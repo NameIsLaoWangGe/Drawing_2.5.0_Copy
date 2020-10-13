@@ -1,0 +1,6 @@
+{
+  "code": "import { _PreLoad, _SceneName } from \"./lwg\";\r\nexport default class UIPreLoad extends _PreLoad._PreLoadScene {\r\n    lwgOnAwake() {\r\n        _PreLoad.list_2DPic = [];\r\n        _PreLoad.list_2DScene = [\r\n            \"Scene/\" + _SceneName.UIStart + '.json',\r\n            \"Scene/\" + _SceneName.GameScene + '.json',\r\n            \"Scene/\" + _SceneName.UIPreLoad + '.json',\r\n        ];\r\n        _PreLoad.list_2DPrefab = [];\r\n        _PreLoad.list_3DScene = [];\r\n        _PreLoad.list_3DPrefab = [];\r\n        _PreLoad.list_JsonData = [];\r\n    }\r\n    lwgAdaptive() {\r\n    }\r\n    lwgOnEnable() {\r\n    }\r\n    lwgOnStart() {\r\n    }\r\n    lwgOpenAni() { return 0; }\r\n    lodingPhaseComplete() {\r\n    }\r\n    lodingComplete() {\r\n        return 200;\r\n    }\r\n}\r\n",
+  "references": [
+    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/lwg.ts"
+  ]
+}
