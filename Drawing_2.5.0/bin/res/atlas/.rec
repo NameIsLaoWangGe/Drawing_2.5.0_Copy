@@ -64,6 +64,7 @@ P 4A512E89 yezi1.png
 P CAAFC187 yuan1.png
 P B63DD538 yuanfaguang.png
 D Frame/UI
+P 5FCECF63 icon_cusp.png
 P C36AA67B icon_execution.png
 P A5763191 icon_gold.png
 P CD257D00 reverseMask.png
@@ -141,12 +142,11 @@ D Game/Skeleton
 D Game/UI
 D Game/Voice
 D Game/UI/Common
-P 30AAF986 BLUE_PENCIL.png
-P 6D8F77A9 GREEN_PENCIL.png
 D Game/UI/DesignPic
 D Game/UI/GameScene
 P E1951C3C face.png
 P 22966FDB Petal.png
+P CDE12E69 PetalMask.png
 D Game/UI/UIAdsHint
 D Game/UI/UICard
 D Game/UI/UICheckIn
@@ -172,3 +172,6 @@ D Game/UI/UIStart
 D Game/UI/UITask
 D Game/UI/UIVictory
 D Game/UI/UIVictoryBox
+D Game/UI/GameScene/SinglePencils
+P 30AAF986 blue.png
+P 6D8F77A9 green.png

@@ -1,10 +1,16 @@
-{ 
-"RECORDS": 
-[
-  {
-    "index": 1,
-    "name": "green",
-    "color": "00d700"
-  }
-]
+{
+  "RECORDS": [
+    {
+      "index": 1,
+      "name": "green",
+      "color": "#00d700",
+      "pitch": true
+    },
+    {
+      "index": 2,
+      "name": "blue",
+      "color": "#005fff",
+      "pitch": false
+    }
+  ]
 }

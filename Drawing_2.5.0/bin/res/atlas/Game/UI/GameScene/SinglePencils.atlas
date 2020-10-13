@@ -1,0 +1,1 @@
+{"frames":{"blue.png":{"frame":{"h":512,"idx":0,"w":512,"x":0,"y":0},"sourceSize":{"h":512,"w":512},"spriteSourceSize":{"x":0,"y":0}},"green.png":{"frame":{"h":512,"idx":0,"w":512,"x":513,"y":0},"sourceSize":{"h":512,"w":512},"spriteSourceSize":{"x":0,"y":0}}},"meta":{"image":"SinglePencils.png","prefix":"Game/UI/GameScene/SinglePencils/"}}

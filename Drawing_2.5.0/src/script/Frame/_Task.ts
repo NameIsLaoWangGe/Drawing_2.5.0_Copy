@@ -241,7 +241,7 @@ export module _Task {
             for (let index = 0; index < _Task._TaskList.cells.length; index++) {
                 const element = _Task._TaskList.cells[index];
                 if (!element.getComponent(TaskItem)) {
-                    element.getComponent(TaskItem);
+                    element.addComponent(TaskItem);
                 }
             }
         }

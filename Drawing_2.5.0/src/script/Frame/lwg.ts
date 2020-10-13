@@ -1700,11 +1700,9 @@ export module lwg {
                 // 组件变为的self属性
                 this.self[calssName] = this;
                 // this.rig = this.self.getComponent(Laya.RigidBody);
-                this.lwgNodeDec();
                 this.lwgOnAwake();
             }
             /**声明一些节点*/
-            lwgNodeDec(): void { }
             lwgOnAwake(): void { }
             onEnable(): void {
                 this.lwgBtnClick();
@@ -1717,6 +1715,10 @@ export module lwg {
             lwgBtnClick(): void { }
             /**事件注册*/
             lwgEventRegister(): void { }
+            onStart(): void {
+                this.lwgOnStart();
+            }
+            lwgOnStart(): void { }
             onUpdate(): void {
                 this.lwgOnUpdate();
             }
@@ -3276,15 +3278,21 @@ export module lwg {
          * @param time 花费时间
          * @param delayed 延时
          * @param func 回调函数
-         * @param  场景可否点击
+         * @param  stageLock 场景锁
          */
         export function fadeOut(node, alpha1, alpha2, time, delayed?: number, func?: Function, stageClick?: boolean): void {
             node.alpha = alpha1;
+            if (stageClick) {
+                Admin._clickLock.switch = true;
+            }
             Laya.Tween.to(node, { alpha: alpha2 }, time, null, Laya.Handler.create(this, function () {
                 if (func) {
                     func();
                 }
-            }), delayed ? delayed: 0)
+                if (stageClick) {
+                    Admin._clickLock.switch = false;
+                }
+            }), delayed ? delayed : 0)
         }
 
         /**
@@ -6040,7 +6048,7 @@ export module lwg {
             checkList_Create(): void {
                 CheckIn._checkList.selectEnable = true;
                 // CheckIn._checkList.vScrollBarSkin = "";//不需要移动时，就不设置移动条
-                // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
+                // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回����时间。单位为毫秒。
                 // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
                 CheckIn._checkList.selectHandler = new Laya.Handler(this, this.checkList_Scelet);
                 CheckIn._checkList.renderHandler = new Laya.Handler(this, this.checkList_Update);
