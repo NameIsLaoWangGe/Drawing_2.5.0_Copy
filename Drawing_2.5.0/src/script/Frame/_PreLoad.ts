@@ -1,4 +1,4 @@
-import { _PreLoad, _SceneName } from "./lwg";
+import { _PreLoad, _SceneName } from "./Lwg";
 
 export default class UIPreLoad extends _PreLoad._PreLoadScene {
     lwgOnAwake(): void {
@@ -18,22 +18,14 @@ export default class UIPreLoad extends _PreLoad._PreLoadScene {
             // "Prefab/PreGuessCard.json",
         ];
         _PreLoad.list_3DScene = [
-            // "3DScene/LayaScene_GameMain/Conventional/GameMain.ls"
+            // "_Lwg3D/_Scene/LayaScene_GameMain/Conventional/GameMain.ls"
         ];
         _PreLoad.list_3DPrefab = [
-            // "3DPrefab/LayaScene_GameMain/Conventional/CardContainer.lh"
+            // "_Lwg3D/_Prefab/LayaScene_GameMain/Conventional/CardContainer.lh"
         ];
         _PreLoad.list_JsonData = [
-            // "GameData/Shop/Other.json",
-            // "GameData/Shop/Props.json",
-            // "GameData/Shop/Skin.json",
-            // 'GameData/Task/everydayTask.json',
-            // "GameData/VictoryBox/VictoryBox.json",
-            // "GameData/CheckIn/CheckIn.json",
-            // "GameData/Dialog/Dialog.json",
-            // "GameData/Game/Feature.json",
-            // "GameData/Game/Card.json",
-            // "GameData/EasterEgg/EasterEgg.json",
+            "_LwgData" + "/_Game/SingleColor" + ".json",
+            "_LwgData" + "/_Game/Colours" + ".json",
         ];
     }
     lwgAdaptive(): void {

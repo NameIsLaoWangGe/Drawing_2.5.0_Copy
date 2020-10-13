@@ -1,6 +1,6 @@
-import { Admin, Animation2D, Click, Effects, EventAdmin, TimerAdmin, Tools } from "./lwg";
+import { Admin, Animation2D, Click, EventAdmin, _PreLoad } from "./Lwg";
+
 export module _Game {
-    /**事件类型*/
     export enum _Event {
         start = '_Game_start',
         onStep = '_Game_onStep',
@@ -13,22 +13,55 @@ export module _Game {
         action1 = 'action1',
         action2 = 'action2',
     }
-    // 此处考虑使用表格
     export let _stepOrder: Array<string> = [];
     export let _passLenghtArr: Array<number> = [];
     export let _stepIndex = 0;
     export let _drawSwitch: boolean = false;
-    /**基类*/
+
+    export let _PencilsList: Laya.List;
+    export let _singlePencils: Array<any> = [];
+    export let _coloursPencils: Array<any> = [];
+
+    export function _init(): void {
+        _singlePencils = Laya.loader.getRes(_PreLoad.list_JsonData[0])["RECORDS"];
+        _coloursPencils = Laya.loader.getRes(_PreLoad.list_JsonData[1])["RECORDS"];
+        _stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
+        _passLenghtArr = [600, 400, 400, 400, 400, 200, 300, 300];
+    }
     export class _GameGeneral extends Admin._Scene {
         moduleOnAwake(): void {
-            _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
-            _Game._passLenghtArr = [600, 400, 400, 400, 400, 200, 300, 300];
-            _Game._stepIndex = 0;
+            _stepIndex = 0;
+
+            _PencilsList = this.ListVar('PencilsList');
+            _PencilsList.array = _singlePencils;
+            _PencilsList.selectEnable = true;
+            _PencilsList.vScrollBarSkin = "";
+            // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
+            // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
+            _PencilsList.selectHandler = new Laya.Handler(this, this._PencilsListScelet);
+            _PencilsList.renderHandler = new Laya.Handler(this, this._PencilsListUpdate);
+            if (_PencilsList.cells.length !== 0) {
+                for (let index = 0; index < _PencilsList.cells.length; index++) {
+                    const element = _PencilsList.cells[index];
+                    if (!element.getComponent(_PencilsListItem)) {
+                        element.getComponent(_PencilsListItem);
+                    }
+                }
+            }
+            console.log(_PencilsList.cells);
         }
+        /**list选中监听,重写覆盖*/
+        _PencilsListScelet(index: number): void { }
+        /**list列表刷新,重写覆盖*/
+        _PencilsListUpdate(cell: Laya.Box, index: number): void { }
     }
-    // export let brushColor: Array<>=[];
+    export class _PencilsListItem extends Admin._Object {
+        lwgOnAwake(): void {
+            console.log('测试！');
+        };
+    }
+
 }
-/**场景类*/
 export default class GameScene extends _Game._GameGeneral {
     /**每个步骤需要绘制的长度监听*/
     _drawingLenth = {
@@ -148,4 +181,5 @@ export default class GameScene extends _Game._GameGeneral {
         });
     }
 }
+
 

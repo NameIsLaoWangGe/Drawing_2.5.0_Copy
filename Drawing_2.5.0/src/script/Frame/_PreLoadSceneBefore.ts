@@ -1,4 +1,4 @@
-import { Admin, EventAdmin, _PreLoad, _SceneName } from "./lwg";
+import { Admin, EventAdmin, _PreLoad, _SceneName } from "./Lwg";
 
 /**每个页面前的加载页面，需要手动调出*/
 export module _PreLoadSceneBefore {
@@ -14,7 +14,7 @@ export default class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {
         switch (Admin._preLoadOpenSceneLater.openSceneName) {
             case _SceneName.GameScene:
                 _PreLoad.list_3DPrefab = [
-                    // "3DPrefab/LayaScene_GameMain/Conventional/CardContainer.lh",
+                    // "_Lwg3D/_Prefab/LayaScene_GameMain/Conventional/CardContainer.lh"
                 ]
                 break;
             case _SceneName.UIDefeated:

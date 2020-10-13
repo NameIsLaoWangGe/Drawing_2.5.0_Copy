@@ -1,4 +1,4 @@
-import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting, Dialog, Backpack, PalyAudio, _SceneName } from "../Frame/lwg";
+import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting, Dialog, Backpack, PalyAudio, _SceneName } from "./Lwg";
 import ADManager from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { _Guide } from "./_Guide";

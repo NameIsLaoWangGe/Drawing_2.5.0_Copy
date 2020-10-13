@@ -1,11 +1,11 @@
-import GameScene from "./_Game";
+import GameScene, { _Game } from "./_Game";
 import UIGuide, { _Guide } from "./_Guide";
 import UIExample from "./_Example";
 // import ZJADMgr from "../../TJ/ZJADMgr";
 import UITask, { _Task } from "./_Task";
 import UIStart, { _Start } from "./_Start";
 import UIPreLoadSceneBefore from "./_PreLoadSceneBefore";
-import { Admin, DateAdmin, EventAdmin, _SceneName } from "./lwg";
+import { Admin, DateAdmin, EventAdmin, _SceneName } from "./Lwg";
 export default class UIInit extends Admin._Scene {
     lwgEventRegister(): void {
         EventAdmin._register(_SceneName.UIInit, this, () => {
@@ -37,6 +37,7 @@ export default class UIInit extends Admin._Scene {
             }());
             (function module() {
                 _Start._init();
+                _Game._init();
                 _Task._init();
                 _Guide._init();//引导初始化必须放在最后
             }());

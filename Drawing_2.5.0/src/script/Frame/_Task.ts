@@ -1,4 +1,4 @@
-import { Admin } from "./lwg";
+import { Admin, Tools } from "./Lwg";
 
 /**任务模块*/
 export module _Task {
@@ -157,7 +157,7 @@ export module _Task {
     }
 
     /**事件名称*/
-    export enum _EventType {
+    export enum _Event {
         /**领取奖励*/
         getAward = 'Task_getAward',
         /**每次点击广告获得金币*/
@@ -241,7 +241,7 @@ export module _Task {
             for (let index = 0; index < _Task._TaskList.cells.length; index++) {
                 const element = _Task._TaskList.cells[index];
                 if (!element.getComponent(TaskItem)) {
-                    !element.getComponent(TaskItem);
+                    element.getComponent(TaskItem);
                 }
             }
         }

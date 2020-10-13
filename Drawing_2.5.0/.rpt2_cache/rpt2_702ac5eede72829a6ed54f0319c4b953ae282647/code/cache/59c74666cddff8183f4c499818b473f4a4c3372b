@@ -1,0 +1,6 @@
+{
+  "code": "import { Admin, _PreLoad, _SceneName } from \"./Lwg\";\r\nexport default class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {\r\n    lwgOnAwake() {\r\n        switch (Admin._preLoadOpenSceneLater.openSceneName) {\r\n            case _SceneName.GameScene:\r\n                _PreLoad.list_3DPrefab = [];\r\n                break;\r\n            case _SceneName.UIDefeated:\r\n                break;\r\n            default:\r\n                break;\r\n        }\r\n    }\r\n}\r\n",
+  "references": [
+    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/Lwg.ts"
+  ]
+}

@@ -5194,7 +5194,10 @@
            _PreLoad.list_2DPrefab = [];
            _PreLoad.list_3DScene = [];
            _PreLoad.list_3DPrefab = [];
-           _PreLoad.list_JsonData = [];
+           _PreLoad.list_JsonData = [
+               "_LwgData" + "/_Game/SingleColor" + ".json",
+               "_LwgData" + "/_Game/Colours" + ".json",
+           ];
        }
        lwgAdaptive() {
        }
@@ -5229,14 +5232,45 @@
        _Game._passLenghtArr = [];
        _Game._stepIndex = 0;
        _Game._drawSwitch = false;
+       _Game._singlePencils = [];
+       _Game._coloursPencils = [];
+       function _init() {
+           _Game._singlePencils = Laya.loader.getRes(_PreLoad.list_JsonData[0])["RECORDS"];
+           _Game._coloursPencils = Laya.loader.getRes(_PreLoad.list_JsonData[1])["RECORDS"];
+           _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
+           _Game._passLenghtArr = [600, 400, 400, 400, 400, 200, 300, 300];
+       }
+       _Game._init = _init;
        class _GameGeneral extends Admin._Scene {
            moduleOnAwake() {
-               _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
-               _Game._passLenghtArr = [600, 400, 400, 400, 400, 200, 300, 300];
                _Game._stepIndex = 0;
+               _Game._PencilsList = this.ListVar('PencilsList');
+               _Game._PencilsList.array = _Game._singlePencils;
+               _Game._PencilsList.selectEnable = true;
+               _Game._PencilsList.vScrollBarSkin = "";
+               _Game._PencilsList.selectHandler = new Laya.Handler(this, this._PencilsListScelet);
+               _Game._PencilsList.renderHandler = new Laya.Handler(this, this._PencilsListUpdate);
+               if (_Game._PencilsList.cells.length !== 0) {
+                   for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
+                       const element = _Game._PencilsList.cells[index];
+                       if (!element.getComponent(_PencilsListItem)) {
+                           element.getComponent(_PencilsListItem);
+                       }
+                   }
+               }
+               console.log(_Game._PencilsList.array, _Game._singlePencils);
            }
+           _PencilsListScelet(index) { }
+           _PencilsListUpdate(cell, index) { }
        }
        _Game._GameGeneral = _GameGeneral;
+       class _PencilsListItem extends Admin._Object {
+           lwgOnAwake() {
+               console.log('测试！');
+           }
+           ;
+       }
+       _Game._PencilsListItem = _PencilsListItem;
    })(_Game || (_Game = {}));
    class GameScene extends _Game._GameGeneral {
        constructor() {
@@ -5642,15 +5676,15 @@
            _Classify["everyday"] = "Task_Everyday";
            _Classify["perpetual"] = "Task_Perpetual";
        })(_Classify = _Task._Classify || (_Task._Classify = {}));
-       let _EventType;
-       (function (_EventType) {
-           _EventType["getAward"] = "Task_getAward";
-           _EventType["adsGetAward_Every"] = "Task_adsGetAward_Every";
-           _EventType["useSkins"] = "Task_useSkins";
-           _EventType["victory"] = "Task_victory";
-           _EventType["adsTime"] = "Task_adsTime";
-           _EventType["victoryBox"] = "Task_victoryBox";
-       })(_EventType = _Task._EventType || (_Task._EventType = {}));
+       let _Event;
+       (function (_Event) {
+           _Event["getAward"] = "Task_getAward";
+           _Event["adsGetAward_Every"] = "Task_adsGetAward_Every";
+           _Event["useSkins"] = "Task_useSkins";
+           _Event["victory"] = "Task_victory";
+           _Event["adsTime"] = "Task_adsTime";
+           _Event["victoryBox"] = "Task_victoryBox";
+       })(_Event = _Task._Event || (_Task._Event = {}));
        let _CompeletType;
        (function (_CompeletType) {
            _CompeletType["ads"] = "ads";
@@ -5699,7 +5733,7 @@
                for (let index = 0; index < _Task._TaskList.cells.length; index++) {
                    const element = _Task._TaskList.cells[index];
                    if (!element.getComponent(TaskItem)) {
-                       !element.getComponent(TaskItem);
+                       element.getComponent(TaskItem);
                    }
                }
            }
@@ -5841,6 +5875,7 @@
                }());
                (function module() {
                    _Start._init();
+                   _Game._init();
                    _Task._init();
                    _Guide._init();
                }());

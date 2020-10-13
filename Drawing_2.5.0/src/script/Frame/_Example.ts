@@ -1,4 +1,5 @@
-import { Admin } from "./lwg";
+import { Admin } from "./Lwg";
+
 /**测试模块,每个模块分开，默认导出一个类，这个类是默认挂载的脚本类，如果有多个脚本，
  * 那么在这个默认类中进行添加，或者在其他地方动态添加*/
 export module _Example {

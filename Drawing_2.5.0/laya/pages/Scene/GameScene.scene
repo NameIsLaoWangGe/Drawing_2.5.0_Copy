@@ -387,10 +387,10 @@
         {
             "x":15,
             "type":"List",
-            "searchKey":"List",
-            "props":{"y":31,"width":107,"right":0,"height":596,"bgColor":"#b07b7a"},
+            "searchKey":"List,PencilsList,PencilsList",
+            "props":{"y":31,"width":107,"var":"PencilsList","right":0,"name":"PencilsList","height":596,"bgColor":"#b07b7a"},
             "nodeParent":2,
-            "label":"List",
+            "label":"PencilsList",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
