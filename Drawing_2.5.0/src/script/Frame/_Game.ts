@@ -119,12 +119,12 @@ export module _Game {
 export default class GameScene extends _Game._GameGeneral {
     /**每个步骤需要绘制的长度监听*/
     _drawingLenth = {
-        swtch: true,
+        switch: true,
         get value(): number {
             return this['len'] ? this['len'] : 0;
         },
         set value(v: number) {
-            if (this.swtch) {
+            if (this.switch) {
                 this['len'] = v;
                 if (this['len'] >= _Game._passLenghtArr[_Game._stepIndex]) {
                     EventAdmin._notify(_Game._Event.showStepBtn);
@@ -160,15 +160,15 @@ export default class GameScene extends _Game._GameGeneral {
                 Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
             } else {
                 if (!this.ImgVar('BtnNextStep').visible) {
-                    this.ImgVar('BtnNextStep').visible = true
+                    this.ImgVar('BtnNextStep').visible = true;
                     Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
                 }
                 if (!this.ImgVar('BtnLastStep').visible) {
-                    this.ImgVar('BtnLastStep').visible = true
+                    this.ImgVar('BtnLastStep').visible = true;
                     Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
                 }
             }
-            this._drawingLenth.swtch = false;
+            this._drawingLenth.switch = false;
         });
 
         EventAdmin._register(_Game._Event.lastStep, this, () => {
@@ -224,7 +224,7 @@ export default class GameScene extends _Game._GameGeneral {
                         if (_Game._stepIndex == _Game._stepMaskIndex + 1) {
                             _Game._stepMaskIndex++;
                             this.ImgVar('BtnNextStep').visible = false;
-                            this._drawingLenth.swtch = true;
+                            this._drawingLenth.switch = true;
                         }
                         if (parent0 != this.ImgVar('DrawRoot')) {
                             parent0.zOrder = _Game._stepIndex * 10;
@@ -274,6 +274,9 @@ export default class GameScene extends _Game._GameGeneral {
                 // 移动
                 (e: Laya.Event) => {
                     let DrawSp = Img.getChildByName('DrawSp') as Laya.Sprite;
+                    if (!DrawSp) {
+                        return;
+                    }
                     // 画线
                     if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
                         let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
@@ -287,9 +290,6 @@ export default class GameScene extends _Game._GameGeneral {
                 },
                 (e: Laya.Event) => {
                     this['frontPos'] = null;
-                },
-                (e: Laya.Event) => {
-                    this['frontPos'] = null;
                 }
             );
         }
@@ -297,6 +297,7 @@ export default class GameScene extends _Game._GameGeneral {
             this.AniVar(_Game._Animation.action1).play(null, true);
         });
         Click._on(Click._Type.largen, this.btnVar('BtnLastStep'), this, null, null, () => {
+            this._drawingLenth.switch = false;
             EventAdmin._notify(_Game._Event.lastStep);
         });
         Click._on(Click._Type.largen, this.btnVar('BtnNextStep'), this, null, null, () => {

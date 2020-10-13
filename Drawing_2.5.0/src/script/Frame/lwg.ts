@@ -6659,40 +6659,40 @@ export module lwg {
         export let list_JsonData: Array<any> = [];
 
         /**进度条总长度,长度为以上三个加载资源类型的数组总长度*/
-        export let sumProgress: number = 0;
+        export let _sumProgress: number = 0;
         /**加载顺序依次为3d,2d,数据表，可修改*/
-        export let loadOrder: Array<any> = [];
+        export let _loadOrder: Array<any> = [];
         /**当前加载到哪个分类数组*/
-        export let loadOrderIndex: number = 0;
+        export let _loadOrderIndex: number = 0;
 
         /**在何处加载，是初始化加载还是页面中加载*/
         export let _whereToLoad: string = Admin._SceneName.UIPreLoad;
 
-        /**当前进度条进度,起始位0，每加载成功1个资源，则加1,currentProgress.value / sumProgress为进度百分比*/
-        export let currentProgress = {
-            /**获取进度条的数量值，currentProgress.value / sumProgress为进度百分比*/
+        /**当前进度条进度,起始位0，每加载成功1个资源，则加1,_currentProgress.value / _sumProgress为进度百分比*/
+        export let _currentProgress = {
+            /**获取进度条的数量值，_currentProgress.value / _sumProgress为进度百分比*/
             get value(): number {
                 return this['len'] ? this['len'] : 0;
             },
             /**设置进度条的值*/
             set value(val: number) {
                 this['len'] = val;
-                if (this['len'] >= sumProgress) {
-                    if (sumProgress == 0) {
+                if (this['len'] >= _sumProgress) {
+                    if (_sumProgress == 0) {
                         return;
                     }
-                    console.log('当前进度条进度为:', currentProgress.value / sumProgress);
+                    console.log('当前进度条进度为:', _currentProgress.value / _sumProgress);
                     console.log('进度条停止！');
                     console.log('所有资源加载完成！此时所有资源可通过例如 Laya.loader.getRes("url")获取');
                     EventAdmin._notify(_PreLoad._Event.complete);
                 } else {
                     // 当前进度达到当前长度节点时,去到下一个数组加载
                     let number = 0;
-                    for (let index = 0; index <= loadOrderIndex; index++) {
-                        number += loadOrder[index].length;
+                    for (let index = 0; index <= _loadOrderIndex; index++) {
+                        number += _loadOrder[index].length;
                     }
                     if (this['len'] == number) {
-                        loadOrderIndex++;
+                        _loadOrderIndex++;
                     }
                     EventAdmin._notify(_PreLoad._Event.loding);
                 }
@@ -6715,10 +6715,10 @@ export module lwg {
             list_2DScene = [];
             list_2DPrefab = [];
             list_JsonData = [];
-            sumProgress = 0;
-            loadOrder = [];
-            loadOrderIndex = 0;
-            currentProgress.value = 0;
+            _sumProgress = 0;
+            _loadOrder = [];
+            _loadOrderIndex = 0;
+            _currentProgress.value = 0;
         }
 
         export class _PreLoadScene extends Admin._Scene {
@@ -6750,24 +6750,24 @@ export module lwg {
                 });
 
                 EventAdmin._register(_Event.progress, this, () => {
-                    currentProgress.value++;
-                    if (currentProgress.value < sumProgress) {
-                        console.log('当前进度条进度为:', currentProgress.value / sumProgress);
+                    _currentProgress.value++;
+                    if (_currentProgress.value < _sumProgress) {
+                        console.log('当前进度条进度为:', _currentProgress.value / _sumProgress);
                         this.lodingPhaseComplete();
                     }
                 });
             }
             moduleOnEnable(): void {
-                loadOrder = [list_2DPic, list_2DScene, list_2DPrefab, list_3DScene, list_3DPrefab, list_JsonData];
-                for (let index = 0; index < loadOrder.length; index++) {
-                    sumProgress += loadOrder[index].length;
-                    if (loadOrder[index].length <= 0) {
-                        loadOrder.splice(index, 1);
+                _loadOrder = [list_2DPic, list_2DScene, list_2DPrefab, list_3DScene, list_3DPrefab, list_JsonData];
+                for (let index = 0; index < _loadOrder.length; index++) {
+                    _sumProgress += _loadOrder[index].length;
+                    if (_loadOrder[index].length <= 0) {
+                        _loadOrder.splice(index, 1);
 
                         index--;
                     }
                 }
-                loadOrderIndex = 0;
+                _loadOrderIndex = 0;
             }
 
             moduleOnStart(): void {
@@ -6782,20 +6782,20 @@ export module lwg {
 
             /**根据加载顺序依次加载,第一次加载将会在openAni动画结束之后*/
             private lodingRule(): void {
-                if (loadOrder.length <= 0) {
+                if (_loadOrder.length <= 0) {
                     console.log('没有加载项');
                     EventAdmin._notify(_PreLoad._Event.complete);
                     return;
                 }
                 // 已经加载过的分类数组的长度
                 let alreadyPro: number = 0;
-                for (let i = 0; i < loadOrderIndex; i++) {
-                    alreadyPro += loadOrder[i].length;
+                for (let i = 0; i < _loadOrderIndex; i++) {
+                    alreadyPro += _loadOrder[i].length;
                 }
                 //获取到当前分类加载数组的下标 
-                let index = currentProgress.value - alreadyPro;
+                let index = _currentProgress.value - alreadyPro;
 
-                switch (loadOrder[loadOrderIndex]) {
+                switch (_loadOrder[_loadOrderIndex]) {
                     case list_2DPic:
 
                         Laya.loader.load(list_2DPic[index], Laya.Handler.create(this, (any) => {

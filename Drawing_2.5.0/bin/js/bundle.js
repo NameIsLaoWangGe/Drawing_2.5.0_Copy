@@ -4829,32 +4829,32 @@
            _PreLoad.list_2DScene = [];
            _PreLoad.list_2DPrefab = [];
            _PreLoad.list_JsonData = [];
-           _PreLoad.sumProgress = 0;
-           _PreLoad.loadOrder = [];
-           _PreLoad.loadOrderIndex = 0;
+           _PreLoad._sumProgress = 0;
+           _PreLoad._loadOrder = [];
+           _PreLoad._loadOrderIndex = 0;
            _PreLoad._whereToLoad = Admin._SceneName.UIPreLoad;
-           _PreLoad.currentProgress = {
+           _PreLoad._currentProgress = {
                get value() {
                    return this['len'] ? this['len'] : 0;
                },
                set value(val) {
                    this['len'] = val;
-                   if (this['len'] >= _PreLoad.sumProgress) {
-                       if (_PreLoad.sumProgress == 0) {
+                   if (this['len'] >= _PreLoad._sumProgress) {
+                       if (_PreLoad._sumProgress == 0) {
                            return;
                        }
-                       console.log('当前进度条进度为:', _PreLoad.currentProgress.value / _PreLoad.sumProgress);
+                       console.log('当前进度条进度为:', _PreLoad._currentProgress.value / _PreLoad._sumProgress);
                        console.log('进度条停止！');
                        console.log('所有资源加载完成！此时所有资源可通过例如 Laya.loader.getRes("url")获取');
                        EventAdmin._notify(_PreLoad._Event.complete);
                    }
                    else {
                        let number = 0;
-                       for (let index = 0; index <= _PreLoad.loadOrderIndex; index++) {
-                           number += _PreLoad.loadOrder[index].length;
+                       for (let index = 0; index <= _PreLoad._loadOrderIndex; index++) {
+                           number += _PreLoad._loadOrder[index].length;
                        }
                        if (this['len'] == number) {
-                           _PreLoad.loadOrderIndex++;
+                           _PreLoad._loadOrderIndex++;
                        }
                        EventAdmin._notify(_PreLoad._Event.loding);
                    }
@@ -4876,10 +4876,10 @@
                _PreLoad.list_2DScene = [];
                _PreLoad.list_2DPrefab = [];
                _PreLoad.list_JsonData = [];
-               _PreLoad.sumProgress = 0;
-               _PreLoad.loadOrder = [];
-               _PreLoad.loadOrderIndex = 0;
-               _PreLoad.currentProgress.value = 0;
+               _PreLoad._sumProgress = 0;
+               _PreLoad._loadOrder = [];
+               _PreLoad._loadOrderIndex = 0;
+               _PreLoad._currentProgress.value = 0;
            }
            _PreLoad._remakeLode = _remakeLode;
            class _PreLoadScene extends Admin._Scene {
@@ -4910,23 +4910,23 @@
                        }
                    });
                    EventAdmin._register(_Event.progress, this, () => {
-                       _PreLoad.currentProgress.value++;
-                       if (_PreLoad.currentProgress.value < _PreLoad.sumProgress) {
-                           console.log('当前进度条进度为:', _PreLoad.currentProgress.value / _PreLoad.sumProgress);
+                       _PreLoad._currentProgress.value++;
+                       if (_PreLoad._currentProgress.value < _PreLoad._sumProgress) {
+                           console.log('当前进度条进度为:', _PreLoad._currentProgress.value / _PreLoad._sumProgress);
                            this.lodingPhaseComplete();
                        }
                    });
                }
                moduleOnEnable() {
-                   _PreLoad.loadOrder = [_PreLoad.list_2DPic, _PreLoad.list_2DScene, _PreLoad.list_2DPrefab, _PreLoad.list_3DScene, _PreLoad.list_3DPrefab, _PreLoad.list_JsonData];
-                   for (let index = 0; index < _PreLoad.loadOrder.length; index++) {
-                       _PreLoad.sumProgress += _PreLoad.loadOrder[index].length;
-                       if (_PreLoad.loadOrder[index].length <= 0) {
-                           _PreLoad.loadOrder.splice(index, 1);
+                   _PreLoad._loadOrder = [_PreLoad.list_2DPic, _PreLoad.list_2DScene, _PreLoad.list_2DPrefab, _PreLoad.list_3DScene, _PreLoad.list_3DPrefab, _PreLoad.list_JsonData];
+                   for (let index = 0; index < _PreLoad._loadOrder.length; index++) {
+                       _PreLoad._sumProgress += _PreLoad._loadOrder[index].length;
+                       if (_PreLoad._loadOrder[index].length <= 0) {
+                           _PreLoad._loadOrder.splice(index, 1);
                            index--;
                        }
                    }
-                   _PreLoad.loadOrderIndex = 0;
+                   _PreLoad._loadOrderIndex = 0;
                }
                moduleOnStart() {
                    let time = this.lwgOpenAni();
@@ -4938,17 +4938,17 @@
                    });
                }
                lodingRule() {
-                   if (_PreLoad.loadOrder.length <= 0) {
+                   if (_PreLoad._loadOrder.length <= 0) {
                        console.log('没有加载项');
                        EventAdmin._notify(_PreLoad._Event.complete);
                        return;
                    }
                    let alreadyPro = 0;
-                   for (let i = 0; i < _PreLoad.loadOrderIndex; i++) {
-                       alreadyPro += _PreLoad.loadOrder[i].length;
+                   for (let i = 0; i < _PreLoad._loadOrderIndex; i++) {
+                       alreadyPro += _PreLoad._loadOrder[i].length;
                    }
-                   let index = _PreLoad.currentProgress.value - alreadyPro;
-                   switch (_PreLoad.loadOrder[_PreLoad.loadOrderIndex]) {
+                   let index = _PreLoad._currentProgress.value - alreadyPro;
+                   switch (_PreLoad._loadOrder[_PreLoad._loadOrderIndex]) {
                        case _PreLoad.list_2DPic:
                            Laya.loader.load(_PreLoad.list_2DPic[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
@@ -5340,12 +5340,12 @@
        constructor() {
            super(...arguments);
            this._drawingLenth = {
-               swtch: true,
+               switch: true,
                get value() {
                    return this['len'] ? this['len'] : 0;
                },
                set value(v) {
-                   if (this.swtch) {
+                   if (this.switch) {
                        this['len'] = v;
                        if (this['len'] >= _Game._passLenghtArr[_Game._stepIndex]) {
                            EventAdmin._notify(_Game._Event.showStepBtn);
@@ -5388,7 +5388,7 @@
                        Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
                    }
                }
-               this._drawingLenth.swtch = false;
+               this._drawingLenth.switch = false;
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
                if (_Game._stepIndex - 1 >= 0) {
@@ -5442,7 +5442,7 @@
                            if (_Game._stepIndex == _Game._stepMaskIndex + 1) {
                                _Game._stepMaskIndex++;
                                this.ImgVar('BtnNextStep').visible = false;
-                               this._drawingLenth.swtch = true;
+                               this._drawingLenth.switch = true;
                            }
                            if (parent0 != this.ImgVar('DrawRoot')) {
                                parent0.zOrder = _Game._stepIndex * 10;
@@ -5483,6 +5483,9 @@
                    this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                }, (e) => {
                    let DrawSp = Img.getChildByName('DrawSp');
+                   if (!DrawSp) {
+                       return;
+                   }
                    if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
                        let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
@@ -5492,14 +5495,13 @@
                    }
                }, (e) => {
                    this['frontPos'] = null;
-               }, (e) => {
-                   this['frontPos'] = null;
                });
            }
            Click._on(Click._Type.largen, this.btnVar('PlayAni'), this, null, null, () => {
                this.AniVar(_Game._Animation.action1).play(null, true);
            });
            Click._on(Click._Type.largen, this.btnVar('BtnLastStep'), this, null, null, () => {
+               this._drawingLenth.switch = false;
                EventAdmin._notify(_Game._Event.lastStep);
            });
            Click._on(Click._Type.largen, this.btnVar('BtnNextStep'), this, null, null, () => {
@@ -5971,8 +5973,26 @@
    class UIStartItem extends Admin._Object {
    }
 
+   var _PreLoadSceneBefore;
+   (function (_PreLoadSceneBefore) {
+       class _url {
+           constructor() {
+               this.url = 30;
+           }
+           static getInstance() {
+               if (!this.instance) {
+                   this.instance = new _url();
+               }
+               return this.instance;
+           }
+       }
+       _PreLoadSceneBefore._url = _url;
+   })(_PreLoadSceneBefore || (_PreLoadSceneBefore = {}));
    class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {
        lwgOnAwake() {
+           console.log(_PreLoadSceneBefore._url.getInstance().url);
+           console.log(_PreLoadSceneBefore._url.getInstance().url = 50);
+           console.log(_PreLoadSceneBefore._url.getInstance().url);
            switch (Admin._preLoadOpenSceneLater.openSceneName) {
                case _SceneName.GameScene:
                    _PreLoad.list_3DPrefab = [];
@@ -6037,7 +6057,7 @@
    GameConfig.startScene = "Scene/UIPreLoad.scene";
    GameConfig.sceneRoot = "";
    GameConfig.debug = false;
-   GameConfig.stat = true;
+   GameConfig.stat = false;
    GameConfig.physicsDebug = false;
    GameConfig.exportSceneToJson = true;
    GameConfig.init();

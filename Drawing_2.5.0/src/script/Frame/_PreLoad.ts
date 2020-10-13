@@ -1,6 +1,7 @@
 import { _PreLoad, _SceneName } from "./Lwg";
 
 export default class UIPreLoad extends _PreLoad._PreLoadScene {
+
     lwgOnAwake(): void {
         _PreLoad.list_2DPic = [
             // "res/atlas/Frame/Effects.png",

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":48,
-    "selecteID":50,
+    "selectedBox":2,
+    "selecteID":45,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
@@ -35,13 +35,14 @@
             "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":1280},
             "nodeParent":2,
             "label":"DrawRoot",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Flower,Flower",
                     "props":{"y":775,"x":373,"width":418,"var":"Flower","rotation":0,"pivotY":570,"pivotX":209,"name":"Flower","height":570},
@@ -54,9 +55,10 @@
                     "compId":28,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Stalk,Stalk",
-                            "props":{"y":493,"x":209,"width":29,"var":"Stalk","sizeGrid":"0,12,0,10","pivotY":172,"pivotX":15,"name":"Stalk","height":251},
+                            "props":{"y":447,"x":209,"width":29,"var":"Stalk","sizeGrid":"0,12,0,10","pivotY":126,"pivotX":15,"name":"Stalk","height":251},
                             "nodeParent":28,
                             "label":"Stalk",
                             "isOpen":true,
@@ -66,6 +68,7 @@
                             "compId":19,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"width":29,"skin":"Frame/UI/ui_orthogon_cycn.png","sizeGrid":"0,12,0,10","name":"Pic","hitTestPrior":true,"height":251},
@@ -80,6 +83,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,PetalParent,PetalParent",
                             "props":{"y":211,"x":209,"width":418,"var":"PetalParent","rotation":0,"pivotY":211,"pivotX":209,"name":"PetalParent","height":400},
@@ -92,6 +96,7 @@
                             "compId":27,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Petal4,Petal4",
                                     "props":{"y":212,"x":211,"width":250,"var":"Petal4","rotation":-225,"pivotY":90,"name":"Petal4","height":180},
@@ -104,6 +109,7 @@
                                     "compId":17,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":90,"x":0,"width":250,"skin":"Game/UI/GameScene/Petal.png","rotation":0,"pivotY":90,"name":"Pic","height":180},
@@ -118,6 +124,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"width":250,"skin":"Game/UI/GameScene/PetalMask.png","renderType":"mask","height":180},
@@ -132,6 +139,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Petal3,Petal3",
                                     "props":{"y":209,"x":223,"width":250,"var":"Petal3","rotation":-135,"pivotY":100,"name":"Petal3","height":180},
@@ -144,6 +152,7 @@
                                     "compId":16,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":90,"x":0,"width":250,"skin":"Game/UI/GameScene/Petal.png","rotation":0,"pivotY":90,"name":"Pic","height":180},
@@ -157,6 +166,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"width":250,"skin":"Game/UI/GameScene/PetalMask.png","renderType":"mask","height":180},
@@ -171,6 +181,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Petal2,Petal2",
                                     "props":{"y":220,"x":211,"width":250,"var":"Petal2","rotation":-45,"pivotY":100,"name":"Petal2","height":180},
@@ -183,6 +194,7 @@
                                     "compId":15,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":90,"x":0,"width":250,"skin":"Game/UI/GameScene/Petal.png","rotation":0,"pivotY":90,"name":"Pic","height":180},
@@ -196,6 +208,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"width":250,"skin":"Game/UI/GameScene/PetalMask.png","renderType":"mask","height":180},
@@ -210,6 +223,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Petal1,Petal1",
                                     "props":{"y":217,"x":197,"width":250,"var":"Petal1","rotation":45,"pivotY":100,"name":"Petal1","height":180},
@@ -222,6 +236,7 @@
                                     "compId":14,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":90,"x":0,"width":250,"skin":"Game/UI/GameScene/Petal.png","rotation":0,"pivotY":90,"name":"Pic","height":180},
@@ -235,6 +250,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"width":250,"skin":"Game/UI/GameScene/PetalMask.png","renderType":"mask","height":180},
@@ -250,6 +266,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head,Head",
                             "props":{"y":218.5,"x":206,"width":210,"var":"Head","pivotY":102,"pivotX":105,"name":"Head","height":203},
@@ -262,6 +279,7 @@
                             "compId":29,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Face,Face",
                                     "props":{"y":46,"x":53,"width":200,"var":"Face","pivotY":46,"pivotX":47,"name":"Face","mouseThrough":true,"height":200},
@@ -274,6 +292,7 @@
                                     "compId":18,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"width":200,"skin":"Game/UI/GameScene/face.png","name":"Pic","mouseThrough":true,"height":200},
@@ -288,6 +307,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye2",
                                     "props":{"y":53,"x":127,"width":40,"skin":"Frame/UI/ui_circle_011.png","name":"Eye2","height":40},
@@ -301,6 +321,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye1,Eye1",
                                     "props":{"y":73,"x":73,"width":40,"var":"Eye1","skin":"Frame/UI/ui_circle_011.png","pivotY":20,"pivotX":20,"name":"Eye1","height":40},
@@ -314,6 +335,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Mouth,Mouth",
                                     "props":{"y":131,"x":70,"width":77,"var":"Mouth","skin":"Frame/UI/ui_l_orthogon_red.png","sizeGrid":"7,6,7,5","name":"Mouth","height":31},
@@ -329,6 +351,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Leaf1,Leaf1",
                     "props":{"y":777,"x":362,"width":100,"var":"Leaf1","rotation":-60,"pivotY":150,"pivotX":50,"name":"Leaf1","height":150},
@@ -341,6 +364,7 @@
                     "compId":20,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Pic",
                             "props":{"y":0,"x":0,"width":100,"skin":"Frame/UI/ui_circle_001.png","rotation":0,"name":"Pic","height":150},
@@ -355,6 +379,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Leaf2,Leaf2",
                     "props":{"y":777,"x":377,"width":100,"var":"Leaf2","rotation":60,"pivotY":150,"pivotX":50,"name":"Leaf2","height":150},
@@ -367,6 +392,7 @@
                     "compId":21,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Pic",
                             "props":{"y":0,"x":0,"width":100,"skin":"Frame/UI/ui_circle_001.png","rotation":0,"name":"Pic","height":150},
@@ -388,14 +414,13 @@
             "props":{"y":1098,"x":361,"width":291,"visible":false,"var":"BtnBack","skin":"Frame/UI/ui_l_orthogon_red.png","sizeGrid":"13,19,20,14","pivotY":60,"pivotX":146,"name":"BtnBack","height":120,"centerY":458,"centerX":0},
             "nodeParent":2,
             "label":"BtnBack",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":3,
             "child":[
                 {
-                    "x":30,
                     "type":"Label",
                     "searchKey":"Label,下一关",
                     "props":{"y":20,"x":48,"width":195,"valign":"middle","text":"下一关","name":"下一关","height":80,"fontSize":30,"bold":true,"align":"center"},
@@ -443,14 +468,13 @@
             "props":{"y":837.5,"x":194.5,"width":331,"visible":true,"var":"StepSwitch","name":"StepSwitch","height":159},
             "nodeParent":2,
             "label":"StepSwitch",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":48,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,BtnLastStep,BtnLastStep",
                     "props":{"y":79.5,"x":95.5,"width":140,"visible":false,"var":"BtnLastStep","skin":"Frame/UI/ui_l_orthogon_cycn.png","sizeGrid":"19,11,12,14","pivotY":76,"pivotX":70,"name":"BtnLastStep","height":152},
@@ -477,7 +501,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,BtnNextStep,BtnNextStep",
                     "props":{"y":80,"x":248,"width":140,"visible":false,"var":"BtnNextStep","skin":"Frame/UI/ui_l_orthogon_cycn.png","sizeGrid":"19,11,12,14","pivotY":76,"pivotX":70,"name":"BtnNextStep","height":152},
@@ -490,7 +513,6 @@
                     "compId":50,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"skin":"Frame/UI/icon_cusp.png","centerY":0,"centerX":0},
@@ -509,7 +531,7 @@
             "x":15,
             "type":"List",
             "searchKey":"List,PencilsList,PencilsList",
-            "props":{"y":31,"x":613,"width":107,"var":"PencilsList","right":0,"name":"PencilsList","height":596,"bgColor":"#b07b7a"},
+            "props":{"width":107,"var":"PencilsList","top":120,"right":0,"name":"PencilsList","height":596,"bgColor":"#b07b7a"},
             "nodeParent":2,
             "label":"PencilsList",
             "isOpen":false,
@@ -566,24 +588,7 @@
                                 "tween":true,
                                 "target":27,
                                 "key":"rotation",
-                                "index":10
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "label":null,
-                                "key":"rotation",
                                 "index":20
-                            },
-                            {
-                                "value":90,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":30
                             },
                             {
                                 "value":0,
@@ -595,12 +600,29 @@
                                 "index":40
                             },
                             {
+                                "value":90,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":27,
+                                "key":"rotation",
+                                "index":60
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":27,
+                                "label":null,
+                                "key":"rotation",
+                                "index":80
+                            },
+                            {
                                 "value":100,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":27,
                                 "key":"rotation",
-                                "index":50
+                                "index":100
                             },
                             {
                                 "value":0,
@@ -608,7 +630,7 @@
                                 "tween":true,
                                 "target":27,
                                 "key":"rotation",
-                                "index":60
+                                "index":120
                             }]
                     }
                 },
@@ -630,7 +652,7 @@
                                 "tween":true,
                                 "target":20,
                                 "key":"rotation",
-                                "index":30
+                                "index":60
                             },
                             {
                                 "value":-39,
@@ -639,7 +661,7 @@
                                 "target":20,
                                 "label":null,
                                 "key":"rotation",
-                                "index":40
+                                "index":80
                             },
                             {
                                 "value":-60,
@@ -648,7 +670,7 @@
                                 "target":20,
                                 "label":null,
                                 "key":"rotation",
-                                "index":60
+                                "index":120
                             }]
                     }
                 },
@@ -671,19 +693,10 @@
                                 "tween":true,
                                 "target":21,
                                 "key":"rotation",
-                                "index":10
-                            },
-                            {
-                                "value":60,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":21,
-                                "label":null,
-                                "key":"rotation",
                                 "index":20
                             },
                             {
-                                "value":35,
+                                "value":60,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":21,
@@ -692,13 +705,22 @@
                                 "index":40
                             },
                             {
+                                "value":35,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":21,
+                                "label":null,
+                                "key":"rotation",
+                                "index":80
+                            },
+                            {
                                 "value":60,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":21,
                                 "label":null,
                                 "key":"rotation",
-                                "index":60
+                                "index":120
                             }]
                     }
                 },
@@ -720,7 +742,7 @@
                                 "tween":true,
                                 "target":28,
                                 "key":"y",
-                                "index":50
+                                "index":100
                             },
                             {
                                 "value":775,
@@ -728,7 +750,7 @@
                                 "tween":true,
                                 "target":28,
                                 "key":"y",
-                                "index":60
+                                "index":120
                             }],
                         "rotation":[
                             {
@@ -745,24 +767,7 @@
                                 "tween":true,
                                 "target":28,
                                 "key":"rotation",
-                                "index":10
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":28,
-                                "label":null,
-                                "key":"rotation",
                                 "index":20
-                            },
-                            {
-                                "value":-12,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":28,
-                                "key":"rotation",
-                                "index":30
                             },
                             {
                                 "value":0,
@@ -772,12 +777,29 @@
                                 "label":null,
                                 "key":"rotation",
                                 "index":40
+                            },
+                            {
+                                "value":-12,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":28,
+                                "key":"rotation",
+                                "index":60
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":28,
+                                "label":null,
+                                "key":"rotation",
+                                "index":80
                             }]
                     }
                 }],
             "name":"action1",
             "id":1,
-            "frameRate":24,
+            "frameRate":60,
             "action":0
         }]
 }
