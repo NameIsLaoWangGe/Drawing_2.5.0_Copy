@@ -4869,7 +4869,7 @@ export module lwg {
              * @param radius 半径
              * @param eliminate 是否清除其他遮罩，默认为true
              */
-            export function reverseRoundMask(node, x: number, y: number, radius: number, eliminate?: boolean): void {
+            export function reverseRoundMask(node, x: number, y: number, radius: number, eliminate?: boolean): Laya.Sprite {
                 if (eliminate == undefined || eliminate == true) {
                     node_RemoveAllChildren(node);
                 }
@@ -4882,6 +4882,7 @@ export module lwg {
                 // 画出圆形，可以画很多个圆形
                 interactionArea.graphics.drawCircle(0, 0, radius, "#000000");
                 interactionArea.pos(x, y);
+                return interactionArea;
             }
 
 

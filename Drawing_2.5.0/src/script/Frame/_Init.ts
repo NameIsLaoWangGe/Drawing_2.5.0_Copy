@@ -1,6 +1,5 @@
 import GameScene, { _Game } from "./_Game";
 import UIGuide, { _Guide } from "./_Guide";
-import UIExample from "./_Example";
 // import ZJADMgr from "../../TJ/ZJADMgr";
 import UITask, { _Task } from "./_Task";
 import UIStart, { _Start } from "./_Start";

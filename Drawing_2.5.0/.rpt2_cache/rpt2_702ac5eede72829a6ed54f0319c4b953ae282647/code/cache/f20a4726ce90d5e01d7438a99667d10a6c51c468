@@ -3,7 +3,6 @@
   "references": [
     "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_Game.ts",
     "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_Guide.ts",
-    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_Example.ts",
     "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_Task.ts",
     "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_Start.ts",
     "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/_PreLoadSceneBefore.ts",

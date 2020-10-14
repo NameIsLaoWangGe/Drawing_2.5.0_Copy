@@ -1,6 +1,6 @@
 import { EventAdmin, _PreLoad, _SceneName } from "./Lwg";
 export module _PreloadUrl {
-    export let list = {
+    export let _list = {
         // scene3D: {
         //     // "_Lwg3D/_Scene/LayaScene_GameMain/Conventional/GameMain.ls"
         // },
@@ -13,11 +13,12 @@ export module _PreloadUrl {
         //     // "res/atlas/Game/UI/UISkinQualified.png",
         //     // "res/atlas/Game/UI/UIDrawCard/Card.png",
         // },
-
         // prefab2D: {},
         // mesh3D: {},
         // material: {},
-        // texture2D: {},
+        texture2D: {
+            star1: 'Frame/Effects/hua4.png',
+        },
         scene2D: {
             UIStart: "Scene/" + _SceneName.UIStart + '.json',
             GameScene: "Scene/" + _SceneName.GameScene + '.json',
@@ -27,23 +28,17 @@ export module _PreloadUrl {
             SingleColor: "_LwgData" + "/_Game/SingleColor" + ".json",
             Colours: "_LwgData" + "/_Game/Colours" + ".json",
         },
-        skeleton: {
-            aisha: {
-                templet: new Laya.Templet(),
-                url: 'Game/Skeleton/aisha.sk',
-            },
-        }
+        // skeleton: {
+        //     test: {
+        //         templet: new Laya.Templet(),
+        //         url: 'Game/Skeleton/test.sk',
+        //     },
+        // }
     }
-    // export function createWangziTem(): void {
-    //     _PreloadUrl.list.skeleton.wangziTem.on(Laya.Event.COMPLETE, this, null);
-    //     _PreloadUrl.list.skeleton.wangziTem.on(Laya.Event.ERROR, this, () => {
-    //     });
-    //     _PreloadUrl.list.skeleton.wangziTem.loadAni("SK/wangzi.sk");
-    // }
 }
 export default class UIPreLoad extends _PreLoad._PreLoadScene {
     lwgOnStart(): void {
-        EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl.list]));
+        EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl._list]));
     }
     lwgOpenAni(): number { return 0; }
     lwgStepComplete(): void {

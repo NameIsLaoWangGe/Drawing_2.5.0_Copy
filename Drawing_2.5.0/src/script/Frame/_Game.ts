@@ -1,4 +1,4 @@
-import { Admin, Animation2D, Click, EventAdmin, Tools } from "./Lwg";
+import { Admin, Animation2D, Click, EventAdmin, Tools, _PreLoad } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 
 export module _Game {
@@ -49,7 +49,7 @@ export module _Game {
             }
         },
         get data(): Array<any> {
-            return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor));
+            return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor));
         },
         set data(array: Array<any>) {
             this['arr'] = array;
@@ -67,57 +67,21 @@ export module _Game {
         }
     }
     export function _init(): void {
-        _singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor)["RECORDS"]);
+        _singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
         _singlePencils.setPitchByName(_singlePencils.data[0][_singlePencils.property.name]);
         _stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
         _passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
     }
-    export class _GameGeneral extends Admin._Scene {
-        moduleOnAwake(): void {
-            _stepIndex = 0;
-            _PencilsList = this.ListVar('PencilsList');
-            _PencilsList.array = _singlePencils.data;
-            _PencilsList.selectEnable = true;
-            _PencilsList.vScrollBarSkin = "";
-            // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
-            // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
-            _PencilsList.selectHandler = new Laya.Handler(this, this._pencilsListScelet);
-            _PencilsList.renderHandler = new Laya.Handler(this, this._pencilsListUpdate);
-            if (_PencilsList.cells.length !== 0) {
-                for (let index = 0; index < _PencilsList.cells.length; index++) {
-                    const element = _PencilsList.cells[index];
-                    if (!element.getComponent(_PencilsListItem)) {
-                        element.addComponent(_PencilsListItem);
-                    }
-                }
-            }
-        }
-        /**list选中监听,重写覆盖*/
-        _pencilsListScelet(index: number): void { }
-        /**list列表刷新,重写覆盖*/
-        _pencilsListUpdate(cell: Laya.Box, index: number): void {
-            let _dataSource = cell.dataSource;
-            let Pic = cell.getChildByName('Pic') as Laya.Image;
-            Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
-            if (_dataSource[_singlePencils.property.pitch]) {
-                Pic.scale(1.1, 1.1);
-            } else {
-                Pic.scale(1, 1);
-            }
-        }
-    }
-
     export class _PencilsListItem extends Admin._Object {
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.self, this, null, null, () => {
                 _singlePencils.setPitchByName(this.self['_dataSource'][_singlePencils.property.name]);
                 _PencilsList.refresh();
-                console.log(_singlePencils.pitchColor.value);
             });
         }
     }
 }
-export default class GameScene extends _Game._GameGeneral {
+export default class GameScene extends Admin._Scene {
     /**每个步骤需要绘制的长度监听*/
     _drawingLenth = {
         switch: true,
@@ -137,6 +101,33 @@ export default class GameScene extends _Game._GameGeneral {
     lwgOnAwake(): void {
         _Game._stepIndex = 0;
         _Game._drawSwitch = false;
+        _Game._stepIndex = 0;
+
+        _Game._PencilsList = this.ListVar('PencilsList');
+        _Game._PencilsList.array = _Game._singlePencils.data;
+        _Game._PencilsList.selectEnable = true;
+        _Game._PencilsList.vScrollBarSkin = "";
+        // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
+        // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
+        _Game._PencilsList.selectHandler = new Laya.Handler(this, (index: number) => { });
+        _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
+            let _dataSource = cell.dataSource;
+            let Pic = cell.getChildByName('Pic') as Laya.Image;
+            Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
+            if (_dataSource[_Game._singlePencils.property.pitch]) {
+                Pic.scale(1.1, 1.1);
+            } else {
+                Pic.scale(1, 1);
+            }
+        });
+        if (_Game._PencilsList.cells.length !== 0) {
+            for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
+                const element = _Game._PencilsList.cells[index];
+                if (!element.getComponent(_Game._PencilsListItem)) {
+                    element.addComponent(_Game._PencilsListItem);
+                }
+            }
+        }
     }
     lwgOnEnable(): void {
         // this.ImgVar('DrawRoot').pivotX = this.ImgVar('DrawRoot').width / 2;
@@ -158,15 +149,15 @@ export default class GameScene extends _Game._GameGeneral {
         EventAdmin._register(_Game._Event.showStepBtn, this, () => {
             if (_Game._stepIndex == 0) {
                 this.ImgVar('BtnNextStep').visible = true;
-                Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300);
             } else {
                 if (!this.ImgVar('BtnNextStep').visible) {
                     this.ImgVar('BtnNextStep').visible = true;
-                    Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                    Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300);
                 }
                 if (!this.ImgVar('BtnLastStep').visible) {
                     this.ImgVar('BtnLastStep').visible = true;
-                    Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
+                    Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300);
                 }
             }
             this._drawingLenth.switch = false;
@@ -174,7 +165,6 @@ export default class GameScene extends _Game._GameGeneral {
 
         EventAdmin._register(_Game._Event.lastStep, this, () => {
             if (_Game._stepIndex - 1 >= 0) {
-                Admin._clickLock.switch = true;
                 let Img0 = this.ImgVar(_Game._stepOrder[_Game._stepIndex - 1]);
                 let parent0 = Img0.parent as Laya.Image;
                 Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
@@ -198,7 +188,7 @@ export default class GameScene extends _Game._GameGeneral {
                         if (_Game._stepIndex == 0) {
                             this.ImgVar('BtnLastStep').visible = false;
                         }
-                        Admin._clickLock.switch = false;
+                        this['BtnLastStepClose'] = false;
                     })
                 });
             }
@@ -209,7 +199,6 @@ export default class GameScene extends _Game._GameGeneral {
                 EventAdmin._notify(_Game._Event.compelet);
                 Animation2D.fadeOut(this.ImgVar(_Game._stepOrder[_Game._stepIndex]).getChildByName('Pic'), 1, 0, 300, 0);
             } else {
-                Admin._clickLock.switch = true;
                 let Img = this.ImgVar(_Game._stepOrder[_Game._stepIndex]);
                 let parent = Img.parent as Laya.Image;
                 if (parent != this.ImgVar('DrawRoot')) {
@@ -232,7 +221,7 @@ export default class GameScene extends _Game._GameGeneral {
                         }
                         console.log(_Game._stepIndex, _Game._stepMaskIndex);
                         Img0.zOrder = _Game._stepIndex * 10;
-                        Admin._clickLock.switch = false;
+                        this['BtnNextStepClose'] = false;
                     })
                 });
             }
@@ -258,19 +247,21 @@ export default class GameScene extends _Game._GameGeneral {
         });
         for (let index = 0; index < _Game._stepOrder.length; index++) {
             let Img = this.ImgVar(_Game._stepOrder[index]);
+            // Img.cacheAs = "bitmap";
             Click._on(Click._Type.noEffect, Img.getChildByName('Pic'), this,
                 // 按下
                 (e: Laya.Event) => {
-                    this['frontPos'] = null;
                     // 初始化一个绘制节点
+                    this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     if (!Img.getChildByName('DrawSp')) {
                         let DrawSp = new Laya.Sprite();
                         Img.addChild(DrawSp);
                         DrawSp.name = 'DrawSp';
                         DrawSp.pos(0, 0);
+                        DrawSp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
                     }
                     // 初始位置
-                    this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+
                 },
                 // 移动
                 (e: Laya.Event) => {
@@ -281,16 +272,22 @@ export default class GameScene extends _Game._GameGeneral {
                     // 画线
                     if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
                         let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                        DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
-
-                        DrawSp.graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
-
+                        // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
+                        // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
+                        if (_Game._singlePencils.pitchColor.value == '-1') {
+                            DrawSp.blendMode = "destination-out";
+                        } else {
+                            DrawSp.blendMode = "";
+                            DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
+                            DrawSp.graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                        }
                         this._drawingLenth.value += (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
                         this['frontPos'] = new Laya.Point(endPos.x, endPos.y);
                     }
                 },
                 (e: Laya.Event) => {
                     this['frontPos'] = null;
+                    let DrawSp = Img.getChildByName('DrawSp') as Laya.Sprite;
                 }
             );
         }
@@ -298,10 +295,20 @@ export default class GameScene extends _Game._GameGeneral {
             this.AniVar(_Game._Animation.action1).play(null, true);
         });
         Click._on(Click._Type.largen, this.btnVar('BtnLastStep'), this, null, null, () => {
+            if (this['BtnLastStepClose']) {
+                return;
+            } else {
+                this['BtnLastStepClose'] = true;
+            }
             this._drawingLenth.switch = false;
             EventAdmin._notify(_Game._Event.lastStep);
         });
         Click._on(Click._Type.largen, this.btnVar('BtnNextStep'), this, null, null, () => {
+            if (this['BtnNextStepClose']) {
+                return;
+            } else {
+                this['BtnNextStepClose'] = true;
+            }
             if (!this.ImgVar('BtnLastStep').visible) {
                 this.ImgVar('BtnLastStep').visible = true;
                 Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);

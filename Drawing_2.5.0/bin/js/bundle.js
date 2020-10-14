@@ -3515,6 +3515,7 @@
                    node.addChild(interactionArea);
                    interactionArea.graphics.drawCircle(0, 0, radius, "#000000");
                    interactionArea.pos(x, y);
+                   return interactionArea;
                }
                Draw.reverseRoundMask = reverseRoundMask;
                function reverseRoundrectMask(node, x, y, width, height, round, eliminate) {
@@ -5263,7 +5264,10 @@
 
    var _PreloadUrl;
    (function (_PreloadUrl) {
-       _PreloadUrl.list = {
+       _PreloadUrl._list = {
+           texture2D: {
+               star1: 'Frame/Effects/hua4.png',
+           },
            scene2D: {
                UIStart: "Scene/" + _SceneName.UIStart + '.json',
                GameScene: "Scene/" + _SceneName.GameScene + '.json',
@@ -5273,17 +5277,11 @@
                SingleColor: "_LwgData" + "/_Game/SingleColor" + ".json",
                Colours: "_LwgData" + "/_Game/Colours" + ".json",
            },
-           skeleton: {
-               aisha: {
-                   templet: new Laya.Templet(),
-                   url: 'Game/Skeleton/aisha.sk',
-               },
-           }
        };
    })(_PreloadUrl || (_PreloadUrl = {}));
    class UIPreLoad extends _PreLoad._PreLoadScene {
        lwgOnStart() {
-           EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl.list]));
+           EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl._list]));
        }
        lwgOpenAni() { return 0; }
        lwgStepComplete() {
@@ -5340,7 +5338,7 @@
                }
            },
            get data() {
-               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor));
+               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor));
            },
            set data(array) {
                this['arr'] = array;
@@ -5359,56 +5357,23 @@
            }
        };
        function _init() {
-           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor)["RECORDS"]);
+           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
            _Game._singlePencils.setPitchByName(_Game._singlePencils.data[0][_Game._singlePencils.property.name]);
            _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
            _Game._passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
        }
        _Game._init = _init;
-       class _GameGeneral extends Admin._Scene {
-           moduleOnAwake() {
-               _Game._stepIndex = 0;
-               _Game._PencilsList = this.ListVar('PencilsList');
-               _Game._PencilsList.array = _Game._singlePencils.data;
-               _Game._PencilsList.selectEnable = true;
-               _Game._PencilsList.vScrollBarSkin = "";
-               _Game._PencilsList.selectHandler = new Laya.Handler(this, this._pencilsListScelet);
-               _Game._PencilsList.renderHandler = new Laya.Handler(this, this._pencilsListUpdate);
-               if (_Game._PencilsList.cells.length !== 0) {
-                   for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
-                       const element = _Game._PencilsList.cells[index];
-                       if (!element.getComponent(_PencilsListItem)) {
-                           element.addComponent(_PencilsListItem);
-                       }
-                   }
-               }
-           }
-           _pencilsListScelet(index) { }
-           _pencilsListUpdate(cell, index) {
-               let _dataSource = cell.dataSource;
-               let Pic = cell.getChildByName('Pic');
-               Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
-               if (_dataSource[_Game._singlePencils.property.pitch]) {
-                   Pic.scale(1.1, 1.1);
-               }
-               else {
-                   Pic.scale(1, 1);
-               }
-           }
-       }
-       _Game._GameGeneral = _GameGeneral;
        class _PencilsListItem extends Admin._Object {
            lwgBtnClick() {
                Click._on(Click._Type.largen, this.self, this, null, null, () => {
                    _Game._singlePencils.setPitchByName(this.self['_dataSource'][_Game._singlePencils.property.name]);
                    _Game._PencilsList.refresh();
-                   console.log(_Game._singlePencils.pitchColor.value);
                });
            }
        }
        _Game._PencilsListItem = _PencilsListItem;
    })(_Game || (_Game = {}));
-   class GameScene extends _Game._GameGeneral {
+   class GameScene extends Admin._Scene {
        constructor() {
            super(...arguments);
            this._drawingLenth = {
@@ -5430,6 +5395,31 @@
        lwgOnAwake() {
            _Game._stepIndex = 0;
            _Game._drawSwitch = false;
+           _Game._stepIndex = 0;
+           _Game._PencilsList = this.ListVar('PencilsList');
+           _Game._PencilsList.array = _Game._singlePencils.data;
+           _Game._PencilsList.selectEnable = true;
+           _Game._PencilsList.vScrollBarSkin = "";
+           _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
+           _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell, index) => {
+               let _dataSource = cell.dataSource;
+               let Pic = cell.getChildByName('Pic');
+               Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
+               if (_dataSource[_Game._singlePencils.property.pitch]) {
+                   Pic.scale(1.1, 1.1);
+               }
+               else {
+                   Pic.scale(1, 1);
+               }
+           });
+           if (_Game._PencilsList.cells.length !== 0) {
+               for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
+                   const element = _Game._PencilsList.cells[index];
+                   if (!element.getComponent(_Game._PencilsListItem)) {
+                       element.addComponent(_Game._PencilsListItem);
+                   }
+               }
+           }
        }
        lwgOnEnable() {
        }
@@ -5448,23 +5438,22 @@
            EventAdmin._register(_Game._Event.showStepBtn, this, () => {
                if (_Game._stepIndex == 0) {
                    this.ImgVar('BtnNextStep').visible = true;
-                   Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                   Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300);
                }
                else {
                    if (!this.ImgVar('BtnNextStep').visible) {
                        this.ImgVar('BtnNextStep').visible = true;
-                       Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                       Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300);
                    }
                    if (!this.ImgVar('BtnLastStep').visible) {
                        this.ImgVar('BtnLastStep').visible = true;
-                       Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
+                       Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300);
                    }
                }
                this._drawingLenth.switch = false;
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
                if (_Game._stepIndex - 1 >= 0) {
-                   Admin._clickLock.switch = true;
                    let Img0 = this.ImgVar(_Game._stepOrder[_Game._stepIndex - 1]);
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
@@ -5487,7 +5476,7 @@
                            if (_Game._stepIndex == 0) {
                                this.ImgVar('BtnLastStep').visible = false;
                            }
-                           Admin._clickLock.switch = false;
+                           this['BtnLastStepClose'] = false;
                        });
                    });
                }
@@ -5498,7 +5487,6 @@
                    Animation2D.fadeOut(this.ImgVar(_Game._stepOrder[_Game._stepIndex]).getChildByName('Pic'), 1, 0, 300, 0);
                }
                else {
-                   Admin._clickLock.switch = true;
                    let Img = this.ImgVar(_Game._stepOrder[_Game._stepIndex]);
                    let parent = Img.parent;
                    if (parent != this.ImgVar('DrawRoot')) {
@@ -5521,7 +5509,7 @@
                            }
                            console.log(_Game._stepIndex, _Game._stepMaskIndex);
                            Img0.zOrder = _Game._stepIndex * 10;
-                           Admin._clickLock.switch = false;
+                           this['BtnNextStepClose'] = false;
                        });
                    });
                }
@@ -5545,19 +5533,20 @@
            for (let index = 0; index < _Game._stepOrder.length; index++) {
                let Img = this.ImgVar(_Game._stepOrder[index]);
                Click._on(Click._Type.noEffect, Img.getChildByName('Pic'), this, (e) => {
-                   this['frontPos'] = null;
+                   this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                    if (!Img.getChildByName('DrawSp')) {
                        let DrawSp = new Laya.Sprite();
                        Img.addChild(DrawSp);
                        DrawSp.name = 'DrawSp';
                        DrawSp.pos(0, 0);
+                       DrawSp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
                    }
-                   this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                }, (e) => {
                    let DrawSp = Img.getChildByName('DrawSp');
                    if (!DrawSp) {
                        return;
                    }
+                   console.log(this['frontPos'], index == _Game._stepIndex, _Game._drawSwitch);
                    if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
                        let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
@@ -5567,16 +5556,29 @@
                    }
                }, (e) => {
                    this['frontPos'] = null;
+                   let DrawSp = Img.getChildByName('DrawSp');
                });
            }
            Click._on(Click._Type.largen, this.btnVar('PlayAni'), this, null, null, () => {
                this.AniVar(_Game._Animation.action1).play(null, true);
            });
            Click._on(Click._Type.largen, this.btnVar('BtnLastStep'), this, null, null, () => {
+               if (this['BtnLastStepClose']) {
+                   return;
+               }
+               else {
+                   this['BtnLastStepClose'] = true;
+               }
                this._drawingLenth.switch = false;
                EventAdmin._notify(_Game._Event.lastStep);
            });
            Click._on(Click._Type.largen, this.btnVar('BtnNextStep'), this, null, null, () => {
+               if (this['BtnNextStepClose']) {
+                   return;
+               }
+               else {
+                   this['BtnNextStepClose'] = true;
+               }
                if (!this.ImgVar('BtnLastStep').visible) {
                    this.ImgVar('BtnLastStep').visible = true;
                    Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
@@ -6045,20 +6047,19 @@
    class UIStartItem extends Admin._Object {
    }
 
-   var _PreLoadSceneBefore;
-   (function (_PreLoadSceneBefore) {
-       let _Event;
-       (function (_Event) {
-           _Event["event1"] = "_PreLoadPageBefore_Event1";
-           _Event["event2"] = "_PreLoadPageBefore_Event2";
-       })(_Event = _PreLoadSceneBefore._Event || (_PreLoadSceneBefore._Event = {}));
-       _PreLoadSceneBefore._gameScene = {};
-   })(_PreLoadSceneBefore || (_PreLoadSceneBefore = {}));
+   var _PreLoadSceneBeforeUrl;
+   (function (_PreLoadSceneBeforeUrl) {
+       _PreLoadSceneBeforeUrl._gameScene = {};
+   })(_PreLoadSceneBeforeUrl || (_PreLoadSceneBeforeUrl = {}));
    class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {
-       lwgOnAwake() { }
-       ;
        lwgOnStart() {
-           EventAdmin._notify(_PreLoad._Event.importList, ([_PreLoadSceneBefore._gameScene]));
+           switch (Admin._preLoadOpenSceneLater.openSceneName) {
+               case _SceneName.GameScene:
+                   EventAdmin._notify(_PreLoad._Event.importList, ([_PreLoadSceneBeforeUrl._gameScene]));
+                   break;
+               default:
+                   break;
+           }
        }
    }
 
@@ -6114,7 +6115,7 @@
    GameConfig.startScene = "Scene/UIPreLoad.scene";
    GameConfig.sceneRoot = "";
    GameConfig.debug = false;
-   GameConfig.stat = false;
+   GameConfig.stat = true;
    GameConfig.physicsDebug = false;
    GameConfig.exportSceneToJson = true;
    GameConfig.init();
