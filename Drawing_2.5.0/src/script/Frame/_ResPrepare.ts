@@ -1,4 +1,4 @@
-import { Admin, EventAdmin, _ResPrepare } from "./lwg";
+import { Admin, EventAdmin, _ResPrepare } from "./Lwg";
 
 export default class UIResPrepare extends _ResPrepare._ResPrepareScene {
     lwgOnAwake(): void {

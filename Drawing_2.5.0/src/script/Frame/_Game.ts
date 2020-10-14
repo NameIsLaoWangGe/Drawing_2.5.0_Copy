@@ -1,4 +1,5 @@
-import { Admin, Animation2D, Click, EventAdmin, Tools, _PreLoad } from "./Lwg";
+import { Admin, Animation2D, Click, EventAdmin, Tools } from "./Lwg";
+import { _PreloadUrl } from "./_PreLoad";
 
 export module _Game {
     export enum _Event {
@@ -48,7 +49,7 @@ export module _Game {
             }
         },
         get data(): Array<any> {
-            return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0]));
+            return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor));
         },
         set data(array: Array<any>) {
             this['arr'] = array;
@@ -66,7 +67,7 @@ export module _Game {
         }
     }
     export function _init(): void {
-        _singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0])["RECORDS"]);
+        _singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor)["RECORDS"]);
         _singlePencils.setPitchByName(_singlePencils.data[0][_singlePencils.property.name]);
         _stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
         _passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];

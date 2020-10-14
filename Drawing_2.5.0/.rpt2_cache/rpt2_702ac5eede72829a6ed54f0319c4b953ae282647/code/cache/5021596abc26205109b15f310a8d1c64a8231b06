@@ -1,0 +1,6 @@
+{
+  "code": "import { EventAdmin, _PreLoad } from \"./Lwg\";\r\nexport var _PreLoadSceneBefore;\r\n(function (_PreLoadSceneBefore) {\r\n    let _Event;\r\n    (function (_Event) {\r\n        _Event[\"event1\"] = \"_PreLoadPageBefore_Event1\";\r\n        _Event[\"event2\"] = \"_PreLoadPageBefore_Event2\";\r\n    })(_Event = _PreLoadSceneBefore._Event || (_PreLoadSceneBefore._Event = {}));\r\n    _PreLoadSceneBefore._gameScene = {};\r\n})(_PreLoadSceneBefore || (_PreLoadSceneBefore = {}));\r\nexport default class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {\r\n    lwgOnAwake() { }\r\n    ;\r\n    lwgOnStart() {\r\n        EventAdmin._notify(_PreLoad._Event.importList, ([_PreLoadSceneBefore._gameScene]));\r\n    }\r\n}\r\n",
+  "references": [
+    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/Lwg.ts"
+  ]
+}

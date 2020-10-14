@@ -1,6 +1,0 @@
-{
-  "code": "import { Admin, _PreLoad, _SceneName } from \"./Lwg\";\r\nexport var _PreLoadSceneBefore;\r\n(function (_PreLoadSceneBefore) {\r\n    class _url {\r\n        constructor() {\r\n            this.url = 30;\r\n        }\r\n        static getInstance() {\r\n            if (!this.instance) {\r\n                this.instance = new _url();\r\n            }\r\n            return this.instance;\r\n        }\r\n    }\r\n    _PreLoadSceneBefore._url = _url;\r\n})(_PreLoadSceneBefore || (_PreLoadSceneBefore = {}));\r\nexport default class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {\r\n    lwgOnAwake() {\r\n        console.log(_PreLoadSceneBefore._url.getInstance().url);\r\n        console.log(_PreLoadSceneBefore._url.getInstance().url = 50);\r\n        console.log(_PreLoadSceneBefore._url.getInstance().url);\r\n        switch (Admin._preLoadOpenSceneLater.openSceneName) {\r\n            case _SceneName.GameScene:\r\n                _PreLoad.list_3DPrefab = [];\r\n                break;\r\n            case _SceneName.UIDefeated:\r\n                break;\r\n            default:\r\n                break;\r\n        }\r\n    }\r\n}\r\n",
-  "references": [
-    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/Lwg.ts"
-  ]
-}

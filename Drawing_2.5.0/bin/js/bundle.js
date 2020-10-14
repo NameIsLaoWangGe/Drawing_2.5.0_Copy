@@ -4820,19 +4820,33 @@
        })(Backpack = lwg.Backpack || (lwg.Backpack = {}));
        let _PreLoad;
        (function (_PreLoad) {
-           _PreLoad.list_3DScene = [];
-           _PreLoad.list_3DPrefab = [];
-           _PreLoad.list_3DMesh = [];
-           _PreLoad.list_Material = [];
-           _PreLoad.list_Texture2D = [];
-           _PreLoad.list_2DPic = [];
-           _PreLoad.list_2DScene = [];
-           _PreLoad.list_2DPrefab = [];
-           _PreLoad.list_JsonData = [];
+           _PreLoad._scene3D = [];
+           _PreLoad._prefab3D = [];
+           _PreLoad._mesh3D = [];
+           _PreLoad._material = [];
+           _PreLoad._texture2D = [];
+           _PreLoad._pic2D = [];
+           _PreLoad._scene2D = [];
+           _PreLoad._prefab2D = [];
+           _PreLoad._json = [];
+           _PreLoad._skeleton = [];
            _PreLoad._sumProgress = 0;
            _PreLoad._loadOrder = [];
            _PreLoad._loadOrderIndex = 0;
            _PreLoad._whereToLoad = Admin._SceneName.UIPreLoad;
+           let _ListName;
+           (function (_ListName) {
+               _ListName["scene3D"] = "scene3D";
+               _ListName["prefab3D"] = "prefab3D";
+               _ListName["mesh3D"] = "mesh3D";
+               _ListName["material"] = "material";
+               _ListName["texture2D"] = "texture2D";
+               _ListName["pic2D"] = "pic2D";
+               _ListName["scene2D"] = "scene2D";
+               _ListName["prefab2D"] = "prefab2D";
+               _ListName["json"] = "json";
+               _ListName["skeleton"] = "skeleton";
+           })(_ListName = _PreLoad._ListName || (_PreLoad._ListName = {}));
            _PreLoad._currentProgress = {
                get value() {
                    return this['len'] ? this['len'] : 0;
@@ -4856,28 +4870,30 @@
                        if (this['len'] == number) {
                            _PreLoad._loadOrderIndex++;
                        }
-                       EventAdmin._notify(_PreLoad._Event.loding);
+                       EventAdmin._notify(_PreLoad._Event.startLoding);
                    }
                },
            };
            let _Event;
            (function (_Event) {
-               _Event["complete"] = "complete";
-               _Event["loding"] = "loding";
-               _Event["progress"] = "progress";
+               _Event["importList"] = "_PreLoad_importList";
+               _Event["complete"] = "_PreLoad_complete";
+               _Event["startLoding"] = "_PreLoad_startLoding";
+               _Event["progress"] = "_PreLoad_progress";
            })(_Event = _PreLoad._Event || (_PreLoad._Event = {}));
            function _remakeLode() {
-               _PreLoad.list_3DScene = [];
-               _PreLoad.list_3DPrefab = [];
-               _PreLoad.list_3DMesh = [];
-               _PreLoad.list_Material = [];
-               _PreLoad.list_Texture2D = [];
-               _PreLoad.list_2DPic = [];
-               _PreLoad.list_2DScene = [];
-               _PreLoad.list_2DPrefab = [];
-               _PreLoad.list_JsonData = [];
-               _PreLoad._sumProgress = 0;
+               _PreLoad._scene3D = [];
+               _PreLoad._prefab3D = [];
+               _PreLoad._mesh3D = [];
+               _PreLoad._material = [];
+               _PreLoad._texture2D = [];
+               _PreLoad._pic2D = [];
+               _PreLoad._scene2D = [];
+               _PreLoad._prefab2D = [];
+               _PreLoad._json = [];
+               _PreLoad._skeleton = [];
                _PreLoad._loadOrder = [];
+               _PreLoad._sumProgress = 0;
                _PreLoad._loadOrderIndex = 0;
                _PreLoad._currentProgress.value = 0;
            }
@@ -4887,9 +4903,69 @@
                    _PreLoad._remakeLode();
                }
                moduleEventRegister() {
-                   EventAdmin._register(_Event.loding, this, () => { this.lodingRule(); });
+                   EventAdmin._register(_Event.importList, this, (listObj) => {
+                       for (const key in listObj) {
+                           if (Object.prototype.hasOwnProperty.call(listObj, key)) {
+                               for (const key1 in listObj[key]) {
+                                   if (Object.prototype.hasOwnProperty.call(listObj[key], key1)) {
+                                       const element = listObj[key][key1];
+                                       switch (key) {
+                                           case _ListName.json:
+                                               _PreLoad._json.push(element);
+                                               break;
+                                           case _ListName.material:
+                                               _PreLoad._material.push(element);
+                                               break;
+                                           case _ListName.mesh3D:
+                                               _PreLoad._mesh3D.push(element);
+                                               break;
+                                           case _ListName.pic2D:
+                                               _PreLoad._pic2D.push(element);
+                                               break;
+                                           case _ListName.prefab2D:
+                                               _PreLoad._prefab2D.push(element);
+                                               break;
+                                           case _ListName.prefab3D:
+                                               _PreLoad._prefab3D.push(element);
+                                               break;
+                                           case _ListName.scene2D:
+                                               _PreLoad._scene2D.push(element);
+                                               break;
+                                           case _ListName.scene3D:
+                                               _PreLoad._scene3D.push(element);
+                                               break;
+                                           case _ListName.texture2D:
+                                               _PreLoad._texture2D.push(element);
+                                               break;
+                                           case _ListName.skeleton:
+                                               _PreLoad._skeleton.push(element);
+                                               break;
+                                           default:
+                                               break;
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                       _PreLoad._loadOrder = [_PreLoad._pic2D, _PreLoad._scene2D, _PreLoad._prefab2D, _PreLoad._scene3D, _PreLoad._prefab3D, _PreLoad._json, _PreLoad._texture2D, _PreLoad._mesh3D, _PreLoad._material, _PreLoad._skeleton];
+                       for (let index = 0; index < _PreLoad._loadOrder.length; index++) {
+                           _PreLoad._sumProgress += _PreLoad._loadOrder[index].length;
+                           if (_PreLoad._loadOrder[index].length <= 0) {
+                               _PreLoad._loadOrder.splice(index, 1);
+                               index--;
+                           }
+                       }
+                       let time = this.lwgOpenAni();
+                       if (time == null) {
+                           time = 0;
+                       }
+                       Laya.timer.once(time, this, () => {
+                           EventAdmin._notify(_PreLoad._Event.startLoding);
+                       });
+                   });
+                   EventAdmin._register(_Event.startLoding, this, () => { this.startLodingRule(); });
                    EventAdmin._register(_Event.complete, this, () => {
-                       let time = this.lodingComplete();
+                       let time = this.lwgAllComplete();
                        Laya.timer.once(time, this, () => { });
                        this.self.name = _PreLoad._whereToLoad;
                        Admin._sceneControl[_PreLoad._whereToLoad] = this.self;
@@ -4913,31 +4989,14 @@
                        _PreLoad._currentProgress.value++;
                        if (_PreLoad._currentProgress.value < _PreLoad._sumProgress) {
                            console.log('当前进度条进度为:', _PreLoad._currentProgress.value / _PreLoad._sumProgress);
-                           this.lodingPhaseComplete();
+                           this.lwgStepComplete();
                        }
                    });
                }
                moduleOnEnable() {
-                   _PreLoad._loadOrder = [_PreLoad.list_2DPic, _PreLoad.list_2DScene, _PreLoad.list_2DPrefab, _PreLoad.list_3DScene, _PreLoad.list_3DPrefab, _PreLoad.list_JsonData];
-                   for (let index = 0; index < _PreLoad._loadOrder.length; index++) {
-                       _PreLoad._sumProgress += _PreLoad._loadOrder[index].length;
-                       if (_PreLoad._loadOrder[index].length <= 0) {
-                           _PreLoad._loadOrder.splice(index, 1);
-                           index--;
-                       }
-                   }
                    _PreLoad._loadOrderIndex = 0;
                }
-               moduleOnStart() {
-                   let time = this.lwgOpenAni();
-                   if (time == null) {
-                       time = 0;
-                   }
-                   Laya.timer.once(time, this, () => {
-                       EventAdmin._notify(_PreLoad._Event.loding);
-                   });
-               }
-               lodingRule() {
+               startLodingRule() {
                    if (_PreLoad._loadOrder.length <= 0) {
                        console.log('没有加载项');
                        EventAdmin._notify(_PreLoad._Event.complete);
@@ -4949,111 +5008,122 @@
                    }
                    let index = _PreLoad._currentProgress.value - alreadyPro;
                    switch (_PreLoad._loadOrder[_PreLoad._loadOrderIndex]) {
-                       case _PreLoad.list_2DPic:
-                           Laya.loader.load(_PreLoad.list_2DPic[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._pic2D:
+                           Laya.loader.load(_PreLoad._pic2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX2D资源' + _PreLoad.list_2DPic[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX2D资源' + _PreLoad._pic2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D图片' + _PreLoad.list_2DPic[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D图片' + _PreLoad._pic2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_2DScene:
-                           Laya.loader.load(_PreLoad.list_2DScene[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._scene2D:
+                           Laya.loader.load(_PreLoad._scene2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_2DScene[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._scene2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D场景' + _PreLoad.list_2DScene[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D场景' + _PreLoad._scene2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }), null, Laya.Loader.JSON);
                            break;
-                       case _PreLoad.list_2DPrefab:
-                           Laya.loader.load(_PreLoad.list_2DPrefab[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._prefab2D:
+                           Laya.loader.load(_PreLoad._prefab2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_2DPrefab[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D预制体' + _PreLoad.list_2DPrefab[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D预制体' + _PreLoad._prefab2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }), null, Laya.Loader.JSON);
                            break;
-                       case _PreLoad.list_3DScene:
-                           Laya.Scene3D.load(_PreLoad.list_3DScene[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._scene3D:
+                           Laya.Scene3D.load(_PreLoad._scene3D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad.list_3DScene[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad._scene3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D场景' + _PreLoad.list_3DScene[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('3D场景' + _PreLoad._scene3D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_3DPrefab:
-                           Laya.Sprite3D.load(_PreLoad.list_3DPrefab[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._prefab3D:
+                           Laya.Sprite3D.load(_PreLoad._prefab3D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad.list_3DPrefab[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad._prefab3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D预制体' + _PreLoad.list_3DPrefab[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('3D预制体' + _PreLoad._prefab3D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_3DMesh:
-                           Laya.Mesh.load(_PreLoad.list_3DMesh[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._mesh3D:
+                           Laya.Mesh.load(_PreLoad._mesh3D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad.list_3DMesh[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad._mesh3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D网格' + _PreLoad.list_3DMesh[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('3D网格' + _PreLoad._mesh3D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_Texture2D:
-                           Laya.Texture2D.load(_PreLoad.list_Texture2D[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._texture2D:
+                           Laya.Texture2D.load(_PreLoad._texture2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad.list_Texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad._texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D纹理' + _PreLoad.list_Texture2D[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D纹理' + _PreLoad._texture2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_Material:
-                           Laya.Material.load(_PreLoad.list_Material[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._material:
+                           Laya.Material.load(_PreLoad._material[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX材质' + _PreLoad.list_Material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX材质' + _PreLoad._material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('材质' + _PreLoad.list_Material[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('材质' + _PreLoad._material[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_JsonData:
-                           Laya.loader.load(_PreLoad.list_JsonData[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._json:
+                           Laya.loader.load(_PreLoad._json[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_JsonData[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._json[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('数据表' + _PreLoad.list_JsonData[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('数据表' + _PreLoad._json[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }), null, Laya.Loader.JSON);
+                           break;
+                       case _PreLoad._skeleton:
+                           _PreLoad._skeleton[index]['templet'].on(Laya.Event.ERROR, this, () => {
+                               console.log('XXXXXXXXXXX骨骼动画' + _PreLoad._skeleton[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               EventAdmin._notify(_Event.progress);
+                           });
+                           _PreLoad._skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
+                               console.log('骨骼动画', _PreLoad._skeleton[index]['templet'], '加载完成！', '数组下标为：', index);
+                               EventAdmin._notify(_Event.progress);
+                           });
+                           _PreLoad._skeleton[index]['templet'].loadAni(_PreLoad._skeleton[index]['url']);
                            break;
                        default:
                            break;
                    }
                }
-               lodingPhaseComplete() { }
-               lodingComplete() { return 0; }
+               lwgStepComplete() { }
+               lwgAllComplete() { return 0; }
                ;
            }
            _PreLoad._PreLoadScene = _PreLoadScene;
@@ -5191,32 +5261,34 @@
    let Backpack = lwg.Backpack;
    let BackpackScene = lwg.Backpack.BackpackScene;
 
+   var _PreloadUrl;
+   (function (_PreloadUrl) {
+       _PreloadUrl.list = {
+           scene2D: {
+               UIStart: "Scene/" + _SceneName.UIStart + '.json',
+               GameScene: "Scene/" + _SceneName.GameScene + '.json',
+               UIPreLoad: "Scene/" + _SceneName.UIPreLoad + '.json',
+           },
+           json: {
+               SingleColor: "_LwgData" + "/_Game/SingleColor" + ".json",
+               Colours: "_LwgData" + "/_Game/Colours" + ".json",
+           },
+           skeleton: {
+               aisha: {
+                   templet: new Laya.Templet(),
+                   url: 'Game/Skeleton/aisha.sk',
+               },
+           }
+       };
+   })(_PreloadUrl || (_PreloadUrl = {}));
    class UIPreLoad extends _PreLoad._PreLoadScene {
-       lwgOnAwake() {
-           _PreLoad.list_2DPic = [];
-           _PreLoad.list_2DScene = [
-               "Scene/" + _SceneName.UIStart + '.json',
-               "Scene/" + _SceneName.GameScene + '.json',
-               "Scene/" + _SceneName.UIPreLoad + '.json',
-           ];
-           _PreLoad.list_2DPrefab = [];
-           _PreLoad.list_3DScene = [];
-           _PreLoad.list_3DPrefab = [];
-           _PreLoad.list_JsonData = [
-               "_LwgData" + "/_Game/SingleColor" + ".json",
-               "_LwgData" + "/_Game/Colours" + ".json",
-           ];
-       }
-       lwgAdaptive() {
-       }
-       lwgOnEnable() {
-       }
        lwgOnStart() {
+           EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl.list]));
        }
        lwgOpenAni() { return 0; }
-       lodingPhaseComplete() {
+       lwgStepComplete() {
        }
-       lodingComplete() {
+       lwgAllComplete() {
            return 200;
        }
    }
@@ -5268,7 +5340,7 @@
                }
            },
            get data() {
-               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0]));
+               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor));
            },
            set data(array) {
                this['arr'] = array;
@@ -5287,7 +5359,7 @@
            }
        };
        function _init() {
-           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0])["RECORDS"]);
+           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl.list.json.SingleColor)["RECORDS"]);
            _Game._singlePencils.setPitchByName(_Game._singlePencils.data[0][_Game._singlePencils.property.name]);
            _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
            _Game._passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
@@ -5975,33 +6047,18 @@
 
    var _PreLoadSceneBefore;
    (function (_PreLoadSceneBefore) {
-       class _url {
-           constructor() {
-               this.url = 30;
-           }
-           static getInstance() {
-               if (!this.instance) {
-                   this.instance = new _url();
-               }
-               return this.instance;
-           }
-       }
-       _PreLoadSceneBefore._url = _url;
+       let _Event;
+       (function (_Event) {
+           _Event["event1"] = "_PreLoadPageBefore_Event1";
+           _Event["event2"] = "_PreLoadPageBefore_Event2";
+       })(_Event = _PreLoadSceneBefore._Event || (_PreLoadSceneBefore._Event = {}));
+       _PreLoadSceneBefore._gameScene = {};
    })(_PreLoadSceneBefore || (_PreLoadSceneBefore = {}));
    class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {
-       lwgOnAwake() {
-           console.log(_PreLoadSceneBefore._url.getInstance().url);
-           console.log(_PreLoadSceneBefore._url.getInstance().url = 50);
-           console.log(_PreLoadSceneBefore._url.getInstance().url);
-           switch (Admin._preLoadOpenSceneLater.openSceneName) {
-               case _SceneName.GameScene:
-                   _PreLoad.list_3DPrefab = [];
-                   break;
-               case _SceneName.UIDefeated:
-                   break;
-               default:
-                   break;
-           }
+       lwgOnAwake() { }
+       ;
+       lwgOnStart() {
+           EventAdmin._notify(_PreLoad._Event.importList, ([_PreLoadSceneBefore._gameScene]));
        }
    }
 

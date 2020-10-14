@@ -1,0 +1,6 @@
+{
+  "code": "import { EventAdmin, _PreLoad, _SceneName } from \"./Lwg\";\r\nexport var _PreloadUrl;\r\n(function (_PreloadUrl) {\r\n    _PreloadUrl.list = {\r\n        scene2D: {\r\n            UIStart: \"Scene/\" + _SceneName.UIStart + '.json',\r\n            GameScene: \"Scene/\" + _SceneName.GameScene + '.json',\r\n            UIPreLoad: \"Scene/\" + _SceneName.UIPreLoad + '.json',\r\n        },\r\n        json: {\r\n            SingleColor: \"_LwgData\" + \"/_Game/SingleColor\" + \".json\",\r\n            Colours: \"_LwgData\" + \"/_Game/Colours\" + \".json\",\r\n        },\r\n        skeleton: {\r\n            aisha: {\r\n                templet: new Laya.Templet(),\r\n                url: 'Game/Skeleton/aisha.sk',\r\n            },\r\n        }\r\n    };\r\n})(_PreloadUrl || (_PreloadUrl = {}));\r\nexport default class UIPreLoad extends _PreLoad._PreLoadScene {\r\n    lwgOnStart() {\r\n        EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl.list]));\r\n    }\r\n    lwgOpenAni() { return 0; }\r\n    lwgStepComplete() {\r\n    }\r\n    lwgAllComplete() {\r\n        return 200;\r\n    }\r\n}\r\n",
+  "references": [
+    "D:/Game/project/Drawing/Project_2.5.0/Drawing_2.5.0/src/script/Frame/Lwg.ts"
+  ]
+}
