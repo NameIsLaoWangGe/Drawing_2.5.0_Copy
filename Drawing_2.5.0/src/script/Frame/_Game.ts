@@ -16,6 +16,11 @@ export module _Game {
         action1 = 'action1',
         action2 = 'action2',
     }
+    /**笔刷名称*/
+    export enum _Brush {
+        chalk = 'chalk',
+        pencil = 'pencil',
+    }
     export let _stepOrder: Array<string> = [];
     export let _passLenghtArr: Array<number> = [];
     export let _stepIndex = 0;
@@ -246,48 +251,68 @@ export default class GameScene extends Admin._Scene {
             Admin._openScene(Admin._SceneName.UIStart, this.calssName);
         });
         for (let index = 0; index < _Game._stepOrder.length; index++) {
-            let Img = this.ImgVar(_Game._stepOrder[index]);
-            // Img.cacheAs = "bitmap";
-            Click._on(Click._Type.noEffect, Img.getChildByName('Pic'), this,
+            let DrawRoot = this.ImgVar(_Game._stepOrder[index]);
+            var createBoard = (): Laya.Sprite => {
+                let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+                Board.cacheAs = "bitmap";
+                Board.name = 'Board';
+                Board.width = DrawRoot.width;
+                Board.height = DrawRoot.height;
+                return Board;
+            }
+            createBoard();
+            Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this,
                 // 按下
                 (e: Laya.Event) => {
                     // 初始化一个绘制节点
-                    this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                    if (!Img.getChildByName('DrawSp')) {
-                        let DrawSp = new Laya.Sprite();
-                        Img.addChild(DrawSp);
-                        DrawSp.name = 'DrawSp';
-                        DrawSp.pos(0, 0);
-                        DrawSp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
+                    let Sp: Laya.Sprite;
+                    let Board = DrawRoot.getChildByName('Board') as Laya.Sprite;
+                    this['frontPos'] = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                    if (_Game._singlePencils.pitchName.value == 'eraser') {
+                        Sp = this['EraserSp'] = new Laya.Sprite();
+                        this['EraserSp'].blendMode = "destination-out";
+                    } else {
+                        Sp = this['DrawSp'] = new Laya.Sprite();
+                        this['DrawSp'].blendMode = "none";
                     }
-                    // 初始位置
-
+                    Board.addChild(Sp)['pos'](0, 0);
+                    Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
                 },
                 // 移动
                 (e: Laya.Event) => {
-                    let DrawSp = Img.getChildByName('DrawSp') as Laya.Sprite;
-                    if (!DrawSp) {
-                        return;
-                    }
-                    // 画线
+                    let Board = DrawRoot.getChildByName('Board') as Laya.Sprite;
+                    let endPos = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
-                        let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                        // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
-                        // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                        if (_Game._singlePencils.pitchColor.value == '-1') {
-                            DrawSp.blendMode = "destination-out";
+                        if (_Game._singlePencils.pitchName.value == 'eraser') {
+                            if (this['EraserSp']) {
+                                this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', 50);
+                                this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                                // this._drawingLenth.value -= (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
+                            }
                         } else {
-                            DrawSp.blendMode = "";
-                            DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
-                            DrawSp.graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                            if (this['DrawSp']) {
+                                // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
+                                // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
+                                this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
+                                this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                                this._drawingLenth.value += (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
+                            }
                         }
-                        this._drawingLenth.value += (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
                         this['frontPos'] = new Laya.Point(endPos.x, endPos.y);
                     }
                 },
                 (e: Laya.Event) => {
                     this['frontPos'] = null;
-                    let DrawSp = Img.getChildByName('DrawSp') as Laya.Sprite;
+                    let Board = DrawRoot.getChildByName('Board') as Laya.Sprite;
+                    if (Board && Board.numChildren > 3) {
+                        let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+                        NewBoard.cacheAs = "bitmap";
+                        NewBoard.name = 'Board';
+                        NewBoard.width = DrawRoot.width;
+                        NewBoard.height = DrawRoot.height;
+                        NewBoard.texture = Board.drawToTexture(Board.width, Board.height, Board.x, Board.y) as Laya.Texture;
+                        Board.destroy();
+                    }
                 }
             );
         }
