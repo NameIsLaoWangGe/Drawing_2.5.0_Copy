@@ -6,6 +6,12 @@ export module _Example {
 
     /**数据表和其中的数据增删改查*/
     export let _data = {
+        /**数据表中属性列举*/
+        property: {
+            name: 'name',
+            index: 'index',
+            color: 'color',
+        },
         /**对表格整体取值*/
         get array(): Array<any> {
             return this['data'] ? this['data'] : [];
@@ -53,6 +59,28 @@ export module _Example {
             this['val'] = v;
         },
     }
+    /**类模式，用于可继承时，或者多列时，例如商店中的商品种类*/
+    export class _Classify1 {
+        static _property = {
+            index: 'index',
+            name: 'name',
+            color: 'color',
+        };
+        static _init(): void {
+        }
+        /**当前选中画笔*/
+        static _pitchName: string = '';
+        /**当前选中画笔的颜色*/
+        static _pitchColor: string = '';
+        static _data: Array<any> = [];
+        /**设置选中*/
+        static _setPitchByName(name: string): void {
+        }
+    }
+    export class _Classify2 extends _Classify1 {
+        static _init(): void {
+        }
+    }
 
     /**本地存储变量格式*/
     export let variable = {
@@ -76,7 +104,6 @@ export module _Example {
                 } else {
                     return [];
                 }
-
             } catch (error) {
                 return [];
             }
@@ -115,10 +142,6 @@ export module _Example {
         }
         moduleOnStart(): void {
         }
-    }
-    /**其他类*/
-    export class Singleton {
-
     }
 
 }

@@ -10,6 +10,7 @@ export module _Game {
         compelet = '_Game_compelet',
         playAni1 = '_Game_playAni1',
         playAni2 = '_Game_playAni2',
+        restoreZoder = '_Game_restoreZoder',
     }
     /**动画名称*/
     export enum _Animation {
@@ -22,9 +23,9 @@ export module _Game {
         pencil = 'pencil',
     }
     /**需要绘画的名称顺序*/
-    export let _stepOrder: Array<Laya.Image> = [];
+    export let _stepOrderImg: Array<Laya.Image> = [];
     /**每个阶段需要过关的绘画长度*/
-    export let _passLenghtArr: Array<number> = [];
+    export let _passLenght: number = 100;
     /**当前正在哪一步绘画*/
     export let _stepIndex: number = 0;
     /**当前最高绘制到哪一步*/
@@ -37,6 +38,13 @@ export module _Game {
             SingleColor: 'SingleColor',
             Colours: 'Colours',
             Stars: 'Stars',
+        },
+        /**当前使用*/
+        get presentUse(): string {
+            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : null;
+        },
+        set presentUse(name: string) {
+            Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
         },
         allPencils: ['Colours', 'SingleColor', 'Stars'],
         get have(): Array<string> {
@@ -63,10 +71,10 @@ export module _Game {
             Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(arr));
         }
     }
-    /**彩色画笔套装*/
+    /**单色画笔套装*/
     export class _SingleColorPencils {
         static _property = {
-            number: 'number',
+            index: 'index',
             name: 'name',
             color: 'color',
             pitch: 'pitch',
@@ -79,6 +87,7 @@ export module _Game {
         static _pitchName: string = '';
         /**当前选中画笔的颜色*/
         static _pitchColor: string = '';
+        /**数据表*/
         static _data: Array<any> = [];
         /**设置选中*/
         static _setPitchByName(name: string): void {
@@ -111,9 +120,7 @@ export module _Game {
         _SingleColorPencils._init();
         _StarsPencils._init();
         _ColoursPencils._init();
-        _passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
     }
-
     /**画笔列表*/
     export let _PencilsList: Laya.List;
     /**画笔脚本*/
@@ -136,15 +143,15 @@ export default class GameScene extends Admin._Scene {
         set value(v: number) {
             if (this.switch) {
                 this['len'] = v;
-                if (this['len'] >= _Game._passLenghtArr[_Game._stepIndex]) {
+                if (this['len'] >= _Game._passLenght) {
                     EventAdmin._notify(_Game._Event.showStepBtn);
                     this['len'] = 0;
                 }
             }
         },
     }
-
     lwgOnAwake(): void {
+        _Game._passLenght = 100;
         _Game._stepIndex = 0;
         _Game._drawSwitch = false;
         _Game._stepIndex = 0;
@@ -175,13 +182,13 @@ export default class GameScene extends Admin._Scene {
                 }
             }
         }
-        _Game._stepOrder = [];
+        _Game._stepOrderImg = [];
         let index = 1;
         while (this.self['Draw' + index]) {
-            _Game._stepOrder.push(this.self['Draw' + index]);
+            _Game._stepOrderImg.push(this.self['Draw' + index]);
             index++;
         }
-        console.log(_Game._stepOrder);
+        console.log(_Game._stepOrderImg);
     }
     /**阶段切换按钮*/
     StepSwitch: Laya.Image;
@@ -193,7 +200,7 @@ export default class GameScene extends Admin._Scene {
     BtnBack: Laya.Image;
     lwgOnEnable(): void {
         this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
-        this.self.addChild(this.StepSwitch)
+        this.self.addChild(this.StepSwitch);
         this.StepSwitch.pos(194.5, 837.5);
         this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
         this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
@@ -208,7 +215,7 @@ export default class GameScene extends Admin._Scene {
         this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab) as Laya.Image;
         this.self.addChild(this.BtnBack);
         this.BtnBack.visible = false;
-        this.BtnPlayAni.pos(361, 1098);
+        this.BtnBack.pos(361, 1098);
 
         // this.ImgVar('DrawRoot').pivotX = this.ImgVar('DrawRoot').width / 2;
         // this.ImgVar('DrawRoot').pivotY = this.ImgVar('DrawRoot').height / 2;
@@ -216,11 +223,11 @@ export default class GameScene extends Admin._Scene {
     lwgEventRegister(): void {
         EventAdmin._register(_Game._Event.start, this, () => {
             _Game._drawSwitch = true;
-            for (let index = 0; index < _Game._stepOrder.length; index++) {
+            for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                 if (_Game._stepIndex >= index) {
-                    _Game._stepOrder[index].visible = true;
+                    _Game._stepOrderImg[index].visible = true;
                 } else {
-                    _Game._stepOrder[index].visible = false;
+                    _Game._stepOrderImg[index].visible = false;
                 }
             }
         });
@@ -244,7 +251,7 @@ export default class GameScene extends Admin._Scene {
 
         EventAdmin._register(_Game._Event.lastStep, this, () => {
             if (_Game._stepIndex - 1 >= 0) {
-                let Img0 = _Game._stepOrder[_Game._stepIndex - 1];
+                let Img0 = _Game._stepOrderImg[_Game._stepIndex - 1];
                 let parent0 = Img0.parent as Laya.Image;
                 Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                     if (parent0 != this.ImgVar('DrawRoot')) {
@@ -252,7 +259,7 @@ export default class GameScene extends Admin._Scene {
                     }
                     Img0.zOrder = (_Game._stepIndex + 1) * 10;
 
-                    let Img = _Game._stepOrder[_Game._stepIndex];
+                    let Img = _Game._stepOrderImg[_Game._stepIndex];
                     let parent = Img.parent as Laya.Image;
                     Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                         if (parent != this.ImgVar('DrawRoot')) {
@@ -273,18 +280,18 @@ export default class GameScene extends Admin._Scene {
         })
 
         EventAdmin._register(_Game._Event.nextStep, this, () => {
-            if (_Game._stepIndex >= _Game._stepOrder.length - 1) {
+            if (_Game._stepIndex >= _Game._stepOrderImg.length - 1) {
                 EventAdmin._notify(_Game._Event.compelet);
-                Animation2D.fadeOut(_Game._stepOrder[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
+                Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
             } else {
-                let Img = _Game._stepOrder[_Game._stepIndex];
+                let Img = _Game._stepOrderImg[_Game._stepIndex];
                 let parent = Img.parent as Laya.Image;
                 if (parent != this.ImgVar('DrawRoot')) {
                     parent.zOrder = -1;
                 }
                 Img.zOrder = -1;
                 Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                    let Img0 = _Game._stepOrder[_Game._stepIndex + 1];
+                    let Img0 = _Game._stepOrderImg[_Game._stepIndex + 1];
                     Img0.visible = true;
                     Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                         let parent0 = Img0.parent as Laya.Image;
@@ -305,7 +312,17 @@ export default class GameScene extends Admin._Scene {
             }
         })
 
+        EventAdmin._register(_Game._Event.restoreZoder, this, () => {
+            for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+                const element = _Game._stepOrderImg[index] as Laya.Image;
+                if (element) {
+                    element.zOrder = 0;
+                }
+            }
+        });
+
         EventAdmin._register(_Game._Event.compelet, this, () => {
+            EventAdmin._notify(_Game._Event.restoreZoder);
             _Game._drawSwitch = false;
             // Animation2D.move_Scale(this.ImgVar('DrawRoot'), 1, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y - 200, 0.7, 500, null, null, () => {
             this.BtnNextStep.visible = false;
@@ -320,11 +337,9 @@ export default class GameScene extends Admin._Scene {
         EventAdmin._notify(_Game._Event.start);
     }
     lwgBtnClick(): void {
-        Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
-            Admin._openScene(Admin._SceneName.UIStart, this.calssName);
-        });
-        for (let index = 0; index < _Game._stepOrder.length; index++) {
-            let DrawRoot = _Game._stepOrder[index];
+
+        for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+            let DrawRoot = _Game._stepOrderImg[index];
             let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
             Board.cacheAs = "bitmap";
             Board.name = 'Board';
@@ -411,6 +426,10 @@ export default class GameScene extends Admin._Scene {
                 Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
             }
             EventAdmin._notify(_Game._Event.nextStep);
+        });
+        Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
+            Admin._game.level++;
+            Admin._openScene(Admin._SceneName.UIStart, this.calssName);
         });
     }
 }

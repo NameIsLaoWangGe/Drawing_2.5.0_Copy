@@ -5335,6 +5335,7 @@
            _Event["compelet"] = "_Game_compelet";
            _Event["playAni1"] = "_Game_playAni1";
            _Event["playAni2"] = "_Game_playAni2";
+           _Event["restoreZoder"] = "_Game_restoreZoder";
        })(_Event = _Game._Event || (_Game._Event = {}));
        let _Animation;
        (function (_Animation) {
@@ -5346,8 +5347,8 @@
            _Brush["chalk"] = "chalk";
            _Brush["pencil"] = "pencil";
        })(_Brush = _Game._Brush || (_Game._Brush = {}));
-       _Game._stepOrder = [];
-       _Game._passLenghtArr = [];
+       _Game._stepOrderImg = [];
+       _Game._passLenght = 100;
        _Game._stepIndex = 0;
        _Game._stepMaskIndex = 0;
        _Game._drawSwitch = false;
@@ -5356,6 +5357,12 @@
                SingleColor: 'SingleColor',
                Colours: 'Colours',
                Stars: 'Stars',
+           },
+           get presentUse() {
+               return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : null;
+           },
+           set presentUse(name) {
+               Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
            },
            allPencils: ['Colours', 'SingleColor', 'Stars'],
            get have() {
@@ -5404,7 +5411,7 @@
            }
        }
        _SingleColorPencils._property = {
-           number: 'number',
+           index: 'index',
            name: 'name',
            color: 'color',
            pitch: 'pitch',
@@ -5433,7 +5440,6 @@
            _SingleColorPencils._init();
            _StarsPencils._init();
            _ColoursPencils._init();
-           _Game._passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
        }
        _Game._init = _init;
        class _PencilsListItem extends Admin._Object {
@@ -5457,7 +5463,7 @@
                set value(v) {
                    if (this.switch) {
                        this['len'] = v;
-                       if (this['len'] >= _Game._passLenghtArr[_Game._stepIndex]) {
+                       if (this['len'] >= _Game._passLenght) {
                            EventAdmin._notify(_Game._Event.showStepBtn);
                            this['len'] = 0;
                        }
@@ -5466,6 +5472,7 @@
            };
        }
        lwgOnAwake() {
+           _Game._passLenght = 100;
            _Game._stepIndex = 0;
            _Game._drawSwitch = false;
            _Game._stepIndex = 0;
@@ -5495,13 +5502,13 @@
                    }
                }
            }
-           _Game._stepOrder = [];
+           _Game._stepOrderImg = [];
            let index = 1;
            while (this.self['Draw' + index]) {
-               _Game._stepOrder.push(this.self['Draw' + index]);
+               _Game._stepOrderImg.push(this.self['Draw' + index]);
                index++;
            }
-           console.log(_Game._stepOrder);
+           console.log(_Game._stepOrderImg);
        }
        lwgOnEnable() {
            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
@@ -5518,17 +5525,17 @@
            this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
            this.self.addChild(this.BtnBack);
            this.BtnBack.visible = false;
-           this.BtnPlayAni.pos(361, 1098);
+           this.BtnBack.pos(361, 1098);
        }
        lwgEventRegister() {
            EventAdmin._register(_Game._Event.start, this, () => {
                _Game._drawSwitch = true;
-               for (let index = 0; index < _Game._stepOrder.length; index++) {
+               for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                    if (_Game._stepIndex >= index) {
-                       _Game._stepOrder[index].visible = true;
+                       _Game._stepOrderImg[index].visible = true;
                    }
                    else {
-                       _Game._stepOrder[index].visible = false;
+                       _Game._stepOrderImg[index].visible = false;
                    }
                }
            });
@@ -5551,14 +5558,14 @@
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
                if (_Game._stepIndex - 1 >= 0) {
-                   let Img0 = _Game._stepOrder[_Game._stepIndex - 1];
+                   let Img0 = _Game._stepOrderImg[_Game._stepIndex - 1];
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                        if (parent0 != this.ImgVar('DrawRoot')) {
                            parent0.zOrder = (_Game._stepIndex + 1) * 10;
                        }
                        Img0.zOrder = (_Game._stepIndex + 1) * 10;
-                       let Img = _Game._stepOrder[_Game._stepIndex];
+                       let Img = _Game._stepOrderImg[_Game._stepIndex];
                        let parent = Img.parent;
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                            if (parent != this.ImgVar('DrawRoot')) {
@@ -5578,19 +5585,19 @@
                }
            });
            EventAdmin._register(_Game._Event.nextStep, this, () => {
-               if (_Game._stepIndex >= _Game._stepOrder.length - 1) {
+               if (_Game._stepIndex >= _Game._stepOrderImg.length - 1) {
                    EventAdmin._notify(_Game._Event.compelet);
-                   Animation2D.fadeOut(_Game._stepOrder[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
+                   Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
                }
                else {
-                   let Img = _Game._stepOrder[_Game._stepIndex];
+                   let Img = _Game._stepOrderImg[_Game._stepIndex];
                    let parent = Img.parent;
                    if (parent != this.ImgVar('DrawRoot')) {
                        parent.zOrder = -1;
                    }
                    Img.zOrder = -1;
                    Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                       let Img0 = _Game._stepOrder[_Game._stepIndex + 1];
+                       let Img0 = _Game._stepOrderImg[_Game._stepIndex + 1];
                        Img0.visible = true;
                        Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                            let parent0 = Img0.parent;
@@ -5610,7 +5617,16 @@
                    });
                }
            });
+           EventAdmin._register(_Game._Event.restoreZoder, this, () => {
+               for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+                   const element = _Game._stepOrderImg[index];
+                   if (element) {
+                       element.zOrder = 0;
+                   }
+               }
+           });
            EventAdmin._register(_Game._Event.compelet, this, () => {
+               EventAdmin._notify(_Game._Event.restoreZoder);
                _Game._drawSwitch = false;
                this.BtnNextStep.visible = false;
                this.BtnLastStep.visible = false;
@@ -5623,11 +5639,8 @@
            EventAdmin._notify(_Game._Event.start);
        }
        lwgBtnClick() {
-           Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
-               Admin._openScene(Admin._SceneName.UIStart, this.calssName);
-           });
-           for (let index = 0; index < _Game._stepOrder.length; index++) {
-               let DrawRoot = _Game._stepOrder[index];
+           for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+               let DrawRoot = _Game._stepOrderImg[index];
                let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
                Board.cacheAs = "bitmap";
                Board.name = 'Board';
@@ -5707,6 +5720,10 @@
                    Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
                }
                EventAdmin._notify(_Game._Event.nextStep);
+           });
+           Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
+               Admin._game.level++;
+               Admin._openScene(Admin._SceneName.UIStart, this.calssName);
            });
        }
    }
@@ -6081,65 +6098,6 @@
 
    var _Start;
    (function (_Start) {
-       _Start._data = {
-           da: '_data',
-           get array() {
-               return [];
-           },
-           set array(arr) {
-           },
-           getFunc1: () => {
-               return '测试1';
-           },
-           getFunc2: (any) => {
-               return;
-           },
-           setFunc1: () => {
-           },
-           setFunc2: (any) => {
-               console.log(any);
-           },
-           checkFunc1: (bool) => {
-               return bool;
-           },
-           checkFunc2: (bool) => {
-               return bool;
-           },
-           getTemporaryVariable: () => {
-               if (!_Start._data['name']) {
-                   _Start._data['name'] = '王大哥';
-               }
-               else {
-                   return _Start._data['name'];
-               }
-           }
-       };
-       _Start._variable = {
-           get value() {
-               return Laya.LocalStorage.getItem('Example_variable') ? Number(Laya.LocalStorage.getItem('Example_variable')) : null;
-           },
-           set value(date) {
-               Laya.LocalStorage.setItem('Example_variable', date.toString());
-           }
-       };
-       _Start._arrayData = {
-           get arr() {
-               return Laya.LocalStorage.getJSON('Example_array') ? JSON.parse(Laya.LocalStorage.getJSON('Example_array')) : [];
-           },
-           set arr(array) {
-               Laya.LocalStorage.setJSON('Example_array', JSON.stringify(array));
-           },
-       };
-       let _Event;
-       (function (_Event) {
-           _Event["event1"] = "Example_Event1";
-           _Event["event2"] = "Example_Event2";
-       })(_Event = _Start._Event || (_Start._Event = {}));
-       let _AnyVariableEnum;
-       (function (_AnyVariableEnum) {
-           _AnyVariableEnum["thisVariable1"] = "thisVariable1";
-           _AnyVariableEnum["thisVariable2"] = "thisVariable2";
-       })(_AnyVariableEnum = _Start._AnyVariableEnum || (_Start._AnyVariableEnum = {}));
        function _init() {
        }
        _Start._init = _init;
@@ -6154,15 +6112,19 @@
            }
        }
        _Start._StartScene = _StartScene;
-       class _Singleton {
-       }
-       _Start._Singleton = _Singleton;
    })(_Start || (_Start = {}));
    class UIStart extends _Start._StartScene {
        lwgOnAwake() {
        }
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
+               let index = 1;
+               if (Admin._game.level % 2 == 0) {
+                   index = 2;
+               }
+               else if (Admin._game.level % 3 == 0) {
+                   index = 3;
+               }
                Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
                    if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
                        Admin._sceneControl[_SceneName.GameScene + Admin._game.level].addComponent(GameScene);
