@@ -26,61 +26,67 @@ export module _Game {
     export let _stepIndex = 0;
     export let _stepMaskIndex = 0;
     export let _drawSwitch: boolean = false;
-
+    
     export let _PencilsList: Laya.List;
-    export let _coloursPencils = {
-    };
-    export let _singlePencils = {
-        property: {
+    export class _coloursPencils {
+        static _property = {
             number: 'number',
             name: 'name',
             color: 'color',
             pitch: 'pitch',
-        },
-        pitchName: {
-            get value(): string {
-                return this['name'] ? this['name'] : _singlePencils.data[0][_singlePencils.property.name];
-            },
-            set value(name: string) {
-                this['name'] = name;
-            }
-        },
-        pitchColor: {
-            get value(): string {
-                return this['color'] ? this['color'] : _singlePencils.data[0][_singlePencils.property.color];
-            },
-            set value(name: string) {
-                this['color'] = name;
-            }
-        },
-        get data(): Array<any> {
-            return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor));
-        },
-        set data(array: Array<any>) {
-            this['arr'] = array;
-        },
-        setPitchByName(name: string): void {
-            for (let index = 0; index < this.data.length; index++) {
-                if (name == this.data[index][this.property.name]) {
-                    this.data[index][this.property.pitch] = true;
-                    _singlePencils.pitchName.value = name;
-                    _singlePencils.pitchColor.value = this.data[index][this.property.color];
+        };
+        /**当前选中画笔*/
+        protected static pitchName: string;
+        static get _pitchName(): string {
+            return this.pitchName ? this.pitchName : this._data[0][this._property.name];
+        };
+        static set _pitchName(name: string) { this.pitchName = name };
+
+        /**当前选中画笔的颜色*/
+        protected static pitchColor: string;
+        static get _pitchColor(): string {
+            return this['color'] ? this['color'] : this._data[0][this._property.color];
+        };
+        static set _pitchColor(name: string) { this['color'] = name };
+        /**列表*/
+        protected static data: Array<any>;
+        static get _data(): Array<any> {
+            return this.data ? this.data : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
+        };
+        static set _data(array: Array<any>) {
+            this.data = array;
+        };
+        /**设置选中*/
+        static setPitchByName(name: string): void {
+            for (let index = 0; index < this._data.length; index++) {
+                if (name == this._data[index][this._property.name]) {
+                    this._data[index][this._property.pitch] = true;
+                    this._pitchName = name;
+                    this._pitchColor = this._data[index][this._property.color];
                 } else {
-                    this.data[index][this.property.pitch] = false;
+                    this._data[index][this._property.pitch] = false;
                 }
             }
         }
     }
+    export class _starsPencils extends _coloursPencils {
+        static get _data(): Array<any> {
+            return this.data ? this.data : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.Colours)["RECORDS"]);
+        };
+        static set _data(array: Array<any>) {
+            this.data = array;
+        };
+    }
     export function _init(): void {
-        _singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
-        _singlePencils.setPitchByName(_singlePencils.data[0][_singlePencils.property.name]);
+        _coloursPencils._data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
+        _coloursPencils.setPitchByName(_coloursPencils._data[0][_coloursPencils._property.name]);
         _stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
         _passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
     }
     export class _PencilsListItem extends Admin._Object {
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.self, this, null, null, () => {
-                _singlePencils.setPitchByName(this.self['_dataSource'][_singlePencils.property.name]);
+                _coloursPencils.setPitchByName(this.self['_dataSource'][_coloursPencils._property.name]);
                 _PencilsList.refresh();
             });
         }
@@ -109,7 +115,7 @@ export default class GameScene extends Admin._Scene {
         _Game._stepIndex = 0;
 
         _Game._PencilsList = this.ListVar('PencilsList');
-        _Game._PencilsList.array = _Game._singlePencils.data;
+        _Game._PencilsList.array = _Game._coloursPencils._data;
         _Game._PencilsList.selectEnable = true;
         _Game._PencilsList.vScrollBarSkin = "";
         // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
@@ -119,7 +125,7 @@ export default class GameScene extends Admin._Scene {
             let _dataSource = cell.dataSource;
             let Pic = cell.getChildByName('Pic') as Laya.Image;
             Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
-            if (_dataSource[_Game._singlePencils.property.pitch]) {
+            if (_dataSource[_Game._coloursPencils._property.pitch]) {
                 Pic.scale(1.1, 1.1);
             } else {
                 Pic.scale(1, 1);
@@ -252,15 +258,12 @@ export default class GameScene extends Admin._Scene {
         });
         for (let index = 0; index < _Game._stepOrder.length; index++) {
             let DrawRoot = this.ImgVar(_Game._stepOrder[index]);
-            var createBoard = (): Laya.Sprite => {
-                let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
-                Board.cacheAs = "bitmap";
-                Board.name = 'Board';
-                Board.width = DrawRoot.width;
-                Board.height = DrawRoot.height;
-                return Board;
-            }
-            createBoard();
+            let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+            Board.cacheAs = "bitmap";
+            Board.name = 'Board';
+            Board.width = DrawRoot.width;
+            Board.height = DrawRoot.height;
+
             Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this,
                 // 按下
                 (e: Laya.Event) => {
@@ -268,7 +271,7 @@ export default class GameScene extends Admin._Scene {
                     let Sp: Laya.Sprite;
                     let Board = DrawRoot.getChildByName('Board') as Laya.Sprite;
                     this['frontPos'] = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                    if (_Game._singlePencils.pitchName.value == 'eraser') {
+                    if (_Game._coloursPencils._pitchName == 'eraser') {
                         Sp = this['EraserSp'] = new Laya.Sprite();
                         this['EraserSp'].blendMode = "destination-out";
                     } else {
@@ -276,25 +279,27 @@ export default class GameScene extends Admin._Scene {
                         this['DrawSp'].blendMode = "none";
                     }
                     Board.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
+                    Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._coloursPencils._pitchColor);
                 },
                 // 移动
                 (e: Laya.Event) => {
                     let Board = DrawRoot.getChildByName('Board') as Laya.Sprite;
                     let endPos = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
-                        if (_Game._singlePencils.pitchName.value == 'eraser') {
+                        if (_Game._coloursPencils._pitchName == 'eraser') {
                             if (this['EraserSp']) {
-                                this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', 50);
-                                this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                                let radius = 25;
+                                this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', radius * 2);
+                                this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
                                 // this._drawingLenth.value -= (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
                             }
                         } else {
                             if (this['DrawSp']) {
                                 // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
                                 // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                                this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
-                                this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                                let radius = 15;
+                                this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._coloursPencils._pitchColor, radius * 2);
+                                this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, radius, _Game._coloursPencils._pitchColor);
                                 this._drawingLenth.value += (this['frontPos'] as Laya.Point).distance(endPos.x, endPos.y);
                             }
                         }

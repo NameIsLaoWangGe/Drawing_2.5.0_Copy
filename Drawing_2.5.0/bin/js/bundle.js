@@ -5318,52 +5318,61 @@
        _Game._stepIndex = 0;
        _Game._stepMaskIndex = 0;
        _Game._drawSwitch = false;
-       _Game._coloursPencils = {};
-       _Game._singlePencils = {
-           property: {
-               number: 'number',
-               name: 'name',
-               color: 'color',
-               pitch: 'pitch',
-           },
-           pitchName: {
-               get value() {
-                   return this['name'] ? this['name'] : _Game._singlePencils.data[0][_Game._singlePencils.property.name];
-               },
-               set value(name) {
-                   this['name'] = name;
-               }
-           },
-           pitchColor: {
-               get value() {
-                   return this['color'] ? this['color'] : _Game._singlePencils.data[0][_Game._singlePencils.property.color];
-               },
-               set value(name) {
-                   this['color'] = name;
-               }
-           },
-           get data() {
-               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor));
-           },
-           set data(array) {
-               this['arr'] = array;
-           },
-           setPitchByName(name) {
-               for (let index = 0; index < this.data.length; index++) {
-                   if (name == this.data[index][this.property.name]) {
-                       this.data[index][this.property.pitch] = true;
-                       _Game._singlePencils.pitchName.value = name;
-                       _Game._singlePencils.pitchColor.value = this.data[index][this.property.color];
+       class _coloursPencils {
+           static get _pitchName() {
+               return this.pitchName ? this.pitchName : this._data[0][this._property.name];
+           }
+           ;
+           static set _pitchName(name) { this.pitchName = name; }
+           ;
+           static get _pitchColor() {
+               return this['color'] ? this['color'] : this._data[0][this._property.color];
+           }
+           ;
+           static set _pitchColor(name) { this['color'] = name; }
+           ;
+           static get _data() {
+               return this.data ? this.data : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
+           }
+           ;
+           static set _data(array) {
+               this.data = array;
+           }
+           ;
+           static setPitchByName(name) {
+               for (let index = 0; index < this._data.length; index++) {
+                   if (name == this._data[index][this._property.name]) {
+                       this._data[index][this._property.pitch] = true;
+                       this._pitchName = name;
+                       this._pitchColor = this._data[index][this._property.color];
                    }
                    else {
-                       this.data[index][this.property.pitch] = false;
+                       this._data[index][this._property.pitch] = false;
                    }
                }
            }
+       }
+       _coloursPencils._property = {
+           number: 'number',
+           name: 'name',
+           color: 'color',
+           pitch: 'pitch',
        };
+       _Game._coloursPencils = _coloursPencils;
+       class _starsPencils extends _coloursPencils {
+           static get _data() {
+               return this.data ? this.data : Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.Colours)["RECORDS"]);
+           }
+           ;
+           static set _data(array) {
+               this.data = array;
+           }
+           ;
+       }
+       _Game._starsPencils = _starsPencils;
        function _init() {
-           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
-           _Game._singlePencils.setPitchByName(_Game._singlePencils.data[0][_Game._singlePencils.property.name]);
+           _coloursPencils._data = Tools.objArray_Copy(Laya.loader.getRes(_PreloadUrl._list.json.SingleColor)["RECORDS"]);
+           _coloursPencils.setPitchByName(_coloursPencils._data[0][_coloursPencils._property.name]);
            _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
            _Game._passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
        }
@@ -5371,7 +5380,7 @@
        class _PencilsListItem extends Admin._Object {
            lwgBtnClick() {
                Click._on(Click._Type.largen, this.self, this, null, null, () => {
-                   _Game._singlePencils.setPitchByName(this.self['_dataSource'][_Game._singlePencils.property.name]);
+                   _coloursPencils.setPitchByName(this.self['_dataSource'][_coloursPencils._property.name]);
                    _Game._PencilsList.refresh();
                });
            }
@@ -5402,7 +5411,7 @@
            _Game._drawSwitch = false;
            _Game._stepIndex = 0;
            _Game._PencilsList = this.ListVar('PencilsList');
-           _Game._PencilsList.array = _Game._singlePencils.data;
+           _Game._PencilsList.array = _Game._coloursPencils._data;
            _Game._PencilsList.selectEnable = true;
            _Game._PencilsList.vScrollBarSkin = "";
            _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
@@ -5410,7 +5419,7 @@
                let _dataSource = cell.dataSource;
                let Pic = cell.getChildByName('Pic');
                Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
-               if (_dataSource[_Game._singlePencils.property.pitch]) {
+               if (_dataSource[_Game._coloursPencils._property.pitch]) {
                    Pic.scale(1.1, 1.1);
                }
                else {
@@ -5537,20 +5546,16 @@
            });
            for (let index = 0; index < _Game._stepOrder.length; index++) {
                let DrawRoot = this.ImgVar(_Game._stepOrder[index]);
-               var createBoard = () => {
-                   let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
-                   Board.cacheAs = "bitmap";
-                   Board.name = 'Board';
-                   Board.width = DrawRoot.width;
-                   Board.height = DrawRoot.height;
-                   return Board;
-               };
-               createBoard();
+               let Board = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+               Board.cacheAs = "bitmap";
+               Board.name = 'Board';
+               Board.width = DrawRoot.width;
+               Board.height = DrawRoot.height;
                Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, (e) => {
                    let Sp;
                    let Board = DrawRoot.getChildByName('Board');
                    this['frontPos'] = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                   if (_Game._singlePencils.pitchName.value == 'eraser') {
+                   if (_Game._coloursPencils._pitchName == 'eraser') {
                        Sp = this['EraserSp'] = new Laya.Sprite();
                        this['EraserSp'].blendMode = "destination-out";
                    }
@@ -5559,21 +5564,23 @@
                        this['DrawSp'].blendMode = "none";
                    }
                    Board.addChild(Sp)['pos'](0, 0);
-                   Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._singlePencils.pitchColor.value);
+                   Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._coloursPencils._pitchColor);
                }, (e) => {
                    let Board = DrawRoot.getChildByName('Board');
                    let endPos = Board.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                    if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
-                       if (_Game._singlePencils.pitchName.value == 'eraser') {
+                       if (_Game._coloursPencils._pitchName == 'eraser') {
                            if (this['EraserSp']) {
-                               this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', 50);
-                               this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                               let radius = 25;
+                               this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', radius * 2);
+                               this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
                            }
                        }
                        else {
                            if (this['DrawSp']) {
-                               this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
-                               this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
+                               let radius = 15;
+                               this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._coloursPencils._pitchColor, radius * 2);
+                               this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, radius, _Game._coloursPencils._pitchColor);
                                this._drawingLenth.value += this['frontPos'].distance(endPos.x, endPos.y);
                            }
                        }
