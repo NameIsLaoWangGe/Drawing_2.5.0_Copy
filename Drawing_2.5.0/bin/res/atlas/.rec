@@ -172,6 +172,78 @@ D Game/UI/UIStart
 D Game/UI/UITask
 D Game/UI/UIVictory
 D Game/UI/UIVictoryBox
+D Game/UI/GameScene/design
+R 8A3D0CE5 level1.png
+P 5AC6070B level2.png
+P C44D3C5E level3.png
+D Game/UI/GameScene/Level1
+R 5B2D0DC8 huaban.png
+R 4C0E95FD huabanmask.png
+P 108A7A3C lian.png
+P F5D1385E lianmask.png
+P 59263A82 tengman .png
+P FA49C30E tengman mask.png
+P 53994BAC yanjing.png
+P 49040E28 youyepian.png
+P F7CDCD05 youyepianmask.png
+P BDEBD58E zui .png
+P D6036451 zuimask.png
+P 6CA8B783 zuoyepian .png
+P AEB53829 zuoyepian mask.png
+D Game/UI/GameScene/Level2
+P 664D06B6 guiixan4.png
+P 58305064 guike.png
+P 83F6D61C guikemask.png
+P 064DF43F guitou.png
+P DB194E7D guitoumask.png
+P BFAFD6B2 guixian.png
+P 29E99FAD guixian2.png
+P 28DE299A guixian2mask.png
+P 46D86BDA guixian3.png
+P 6FDA1EE5 guixian3mask.png
+P 83D3846E guixian4mask.png
+P 9B57690A guixianmask.png
+P 102ADB21 houtui.png
+P 102ADB21 houtui2.png
+P E432EFAA houtui2mask.png
+P 06E8DB30 houtuimask.png
+P 961D4D0E qiantui.png
+P 997337BD qiantui2.png
+P 35B49A83 qiantui2mask.png
+P 460FF788 qiantuimask.png
+P 953F932A wei.png
+P 2C2C3121 weimask.png
+P 4F849911 yan.png
+P 4F849911 yan2.png
+P BB747BC6 zui.png
+P 1C982B59 zuimask.png
+D Game/UI/GameScene/Level3
+P 70F49352 bizi.png
+P FD93A886 bizimask.png
+P 58226489 hudiejie.png
+P 4E039249 hudiejiemask.png
+P EC474BFC lian.png
+P 5077C715 lianmask.png
+P 7A872809 shenti.png
+P EB0B5A8F shenzimask.png
+P 96235149 weiba.png
+P F2233F7E weibamask.png
+P 9AC0F03F yan.png
+P 9899FA3E yan2.png
+P 23FEF644 youer.png
+P 2C5FCAD3 youermask.png
+P 6F2BEF1B youjiao.png
+P E1FABDBB youjiaomask.png
+P 285F9B30 youshou.png
+P C552B39D youshoumask.png
+P 009615F4 zui.png
+P 0B39E777 zuimask.png
+P 51856A1E zuoer.png
+P 50C750BB zuoermask.png
+P 6F2BEF1B zuojiao.png
+P 027348B5 zuojiaomask.png
+P A800FCD3 zuoshou.png
+P 68EAC4BB zuoshoumask.png
 D Game/UI/GameScene/SinglePencils
 P 30AAF986 blue.png
 P B81FB0DF eraser.png

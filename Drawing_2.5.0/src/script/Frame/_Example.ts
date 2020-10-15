@@ -69,11 +69,21 @@ export module _Example {
       */
     export let _arrayData = {
         get arr(): Array<string> {
-            return Laya.LocalStorage.getJSON('_Example__array') ? JSON.parse(Laya.LocalStorage.getJSON('_Example__array')) : [];
+            try {
+                let data = Laya.LocalStorage.getJSON('_Example_arrayData')
+                if (data) {
+                    return JSON.parse(data);;
+                } else {
+                    return [];
+                }
+
+            } catch (error) {
+                return [];
+            }
         },
 
         set arr(array: Array<string>) {
-            Laya.LocalStorage.setJSON('_Example__array', JSON.stringify(array));
+            Laya.LocalStorage.setJSON('_Example_array', JSON.stringify(array));
         },
     }
 

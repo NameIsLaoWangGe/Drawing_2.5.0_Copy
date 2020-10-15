@@ -1103,15 +1103,14 @@ export module lwg {
         /**是否为评测包，评测包广告默认关闭，默认为非评测包，直接获得广告奖励*/
         export let _evaluating: boolean = false;
 
-        /**游戏控制开关*/
-        export let _gameSwitch: boolean = false;
-
         /**等级*/
-        export let _gameLevel = {
-            get value(): number {
+        export let _game = {
+            /**游戏控制开关*/
+            switch: true,
+            get level(): number {
                 return Laya.LocalStorage.getItem('_gameLevel') ? Number(Laya.LocalStorage.getItem('_gameLevel')) : 1;
             },
-            set value(val) {
+            set level(val) {
                 Laya.LocalStorage.setItem('_gameLevel', val.toString());
             }
         }
@@ -1119,7 +1118,7 @@ export module lwg {
         /**当前实际打开后者停留的关卡数，而非真实的关卡等级*/
         export let _practicalLevel = {
             get value(): number {
-                return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : _gameLevel.value;
+                return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : _game.level;
             },
             set value(val) {
                 Laya.LocalStorage.setItem('_practicalLevel', val.toString());
@@ -1151,15 +1150,15 @@ export module lwg {
         /**暂停当前游戏*/
         export let _pause = {
             get switch(): boolean {
-                return _gameSwitch;
+                return _game.switch;
             },
             set switch(bool: boolean) {
                 this.bool = bool;
                 if (bool) {
-                    _gameSwitch = false;
+                    _game.switch = false;
                     Laya.timer.pause();
                 } else {
-                    _gameSwitch = true;
+                    _game.switch = true;
                     Laya.timer.resume();
                 }
             }
@@ -4470,6 +4469,17 @@ export module lwg {
         }
 
         /**
+         *通prefab过prefab创建一个实例
+         * @param {Laya.Prefab} prefab 预制体
+         * @param {string} [name] 名称
+         * @return {*}  {Laya.Sprite}
+         */
+        export function node_PrefabCreate(prefab: Laya.Prefab, name?: string): Laya.Sprite {
+            let sp: Laya.Sprite = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
+            return sp;
+        }
+
+        /**
          *2D隐藏或者打开所有子节点
          * @param node 节点
          * @param bool visible控制
@@ -4533,6 +4543,29 @@ export module lwg {
                     return go;
             }
             return null;
+        }
+
+        /**
+         * 通过一个名称的一部分查找整个节点下面的所有有这个名称的子节点,例如输入'name',那么以'name'为开头的命名的节点'name1'则会被找到
+         * */
+        export function node_2dFindChildByName(parent: any, name: string): Array<Laya.Sprite> {
+            let arr = [];
+
+            // var item: Laya.Sprite = null;
+            // //寻找自身一级目录下的子物体有没有该名字的子物体
+            // item = parent.getChildByName(name) as Laya.Sprite;
+            // //如果有，返回他
+            // if (item != null) return item;
+            // var go: Laya.Sprite = null;
+            // //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
+            // for (var i = 0; i < parent.numChildren; i++) {
+            //     go = node_2dFindChild(parent.getChildAt(i) as Laya.Sprite, name);
+            //     if (go == null) {
+            //         arr.push(go);
+
+            //     }
+            // }
+            return arr;
         }
 
         /**
@@ -5171,9 +5204,10 @@ export module lwg {
             let arr1Capy = array_Copy(arr1);
             let arr2Capy = array_Copy(arr2);
 
+            // console.log(arr1,arr2)
             for (let i = 0; i < arr1Capy.length; i++) {
                 for (let j = 0; j < arr2Capy.length; j++) {
-                    if (arr1Capy[i] === arr2Capy[j]) {
+                    if (arr1Capy[i] == arr2Capy[j]) {
                         arr1Capy.splice(i, 1);
                         i--;
                     }
@@ -6573,8 +6607,9 @@ export module lwg {
         export let _haveCardArray = {
             get arr(): Array<string> {
                 try {
-                    if (Laya.LocalStorage.getJSON('Backpack_haveCardArray')) {
-                        return Laya.LocalStorage.getJSON('Backpack_haveCardArray');
+                    let data = Laya.LocalStorage.getJSON('Backpack_haveCardArray')
+                    if (data) {
+                        return JSON.parse(data);;
                     } else {
                         return [];
                     }
@@ -6875,18 +6910,6 @@ export module lwg {
                         }), null, Laya.Loader.JSON);
                         break;
 
-                    case _prefab2D:
-                        Laya.loader.load(_prefab2D[index], Laya.Handler.create(this, (any) => {
-                            if (any == null) {
-                                console.log('XXXXXXXXXXX数据表' + _prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                            } else {
-                                console.log('2D预制体' + _prefab2D[index] + '加载完成！', '数组下标为：', index);
-                            }
-                            EventAdmin._notify(_Event.progress);
-
-                        }), null, Laya.Loader.JSON);
-                        break;
-
                     case _scene3D:
                         Laya.Scene3D.load(_scene3D[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
@@ -6958,10 +6981,26 @@ export module lwg {
                             EventAdmin._notify(_Event.progress);
                         });
                         _skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
-                            console.log('骨骼动画', _skeleton[index]['templet'] , '加载完成！', '数组下标为：', index);
+                            console.log('骨骼动画', _skeleton[index]['templet'], '加载完成！', '数组下标为：', index);
                             EventAdmin._notify(_Event.progress);
                         });
                         _skeleton[index]['templet'].loadAni(_skeleton[index]['url']);
+                        break;
+
+                    case _prefab2D:
+                        Laya.loader.load(_prefab2D[index]['url'], Laya.Handler.create(this, (prefab: Laya.Prefab) => {
+                            if (prefab == null) {
+                                console.log('XXXXXXXXXXX数据表' + _prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                            } else {
+                                let _prefab = new Laya.Prefab();
+                                _prefab.json = prefab;
+                                _prefab2D[index]['prefab'] = _prefab;
+
+                                console.log('2D预制体' + _prefab2D[index] + '加载完成！', '数组下标为：', index);
+                            }
+                            EventAdmin._notify(_Event.progress);
+
+                        }));
                         break;
 
                     default:

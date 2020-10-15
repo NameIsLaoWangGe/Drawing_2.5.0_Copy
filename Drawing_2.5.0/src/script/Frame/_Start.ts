@@ -1,4 +1,5 @@
 import { Admin, Click, _SceneName } from "./Lwg";
+import GameScene, { _Game } from "./_Game";
 
 /**测试模块,每个模块分开，默认导出一个类，这个类是默认挂载的脚本类，如果有多个脚本，
  * 那么在这个默认类中进行添加，或者在其他地方动态添加*/
@@ -13,7 +14,6 @@ export module _Start {
         },
         /**对表格整体修改替换*/
         set array(arr: Array<any>) {
-
         },
         // 获取方法
         getFunc1: (): any => {
@@ -105,7 +105,11 @@ export default class UIStart extends _Start._StartScene {
     }
     lwgBtnClick(): void {
         Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-            Admin._preLoadOpenScene(_SceneName.GameScene, _SceneName.UIStart);
+            Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
+                if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
+                    Admin._sceneControl[_SceneName.GameScene + Admin._game.level].addComponent(GameScene);
+                }
+            });
         })
     }
 }

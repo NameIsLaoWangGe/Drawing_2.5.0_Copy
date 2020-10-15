@@ -13,9 +13,26 @@ export module _PreloadUrl {
         //     // "res/atlas/Game/UI/UISkinQualified.png",
         //     // "res/atlas/Game/UI/UIDrawCard/Card.png",
         // },
-        // prefab2D: {},
         // mesh3D: {},
         // material: {},
+        prefab2D: {
+            PencilsList: {
+                url: 'Prefab/PencilsList.json',
+                prefab: new Laya.Prefab,
+            },
+            StepSwitch: {
+                url: 'Prefab/StepSwitch.json',
+                prefab: new Laya.Prefab,
+            },
+            BtnBack: {
+                url: 'Prefab/BtnBack.json',
+                prefab: new Laya.Prefab,
+            },
+            BtnPlayAni: {
+                url: 'Prefab/BtnPlayAni.json',
+                prefab: new Laya.Prefab,
+            }
+        },
         texture2D: {
             star1: 'Frame/Effects/hua4.png',
         },
@@ -30,8 +47,8 @@ export module _PreloadUrl {
         },
         // skeleton: {
         //     test: {
-        //         templet: new Laya.Templet(),
         //         url: 'Game/Skeleton/test.sk',
+        //         templet: new Laya.Templet(),
         //     },
         // }
     }
