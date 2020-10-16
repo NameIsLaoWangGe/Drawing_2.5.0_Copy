@@ -42,13 +42,19 @@ export module _PreloadUrl {
             UIPreLoad: "Scene/" + _SceneName.UIPreLoad + '.json',
         },
         json: {
-            SingleColor: "_LwgData" + "/_Game/SingleColor" + ".json",
-            Colours: "_LwgData" + "/_Game/Colours" + ".json",
+            SingleColor: {
+                url: "_LwgData" + "/_Game/SingleColor" + ".json",
+                data: new Array,
+            },
+            Colours: {
+                url: "_LwgData" + "/_Game/Colours" + ".json",
+                data: new Array,
+            }
         },
         // skeleton: {
         //     test: {
         //         url: 'Game/Skeleton/test.sk',
-        //         templet: new Laya.Templet(),
+        //         templet: new Laya.Templet,
         //     },
         // }
     }

@@ -3,7 +3,7 @@
     "type":"List",
     "selectedBox":45,
     "searchKey":"List,PencilsList,PencilsList",
-    "props":{"y":0,"x":0,"width":107,"var":"PencilsList","top":120,"right":0,"presetID":1,"preset":"laya/pages/Prefab/PencilsList.prefab","name":"PencilsList","isPresetRoot":true,"height":596},
+    "props":{"y":0,"x":0,"width":528,"var":"PencilsList","presetID":1,"preset":"laya/pages/Prefab/PencilsList.prefab","name":"PencilsList","isPresetRoot":true,"height":75},
     "nodeParent":-1,
     "maxID":47,
     "label":"PencilsList",

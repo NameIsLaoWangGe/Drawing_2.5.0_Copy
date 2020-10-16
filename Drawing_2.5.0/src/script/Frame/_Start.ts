@@ -23,11 +23,8 @@ export default class UIStart extends _Start._StartScene {
     }
     lwgBtnClick(): void {
         Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-            let index = 1;
-            if (Admin._game.level % 2 == 0) {
-                index = 2;
-            } else if (Admin._game.level % 3 == 0) {
-                index = 3;
+            if (Admin._game.level > 4) {
+                Admin._game.level == 1;
             }
             Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
                 if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {

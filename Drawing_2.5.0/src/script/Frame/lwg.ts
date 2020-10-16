@@ -1112,19 +1112,34 @@ export module lwg {
             },
             set level(val) {
                 Laya.LocalStorage.setItem('_gameLevel', val.toString());
-            }
-        }
-
-        /**当前实际打开后者停留的关卡数，而非真实的关卡等级*/
-        export let _practicalLevel = {
-            get value(): number {
+            },
+            get practicalLevel(): number {
                 return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : _game.level;
             },
-            set value(val) {
+            set practicalLevel(val) {
                 Laya.LocalStorage.setItem('_practicalLevel', val.toString());
+            },
+            /**等级的显示节点*/
+            LevelNode: new Laya.Sprite,
+            _createLevel(parent: Laya.Sprite, x: number, y: number): void {
+                let sp: Laya.Sprite;
+                Laya.loader.load('prefab/LevelNode.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
+                    let _prefab = new Laya.Prefab();
+                    _prefab.json = prefab;
+                    sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
+                    parent.addChild(sp);
+                    sp.pos(x, y);
+                    sp.zOrder = 0;
+                    let level = sp.getChildByName('level') as Laya.Label;
+                    _LevelNode = sp;
+                }));
             }
         }
 
+        /**可替代上述等级对象*/
+        export class _Game {
+
+        }
         /**等级的显示节点*/
         export let _LevelNode: Laya.Sprite;
         /**
@@ -6887,7 +6902,6 @@ export module lwg {
 
                 switch (_loadOrder[_loadOrderIndex]) {
                     case _pic2D:
-
                         Laya.loader.load(_pic2D[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
                                 console.log('XXXXXXXXXXX2D资源' + _pic2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
@@ -6921,6 +6935,7 @@ export module lwg {
 
                         }));
                         break;
+
                     case _prefab3D:
                         Laya.Sprite3D.load(_prefab3D[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
@@ -6932,6 +6947,7 @@ export module lwg {
 
                         }));
                         break;
+
                     case _mesh3D:
                         Laya.Mesh.load(_mesh3D[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
@@ -6943,6 +6959,7 @@ export module lwg {
 
                         }));
                         break;
+
                     case _texture2D:
                         Laya.Texture2D.load(_texture2D[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
@@ -6953,6 +6970,7 @@ export module lwg {
                             EventAdmin._notify(_Event.progress);
                         }));
                         break;
+
                     case _material:
                         Laya.Material.load(_material[index], Laya.Handler.create(this, (any) => {
                             if (any == null) {
@@ -6963,12 +6981,14 @@ export module lwg {
                             EventAdmin._notify(_Event.progress);
                         }));
                         break;
+
                     case _json:
-                        Laya.loader.load(_json[index], Laya.Handler.create(this, (any) => {
-                            if (any == null) {
+                        Laya.loader.load(_json[index]['url'], Laya.Handler.create(this, (data) => {
+                            if (data == null) {
                                 console.log('XXXXXXXXXXX数据表' + _json[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('数据表' + _json[index] + '加载完成！', '数组下标为：', index);
+                                _json[index]['data'] = data["RECORDS"];
+                                console.log('数据表' + _json[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
 

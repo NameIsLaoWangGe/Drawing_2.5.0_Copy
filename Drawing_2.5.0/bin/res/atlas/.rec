@@ -173,6 +173,7 @@ D Game/UI/UITask
 D Game/UI/UIVictory
 D Game/UI/UIVictoryBox
 D Game/UI/GameScene/design
+P 65FBBA7A lALPD26eM-Z81R3NAcrNAeI_482_458.png_720x720q90g.jpg
 R 8A3D0CE5 level1.png
 P 5AC6070B level2.png
 P C44D3C5E level3.png
@@ -244,6 +245,18 @@ P 6F2BEF1B zuojiao.png
 P 027348B5 zuojiaomask.png
 P A800FCD3 zuoshou.png
 P 68EAC4BB zuoshoumask.png
+D Game/UI/GameScene/Level4
+P E9DA4813 fuqi.png
+P C0884B13 fuqimask.png
+P 822461B3 shenzi.png
+P 85040B9D shenzimask.png
+P F198951D yajnzhuzi.png
+P 837D5434 yiba.png
+P CEB0A596 yibamask.png
+P EE4727D5 yuqi.png
+P CFF00F8F yuqimask.png
+P 08502758 zui.png
+P EA4F63E0 zuimask.png
 D Game/UI/GameScene/SinglePencils
 P 30AAF986 blue.png
 P B81FB0DF eraser.png
