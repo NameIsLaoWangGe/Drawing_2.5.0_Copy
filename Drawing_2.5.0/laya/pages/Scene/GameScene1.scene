@@ -1,7 +1,8 @@
 {
+    "x":0,
     "type":"View",
-    "selectedBox":75,
-    "selecteID":66,
+    "selectedBox":2,
+    "selecteID":68,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
@@ -14,6 +15,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -27,6 +29,7 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
             "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":1280},
@@ -39,6 +42,7 @@
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Flawer,Flawer",
                     "props":{"y":76,"x":96,"width":528,"var":"Flawer","name":"Flawer","height":771},
@@ -51,6 +55,7 @@
                     "compId":85,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Body,Body",
                             "props":{"y":692,"x":262,"width":525,"var":"Body","pivotY":706,"pivotX":263,"name":"Body","height":706},
@@ -63,9 +68,10 @@
                             "compId":75,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
-                                    "props":{"y":746,"x":266,"width":74,"var":"Draw4","skin":"Game/UI/GameScene/Level1/tengman mask.png","pivotY":372,"pivotX":37,"name":"Draw4","height":372},
+                                    "props":{"zOrder":98,"y":746,"x":266,"width":74,"var":"Draw4","skin":"Game/UI/GameScene/Level1/tengman mask.png","pivotY":372,"pivotX":37,"name":"Draw4","height":372},
                                     "nodeParent":75,
                                     "label":"Draw4",
                                     "isOpen":true,
@@ -75,6 +81,7 @@
                                     "compId":66,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/tengman .png","name":"Pic"},
@@ -88,6 +95,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level1/tengman mask.png","renderType":"mask"},
@@ -102,9 +110,10 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw3,Draw3",
-                                    "props":{"y":256,"x":276,"width":527,"var":"Draw3","skin":"Game/UI/GameScene/Level1/huabanmask.png","pivotY":231,"pivotX":264,"name":"Draw3","height":461},
+                                    "props":{"zOrder":99,"y":256,"x":276,"width":527,"var":"Draw3","skin":"Game/UI/GameScene/Level1/huabanmask.png","pivotY":231,"pivotX":264,"name":"Draw3","height":461},
                                     "nodeParent":75,
                                     "label":"Draw3",
                                     "isOpen":true,
@@ -114,6 +123,7 @@
                                     "compId":64,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level1/huaban.png","name":"Pic"},
@@ -127,6 +137,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level1/huabanmask.png","renderType":"mask"},
@@ -141,9 +152,10 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Head,Head",
-                                    "props":{"y":256,"x":277,"width":280,"var":"Head","pivotY":140,"pivotX":140,"name":"Head","height":279},
+                                    "props":{"zOrder":100,"y":256,"x":277,"width":280,"var":"Head","pivotY":140,"pivotX":140,"name":"Head","height":279},
                                     "nodeParent":75,
                                     "label":"Head",
                                     "isOpen":true,
@@ -153,9 +165,10 @@
                                     "compId":65,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Draw2,Draw2",
-                                            "props":{"y":140,"x":140,"width":280,"var":"Draw2","skin":"Game/UI/GameScene/Level1/lianmask.png","pivotY":140,"pivotX":140,"name":"Draw2","height":279},
+                                            "props":{"zOrder":99,"y":140,"x":140,"width":280,"var":"Draw2","skin":"Game/UI/GameScene/Level1/lianmask.png","pivotY":140,"pivotX":140,"name":"Draw2","height":279},
                                             "nodeParent":65,
                                             "label":"Draw2",
                                             "isOpen":true,
@@ -165,6 +178,7 @@
                                             "compId":74,
                                             "child":[
                                                 {
+                                                    "x":90,
                                                     "type":"Image",
                                                     "searchKey":"Image,Pic",
                                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/lian.png","name":"Pic"},
@@ -178,6 +192,7 @@
                                                         ]
                                                 },
                                                 {
+                                                    "x":90,
                                                     "type":"Image",
                                                     "searchKey":"Image",
                                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/lianmask.png","renderType":"mask"},
@@ -192,9 +207,10 @@
                                                 }]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Draw1,Draw1",
-                                            "props":{"y":176,"x":140,"width":165,"var":"Draw1","skin":"Game/UI/GameScene/Level1/zuimask.png","pivotY":47,"pivotX":83,"name":"Draw1","height":93},
+                                            "props":{"zOrder":100,"y":176,"x":140,"width":165,"var":"Draw1","skin":"Game/UI/GameScene/Level1/zuimask.png","pivotY":47,"pivotX":83,"name":"Draw1","height":93},
                                             "nodeParent":65,
                                             "label":"Draw1",
                                             "isOpen":true,
@@ -204,6 +220,7 @@
                                             "compId":72,
                                             "child":[
                                                 {
+                                                    "x":90,
                                                     "type":"Image",
                                                     "searchKey":"Image,Pic",
                                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/zui .png","name":"Pic"},
@@ -217,6 +234,7 @@
                                                         ]
                                                 },
                                                 {
+                                                    "x":90,
                                                     "type":"Image",
                                                     "searchKey":"Image",
                                                     "props":{"skin":"Game/UI/GameScene/Level1/zuimask.png","renderType":"mask"},
@@ -231,9 +249,10 @@
                                                 }]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Eye1",
-                                            "props":{"zOrder":3000,"y":105,"x":101,"width":34,"skin":"Game/UI/GameScene/Level1/yanjing.png","pivotY":17,"pivotX":17,"name":"Eye1","height":33},
+                                            "props":{"zOrder":100,"y":105,"x":101,"width":34,"skin":"Game/UI/GameScene/Level1/yanjing.png","pivotY":17,"pivotX":17,"name":"Eye1","height":33},
                                             "nodeParent":65,
                                             "label":"Eye1",
                                             "isDirectory":false,
@@ -244,9 +263,10 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Eye2",
-                                            "props":{"zOrder":3000,"y":106,"x":182,"width":34,"skin":"Game/UI/GameScene/Level1/yanjing.png","pivotY":17,"pivotX":17,"name":"Eye2","height":33},
+                                            "props":{"zOrder":100,"y":106,"x":182,"width":34,"skin":"Game/UI/GameScene/Level1/yanjing.png","pivotY":17,"pivotX":17,"name":"Eye2","height":33},
                                             "nodeParent":65,
                                             "label":"Eye2",
                                             "isOpen":true,
@@ -260,9 +280,10 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw6,Draw6",
-                            "props":{"y":725,"x":268,"width":243,"var":"Draw6","skin":"Game/UI/GameScene/Level1/youyepianmask.png","pivotY":191,"pivotX":36,"name":"Draw6","height":223},
+                            "props":{"zOrder":96,"y":725,"x":268,"width":243,"var":"Draw6","skin":"Game/UI/GameScene/Level1/youyepianmask.png","pivotY":191,"pivotX":36,"name":"Draw6","height":223},
                             "nodeParent":85,
                             "label":"Draw6",
                             "isOpen":true,
@@ -272,6 +293,7 @@
                             "compId":68,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"width":243,"skin":"Game/UI/GameScene/Level1/youyepian.png","name":"Pic","height":223},
@@ -285,6 +307,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"skin":"Game/UI/GameScene/Level1/youyepianmask.png","renderType":"mask"},
@@ -299,6 +322,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw5,Draw5",
                             "props":{"y":734,"x":241,"width":244,"var":"Draw5","skin":"Game/UI/GameScene/Level1/zuoyepian mask.png","pivotY":176,"pivotX":211,"name":"Draw5","height":199},
@@ -311,6 +335,7 @@
                             "compId":67,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/zuoyepian .png","name":"Pic"},
@@ -324,6 +349,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"skin":"Game/UI/GameScene/Level1/zuoyepian mask.png","renderType":"mask"},
@@ -1845,6 +1871,47 @@
                                 "target":66,
                                 "key":"scaleX",
                                 "index":200
+                            }]
+                    }
+                },
+                {
+                    "target":13,
+                    "keyframes":{
+                        "y":[
+                            {
+                                "value":42,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":13,
+                                "key":"y",
+                                "index":0
+                            }],
+                        "x":[
+                            {
+                                "value":30,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":13,
+                                "key":"x",
+                                "index":0
+                            }],
+                        "scaleY":[
+                            {
+                                "value":0.9,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":13,
+                                "key":"scaleY",
+                                "index":0
+                            }],
+                        "scaleX":[
+                            {
+                                "value":0.9,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":13,
+                                "key":"scaleX",
+                                "index":0
                             }]
                     }
                 }],

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":13,
-    "selecteID":178,
+    "selectedBox":2,
+    "selecteID":13,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
@@ -32,7 +32,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":1280},
+            "props":{"y":74,"x":76,"width":720,"var":"DrawRoot","scaleY":0.8,"scaleX":0.8,"name":"DrawRoot","height":1280},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,
@@ -71,17 +71,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw11,Draw11",
-                                    "props":{"y":294,"x":84,"width":191,"var":"Draw11","skin":"Game/UI/GameScene/Level3/youjiaomask.png","name":"Draw11","height":110},
+                                    "props":{"y":331,"x":217,"width":191,"var":"Draw11","skin":"Game/UI/GameScene/Level3/youjiaomask.png","pivotY":37,"pivotX":133,"name":"Draw11","height":110},
                                     "nodeParent":177,
                                     "label":"Draw11",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":172,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youjiao.png","name":"Pic"},
@@ -95,7 +94,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/youjiaomask.png","renderType":"mask"},
@@ -113,17 +111,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw9,Draw9",
-                                    "props":{"y":120,"x":88,"width":191,"var":"Draw9","skin":"Game/UI/GameScene/Level3/youshoumask.png","pivotY":31,"pivotX":125,"name":"Draw9","height":202},
+                                    "props":{"zOrder":95,"y":138,"x":92,"width":191,"var":"Draw9","skin":"Game/UI/GameScene/Level3/youshoumask.png","pivotY":31,"pivotX":125,"name":"Draw9","height":202},
                                     "nodeParent":177,
                                     "label":"Draw9",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":170,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youshou.png","name":"Pic"},
@@ -137,7 +134,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youshoumask.png","renderType":"mask"},
@@ -155,17 +151,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw10,Draw10",
-                                    "props":{"y":262,"x":339,"width":249,"var":"Draw10","skin":"Game/UI/GameScene/Level3/weibamask.png","pivotY":121,"pivotX":36,"name":"Draw10","height":181},
+                                    "props":{"zOrder":96,"y":262,"x":339,"width":249,"var":"Draw10","skin":"Game/UI/GameScene/Level3/weibamask.png","pivotY":121,"pivotX":36,"name":"Draw10","height":181},
                                     "nodeParent":177,
                                     "label":"Draw10",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":166,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/weiba.png","name":"Pic"},
@@ -179,7 +174,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/weibamask.png","renderType":"mask"},
@@ -197,17 +191,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw7,Draw7",
-                                    "props":{"y":213,"x":207,"width":323,"var":"Draw7","skin":"Game/UI/GameScene/Level3/shenzimask.png","pivotY":156,"pivotX":162,"name":"Draw7","height":311},
+                                    "props":{"zOrder":97,"y":213,"x":207,"width":323,"var":"Draw7","skin":"Game/UI/GameScene/Level3/shenzimask.png","pivotY":156,"pivotX":162,"name":"Draw7","height":311},
                                     "nodeParent":177,
                                     "label":"Draw7",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":164,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/shenti.png","name":"Pic"},
@@ -221,7 +214,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/shenzimask.png","renderType":"mask"},
@@ -239,17 +231,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw8,Draw8",
-                                    "props":{"y":166,"x":153,"width":191,"var":"Draw8","skin":"Game/UI/GameScene/Level3/youshoumask.png","pivotY":37,"pivotX":129,"name":"Draw8","height":202},
+                                    "props":{"zOrder":98,"y":166,"x":153,"width":191,"var":"Draw8","skin":"Game/UI/GameScene/Level3/youshoumask.png","pivotY":37,"pivotX":129,"name":"Draw8","height":202},
                                     "nodeParent":177,
                                     "label":"Draw8",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":168,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youshou.png","name":"Pic"},
@@ -263,7 +254,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youshoumask.png","renderType":"mask"},
@@ -281,17 +271,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw12,Draw12",
-                                    "props":{"y":307,"x":216,"width":191,"var":"Draw12","skin":"Game/UI/GameScene/Level3/youjiaomask.png","pivotX":96,"name":"Draw12","height":110},
+                                    "props":{"zOrder":99,"y":336,"x":256,"width":191,"var":"Draw12","skin":"Game/UI/GameScene/Level3/youjiaomask.png","pivotY":29,"pivotX":136,"name":"Draw12","height":110},
                                     "nodeParent":177,
                                     "label":"Draw12",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":174,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youjiao.png","name":"Pic"},
@@ -305,7 +294,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youjiaomask.png","renderType":"mask"},
@@ -324,7 +312,7 @@
                             "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head",
-                            "props":{"y":19,"x":34,"width":505,"name":"Head","height":401},
+                            "props":{"zOrder":100,"y":19,"x":34,"width":505,"name":"Head","height":401},
                             "nodeParent":178,
                             "label":"Head",
                             "isOpen":true,
@@ -337,17 +325,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw5,Draw5",
-                                    "props":{"y":152,"x":380,"width":176,"var":"Draw5","skin":"Game/UI/GameScene/Level3/youermask.png","pivotY":115,"pivotX":43,"name":"Draw5","height":164},
+                                    "props":{"zOrder":94,"y":152,"x":380,"width":176,"var":"Draw5","skin":"Game/UI/GameScene/Level3/youermask.png","pivotY":115,"pivotX":43,"name":"Draw5","height":164},
                                     "nodeParent":176,
                                     "label":"Draw5",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":152,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youer.png","name":"Pic"},
@@ -361,7 +348,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/youermask.png","renderType":"mask"},
@@ -379,17 +365,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
-                                    "props":{"y":144,"x":120,"width":177,"var":"Draw4","skin":"Game/UI/GameScene/Level3/zuoermask.png","pivotY":108,"pivotX":119,"name":"Draw4","height":165},
+                                    "props":{"zOrder":95,"y":144,"x":120,"width":177,"var":"Draw4","skin":"Game/UI/GameScene/Level3/zuoermask.png","pivotY":108,"pivotX":119,"name":"Draw4","height":165},
                                     "nodeParent":176,
                                     "label":"Draw4",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":154,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/zuoer.png","name":"Pic"},
@@ -403,7 +388,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/zuoermask.png","renderType":"mask"},
@@ -421,17 +405,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw3,Draw3",
-                                    "props":{"y":232,"x":250,"width":488,"var":"Draw3","skin":"Game/UI/GameScene/Level3/lianmask.png","pivotY":180,"pivotX":233,"name":"Draw3","height":359},
+                                    "props":{"zOrder":96,"y":232,"x":250,"width":488,"var":"Draw3","skin":"Game/UI/GameScene/Level3/lianmask.png","pivotY":180,"pivotX":233,"name":"Draw3","height":359},
                                     "nodeParent":176,
                                     "label":"Draw3",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":147,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/lian.png","name":"Pic"},
@@ -445,7 +428,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/lianmask.png","renderType":"mask"},
@@ -463,17 +445,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw6,Draw6",
-                                    "props":{"y":73,"x":251,"width":206,"var":"Draw6","skin":"Game/UI/GameScene/Level3/hudiejiemask.png","pivotY":67,"pivotX":103,"name":"Draw6","height":133},
+                                    "props":{"zOrder":97,"y":73,"x":251,"width":206,"var":"Draw6","skin":"Game/UI/GameScene/Level3/hudiejiemask.png","pivotY":67,"pivotX":103,"name":"Draw6","height":133},
                                     "nodeParent":176,
                                     "label":"Draw6",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":150,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/hudiejie.png","name":"Pic"},
@@ -487,12 +468,11 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
-                                            "type":"Sprite",
-                                            "searchKey":"Sprite",
-                                            "props":{"texture":"Game/UI/GameScene/Level3/hudiejiemask.png","renderType":"mask"},
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"skin":"Game/UI/GameScene/Level3/hudiejiemask.png","renderType":"mask"},
                                             "nodeParent":150,
-                                            "label":"Sprite",
+                                            "label":"Image",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
@@ -505,7 +485,7 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye1",
-                                    "props":{"y":183,"x":135,"skin":"Game/UI/GameScene/Level3/yan.png","name":"Eye1"},
+                                    "props":{"zOrder":98,"y":228,"x":173,"width":75,"skin":"Game/UI/GameScene/Level3/yan.png","pivotY":45,"pivotX":38,"name":"Eye1","height":89},
                                     "nodeParent":176,
                                     "label":"Eye1",
                                     "isDirectory":false,
@@ -519,7 +499,7 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye2",
-                                    "props":{"y":183,"x":299.5,"skin":"Game/UI/GameScene/Level3/yan.png","name":"Eye2"},
+                                    "props":{"zOrder":98,"y":228,"x":337,"width":75,"skin":"Game/UI/GameScene/Level3/yan.png","pivotY":45,"pivotX":38,"name":"Eye2","height":89},
                                     "nodeParent":176,
                                     "label":"Eye2",
                                     "isDirectory":false,
@@ -533,17 +513,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw2,Draw2",
-                                    "props":{"y":285,"x":255,"width":105,"var":"Draw2","skin":"Game/UI/GameScene/Level3/bizimask.png","pivotY":43,"pivotX":53,"name":"Draw2","height":85},
+                                    "props":{"zOrder":99,"y":285,"x":255,"width":105,"var":"Draw2","skin":"Game/UI/GameScene/Level3/bizimask.png","pivotY":43,"pivotX":53,"name":"Draw2","height":85},
                                     "nodeParent":176,
                                     "label":"Draw2",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":160,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/bizi.png","name":"Pic"},
@@ -557,7 +536,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/bizimask.png","renderType":"mask"},
@@ -575,17 +553,16 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw1,Draw1",
-                                    "props":{"y":355,"x":255,"width":137,"var":"Draw1","skin":"Game/UI/GameScene/Level3/zuimask.png","pivotY":39,"pivotX":69,"name":"Draw1","height":78},
+                                    "props":{"zOrder":100,"y":355,"x":255,"width":137,"var":"Draw1","skin":"Game/UI/GameScene/Level3/zuimask.png","pivotY":39,"pivotX":69,"name":"Draw1","height":78},
                                     "nodeParent":176,
                                     "label":"Draw1",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":162,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level3/zui.png","name":"Pic"},
@@ -599,7 +576,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level3/zuimask.png","renderType":"mask"},
@@ -619,70 +595,7 @@
     "animations":[
         {
             "nodes":[
-                {
-                    "target":27,
-                    "keyframes":{
-                        "rotation":[
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":0
-                            },
-                            {
-                                "value":-90,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":20
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "label":null,
-                                "key":"rotation",
-                                "index":40
-                            },
-                            {
-                                "value":90,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":60
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "label":null,
-                                "key":"rotation",
-                                "index":80
-                            },
-                            {
-                                "value":100,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":100
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":27,
-                                "key":"rotation",
-                                "index":120
-                            }]
-                    }
-                }],
+                ],
             "name":"action1",
             "id":1,
             "frameRate":60,

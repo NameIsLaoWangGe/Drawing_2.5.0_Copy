@@ -5492,6 +5492,9 @@
                    }
                },
            };
+           this.drawBoardProperty = {
+               originalZOder: 'originalZOder',
+           };
        }
        lwgOnAwake() {
            _Game._passLenght = 100;
@@ -5527,7 +5530,13 @@
            _Game._stepOrderImg = [];
            let index = 1;
            while (this.self['Draw' + index]) {
-               _Game._stepOrderImg.push(this.self['Draw' + index]);
+               let Img = this.self['Draw' + index];
+               _Game._stepOrderImg.push(Img);
+               Img[this.drawBoardProperty.originalZOder] = Img.zOrder;
+               let parent = Img.parent;
+               if (parent != this.ImgVar('DrawRoot')) {
+                   parent[this.drawBoardProperty.originalZOder] = parent.zOrder;
+               }
                this.self['Draw' + index].skin = null;
                index++;
            }
@@ -5582,22 +5591,21 @@
                this._drawingLenth.switch = false;
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
-               EventAdmin._notify(_Game._Event.restoreZOder);
                if (_Game._stepIndex - 1 >= 0) {
                    let Img0 = _Game._stepOrderImg[_Game._stepIndex - 1];
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                        if (parent0 != this.ImgVar('DrawRoot')) {
-                           parent0.zOrder = (_Game._stepIndex + 1) * 10;
+                           parent0.zOrder = (_Game._stepIndex + 1) * 200;
                        }
-                       Img0.zOrder = (_Game._stepIndex + 1) * 10;
+                       Img0.zOrder = (_Game._stepIndex + 1) * 200;
                        let Img = _Game._stepOrderImg[_Game._stepIndex];
                        let parent = Img.parent;
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                            if (parent != this.ImgVar('DrawRoot')) {
-                               parent.zOrder = -1;
+                               parent.zOrder = parent[this.drawBoardProperty.originalZOder];
                            }
-                           Img.zOrder = -1;
+                           Img.zOrder = Img[this.drawBoardProperty.originalZOder];
                            _Game._stepIndex--;
                            if (_Game._stepIndex < _Game._stepMaskIndex) {
                                this.BtnNextStep.visible = true;
@@ -5606,6 +5614,7 @@
                                this.BtnLastStep.visible = false;
                            }
                            this['BtnLastStepClose'] = false;
+                           EventAdmin._notify(_Game._Event.restoreZOder);
                        });
                    });
                }
@@ -5620,9 +5629,9 @@
                    let Img = _Game._stepOrderImg[_Game._stepIndex];
                    let parent = Img.parent;
                    if (parent != this.ImgVar('DrawRoot')) {
-                       parent.zOrder = -1;
+                       parent.zOrder = parent[this.drawBoardProperty.originalZOder];
                    }
-                   Img.zOrder = -1;
+                   Img.zOrder = Img[this.drawBoardProperty.originalZOder];
                    Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                        let Img0 = _Game._stepOrderImg[_Game._stepIndex + 1];
                        Img0.visible = true;
@@ -5635,9 +5644,9 @@
                                this._drawingLenth.switch = true;
                            }
                            if (parent0 != this.ImgVar('DrawRoot')) {
-                               parent0.zOrder = _Game._stepIndex * 10;
+                               parent0.zOrder = _Game._stepIndex * 200;
                            }
-                           Img0.zOrder = _Game._stepIndex * 10;
+                           Img0.zOrder = _Game._stepIndex * 200;
                            this['BtnNextStepClose'] = false;
                        });
                    });
@@ -5647,10 +5656,10 @@
                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                    const element = _Game._stepOrderImg[index];
                    if (element) {
-                       element.zOrder = -Number(element.name.substr(4));
+                       element.zOrder = _Game._stepOrderImg[index][this.drawBoardProperty.originalZOder];
                        let parent = element.parent;
                        if (parent != this.ImgVar('DrawRoot')) {
-                           parent.zOrder = -Number(element.name.substr(4));
+                           parent.zOrder = parent[this.drawBoardProperty.originalZOder];
                        }
                    }
                }
