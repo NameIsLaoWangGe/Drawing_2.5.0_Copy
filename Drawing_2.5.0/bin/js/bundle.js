@@ -5528,13 +5528,14 @@
            let index = 1;
            while (this.self['Draw' + index]) {
                _Game._stepOrderImg.push(this.self['Draw' + index]);
+               this.self['Draw' + index].skin = null;
                index++;
            }
        }
        lwgOnEnable() {
            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
            this.self.addChild(this.StepSwitch);
-           this.StepSwitch.pos(194.5, 837.5);
+           this.StepSwitch.pos(194.5, 900);
            this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
            this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
            this.BtnNextStep.visible = false;
@@ -5542,7 +5543,7 @@
            this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
            this.self.addChild(this.BtnPlayAni);
            this.BtnPlayAni.visible = false;
-           this.BtnPlayAni.pos(361, 917);
+           this.BtnPlayAni.pos(361, 920);
            this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
            this.self.addChild(this.BtnBack);
            this.BtnBack.visible = false;
@@ -5647,6 +5648,10 @@
                    const element = _Game._stepOrderImg[index];
                    if (element) {
                        element.zOrder = -Number(element.name.substr(4));
+                       let parent = element.parent;
+                       if (parent != this.ImgVar('DrawRoot')) {
+                           parent.zOrder = -Number(element.name.substr(4));
+                       }
                    }
                }
            });
@@ -5672,16 +5677,18 @@
                    let Sp;
                    let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                    this['frontPos'] = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                   if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                       Sp = this['EraserSp'] = new Laya.Sprite();
-                       this['EraserSp'].blendMode = "destination-out";
+                   if (index == _Game._stepIndex && _Game._drawSwitch) {
+                       if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                           Sp = this['EraserSp'] = new Laya.Sprite();
+                           this['EraserSp'].blendMode = "destination-out";
+                       }
+                       else {
+                           Sp = this['DrawSp'] = new Laya.Sprite();
+                           this['DrawSp'].blendMode = "none";
+                       }
+                       DrawBoard.addChild(Sp)['pos'](0, 0);
+                       Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
                    }
-                   else {
-                       Sp = this['DrawSp'] = new Laya.Sprite();
-                       this['DrawSp'].blendMode = "none";
-                   }
-                   DrawBoard.addChild(Sp)['pos'](0, 0);
-                   Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
                }, (e) => {
                    let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                    let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
@@ -5728,6 +5735,7 @@
                    this['BtnLastStepClose'] = true;
                }
                this._drawingLenth.switch = false;
+               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.lastStep);
            });
            Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
@@ -5741,6 +5749,7 @@
                    this.BtnLastStep.visible = true;
                    Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
                }
+               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.nextStep);
            });
            Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
@@ -6141,7 +6150,8 @@
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                if (Admin._game.level > 4) {
-                   Admin._game.level == 1;
+                   Admin._game.level = 1;
+                   console.log(Admin._game.level);
                }
                Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
                    if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
@@ -6222,7 +6232,7 @@
    GameConfig.startScene = "Scene/UIPreLoad.scene";
    GameConfig.sceneRoot = "";
    GameConfig.debug = false;
-   GameConfig.stat = true;
+   GameConfig.stat = false;
    GameConfig.physicsDebug = false;
    GameConfig.exportSceneToJson = true;
    GameConfig.init();

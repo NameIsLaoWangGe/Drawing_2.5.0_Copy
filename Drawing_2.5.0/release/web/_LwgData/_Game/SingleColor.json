@@ -11,6 +11,12 @@
       "name": "blue",
       "color": "#005fff",
       "pitch": false
+    },
+    {
+      "index": 3,
+      "name": "eraser",
+      "color": "#000000",
+      "pitch": false
     }
   ]
 }

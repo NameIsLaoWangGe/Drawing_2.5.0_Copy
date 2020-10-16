@@ -794,23 +794,38 @@
            })(_platformTpye = Admin._platformTpye || (Admin._platformTpye = {}));
            Admin._platform = _platformTpye.Bytedance;
            Admin._evaluating = false;
-           Admin._gameSwitch = false;
-           Admin._gameLevel = {
-               get value() {
+           Admin._game = {
+               switch: true,
+               get level() {
                    return Laya.LocalStorage.getItem('_gameLevel') ? Number(Laya.LocalStorage.getItem('_gameLevel')) : 1;
                },
-               set value(val) {
+               set level(val) {
                    Laya.LocalStorage.setItem('_gameLevel', val.toString());
-               }
-           };
-           Admin._practicalLevel = {
-               get value() {
-                   return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : Admin._gameLevel.value;
                },
-               set value(val) {
+               get practicalLevel() {
+                   return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : Admin._game.level;
+               },
+               set practicalLevel(val) {
                    Laya.LocalStorage.setItem('_practicalLevel', val.toString());
+               },
+               LevelNode: new Laya.Sprite,
+               _createLevel(parent, x, y) {
+                   let sp;
+                   Laya.loader.load('prefab/LevelNode.json', Laya.Handler.create(this, function (prefab) {
+                       let _prefab = new Laya.Prefab();
+                       _prefab.json = prefab;
+                       sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
+                       parent.addChild(sp);
+                       sp.pos(x, y);
+                       sp.zOrder = 0;
+                       let level = sp.getChildByName('level');
+                       Admin._LevelNode = sp;
+                   }));
                }
            };
+           class _Game {
+           }
+           Admin._Game = _Game;
            function _createLevel(parent, x, y) {
                let sp;
                Laya.loader.load('prefab/LevelNode.json', Laya.Handler.create(this, function (prefab) {
@@ -827,16 +842,16 @@
            Admin._createLevel = _createLevel;
            Admin._pause = {
                get switch() {
-                   return Admin._gameSwitch;
+                   return Admin._game.switch;
                },
                set switch(bool) {
                    this.bool = bool;
                    if (bool) {
-                       Admin._gameSwitch = false;
+                       Admin._game.switch = false;
                        Laya.timer.pause();
                    }
                    else {
-                       Admin._gameSwitch = true;
+                       Admin._game.switch = true;
                        Laya.timer.resume();
                    }
                }
@@ -3223,6 +3238,11 @@
                }
            }
            Tools.node_3DShowExcludedChild = node_3DShowExcludedChild;
+           function node_PrefabCreate(prefab, name) {
+               let sp = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
+               return sp;
+           }
+           Tools.node_PrefabCreate = node_PrefabCreate;
            function node_2DChildrenVisible(node, bool) {
                for (let index = 0; index < node.numChildren; index++) {
                    const element = node.getChildAt(index);
@@ -3275,6 +3295,11 @@
                return null;
            }
            Tools.node_2dFindChild = node_2dFindChild;
+           function node_2dFindChildByName(parent, name) {
+               let arr = [];
+               return arr;
+           }
+           Tools.node_2dFindChildByName = node_2dFindChildByName;
            function randomOneHalf() {
                let number;
                number = Math.floor(Math.random() * 2);
@@ -3515,6 +3540,7 @@
                    node.addChild(interactionArea);
                    interactionArea.graphics.drawCircle(0, 0, radius, "#000000");
                    interactionArea.pos(x, y);
+                   return interactionArea;
                }
                Draw.reverseRoundMask = reverseRoundMask;
                function reverseRoundrectMask(node, x, y, width, height, round, eliminate) {
@@ -3727,7 +3753,7 @@
                let arr2Capy = array_Copy(arr2);
                for (let i = 0; i < arr1Capy.length; i++) {
                    for (let j = 0; j < arr2Capy.length; j++) {
-                       if (arr1Capy[i] === arr2Capy[j]) {
+                       if (arr1Capy[i] == arr2Capy[j]) {
                            arr1Capy.splice(i, 1);
                            i--;
                        }
@@ -4767,8 +4793,10 @@
            Backpack._haveCardArray = {
                get arr() {
                    try {
-                       if (Laya.LocalStorage.getJSON('Backpack_haveCardArray')) {
-                           return Laya.LocalStorage.getJSON('Backpack_haveCardArray');
+                       let data = Laya.LocalStorage.getJSON('Backpack_haveCardArray');
+                       if (data) {
+                           return JSON.parse(data);
+                           ;
                        }
                        else {
                            return [];
@@ -4820,66 +4848,82 @@
        })(Backpack = lwg.Backpack || (lwg.Backpack = {}));
        let _PreLoad;
        (function (_PreLoad) {
-           _PreLoad.list_3DScene = [];
-           _PreLoad.list_3DPrefab = [];
-           _PreLoad.list_3DMesh = [];
-           _PreLoad.list_Material = [];
-           _PreLoad.list_Texture2D = [];
-           _PreLoad.list_2DPic = [];
-           _PreLoad.list_2DScene = [];
-           _PreLoad.list_2DPrefab = [];
-           _PreLoad.list_JsonData = [];
-           _PreLoad.sumProgress = 0;
-           _PreLoad.loadOrder = [];
-           _PreLoad.loadOrderIndex = 0;
+           _PreLoad._scene3D = [];
+           _PreLoad._prefab3D = [];
+           _PreLoad._mesh3D = [];
+           _PreLoad._material = [];
+           _PreLoad._texture2D = [];
+           _PreLoad._pic2D = [];
+           _PreLoad._scene2D = [];
+           _PreLoad._prefab2D = [];
+           _PreLoad._json = [];
+           _PreLoad._skeleton = [];
+           _PreLoad._sumProgress = 0;
+           _PreLoad._loadOrder = [];
+           _PreLoad._loadOrderIndex = 0;
            _PreLoad._whereToLoad = Admin._SceneName.UIPreLoad;
-           _PreLoad.currentProgress = {
+           let _ListName;
+           (function (_ListName) {
+               _ListName["scene3D"] = "scene3D";
+               _ListName["prefab3D"] = "prefab3D";
+               _ListName["mesh3D"] = "mesh3D";
+               _ListName["material"] = "material";
+               _ListName["texture2D"] = "texture2D";
+               _ListName["pic2D"] = "pic2D";
+               _ListName["scene2D"] = "scene2D";
+               _ListName["prefab2D"] = "prefab2D";
+               _ListName["json"] = "json";
+               _ListName["skeleton"] = "skeleton";
+           })(_ListName = _PreLoad._ListName || (_PreLoad._ListName = {}));
+           _PreLoad._currentProgress = {
                get value() {
                    return this['len'] ? this['len'] : 0;
                },
                set value(val) {
                    this['len'] = val;
-                   if (this['len'] >= _PreLoad.sumProgress) {
-                       if (_PreLoad.sumProgress == 0) {
+                   if (this['len'] >= _PreLoad._sumProgress) {
+                       if (_PreLoad._sumProgress == 0) {
                            return;
                        }
-                       console.log('当前进度条进度为:', _PreLoad.currentProgress.value / _PreLoad.sumProgress);
+                       console.log('当前进度条进度为:', _PreLoad._currentProgress.value / _PreLoad._sumProgress);
                        console.log('进度条停止！');
                        console.log('所有资源加载完成！此时所有资源可通过例如 Laya.loader.getRes("url")获取');
                        EventAdmin._notify(_PreLoad._Event.complete);
                    }
                    else {
                        let number = 0;
-                       for (let index = 0; index <= _PreLoad.loadOrderIndex; index++) {
-                           number += _PreLoad.loadOrder[index].length;
+                       for (let index = 0; index <= _PreLoad._loadOrderIndex; index++) {
+                           number += _PreLoad._loadOrder[index].length;
                        }
                        if (this['len'] == number) {
-                           _PreLoad.loadOrderIndex++;
+                           _PreLoad._loadOrderIndex++;
                        }
-                       EventAdmin._notify(_PreLoad._Event.loding);
+                       EventAdmin._notify(_PreLoad._Event.startLoding);
                    }
                },
            };
            let _Event;
            (function (_Event) {
-               _Event["complete"] = "complete";
-               _Event["loding"] = "loding";
-               _Event["progress"] = "progress";
+               _Event["importList"] = "_PreLoad_importList";
+               _Event["complete"] = "_PreLoad_complete";
+               _Event["startLoding"] = "_PreLoad_startLoding";
+               _Event["progress"] = "_PreLoad_progress";
            })(_Event = _PreLoad._Event || (_PreLoad._Event = {}));
            function _remakeLode() {
-               _PreLoad.list_3DScene = [];
-               _PreLoad.list_3DPrefab = [];
-               _PreLoad.list_3DMesh = [];
-               _PreLoad.list_Material = [];
-               _PreLoad.list_Texture2D = [];
-               _PreLoad.list_2DPic = [];
-               _PreLoad.list_2DScene = [];
-               _PreLoad.list_2DPrefab = [];
-               _PreLoad.list_JsonData = [];
-               _PreLoad.sumProgress = 0;
-               _PreLoad.loadOrder = [];
-               _PreLoad.loadOrderIndex = 0;
-               _PreLoad.currentProgress.value = 0;
+               _PreLoad._scene3D = [];
+               _PreLoad._prefab3D = [];
+               _PreLoad._mesh3D = [];
+               _PreLoad._material = [];
+               _PreLoad._texture2D = [];
+               _PreLoad._pic2D = [];
+               _PreLoad._scene2D = [];
+               _PreLoad._prefab2D = [];
+               _PreLoad._json = [];
+               _PreLoad._skeleton = [];
+               _PreLoad._loadOrder = [];
+               _PreLoad._sumProgress = 0;
+               _PreLoad._loadOrderIndex = 0;
+               _PreLoad._currentProgress.value = 0;
            }
            _PreLoad._remakeLode = _remakeLode;
            class _PreLoadScene extends Admin._Scene {
@@ -4887,9 +4931,69 @@
                    _PreLoad._remakeLode();
                }
                moduleEventRegister() {
-                   EventAdmin._register(_Event.loding, this, () => { this.lodingRule(); });
+                   EventAdmin._register(_Event.importList, this, (listObj) => {
+                       for (const key in listObj) {
+                           if (Object.prototype.hasOwnProperty.call(listObj, key)) {
+                               for (const key1 in listObj[key]) {
+                                   if (Object.prototype.hasOwnProperty.call(listObj[key], key1)) {
+                                       const element = listObj[key][key1];
+                                       switch (key) {
+                                           case _ListName.json:
+                                               _PreLoad._json.push(element);
+                                               break;
+                                           case _ListName.material:
+                                               _PreLoad._material.push(element);
+                                               break;
+                                           case _ListName.mesh3D:
+                                               _PreLoad._mesh3D.push(element);
+                                               break;
+                                           case _ListName.pic2D:
+                                               _PreLoad._pic2D.push(element);
+                                               break;
+                                           case _ListName.prefab2D:
+                                               _PreLoad._prefab2D.push(element);
+                                               break;
+                                           case _ListName.prefab3D:
+                                               _PreLoad._prefab3D.push(element);
+                                               break;
+                                           case _ListName.scene2D:
+                                               _PreLoad._scene2D.push(element);
+                                               break;
+                                           case _ListName.scene3D:
+                                               _PreLoad._scene3D.push(element);
+                                               break;
+                                           case _ListName.texture2D:
+                                               _PreLoad._texture2D.push(element);
+                                               break;
+                                           case _ListName.skeleton:
+                                               _PreLoad._skeleton.push(element);
+                                               break;
+                                           default:
+                                               break;
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                       _PreLoad._loadOrder = [_PreLoad._pic2D, _PreLoad._scene2D, _PreLoad._prefab2D, _PreLoad._scene3D, _PreLoad._prefab3D, _PreLoad._json, _PreLoad._texture2D, _PreLoad._mesh3D, _PreLoad._material, _PreLoad._skeleton];
+                       for (let index = 0; index < _PreLoad._loadOrder.length; index++) {
+                           _PreLoad._sumProgress += _PreLoad._loadOrder[index].length;
+                           if (_PreLoad._loadOrder[index].length <= 0) {
+                               _PreLoad._loadOrder.splice(index, 1);
+                               index--;
+                           }
+                       }
+                       let time = this.lwgOpenAni();
+                       if (time == null) {
+                           time = 0;
+                       }
+                       Laya.timer.once(time, this, () => {
+                           EventAdmin._notify(_PreLoad._Event.startLoding);
+                       });
+                   });
+                   EventAdmin._register(_Event.startLoding, this, () => { this.startLodingRule(); });
                    EventAdmin._register(_Event.complete, this, () => {
-                       let time = this.lodingComplete();
+                       let time = this.lwgAllComplete();
                        Laya.timer.once(time, this, () => { });
                        this.self.name = _PreLoad._whereToLoad;
                        Admin._sceneControl[_PreLoad._whereToLoad] = this.self;
@@ -4910,150 +5014,148 @@
                        }
                    });
                    EventAdmin._register(_Event.progress, this, () => {
-                       _PreLoad.currentProgress.value++;
-                       if (_PreLoad.currentProgress.value < _PreLoad.sumProgress) {
-                           console.log('当前进度条进度为:', _PreLoad.currentProgress.value / _PreLoad.sumProgress);
-                           this.lodingPhaseComplete();
+                       _PreLoad._currentProgress.value++;
+                       if (_PreLoad._currentProgress.value < _PreLoad._sumProgress) {
+                           console.log('当前进度条进度为:', _PreLoad._currentProgress.value / _PreLoad._sumProgress);
+                           this.lwgStepComplete();
                        }
                    });
                }
                moduleOnEnable() {
-                   _PreLoad.loadOrder = [_PreLoad.list_2DPic, _PreLoad.list_2DScene, _PreLoad.list_2DPrefab, _PreLoad.list_3DScene, _PreLoad.list_3DPrefab, _PreLoad.list_JsonData];
-                   for (let index = 0; index < _PreLoad.loadOrder.length; index++) {
-                       _PreLoad.sumProgress += _PreLoad.loadOrder[index].length;
-                       if (_PreLoad.loadOrder[index].length <= 0) {
-                           _PreLoad.loadOrder.splice(index, 1);
-                           index--;
-                       }
-                   }
-                   _PreLoad.loadOrderIndex = 0;
+                   _PreLoad._loadOrderIndex = 0;
                }
-               moduleOnStart() {
-                   let time = this.lwgOpenAni();
-                   if (time == null) {
-                       time = 0;
-                   }
-                   Laya.timer.once(time, this, () => {
-                       EventAdmin._notify(_PreLoad._Event.loding);
-                   });
-               }
-               lodingRule() {
-                   if (_PreLoad.loadOrder.length <= 0) {
+               startLodingRule() {
+                   if (_PreLoad._loadOrder.length <= 0) {
                        console.log('没有加载项');
                        EventAdmin._notify(_PreLoad._Event.complete);
                        return;
                    }
                    let alreadyPro = 0;
-                   for (let i = 0; i < _PreLoad.loadOrderIndex; i++) {
-                       alreadyPro += _PreLoad.loadOrder[i].length;
+                   for (let i = 0; i < _PreLoad._loadOrderIndex; i++) {
+                       alreadyPro += _PreLoad._loadOrder[i].length;
                    }
-                   let index = _PreLoad.currentProgress.value - alreadyPro;
-                   switch (_PreLoad.loadOrder[_PreLoad.loadOrderIndex]) {
-                       case _PreLoad.list_2DPic:
-                           Laya.loader.load(_PreLoad.list_2DPic[index], Laya.Handler.create(this, (any) => {
+                   let index = _PreLoad._currentProgress.value - alreadyPro;
+                   switch (_PreLoad._loadOrder[_PreLoad._loadOrderIndex]) {
+                       case _PreLoad._pic2D:
+                           Laya.loader.load(_PreLoad._pic2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX2D资源' + _PreLoad.list_2DPic[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX2D资源' + _PreLoad._pic2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D图片' + _PreLoad.list_2DPic[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D图片' + _PreLoad._pic2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
-                       case _PreLoad.list_2DScene:
-                           Laya.loader.load(_PreLoad.list_2DScene[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._scene2D:
+                           Laya.loader.load(_PreLoad._scene2D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_2DScene[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._scene2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D场景' + _PreLoad.list_2DScene[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D场景' + _PreLoad._scene2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }), null, Laya.Loader.JSON);
                            break;
-                       case _PreLoad.list_2DPrefab:
-                           Laya.loader.load(_PreLoad.list_2DPrefab[index], Laya.Handler.create(this, (any) => {
+                       case _PreLoad._scene3D:
+                           Laya.Scene3D.load(_PreLoad._scene3D[index], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_2DPrefab[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad._scene3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D预制体' + _PreLoad.list_2DPrefab[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('3D场景' + _PreLoad._scene3D[index] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._prefab3D:
+                           Laya.Sprite3D.load(_PreLoad._prefab3D[index], Laya.Handler.create(this, (any) => {
+                               if (any == null) {
+                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad._prefab3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   console.log('3D预制体' + _PreLoad._prefab3D[index] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._mesh3D:
+                           Laya.Mesh.load(_PreLoad._mesh3D[index], Laya.Handler.create(this, (any) => {
+                               if (any == null) {
+                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad._mesh3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   console.log('3D网格' + _PreLoad._mesh3D[index] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._texture2D:
+                           Laya.Texture2D.load(_PreLoad._texture2D[index], Laya.Handler.create(this, (any) => {
+                               if (any == null) {
+                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad._texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   console.log('2D纹理' + _PreLoad._texture2D[index] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._material:
+                           Laya.Material.load(_PreLoad._material[index], Laya.Handler.create(this, (any) => {
+                               if (any == null) {
+                                   console.log('XXXXXXXXXXX材质' + _PreLoad._material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   console.log('材质' + _PreLoad._material[index] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._json:
+                           Laya.loader.load(_PreLoad._json[index]['url'], Laya.Handler.create(this, (data) => {
+                               if (data == null) {
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._json[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   _PreLoad._json[index]['data'] = data["RECORDS"];
+                                   console.log('数据表' + _PreLoad._json[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }), null, Laya.Loader.JSON);
                            break;
-                       case _PreLoad.list_3DScene:
-                           Laya.Scene3D.load(_PreLoad.list_3DScene[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad.list_3DScene[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                       case _PreLoad._skeleton:
+                           _PreLoad._skeleton[index]['templet'].on(Laya.Event.ERROR, this, () => {
+                               console.log('XXXXXXXXXXX骨骼动画' + _PreLoad._skeleton[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               EventAdmin._notify(_Event.progress);
+                           });
+                           _PreLoad._skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
+                               console.log('骨骼动画', _PreLoad._skeleton[index]['templet'], '加载完成！', '数组下标为：', index);
+                               EventAdmin._notify(_Event.progress);
+                           });
+                           _PreLoad._skeleton[index]['templet'].loadAni(_PreLoad._skeleton[index]['url']);
+                           break;
+                       case _PreLoad._prefab2D:
+                           Laya.loader.load(_PreLoad._prefab2D[index]['url'], Laya.Handler.create(this, (prefab) => {
+                               if (prefab == null) {
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D场景' + _PreLoad.list_3DScene[index] + '加载完成！', '数组下标为：', index);
+                                   let _prefab = new Laya.Prefab();
+                                   _prefab.json = prefab;
+                                   _PreLoad._prefab2D[index]['prefab'] = _prefab;
+                                   console.log('2D预制体' + _PreLoad._prefab2D[index] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
-                           break;
-                       case _PreLoad.list_3DPrefab:
-                           Laya.Sprite3D.load(_PreLoad.list_3DPrefab[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad.list_3DPrefab[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                               }
-                               else {
-                                   console.log('3D预制体' + _PreLoad.list_3DPrefab[index] + '加载完成！', '数组下标为：', index);
-                               }
-                               EventAdmin._notify(_Event.progress);
-                           }));
-                           break;
-                       case _PreLoad.list_3DMesh:
-                           Laya.Mesh.load(_PreLoad.list_3DMesh[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad.list_3DMesh[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                               }
-                               else {
-                                   console.log('3D网格' + _PreLoad.list_3DMesh[index] + '加载完成！', '数组下标为：', index);
-                               }
-                               EventAdmin._notify(_Event.progress);
-                           }));
-                           break;
-                       case _PreLoad.list_Texture2D:
-                           Laya.Texture2D.load(_PreLoad.list_Texture2D[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad.list_Texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                               }
-                               else {
-                                   console.log('2D纹理' + _PreLoad.list_Texture2D[index] + '加载完成！', '数组下标为：', index);
-                               }
-                               EventAdmin._notify(_Event.progress);
-                           }));
-                           break;
-                       case _PreLoad.list_Material:
-                           Laya.Material.load(_PreLoad.list_Material[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX材质' + _PreLoad.list_Material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                               }
-                               else {
-                                   console.log('材质' + _PreLoad.list_Material[index] + '加载完成！', '数组下标为：', index);
-                               }
-                               EventAdmin._notify(_Event.progress);
-                           }));
-                           break;
-                       case _PreLoad.list_JsonData:
-                           Laya.loader.load(_PreLoad.list_JsonData[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad.list_JsonData[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
-                               }
-                               else {
-                                   console.log('数据表' + _PreLoad.list_JsonData[index] + '加载完成！', '数组下标为：', index);
-                               }
-                               EventAdmin._notify(_Event.progress);
-                           }), null, Laya.Loader.JSON);
                            break;
                        default:
                            break;
                    }
                }
-               lodingPhaseComplete() { }
-               lodingComplete() { return 0; }
+               lwgStepComplete() { }
+               lwgAllComplete() { return 0; }
                ;
            }
            _PreLoad._PreLoadScene = _PreLoadScene;
@@ -5191,32 +5293,55 @@
    let Backpack = lwg.Backpack;
    let BackpackScene = lwg.Backpack.BackpackScene;
 
+   var _PreloadUrl;
+   (function (_PreloadUrl) {
+       _PreloadUrl._list = {
+           prefab2D: {
+               PencilsList: {
+                   url: 'Prefab/PencilsList.json',
+                   prefab: new Laya.Prefab,
+               },
+               StepSwitch: {
+                   url: 'Prefab/StepSwitch.json',
+                   prefab: new Laya.Prefab,
+               },
+               BtnBack: {
+                   url: 'Prefab/BtnBack.json',
+                   prefab: new Laya.Prefab,
+               },
+               BtnPlayAni: {
+                   url: 'Prefab/BtnPlayAni.json',
+                   prefab: new Laya.Prefab,
+               }
+           },
+           texture2D: {
+               star1: 'Frame/Effects/hua4.png',
+           },
+           scene2D: {
+               UIStart: "Scene/" + _SceneName.UIStart + '.json',
+               GameScene: "Scene/" + _SceneName.GameScene + '.json',
+               UIPreLoad: "Scene/" + _SceneName.UIPreLoad + '.json',
+           },
+           json: {
+               SingleColor: {
+                   url: "_LwgData" + "/_Game/SingleColor" + ".json",
+                   data: new Array,
+               },
+               Colours: {
+                   url: "_LwgData" + "/_Game/Colours" + ".json",
+                   data: new Array,
+               }
+           },
+       };
+   })(_PreloadUrl || (_PreloadUrl = {}));
    class UIPreLoad extends _PreLoad._PreLoadScene {
-       lwgOnAwake() {
-           _PreLoad.list_2DPic = [];
-           _PreLoad.list_2DScene = [
-               "Scene/" + _SceneName.UIStart + '.json',
-               "Scene/" + _SceneName.GameScene + '.json',
-               "Scene/" + _SceneName.UIPreLoad + '.json',
-           ];
-           _PreLoad.list_2DPrefab = [];
-           _PreLoad.list_3DScene = [];
-           _PreLoad.list_3DPrefab = [];
-           _PreLoad.list_JsonData = [
-               "_LwgData" + "/_Game/SingleColor" + ".json",
-               "_LwgData" + "/_Game/Colours" + ".json",
-           ];
-       }
-       lwgAdaptive() {
-       }
-       lwgOnEnable() {
-       }
        lwgOnStart() {
+           EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl._list]));
        }
        lwgOpenAni() { return 0; }
-       lodingPhaseComplete() {
+       lwgStepComplete() {
        }
-       lodingComplete() {
+       lwgAllComplete() {
            return 200;
        }
    }
@@ -5232,122 +5357,135 @@
            _Event["compelet"] = "_Game_compelet";
            _Event["playAni1"] = "_Game_playAni1";
            _Event["playAni2"] = "_Game_playAni2";
+           _Event["restoreZOder"] = "_Game_restoreZoder";
        })(_Event = _Game._Event || (_Game._Event = {}));
        let _Animation;
        (function (_Animation) {
            _Animation["action1"] = "action1";
            _Animation["action2"] = "action2";
        })(_Animation = _Game._Animation || (_Game._Animation = {}));
-       _Game._stepOrder = [];
-       _Game._passLenghtArr = [];
+       let _Brush;
+       (function (_Brush) {
+           _Brush["chalk"] = "chalk";
+           _Brush["pencil"] = "pencil";
+       })(_Brush = _Game._Brush || (_Game._Brush = {}));
+       _Game._stepOrderImg = [];
+       _Game._passLenght = 100;
        _Game._stepIndex = 0;
        _Game._stepMaskIndex = 0;
        _Game._drawSwitch = false;
-       _Game._coloursPencils = {};
-       _Game._singlePencils = {
-           property: {
-               number: 'number',
-               name: 'name',
-               color: 'color',
-               pitch: 'pitch',
+       _Game._Pencils = {
+           type: {
+               SingleColor: 'SingleColor',
+               Colours: 'Colours',
+               Stars: 'Stars',
            },
-           pitchName: {
-               get value() {
-                   return this['name'] ? this['name'] : _Game._singlePencils.data[0][_Game._singlePencils.property.name];
-               },
-               set value(name) {
-                   this['name'] = name;
-               }
+           get presentUse() {
+               return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : null;
            },
-           pitchColor: {
-               get value() {
-                   return this['color'] ? this['color'] : _Game._singlePencils.data[0][_Game._singlePencils.property.color];
-               },
-               set value(name) {
-                   this['color'] = name;
-               }
+           set presentUse(name) {
+               Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
            },
-           get data() {
-               return this['arr'] ? this['arr'] : Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0]));
-           },
-           set data(array) {
-               this['arr'] = array;
-           },
-           setPitchByName(name) {
-               for (let index = 0; index < this.data.length; index++) {
-                   if (name == this.data[index][this.property.name]) {
-                       this.data[index][this.property.pitch] = true;
-                       _Game._singlePencils.pitchName.value = name;
-                       _Game._singlePencils.pitchColor.value = this.data[index][this.property.color];
+           allPencils: ['Colours', 'SingleColor', 'Stars'],
+           get have() {
+               try {
+                   let data = Laya.LocalStorage.getJSON('_Pencils_have');
+                   if (data) {
+                       return JSON.parse(data);
+                       ;
                    }
                    else {
-                       this.data[index][this.property.pitch] = false;
+                       return ['SingleColor'];
                    }
                }
+               catch (error) {
+                   return ['SingleColor'];
+               }
+           },
+           set have(array) {
+               Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(array));
+           },
+           get nohave() {
+               return Tools.array1ExcludeArray2(_Game._Pencils.allPencils, _Game._Pencils.have);
+           },
+           add(str) {
+               let arr = Tools.array_Copy(_Game._Pencils.have);
+               arr.push(str);
+               Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(arr));
            }
        };
-       function _init() {
-           _Game._singlePencils.data = Tools.objArray_Copy(Laya.loader.getRes(_PreLoad.list_JsonData[0])["RECORDS"]);
-           _Game._singlePencils.setPitchByName(_Game._singlePencils.data[0][_Game._singlePencils.property.name]);
-           _Game._stepOrder = ['Face', 'Petal1', 'Petal2', 'Petal3', 'Petal4', 'Stalk', 'Leaf1', 'Leaf2'];
-           _Game._passLenghtArr = [150, 150, 150, 150, 150, 150, 150, 150];
-       }
-       _Game._init = _init;
-       class _GameGeneral extends Admin._Scene {
-           moduleOnAwake() {
-               _Game._stepIndex = 0;
-               _Game._PencilsList = this.ListVar('PencilsList');
-               _Game._PencilsList.array = _Game._singlePencils.data;
-               _Game._PencilsList.selectEnable = true;
-               _Game._PencilsList.vScrollBarSkin = "";
-               _Game._PencilsList.selectHandler = new Laya.Handler(this, this._pencilsListScelet);
-               _Game._PencilsList.renderHandler = new Laya.Handler(this, this._pencilsListUpdate);
-               if (_Game._PencilsList.cells.length !== 0) {
-                   for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
-                       const element = _Game._PencilsList.cells[index];
-                       if (!element.getComponent(_PencilsListItem)) {
-                           element.addComponent(_PencilsListItem);
-                       }
+       class _SingleColorPencils {
+           static _init() {
+               this._data = Tools.objArray_Copy(_PreloadUrl._list.json.SingleColor.data);
+               this._setPitchByName(this._data[0][this._property.name]);
+           }
+           static _setPitchByName(name) {
+               for (let index = 0; index < this._data.length; index++) {
+                   if (name == this._data[index][this._property.name]) {
+                       this._data[index][this._property.pitch] = true;
+                       this._pitchName = name;
+                       this._pitchColor = this._data[index][this._property.color];
+                   }
+                   else {
+                       this._data[index][this._property.pitch] = false;
                    }
                }
            }
-           _pencilsListScelet(index) { }
-           _pencilsListUpdate(cell, index) {
-               let _dataSource = cell.dataSource;
-               let Pic = cell.getChildByName('Pic');
-               Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
-               if (_dataSource[_Game._singlePencils.property.pitch]) {
-                   Pic.scale(1.1, 1.1);
-               }
-               else {
-                   Pic.scale(1, 1);
-               }
+       }
+       _SingleColorPencils._property = {
+           index: 'index',
+           name: 'name',
+           color: 'color',
+           pitch: 'pitch',
+       };
+       _SingleColorPencils._pitchName = '';
+       _SingleColorPencils._pitchColor = '';
+       _SingleColorPencils._data = [];
+       _Game._SingleColorPencils = _SingleColorPencils;
+       class _ColoursPencils extends _SingleColorPencils {
+           static _init() {
+               this._data = Tools.objArray_Copy(_PreloadUrl._list.json.Colours.data);
+               this._setPitchByName(this._data[0][this._property.name]);
            }
        }
-       _Game._GameGeneral = _GameGeneral;
+       _Game._ColoursPencils = _ColoursPencils;
+       ;
+       class _StarsPencils extends _SingleColorPencils {
+           static _init() {
+               this._data = Tools.objArray_Copy(_PreloadUrl._list.json.Colours.data);
+               this._setPitchByName(this._data[0][this._property.name]);
+           }
+       }
+       _Game._StarsPencils = _StarsPencils;
+       ;
+       function _init() {
+           _SingleColorPencils._init();
+           _StarsPencils._init();
+           _ColoursPencils._init();
+       }
+       _Game._init = _init;
        class _PencilsListItem extends Admin._Object {
            lwgBtnClick() {
                Click._on(Click._Type.largen, this.self, this, null, null, () => {
-                   _Game._singlePencils.setPitchByName(this.self['_dataSource'][_Game._singlePencils.property.name]);
+                   _SingleColorPencils._setPitchByName(this.self['_dataSource'][_SingleColorPencils._property.name]);
                    _Game._PencilsList.refresh();
-                   console.log(_Game._singlePencils.pitchColor.value);
                });
            }
        }
        _Game._PencilsListItem = _PencilsListItem;
    })(_Game || (_Game = {}));
-   class GameScene extends _Game._GameGeneral {
+   class GameScene extends Admin._Scene {
        constructor() {
            super(...arguments);
            this._drawingLenth = {
-               swtch: true,
+               switch: true,
                get value() {
                    return this['len'] ? this['len'] : 0;
                },
                set value(v) {
-                   if (this.swtch) {
+                   if (this.switch) {
                        this['len'] = v;
-                       if (this['len'] >= _Game._passLenghtArr[_Game._stepIndex]) {
+                       if (this['len'] >= _Game._passLenght) {
                            EventAdmin._notify(_Game._Event.showStepBtn);
                            this['len'] = 0;
                        }
@@ -5356,51 +5494,104 @@
            };
        }
        lwgOnAwake() {
+           _Game._passLenght = 100;
            _Game._stepIndex = 0;
            _Game._drawSwitch = false;
+           _Game._stepIndex = 0;
+           _Game._stepMaskIndex = 0;
+           _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
+           this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
+           _Game._PencilsList.array = _Game._SingleColorPencils._data;
+           _Game._PencilsList.selectEnable = true;
+           _Game._PencilsList.vScrollBarSkin = "";
+           _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
+           _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell, index) => {
+               let _dataSource = cell.dataSource;
+               let Pic = cell.getChildByName('Pic');
+               Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
+               if (_dataSource[_Game._SingleColorPencils._property.pitch]) {
+                   Pic.scale(1.1, 1.1);
+               }
+               else {
+                   Pic.scale(1, 1);
+               }
+           });
+           if (_Game._PencilsList.cells.length !== 0) {
+               for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
+                   const element = _Game._PencilsList.cells[index];
+                   if (!element.getComponent(_Game._PencilsListItem)) {
+                       element.addComponent(_Game._PencilsListItem);
+                   }
+               }
+           }
+           _Game._stepOrderImg = [];
+           let index = 1;
+           while (this.self['Draw' + index]) {
+               _Game._stepOrderImg.push(this.self['Draw' + index]);
+               this.self['Draw' + index].skin = null;
+               index++;
+           }
        }
        lwgOnEnable() {
+           this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
+           this.self.addChild(this.StepSwitch);
+           this.StepSwitch.pos(194.5, 900);
+           this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
+           this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
+           this.BtnNextStep.visible = false;
+           this.BtnLastStep.visible = false;
+           this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
+           this.self.addChild(this.BtnPlayAni);
+           this.BtnPlayAni.visible = false;
+           this.BtnPlayAni.pos(361, 920);
+           this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
+           this.self.addChild(this.BtnBack);
+           this.BtnBack.visible = false;
+           this.BtnBack.pos(96, 97);
+       }
+       lwgOnStart() {
+           EventAdmin._notify(_Game._Event.start);
        }
        lwgEventRegister() {
            EventAdmin._register(_Game._Event.start, this, () => {
                _Game._drawSwitch = true;
-               for (let index = 0; index < _Game._stepOrder.length; index++) {
+               for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                    if (_Game._stepIndex >= index) {
-                       this.ImgVar(_Game._stepOrder[index]).visible = true;
+                       _Game._stepOrderImg[index].visible = true;
                    }
                    else {
-                       this.ImgVar(_Game._stepOrder[index]).visible = false;
+                       _Game._stepOrderImg[index].visible = false;
                    }
                }
            });
            EventAdmin._register(_Game._Event.showStepBtn, this, () => {
                if (_Game._stepIndex == 0) {
-                   this.ImgVar('BtnNextStep').visible = true;
-                   Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                   this.BtnNextStep.visible = true;
+                   Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
                }
                else {
-                   if (!this.ImgVar('BtnNextStep').visible) {
-                       this.ImgVar('BtnNextStep').visible = true;
-                       Animation2D.fadeOut(this.ImgVar('BtnNextStep'), 0, 1, 300, null, null, true);
+                   if (!this.BtnNextStep.visible) {
+                       this.BtnNextStep.visible = true;
+                       Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
                    }
-                   if (!this.ImgVar('BtnLastStep').visible) {
-                       this.ImgVar('BtnLastStep').visible = true;
-                       Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
+                   if (!this.BtnLastStep.visible) {
+                       this.BtnLastStep.visible = true;
+                       Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300);
                    }
                }
-               this._drawingLenth.swtch = false;
+               this._drawingLenth.switch = false;
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
+               EventAdmin._notify(_Game._Event.restoreZOder);
                if (_Game._stepIndex - 1 >= 0) {
-                   Admin._clickLock.switch = true;
-                   let Img0 = this.ImgVar(_Game._stepOrder[_Game._stepIndex - 1]);
+                   let Img0 = _Game._stepOrderImg[_Game._stepIndex - 1];
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                        if (parent0 != this.ImgVar('DrawRoot')) {
                            parent0.zOrder = (_Game._stepIndex + 1) * 10;
                        }
                        Img0.zOrder = (_Game._stepIndex + 1) * 10;
-                       let Img = this.ImgVar(_Game._stepOrder[_Game._stepIndex]);
+                       let Img = _Game._stepOrderImg[_Game._stepIndex];
                        let parent = Img.parent;
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                            if (parent != this.ImgVar('DrawRoot')) {
@@ -5408,108 +5599,162 @@
                            }
                            Img.zOrder = -1;
                            _Game._stepIndex--;
-                           console.log(_Game._stepIndex, _Game._stepMaskIndex);
                            if (_Game._stepIndex < _Game._stepMaskIndex) {
-                               this.ImgVar('BtnNextStep').visible = true;
+                               this.BtnNextStep.visible = true;
                            }
                            if (_Game._stepIndex == 0) {
-                               this.ImgVar('BtnLastStep').visible = false;
+                               this.BtnLastStep.visible = false;
                            }
-                           Admin._clickLock.switch = false;
+                           this['BtnLastStepClose'] = false;
                        });
                    });
                }
            });
            EventAdmin._register(_Game._Event.nextStep, this, () => {
-               if (_Game._stepIndex >= _Game._stepOrder.length - 1) {
+               EventAdmin._notify(_Game._Event.restoreZOder);
+               if (_Game._stepIndex >= _Game._stepOrderImg.length - 1) {
                    EventAdmin._notify(_Game._Event.compelet);
-                   Animation2D.fadeOut(this.ImgVar(_Game._stepOrder[_Game._stepIndex]).getChildByName('Pic'), 1, 0, 300, 0);
+                   Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
                }
                else {
-                   Admin._clickLock.switch = true;
-                   let Img = this.ImgVar(_Game._stepOrder[_Game._stepIndex]);
+                   let Img = _Game._stepOrderImg[_Game._stepIndex];
                    let parent = Img.parent;
                    if (parent != this.ImgVar('DrawRoot')) {
                        parent.zOrder = -1;
                    }
                    Img.zOrder = -1;
                    Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                       let Img0 = this.ImgVar(_Game._stepOrder[_Game._stepIndex + 1]);
+                       let Img0 = _Game._stepOrderImg[_Game._stepIndex + 1];
                        Img0.visible = true;
                        Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                            let parent0 = Img0.parent;
                            _Game._stepIndex++;
                            if (_Game._stepIndex == _Game._stepMaskIndex + 1) {
                                _Game._stepMaskIndex++;
-                               this.ImgVar('BtnNextStep').visible = false;
-                               this._drawingLenth.swtch = true;
+                               this.BtnNextStep.visible = false;
+                               this._drawingLenth.switch = true;
                            }
                            if (parent0 != this.ImgVar('DrawRoot')) {
                                parent0.zOrder = _Game._stepIndex * 10;
                            }
-                           console.log(_Game._stepIndex, _Game._stepMaskIndex);
                            Img0.zOrder = _Game._stepIndex * 10;
-                           Admin._clickLock.switch = false;
+                           this['BtnNextStepClose'] = false;
                        });
                    });
                }
            });
-           EventAdmin._register(_Game._Event.compelet, this, () => {
-               _Game._drawSwitch = false;
-               this.ImgVar('BtnNextStep').visible = false;
-               this.ImgVar('BtnLastStep').visible = false;
-               this.ImgVar('PlayAni').visible = true;
-               this.ImgVar('PlayAni').zOrder = 10;
-               this.ImgVar('BtnBack').visible = true;
+           EventAdmin._register(_Game._Event.restoreZOder, this, () => {
+               for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+                   const element = _Game._stepOrderImg[index];
+                   if (element) {
+                       element.zOrder = -Number(element.name.substr(4));
+                       let parent = element.parent;
+                       if (parent != this.ImgVar('DrawRoot')) {
+                           parent.zOrder = -Number(element.name.substr(4));
+                       }
+                   }
+               }
            });
-       }
-       lwgOnStart() {
-           EventAdmin._notify(_Game._Event.start);
+           EventAdmin._register(_Game._Event.compelet, this, () => {
+               EventAdmin._notify(_Game._Event.restoreZOder);
+               _Game._drawSwitch = false;
+               this.BtnNextStep.visible = false;
+               this.BtnLastStep.visible = false;
+               this.BtnPlayAni.visible = true;
+               this.BtnPlayAni.zOrder = 10;
+               this.BtnBack.visible = true;
+           });
        }
        lwgBtnClick() {
-           Click._on(Click._Type.largen, this.btnVar('BtnBack'), this, null, null, () => {
-               Admin._openScene(Admin._SceneName.UIStart, this.calssName);
-           });
-           for (let index = 0; index < _Game._stepOrder.length; index++) {
-               let Img = this.ImgVar(_Game._stepOrder[index]);
-               Click._on(Click._Type.noEffect, Img.getChildByName('Pic'), this, (e) => {
-                   this['frontPos'] = null;
-                   if (!Img.getChildByName('DrawSp')) {
-                       let DrawSp = new Laya.Sprite();
-                       Img.addChild(DrawSp);
-                       DrawSp.name = 'DrawSp';
-                       DrawSp.pos(0, 0);
+           for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+               let DrawRoot = _Game._stepOrderImg[index];
+               let DrawBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+               DrawBoard.cacheAs = "bitmap";
+               DrawBoard.name = 'DrawBoard';
+               DrawBoard.width = DrawRoot.width;
+               DrawBoard.height = DrawRoot.height;
+               Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, (e) => {
+                   let Sp;
+                   let DrawBoard = DrawRoot.getChildByName('DrawBoard');
+                   this['frontPos'] = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                   if (index == _Game._stepIndex && _Game._drawSwitch) {
+                       if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                           Sp = this['EraserSp'] = new Laya.Sprite();
+                           this['EraserSp'].blendMode = "destination-out";
+                       }
+                       else {
+                           Sp = this['DrawSp'] = new Laya.Sprite();
+                           this['DrawSp'].blendMode = "none";
+                       }
+                       DrawBoard.addChild(Sp)['pos'](0, 0);
+                       Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
                    }
-                   this['frontPos'] = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                }, (e) => {
-                   let DrawSp = Img.getChildByName('DrawSp');
-                   if (!DrawSp) {
-                       return;
-                   }
+                   let DrawBoard = DrawRoot.getChildByName('DrawBoard');
+                   let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                    if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
-                       let endPos = Img.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                       DrawSp.graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._singlePencils.pitchColor.value, 30);
-                       DrawSp.graphics.drawCircle(endPos.x, endPos.y, 15, _Game._singlePencils.pitchColor.value);
-                       this._drawingLenth.value += this['frontPos'].distance(endPos.x, endPos.y);
+                       if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                           if (this['EraserSp']) {
+                               let radius = 25;
+                               this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', radius * 2);
+                               this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
+                           }
+                       }
+                       else {
+                           if (this['DrawSp']) {
+                               let radius = 15;
+                               this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, radius * 2);
+                               this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, radius, _Game._SingleColorPencils._pitchColor);
+                               this._drawingLenth.value += this['frontPos'].distance(endPos.x, endPos.y);
+                           }
+                       }
                        this['frontPos'] = new Laya.Point(endPos.x, endPos.y);
                    }
                }, (e) => {
                    this['frontPos'] = null;
-               }, (e) => {
+                   let DrawBoard = DrawRoot.getChildByName('DrawBoard');
+                   if (DrawBoard && DrawBoard.numChildren > 3) {
+                       let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                       NewBoard.cacheAs = "bitmap";
+                       NewBoard.name = 'DrawBoard';
+                       NewBoard.width = DrawRoot.width;
+                       NewBoard.height = DrawRoot.height;
+                       NewBoard.texture = DrawBoard.drawToTexture(DrawBoard.width, DrawBoard.height, DrawBoard.x, DrawBoard.y);
+                       DrawBoard.destroy();
+                   }
                });
            }
-           Click._on(Click._Type.largen, this.btnVar('PlayAni'), this, null, null, () => {
+           Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
                this.AniVar(_Game._Animation.action1).play(null, true);
            });
-           Click._on(Click._Type.largen, this.btnVar('BtnLastStep'), this, null, null, () => {
+           Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
+               if (this['BtnLastStepClose']) {
+                   return;
+               }
+               else {
+                   this['BtnLastStepClose'] = true;
+               }
+               this._drawingLenth.switch = false;
+               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.lastStep);
            });
-           Click._on(Click._Type.largen, this.btnVar('BtnNextStep'), this, null, null, () => {
-               if (!this.ImgVar('BtnLastStep').visible) {
-                   this.ImgVar('BtnLastStep').visible = true;
-                   Animation2D.fadeOut(this.ImgVar('BtnLastStep'), 0, 1, 300, null, null, true);
+           Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
+               if (this['BtnNextStepClose']) {
+                   return;
                }
+               else {
+                   this['BtnNextStepClose'] = true;
+               }
+               if (!this.BtnLastStep.visible) {
+                   this.BtnLastStep.visible = true;
+                   Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
+               }
+               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.nextStep);
+           });
+           Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
+               Admin._game.level++;
+               Admin._openScene(Admin._SceneName.UIStart, this.calssName);
            });
        }
    }
@@ -5884,65 +6129,6 @@
 
    var _Start;
    (function (_Start) {
-       _Start._data = {
-           da: '_data',
-           get array() {
-               return [];
-           },
-           set array(arr) {
-           },
-           getFunc1: () => {
-               return '测试1';
-           },
-           getFunc2: (any) => {
-               return;
-           },
-           setFunc1: () => {
-           },
-           setFunc2: (any) => {
-               console.log(any);
-           },
-           checkFunc1: (bool) => {
-               return bool;
-           },
-           checkFunc2: (bool) => {
-               return bool;
-           },
-           getTemporaryVariable: () => {
-               if (!_Start._data['name']) {
-                   _Start._data['name'] = '王大哥';
-               }
-               else {
-                   return _Start._data['name'];
-               }
-           }
-       };
-       _Start._variable = {
-           get value() {
-               return Laya.LocalStorage.getItem('Example_variable') ? Number(Laya.LocalStorage.getItem('Example_variable')) : null;
-           },
-           set value(date) {
-               Laya.LocalStorage.setItem('Example_variable', date.toString());
-           }
-       };
-       _Start._arrayData = {
-           get arr() {
-               return Laya.LocalStorage.getJSON('Example_array') ? JSON.parse(Laya.LocalStorage.getJSON('Example_array')) : [];
-           },
-           set arr(array) {
-               Laya.LocalStorage.setJSON('Example_array', JSON.stringify(array));
-           },
-       };
-       let _Event;
-       (function (_Event) {
-           _Event["event1"] = "Example_Event1";
-           _Event["event2"] = "Example_Event2";
-       })(_Event = _Start._Event || (_Start._Event = {}));
-       let _AnyVariableEnum;
-       (function (_AnyVariableEnum) {
-           _AnyVariableEnum["thisVariable1"] = "thisVariable1";
-           _AnyVariableEnum["thisVariable2"] = "thisVariable2";
-       })(_AnyVariableEnum = _Start._AnyVariableEnum || (_Start._AnyVariableEnum = {}));
        function _init() {
        }
        _Start._init = _init;
@@ -5957,29 +6143,36 @@
            }
        }
        _Start._StartScene = _StartScene;
-       class _Singleton {
-       }
-       _Start._Singleton = _Singleton;
    })(_Start || (_Start = {}));
    class UIStart extends _Start._StartScene {
        lwgOnAwake() {
        }
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-               Admin._preLoadOpenScene(_SceneName.GameScene, _SceneName.UIStart);
+               if (Admin._game.level > 4) {
+                   Admin._game.level = 1;
+                   console.log(Admin._game.level);
+               }
+               Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
+                   if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
+                       Admin._sceneControl[_SceneName.GameScene + Admin._game.level].addComponent(GameScene);
+                   }
+               });
            });
        }
    }
    class UIStartItem extends Admin._Object {
    }
 
+   var _PreLoadSceneBeforeUrl;
+   (function (_PreLoadSceneBeforeUrl) {
+       _PreLoadSceneBeforeUrl._gameScene = {};
+   })(_PreLoadSceneBeforeUrl || (_PreLoadSceneBeforeUrl = {}));
    class UIPreLoadSceneBefore extends _PreLoad._PreLoadScene {
-       lwgOnAwake() {
+       lwgOnStart() {
            switch (Admin._preLoadOpenSceneLater.openSceneName) {
                case _SceneName.GameScene:
-                   _PreLoad.list_3DPrefab = [];
-                   break;
-               case _SceneName.UIDefeated:
+                   EventAdmin._notify(_PreLoad._Event.importList, ([_PreLoadSceneBeforeUrl._gameScene]));
                    break;
                default:
                    break;

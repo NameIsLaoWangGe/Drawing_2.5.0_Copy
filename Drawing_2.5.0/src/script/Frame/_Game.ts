@@ -186,6 +186,7 @@ export default class GameScene extends Admin._Scene {
         let index = 1;
         while (this.self['Draw' + index]) {
             _Game._stepOrderImg.push(this.self['Draw' + index]);
+            this.self['Draw' + index].skin = null;
             index++;
         }
         // console.log(_Game._stepOrderImg);
@@ -201,7 +202,7 @@ export default class GameScene extends Admin._Scene {
     lwgOnEnable(): void {
         this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
         this.self.addChild(this.StepSwitch);
-        this.StepSwitch.pos(194.5, 837.5);
+        this.StepSwitch.pos(194.5, 900);
         this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
         this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
         this.BtnNextStep.visible = false;
@@ -210,7 +211,7 @@ export default class GameScene extends Admin._Scene {
         this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab) as Laya.Image;
         this.self.addChild(this.BtnPlayAni);
         this.BtnPlayAni.visible = false;
-        this.BtnPlayAni.pos(361, 917);
+        this.BtnPlayAni.pos(361, 920);
 
         this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab) as Laya.Image;
         this.self.addChild(this.BtnBack);
@@ -322,6 +323,10 @@ export default class GameScene extends Admin._Scene {
                 const element = _Game._stepOrderImg[index] as Laya.Image;
                 if (element) {
                     element.zOrder = -Number(element.name.substr(4));
+                    let parent = element.parent as Laya.Image;
+                    if (parent != this.ImgVar('DrawRoot')) {
+                        parent.zOrder = -Number(element.name.substr(4));
+                    }
                 }
             }
         });
@@ -356,15 +361,17 @@ export default class GameScene extends Admin._Scene {
                     let Sp: Laya.Sprite;
                     let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                     this['frontPos'] = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                    if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                        Sp = this['EraserSp'] = new Laya.Sprite();
-                        this['EraserSp'].blendMode = "destination-out";
-                    } else {
-                        Sp = this['DrawSp'] = new Laya.Sprite();
-                        this['DrawSp'].blendMode = "none";
+                    if (index == _Game._stepIndex && _Game._drawSwitch) {
+                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                            Sp = this['EraserSp'] = new Laya.Sprite();
+                            this['EraserSp'].blendMode = "destination-out";
+                        } else {
+                            Sp = this['DrawSp'] = new Laya.Sprite();
+                            this['DrawSp'].blendMode = "none";
+                        }
+                        DrawBoard.addChild(Sp)['pos'](0, 0);
+                        Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
                     }
-                    DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
                 },
                 // 移动
                 (e: Laya.Event) => {
@@ -417,6 +424,7 @@ export default class GameScene extends Admin._Scene {
                 this['BtnLastStepClose'] = true;
             }
             this._drawingLenth.switch = false;
+            this['frontPos'] = null;
             EventAdmin._notify(_Game._Event.lastStep);
         });
         Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
@@ -429,6 +437,7 @@ export default class GameScene extends Admin._Scene {
                 this.BtnLastStep.visible = true;
                 Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
             }
+            this['frontPos'] = null;
             EventAdmin._notify(_Game._Event.nextStep);
         });
         Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
