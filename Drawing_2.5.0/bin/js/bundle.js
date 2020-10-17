@@ -5371,8 +5371,24 @@
        })(_Brush = _Game._Brush || (_Game._Brush = {}));
        _Game._stepOrderImg = [];
        _Game._passLenght = 100;
-       _Game._stepIndex = 0;
        _Game._stepMaskIndex = 0;
+       _Game._stepIndex = {
+           get present() {
+               return this['presentIndex'] ? this['presentIndex'] : 0;
+           },
+           set present(val) {
+               this['presentIndex'] = val;
+               if (this['presentIndex'] > _Game._stepIndex.mask) {
+                   _Game._stepIndex.mask = this['presentIndex'];
+               }
+           },
+           get mask() {
+               return this['maskIndex'] ? this['maskIndex'] : 0;
+           },
+           set mask(val) {
+               this['maskIndex'] = val;
+           },
+       };
        _Game._drawSwitch = false;
        _Game._Pencils = {
            type: {
@@ -5458,6 +5474,11 @@
        }
        _Game._StarsPencils = _StarsPencils;
        ;
+       let _drawBoardProperty;
+       (function (_drawBoardProperty) {
+           _drawBoardProperty["originalZOder"] = "originalZOder";
+           _drawBoardProperty["whetherPass"] = "whetherPass";
+       })(_drawBoardProperty = _Game._drawBoardProperty || (_Game._drawBoardProperty = {}));
        function _init() {
            _SingleColorPencils._init();
            _StarsPencils._init();
@@ -5478,30 +5499,27 @@
        constructor() {
            super(...arguments);
            this._drawingLenth = {
-               switch: true,
                get value() {
                    return this['len'] ? this['len'] : 0;
                },
-               set value(v) {
-                   if (this.switch) {
-                       this['len'] = v;
-                       if (this['len'] >= _Game._passLenght) {
+               set value(val) {
+                   if (_Game._stepIndex.present == _Game._stepIndex.mask) {
+                       this['len'] = val;
+                       if (this['len'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
                            EventAdmin._notify(_Game._Event.showStepBtn);
+                           _Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass] = true;
                            this['len'] = 0;
                        }
                    }
                },
            };
-           this.drawBoardProperty = {
-               originalZOder: 'originalZOder',
-           };
        }
        lwgOnAwake() {
            _Game._passLenght = 100;
-           _Game._stepIndex = 0;
+           _Game._stepIndex.present = 0;
            _Game._drawSwitch = false;
-           _Game._stepIndex = 0;
-           _Game._stepMaskIndex = 0;
+           _Game._stepIndex.present = 0;
+           _Game._stepIndex.mask = 0;
            _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
            this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
            _Game._PencilsList.array = _Game._SingleColorPencils._data;
@@ -5532,10 +5550,11 @@
            while (this.self['Draw' + index]) {
                let Img = this.self['Draw' + index];
                _Game._stepOrderImg.push(Img);
-               Img[this.drawBoardProperty.originalZOder] = Img.zOrder;
+               Img[_Game._drawBoardProperty.originalZOder] = Img.zOrder;
                let parent = Img.parent;
                if (parent != this.ImgVar('DrawRoot')) {
-                   parent[this.drawBoardProperty.originalZOder] = parent.zOrder;
+                   parent[_Game._drawBoardProperty.originalZOder] = parent.zOrder;
+                   parent[_Game._drawBoardProperty.whetherPass] = false;
                }
                this.self['Draw' + index].skin = null;
                index++;
@@ -5565,7 +5584,7 @@
            EventAdmin._register(_Game._Event.start, this, () => {
                _Game._drawSwitch = true;
                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
-                   if (_Game._stepIndex >= index) {
+                   if (_Game._stepIndex.present >= index) {
                        _Game._stepOrderImg[index].visible = true;
                    }
                    else {
@@ -5574,7 +5593,7 @@
                }
            });
            EventAdmin._register(_Game._Event.showStepBtn, this, () => {
-               if (_Game._stepIndex == 0) {
+               if (_Game._stepIndex.present == 0) {
                    this.BtnNextStep.visible = true;
                    Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
                }
@@ -5588,29 +5607,28 @@
                        Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300);
                    }
                }
-               this._drawingLenth.switch = false;
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
-               if (_Game._stepIndex - 1 >= 0) {
-                   let Img0 = _Game._stepOrderImg[_Game._stepIndex - 1];
+               if (_Game._stepIndex.present - 1 >= 0) {
+                   let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                        if (parent0 != this.ImgVar('DrawRoot')) {
-                           parent0.zOrder = (_Game._stepIndex + 1) * 200;
+                           parent0.zOrder = 200;
                        }
-                       Img0.zOrder = (_Game._stepIndex + 1) * 200;
-                       let Img = _Game._stepOrderImg[_Game._stepIndex];
+                       Img0.zOrder = 200;
+                       let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                        let parent = Img.parent;
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                            if (parent != this.ImgVar('DrawRoot')) {
-                               parent.zOrder = parent[this.drawBoardProperty.originalZOder];
+                               parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
                            }
-                           Img.zOrder = Img[this.drawBoardProperty.originalZOder];
-                           _Game._stepIndex--;
-                           if (_Game._stepIndex < _Game._stepMaskIndex) {
+                           Img.zOrder = Img[_Game._drawBoardProperty.originalZOder];
+                           _Game._stepIndex.present--;
+                           if (_Game._stepIndex.present < _Game._stepIndex.mask) {
                                this.BtnNextStep.visible = true;
                            }
-                           if (_Game._stepIndex == 0) {
+                           if (_Game._stepIndex.present == 0) {
                                this.BtnLastStep.visible = false;
                            }
                            this['BtnLastStepClose'] = false;
@@ -5621,32 +5639,30 @@
            });
            EventAdmin._register(_Game._Event.nextStep, this, () => {
                EventAdmin._notify(_Game._Event.restoreZOder);
-               if (_Game._stepIndex >= _Game._stepOrderImg.length - 1) {
+               if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                    EventAdmin._notify(_Game._Event.compelet);
-                   Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex].getChildByName('Pic'), 1, 0, 300, 0);
+                   Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
                }
                else {
-                   let Img = _Game._stepOrderImg[_Game._stepIndex];
+                   let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                    let parent = Img.parent;
                    if (parent != this.ImgVar('DrawRoot')) {
-                       parent.zOrder = parent[this.drawBoardProperty.originalZOder];
+                       parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
                    }
-                   Img.zOrder = Img[this.drawBoardProperty.originalZOder];
+                   Img.zOrder = Img[_Game._drawBoardProperty.originalZOder];
                    Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                       let Img0 = _Game._stepOrderImg[_Game._stepIndex + 1];
+                       let Img0 = _Game._stepOrderImg[_Game._stepIndex.present + 1];
                        Img0.visible = true;
                        Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                            let parent0 = Img0.parent;
-                           _Game._stepIndex++;
-                           if (_Game._stepIndex == _Game._stepMaskIndex + 1) {
-                               _Game._stepMaskIndex++;
+                           _Game._stepIndex.present++;
+                           if (!_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
                                this.BtnNextStep.visible = false;
-                               this._drawingLenth.switch = true;
                            }
                            if (parent0 != this.ImgVar('DrawRoot')) {
-                               parent0.zOrder = _Game._stepIndex * 200;
+                               parent0.zOrder = 200;
                            }
-                           Img0.zOrder = _Game._stepIndex * 200;
+                           Img0.zOrder = 200;
                            this['BtnNextStepClose'] = false;
                        });
                    });
@@ -5656,10 +5672,10 @@
                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                    const element = _Game._stepOrderImg[index];
                    if (element) {
-                       element.zOrder = _Game._stepOrderImg[index][this.drawBoardProperty.originalZOder];
+                       element.zOrder = _Game._stepOrderImg[index][_Game._drawBoardProperty.originalZOder];
                        let parent = element.parent;
                        if (parent != this.ImgVar('DrawRoot')) {
-                           parent.zOrder = parent[this.drawBoardProperty.originalZOder];
+                           parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
                        }
                    }
                }
@@ -5686,7 +5702,7 @@
                    let Sp;
                    let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                    this['frontPos'] = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                   if (index == _Game._stepIndex && _Game._drawSwitch) {
+                   if (index == _Game._stepIndex.present && _Game._drawSwitch) {
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
                            Sp = this['EraserSp'] = new Laya.Sprite();
                            this['EraserSp'].blendMode = "destination-out";
@@ -5701,7 +5717,7 @@
                }, (e) => {
                    let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                    let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                   if (this['frontPos'] && index == _Game._stepIndex && _Game._drawSwitch) {
+                   if (this['frontPos'] && index == _Game._stepIndex.present && _Game._drawSwitch) {
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
                            if (this['EraserSp']) {
                                let radius = 25;
@@ -5733,9 +5749,6 @@
                    }
                });
            }
-           Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
-               this.AniVar(_Game._Animation.action1).play(null, true);
-           });
            Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
                if (this['BtnLastStepClose']) {
                    return;
@@ -5743,7 +5756,6 @@
                else {
                    this['BtnLastStepClose'] = true;
                }
-               this._drawingLenth.switch = false;
                this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.lastStep);
            });
@@ -5755,11 +5767,15 @@
                    this['BtnNextStepClose'] = true;
                }
                if (!this.BtnLastStep.visible) {
-                   this.BtnLastStep.visible = true;
-                   Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, null, true);
+                   Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, () => {
+                       this.BtnLastStep.visible = true;
+                   });
                }
                this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.nextStep);
+           });
+           Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
+               this.AniVar(_Game._Animation.action1).play(null, true);
            });
            Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
                Admin._game.level++;
