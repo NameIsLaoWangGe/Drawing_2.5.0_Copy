@@ -222,6 +222,29 @@ export default class GameScene extends Admin._Scene {
             index++;
         }
     }
+
+    /**按钮管理*/
+    PrefabAdmin = {
+        StepSwitch: new Laya.Image,
+        BtnNextStep: new Laya.Image,
+        BtnLastStep: new Laya.Image,
+        BtnPlayAni: new Laya.Image,
+        BtnBack: new Laya.Image,
+        btnSwitch: true,
+        setUnique(btn: Laya.Image): void {
+            switch (btn) {
+                case this.BtnNextStep:
+                    break;
+                case this.BtnLastStep:
+                    break;
+                case this.BtnNextStep:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     /**阶段切换按钮*/
     StepSwitch: Laya.Image;
     BtnNextStep: Laya.Image;
@@ -308,7 +331,7 @@ export default class GameScene extends Admin._Scene {
                             this.BtnLastStep.visible = false;
                         }
                         // console.log(_Game._stepIndex, _Game._stepIndex.mask);
-                        this['BtnLastStepClose'] = false;
+                        this['BtnStepClose'] = false;
                         EventAdmin._notify(_Game._Event.restoreZOder);
                     })
                 });
@@ -341,7 +364,7 @@ export default class GameScene extends Admin._Scene {
                         }
                         // console.log(_Game._stepIndex, _Game._stepIndex.mask);
                         Img0.zOrder = 200;
-                        this['BtnNextStepClose'] = false;
+                        this['BtnStepClose'] = false;
                     })
                 });
             }
@@ -444,19 +467,19 @@ export default class GameScene extends Admin._Scene {
             );
         }
         Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
-            if (this['BtnLastStepClose']) {
+            if (this['BtnStepClose']) {
                 return;
             } else {
-                this['BtnLastStepClose'] = true;
+                this['BtnStepClose'] = true;
             }
             this['frontPos'] = null;
             EventAdmin._notify(_Game._Event.lastStep);
         });
         Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
-            if (this['BtnNextStepClose']) {
+            if (this['BtnStepClose']) {
                 return;
             } else {
-                this['BtnNextStepClose'] = true;
+                this['BtnStepClose'] = true;
             }
             if (!this.BtnLastStep.visible) {
                 Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, () => {
