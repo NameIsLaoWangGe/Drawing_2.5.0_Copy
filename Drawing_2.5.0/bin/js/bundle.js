@@ -5513,25 +5513,11 @@
                    }
                },
            };
-           this.PrefabAdmin = {
-               StepSwitch: new Laya.Image,
-               BtnNextStep: new Laya.Image,
-               BtnLastStep: new Laya.Image,
-               BtnPlayAni: new Laya.Image,
-               BtnBack: new Laya.Image,
-               btnSwitch: true,
-               setUnique(btn) {
-                   switch (btn) {
-                       case this.BtnNextStep:
-                           break;
-                       case this.BtnLastStep:
-                           break;
-                       case this.BtnNextStep:
-                           break;
-                       default:
-                           break;
-                   }
-               }
+           this.drawState = {
+               frontPos: null,
+               endPos: null,
+               EraserSp: null,
+               DrawSp: null,
            };
        }
        lwgOnAwake() {
@@ -5633,17 +5619,8 @@
                    let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                    let parent0 = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
-                       if (parent0 != this.ImgVar('DrawRoot')) {
-                           parent0.zOrder = 200;
-                       }
-                       Img0.zOrder = 200;
                        let Img = _Game._stepOrderImg[_Game._stepIndex.present];
-                       let parent = Img.parent;
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                           if (parent != this.ImgVar('DrawRoot')) {
-                               parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
-                           }
-                           Img.zOrder = Img[_Game._drawBoardProperty.originalZOder];
                            _Game._stepIndex.present--;
                            if (_Game._stepIndex.present < _Game._stepIndex.mask) {
                                this.BtnNextStep.visible = true;
@@ -5652,7 +5629,12 @@
                                this.BtnLastStep.visible = false;
                            }
                            this['BtnStepClose'] = false;
+                           this.drawState.frontPos = null;
                            EventAdmin._notify(_Game._Event.restoreZOder);
+                           if (parent0 != this.ImgVar('DrawRoot')) {
+                               parent0.zOrder = 200;
+                           }
+                           Img0.zOrder = 200;
                        });
                    });
                }
@@ -5665,10 +5647,6 @@
                }
                else {
                    let Img = _Game._stepOrderImg[_Game._stepIndex.present];
-                   let parent = Img.parent;
-                   if (parent != this.ImgVar('DrawRoot')) {
-                       parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
-                   }
                    Img.zOrder = Img[_Game._drawBoardProperty.originalZOder];
                    Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                        let Img0 = _Game._stepOrderImg[_Game._stepIndex.present + 1];
@@ -5684,6 +5662,7 @@
                            }
                            Img0.zOrder = 200;
                            this['BtnStepClose'] = false;
+                           this.drawState.frontPos = null;
                        });
                    });
                }
@@ -5720,43 +5699,43 @@
                DrawBoard.height = DrawRoot.height;
                Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, (e) => {
                    let Sp;
-                   let DrawBoard = DrawRoot.getChildByName('DrawBoard');
-                   this['frontPos'] = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                    if (index == _Game._stepIndex.present && _Game._drawSwitch) {
+                       let DrawBoard = DrawRoot.getChildByName('DrawBoard');
+                       this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                           Sp = this['EraserSp'] = new Laya.Sprite();
-                           this['EraserSp'].blendMode = "destination-out";
+                           Sp = this.drawState.EraserSp = new Laya.Sprite();
+                           this.drawState.EraserSp.blendMode = "destination-out";
                        }
                        else {
-                           Sp = this['DrawSp'] = new Laya.Sprite();
-                           this['DrawSp'].blendMode = "none";
+                           Sp = this.drawState.DrawSp = new Laya.Sprite();
+                           this.drawState.DrawSp.blendMode = "none";
                        }
                        DrawBoard.addChild(Sp)['pos'](0, 0);
-                       Sp.graphics.drawCircle(this['frontPos'].x, this['frontPos'].y, 15, _Game._SingleColorPencils._pitchColor);
+                       Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, 15, _Game._SingleColorPencils._pitchColor);
                    }
                }, (e) => {
-                   let DrawBoard = DrawRoot.getChildByName('DrawBoard');
-                   let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                   if (this['frontPos'] && index == _Game._stepIndex.present && _Game._drawSwitch) {
+                   if (this.drawState.frontPos && index == _Game._stepIndex.present && _Game._drawSwitch) {
+                       let DrawBoard = DrawRoot.getChildByName('DrawBoard');
+                       let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                           if (this['EraserSp']) {
+                           if (this.drawState.EraserSp) {
                                let radius = 25;
-                               this['EraserSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, '#000000', radius * 2);
-                               this['EraserSp'].graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
+                               this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', radius * 2);
+                               this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
                            }
                        }
                        else {
-                           if (this['DrawSp']) {
+                           if (this.drawState.DrawSp) {
                                let radius = 15;
-                               this['DrawSp'].graphics.drawLine(this['frontPos'].x, this['frontPos'].y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, radius * 2);
-                               this['DrawSp'].graphics.drawCircle(endPos.x, endPos.y, radius, _Game._SingleColorPencils._pitchColor);
-                               this._drawingLenth.value += this['frontPos'].distance(endPos.x, endPos.y);
+                               this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, radius * 2);
+                               this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, radius, _Game._SingleColorPencils._pitchColor);
+                               this._drawingLenth.value += this.drawState.frontPos.distance(endPos.x, endPos.y);
                            }
                        }
-                       this['frontPos'] = new Laya.Point(endPos.x, endPos.y);
+                       this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
                    }
                }, (e) => {
-                   this['frontPos'] = null;
+                   this.drawState.frontPos = null;
                    let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                    if (DrawBoard && DrawBoard.numChildren > 3) {
                        let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
@@ -5776,7 +5755,6 @@
                else {
                    this['BtnStepClose'] = true;
                }
-               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.lastStep);
            });
            Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
@@ -5791,7 +5769,6 @@
                        this.BtnLastStep.visible = true;
                    });
                }
-               this['frontPos'] = null;
                EventAdmin._notify(_Game._Event.nextStep);
            });
            Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
@@ -6194,7 +6171,7 @@
        }
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-               if (Admin._game.level > 4) {
+               if (Admin._game.level > 5) {
                    Admin._game.level = 1;
                    console.log(Admin._game.level);
                }

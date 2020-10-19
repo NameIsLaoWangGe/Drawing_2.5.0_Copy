@@ -177,6 +177,9 @@ P 65FBBA7A lALPD26eM-Z81R3NAcrNAeI_482_458.png_720x720q90g.jpg
 R 8A3D0CE5 level1.png
 P 5AC6070B level2.png
 P C44D3C5E level3.png
+P 65FBBA7A Level4.jpg
+R 127621AF Level5.png
+R 8602845D Level6.png
 D Game/UI/GameScene/Level1
 R 5B2D0DC8 huaban.png
 R 4C0E95FD huabanmask.png
@@ -257,6 +260,29 @@ P EE4727D5 yuqi.png
 P CFF00F8F yuqimask.png
 P 08502758 zui.png
 P EA4F63E0 zuimask.png
+D Game/UI/GameScene/Level5
+P BDDAC738 chechuang.png
+P F3F3AE2C chechuangmask.png
+P 7FF10C30 chelun.png
+P DE0F855B chelunmask.png
+P E000FB1D cheshen.png
+P F0E0FA77 cheshenmask.png
+D Game/UI/GameScene/Level6
+P B444C3A9 niu shenti .png
+P 05EB3CEC niu shenti mask.png
+P 4C20DB40 niuerduio.png
+P 54938FD4 niuerduiomask.png
+P D2FF175A niujiao.png
+P C7954A2E niujiaomask.png
+P 462E3C28 niulian .png
+P 4BA296F4 niulian mask.png
+P DD2D7DED niunaizi.png
+P AE8F3297 niunaizimask.png
+P E09451D3 niutui.png
+P 52CE106A niutuimask.png
+P 68BDF959 niuyan .png
+P C7AAFDDB niuyiba.png
+P 4C182FA5 niuyibamask.png
 D Game/UI/GameScene/SinglePencils
 P 30AAF986 blue.png
 P B81FB0DF eraser.png
