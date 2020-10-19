@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":68,
+    "selectedBox":75,
+    "selecteID":65,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":96,
+    "maxID":97,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -180,6 +180,20 @@
                                                 {
                                                     "x":90,
                                                     "type":"Image",
+                                                    "searchKey":"Image,MaskBoard,MaskBoard",
+                                                    "props":{"y":15,"x":21,"width":239,"var":"MaskBoard","skin":"Game/UI/GameScene/Level1/lianmask.png","name":"MaskBoard","height":243},
+                                                    "nodeParent":74,
+                                                    "label":"MaskBoard",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":96,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "x":90,
+                                                    "type":"Image",
                                                     "searchKey":"Image,Pic",
                                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level1/lian.png","name":"Pic"},
                                                     "nodeParent":74,
@@ -203,7 +217,8 @@
                                                     "hasChild":false,
                                                     "compId":94,
                                                     "child":[
-                                                        ]
+                                                        ],
+                                                    "$HIDDEN":false
                                                 }]
                                         },
                                         {
