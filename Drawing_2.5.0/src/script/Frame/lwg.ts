@@ -4795,11 +4795,9 @@ export module lwg {
             let _ray: Laya.Ray = new Laya.Ray(new Laya.Vector3(0, 0, 0), new Laya.Vector3(0, 0, 0));
             /**射线扫描结果*/
             let outs: Array<Laya.HitResult> = new Array<Laya.HitResult>();
-            //产生射线
-            //射线碰撞到挡屏，用来设置手的初始位置，挡屏的属性isTrigger 要勾上，这样只检测碰撞，不产生碰撞反应
+            //射线碰撞到碰撞框，碰撞框的isTrigger属性要勾上，这样只检测碰撞，不产生碰撞反应
             camera.viewportPointToRay(vector2, _ray);
             scene3D.physicsSimulation.rayCastAll(_ray, outs);
-            //找到挡屏的位置，把手的位置放在投屏位置的上方，也就是触摸点的上方
             if (outs.length != 0 && filtrateName) {
                 let outsChaild = null;
                 for (var i = 0; i < outs.length; i++) {

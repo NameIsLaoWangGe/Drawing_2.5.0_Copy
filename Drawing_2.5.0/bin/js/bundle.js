@@ -804,8 +804,7 @@
                    if (diff > 0) {
                        this.maxLevel += diff;
                    }
-                   console.log(this.level, val, this.loopLevel);
-                   if (this.level > this.loopLevel) {
+                   if (val > this.loopLevel) {
                        Laya.LocalStorage.setItem('_gameLevel', (1).toString());
                    }
                    else {
@@ -6224,7 +6223,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
-                   Admin._game.loopLevel = 4;
+                   Admin._game.loopLevel = 7;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;
