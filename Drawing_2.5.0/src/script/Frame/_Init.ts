@@ -18,7 +18,7 @@ export default class UIInit extends Admin._Scene {
                 };
                 Admin._evaluating = false;
                 Admin._platform = Admin._platformTpye.Bytedance;
-                Admin._game.loopLevel = 7;
+                Admin._game.loopLevel = 8;
             }());
 
             (function date() {
@@ -31,7 +31,7 @@ export default class UIInit extends Admin._Scene {
 
             }());
             (function other() {
-                // new ZJADMgr();
+                // new ZJADMgr();.
             }());
             (function module() {
                 _Start._init();

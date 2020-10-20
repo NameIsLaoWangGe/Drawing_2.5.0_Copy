@@ -1116,7 +1116,7 @@ export module lwg {
                 if (diff > 0) {
                     this.maxLevel += diff;
                 }
-                if (val > this.loopLevel) {
+                if (val > this.loopLevel&& this.loopLevel!=-1) {
                     Laya.LocalStorage.setItem('_gameLevel', (1).toString());
                 } else {
                     Laya.LocalStorage.setItem('_gameLevel', (val).toString());
