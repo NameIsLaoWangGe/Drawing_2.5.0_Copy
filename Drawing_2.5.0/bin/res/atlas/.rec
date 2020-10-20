@@ -284,6 +284,14 @@ P 52CE106A niutuimask.png
 P 68BDF959 niuyan .png
 P C7AAFDDB niuyiba.png
 P 4C182FA5 niuyibamask.png
+D Game/UI/GameScene/Level7
+P F3787AC3 nanguatou .png
+P 55D354FC nanguatou mask.png
+R E6D498DC shenti .png
+R 3E7F0529 shenti mask.png
+P F30CBDB4 yanjing .png
+P 6B2095E0 zuiba .png
+P 950031BD zuiba mask.png
 D Game/UI/GameScene/SinglePencils
 P 30AAF986 blue.png
 P B81FB0DF eraser.png

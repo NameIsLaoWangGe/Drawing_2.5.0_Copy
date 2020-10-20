@@ -1,5 +1,4 @@
 {
-    "x":0,
     "type":"View",
     "selectedBox":2,
     "selecteID":13,
@@ -8,7 +7,7 @@
         ],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":168,
+    "maxID":169,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -17,7 +16,6 @@
     "compId":2,
     "child":[
         {
-            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -31,7 +29,6 @@
                 ]
         },
         {
-            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
             "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":1280},
@@ -44,7 +41,6 @@
             "compId":13,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Wugui",
                     "props":{"y":324,"x":317,"width":680,"rotation":0,"pivotY":181,"pivotX":297,"name":"Wugui","height":443},
@@ -57,7 +53,6 @@
                     "compId":145,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw12,Draw12",
                             "props":{"zOrder":91,"y":214,"x":150,"width":135,"var":"Draw12","skin":"Game/UI/GameScene/Level2/weimask.png","rotation":0,"pivotY":50,"pivotX":135,"name":"Draw12","height":99},
@@ -97,10 +92,9 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head",
-                            "props":{"zOrder":94,"y":179,"x":410,"width":264,"scaleY":1,"scaleX":1,"rotation":9,"pivotY":109,"name":"Head","height":218},
+                            "props":{"zOrder":94,"y":179,"x":410,"width":264,"scaleY":1,"scaleX":1,"rotation":-9,"pivotY":109,"name":"Head","height":218},
                             "nodeParent":145,
                             "label":"Head",
                             "isOpen":false,
@@ -151,7 +145,7 @@
                                 {
                                     "type":"Image",
                                     "searchKey":"Image,Eye1",
-                                    "props":{"zOrder":99,"y":69,"x":178,"width":27,"skin":"Game/UI/GameScene/Level2/yan2.png","scaleY":1,"scaleX":1,"pivotY":14,"pivotX":14,"name":"Eye1","height":27},
+                                    "props":{"zOrder":99,"y":69,"x":178,"width":27,"skin":"Game/UI/GameScene/Level2/yan2.png","scaleY":0.30000000000000004,"scaleX":1,"pivotY":14,"pivotX":14,"name":"Eye1","height":27},
                                     "nodeParent":136,
                                     "label":"Eye1",
                                     "isOpen":true,
@@ -165,7 +159,7 @@
                                 {
                                     "type":"Image",
                                     "searchKey":"Image,Eye2",
-                                    "props":{"zOrder":99,"y":71,"x":120,"width":27,"skin":"Game/UI/GameScene/Level2/yan.png","scaleY":1,"pivotY":14,"pivotX":14,"name":"Eye2","height":27},
+                                    "props":{"zOrder":99,"y":71,"x":120,"width":27,"skin":"Game/UI/GameScene/Level2/yan.png","scaleY":0.30000000000000004,"pivotY":14,"pivotX":14,"name":"Eye2","height":27},
                                     "nodeParent":136,
                                     "label":"Eye2",
                                     "isDirectory":false,
@@ -216,7 +210,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw11,Draw11",
                             "props":{"zOrder":92,"y":250,"x":183,"width":111,"var":"Draw11","skin":"Game/UI/GameScene/Level2/houtuimask.png","rotation":13,"pivotX":56,"name":"Draw11","height":142},
@@ -256,7 +249,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw9,Draw9",
                             "props":{"zOrder":96,"y":262,"x":221,"width":111,"var":"Draw9","skin":"Game/UI/GameScene/Level2/houtui2mask.png","rotation":-5,"pivotX":56,"name":"Draw9","height":142},
@@ -296,7 +288,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw10,Draw10",
                             "props":{"zOrder":93,"y":266,"x":357,"width":113,"var":"Draw10","skin":"Game/UI/GameScene/Level2/qiantuimask.png","rotation":15,"pivotX":57,"name":"Draw10","height":142},
@@ -336,13 +327,12 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw8,Draw8",
                             "props":{"zOrder":95,"y":265,"x":399,"width":113,"var":"Draw8","skin":"Game/UI/GameScene/Level2/qiantui2mask.png","rotation":-7,"pivotX":57,"name":"Draw8","height":142},
                             "nodeParent":145,
                             "label":"Draw8",
-                            "isOpen":false,
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -376,220 +366,224 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
-                            "searchKey":"Image,Draw3,Draw3",
-                            "props":{"zOrder":96,"y":164,"x":290,"width":397,"var":"Draw3","skin":"Game/UI/GameScene/Level2/guikemask.png","pivotY":139,"pivotX":199,"name":"Draw3","height":294},
+                            "searchKey":"Image,Body",
+                            "props":{"zOrder":100,"y":189,"x":290,"width":397,"pivotY":147,"pivotX":199,"name":"Body","height":273},
                             "nodeParent":145,
-                            "label":"Draw3",
+                            "label":"Body",
                             "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":97,
+                            "compId":168,
                             "child":[
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guikemask.png"},
-                                    "nodeParent":97,
-                                    "label":"Image",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw3,Draw3",
+                                    "props":{"zOrder":96,"y":122,"x":199,"width":397,"var":"Draw3","skin":"Game/UI/GameScene/Level2/guikemask.png","pivotY":139,"pivotX":199,"name":"Draw3","height":294},
+                                    "nodeParent":168,
+                                    "label":"Draw3",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":147,
+                                    "hasChild":true,
+                                    "compId":97,
                                     "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guikemask.png"},
+                                            "nodeParent":97,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":147,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guike.png","name":"Pic"},
+                                            "nodeParent":97,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":128,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guikemask.png","renderType":"mask"},
+                                            "nodeParent":97,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":146,
+                                            "child":[
+                                                ]
+                                        }]
                                 },
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guike.png","name":"Pic"},
-                                    "nodeParent":97,
-                                    "label":"Pic",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw7,Draw7",
+                                    "props":{"zOrder":100,"y":120,"x":13,"var":"Draw7","skin":"Game/UI/GameScene/Level2/guixian4mask.png","name":"Draw7"},
+                                    "nodeParent":168,
+                                    "label":"Draw7",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":128,
+                                    "hasChild":true,
+                                    "compId":163,
                                     "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guixian4mask.png","renderType":"mask"},
+                                            "nodeParent":163,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":166,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guiixan4.png","name":"Pic"},
+                                            "nodeParent":163,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":167,
+                                            "child":[
+                                                ]
+                                        }]
                                 },
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guikemask.png","renderType":"mask"},
-                                    "nodeParent":97,
-                                    "label":"Image",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw6,Draw6",
+                                    "props":{"zOrder":99,"y":44,"x":50,"var":"Draw6","skin":"Game/UI/GameScene/Level2/guixian3mask.png","name":"Draw6"},
+                                    "nodeParent":168,
+                                    "label":"Draw6",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":146,
+                                    "hasChild":true,
+                                    "compId":162,
                                     "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw4,Draw4",
-                            "props":{"zOrder":97,"y":22,"x":170,"var":"Draw4","skin":"Game/UI/GameScene/Level2/guixianmask.png","name":"Draw4"},
-                            "nodeParent":145,
-                            "label":"Draw4",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":148,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixianmask.png","renderType":"mask"},
-                                    "nodeParent":148,
-                                    "label":"Image",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":151,
-                                    "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian3mask.png","renderType":"mask"},
+                                            "nodeParent":162,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":164,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guixian3.png","name":"Pic"},
+                                            "nodeParent":162,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":165,
+                                            "child":[
+                                                ]
+                                        }]
                                 },
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guixian.png","name":"Pic"},
-                                    "nodeParent":148,
-                                    "label":"Pic",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw5,Draw5",
+                                    "props":{"zOrder":98,"y":-20,"x":196,"var":"Draw5","skin":"Game/UI/GameScene/Level2/guixian2mask.png","name":"Draw5"},
+                                    "nodeParent":168,
+                                    "label":"Draw5",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":150,
+                                    "hasChild":true,
+                                    "compId":152,
                                     "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw5,Draw5",
-                            "props":{"zOrder":98,"y":22,"x":287,"var":"Draw5","skin":"Game/UI/GameScene/Level2/guixian2mask.png","name":"Draw5"},
-                            "nodeParent":145,
-                            "label":"Draw5",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":152,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian2mask.png","renderType":"mask"},
-                                    "nodeParent":152,
-                                    "label":"Image",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":153,
-                                    "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian2mask.png","renderType":"mask"},
+                                            "nodeParent":152,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":153,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guixian2.png","name":"Pic"},
+                                            "nodeParent":152,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":154,
+                                            "child":[
+                                                ]
+                                        }]
                                 },
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guixian2.png","name":"Pic"},
-                                    "nodeParent":152,
-                                    "label":"Pic",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw4,Draw4",
+                                    "props":{"zOrder":97,"y":-20,"x":79,"var":"Draw4","skin":"Game/UI/GameScene/Level2/guixianmask.png","name":"Draw4"},
+                                    "nodeParent":168,
+                                    "label":"Draw4",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":154,
+                                    "hasChild":true,
+                                    "compId":148,
                                     "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw6,Draw6",
-                            "props":{"zOrder":99,"y":86,"x":141,"var":"Draw6","skin":"Game/UI/GameScene/Level2/guixian3mask.png","name":"Draw6"},
-                            "nodeParent":145,
-                            "label":"Draw6",
-                            "isOpen":true,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":162,
-                            "child":[
-                                {
-                                    "x":60,
-                                    "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian3mask.png","renderType":"mask"},
-                                    "nodeParent":162,
-                                    "label":"Image",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":164,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "x":60,
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guixian3.png","name":"Pic"},
-                                    "nodeParent":162,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":165,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw7,Draw7",
-                            "props":{"zOrder":100,"y":162,"x":104,"var":"Draw7","skin":"Game/UI/GameScene/Level2/guixian4mask.png","name":"Draw7"},
-                            "nodeParent":145,
-                            "label":"Draw7",
-                            "isOpen":true,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":163,
-                            "child":[
-                                {
-                                    "x":60,
-                                    "type":"Image",
-                                    "searchKey":"Image",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guixian4mask.png","renderType":"mask"},
-                                    "nodeParent":163,
-                                    "label":"Image",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":166,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "x":60,
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level2/guiixan4.png","name":"Pic"},
-                                    "nodeParent":163,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":167,
-                                    "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixianmask.png","renderType":"mask"},
+                                            "nodeParent":148,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":151,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"skin":"Game/UI/GameScene/Level2/guixian.png","name":"Pic"},
+                                            "nodeParent":148,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":150,
+                                            "child":[
+                                                ]
+                                        }]
                                 }]
                         }]
                 }]
@@ -1460,17 +1454,17 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":129,
-                                "label":null,
                                 "key":"y",
-                                "index":60
+                                "index":50
                             },
                             {
-                                "value":133,
+                                "value":143,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":129,
+                                "label":null,
                                 "key":"y",
-                                "index":70
+                                "index":60
                             },
                             {
                                 "value":132.5,
@@ -1547,21 +1541,13 @@
                                 "index":0
                             },
                             {
-                                "value":399,
+                                "value":357,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":129,
                                 "label":null,
                                 "key":"x",
                                 "index":60
-                            },
-                            {
-                                "value":357,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":129,
-                                "key":"x",
-                                "index":70
                             },
                             {
                                 "value":356.5,
@@ -1636,6 +1622,15 @@
                                 "target":129,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":-7,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":129,
+                                "label":null,
+                                "key":"rotation",
+                                "index":60
                             },
                             {
                                 "value":0,
@@ -1715,17 +1710,17 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":103,
-                                "label":null,
                                 "key":"y",
-                                "index":65
+                                "index":50
                             },
                             {
-                                "value":164,
+                                "value":150.5,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":103,
+                                "label":null,
                                 "key":"y",
-                                "index":75
+                                "index":60
                             },
                             {
                                 "value":163,
@@ -1811,6 +1806,15 @@
                                 "index":0
                             },
                             {
+                                "value":338,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":103,
+                                "label":null,
+                                "key":"x",
+                                "index":60
+                            },
+                            {
                                 "value":356.5,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
@@ -1892,6 +1896,15 @@
                                 "target":103,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":15,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":103,
+                                "label":null,
+                                "key":"rotation",
+                                "index":60
                             },
                             {
                                 "value":13,
@@ -1976,6 +1989,15 @@
                                 "index":0
                             },
                             {
+                                "value":96,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":100,
+                                "label":null,
+                                "key":"zOrder",
+                                "index":60
+                            },
+                            {
                                 "value":95,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
@@ -1997,17 +2019,17 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":100,
-                                "label":null,
                                 "key":"y",
-                                "index":70
+                                "index":50
                             },
                             {
-                                "value":150.5,
+                                "value":143,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":100,
+                                "label":null,
                                 "key":"y",
-                                "index":80
+                                "index":60
                             },
                             {
                                 "value":150,
@@ -2092,21 +2114,13 @@
                                 "index":0
                             },
                             {
-                                "value":221,
+                                "value":227,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":100,
                                 "label":null,
                                 "key":"x",
-                                "index":70
-                            },
-                            {
-                                "value":217.5,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":100,
-                                "key":"x",
-                                "index":80
+                                "index":60
                             },
                             {
                                 "value":217,
@@ -2191,6 +2205,15 @@
                                 "index":0
                             },
                             {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":100,
+                                "label":null,
+                                "key":"rotation",
+                                "index":60
+                            },
+                            {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
@@ -2268,17 +2291,17 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":101,
-                                "label":null,
                                 "key":"y",
-                                "index":75
+                                "index":50
                             },
                             {
-                                "value":150.5,
+                                "value":110,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":101,
+                                "label":null,
                                 "key":"y",
-                                "index":85
+                                "index":60
                             },
                             {
                                 "value":150,
@@ -2356,21 +2379,13 @@
                                 "index":0
                             },
                             {
-                                "value":183,
+                                "value":206,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":101,
                                 "label":null,
                                 "key":"x",
-                                "index":75
-                            },
-                            {
-                                "value":206,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":101,
-                                "key":"x",
-                                "index":85
+                                "index":60
                             },
                             {
                                 "value":205,
@@ -2446,6 +2461,15 @@
                                 "target":101,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":13,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":101,
+                                "label":null,
+                                "key":"rotation",
+                                "index":60
                             },
                             {
                                 "value":18,
@@ -2536,7 +2560,7 @@
                                 "target":145,
                                 "label":null,
                                 "key":"y",
-                                "index":85
+                                "index":60
                             },
                             {
                                 "value":424,
@@ -2759,8 +2783,9 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":145,
+                                "label":null,
                                 "key":"x",
-                                "index":85
+                                "index":60
                             },
                             {
                                 "value":309,
@@ -2955,8 +2980,9 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":145,
+                                "label":null,
                                 "key":"rotation",
-                                "index":85
+                                "index":60
                             },
                             {
                                 "value":0,
@@ -3197,6 +3223,15 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":145,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":60
+                            },
+                            {
+                                "value":181,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":145,
                                 "key":"pivotY",
                                 "index":115
                             },
@@ -3348,6 +3383,15 @@
                                 "target":145,
                                 "key":"pivotX",
                                 "index":0
+                            },
+                            {
+                                "value":297,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":145,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":60
                             },
                             {
                                 "value":297,
@@ -3510,6 +3554,30 @@
                                 "target":105,
                                 "key":"y",
                                 "index":0
+                            },
+                            {
+                                "value":214,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"y",
+                                "index":10
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"y",
+                                "index":20
+                            },
+                            {
+                                "value":214,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"y",
+                                "index":30
                             },
                             {
                                 "value":214,
@@ -3699,6 +3767,30 @@
                                 "tween":true,
                                 "target":105,
                                 "key":"rotation",
+                                "index":10
+                            },
+                            {
+                                "value":-12,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"rotation",
+                                "index":20
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"rotation",
+                                "index":30
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":105,
+                                "key":"rotation",
                                 "index":125
                             },
                             {
@@ -3758,6 +3850,44 @@
                                 "target":105,
                                 "key":"rotation",
                                 "index":365
+                            }]
+                    }
+                },
+                {
+                    "target":168,
+                    "keyframes":{
+                        "y":[
+                            {
+                                "value":189,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":189,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":10
+                            },
+                            {
+                                "value":203,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":20
+                            },
+                            {
+                                "value":189,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":30
                             }]
                     }
                 }],

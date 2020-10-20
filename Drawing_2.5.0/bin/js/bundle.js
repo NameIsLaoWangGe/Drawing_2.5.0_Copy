@@ -800,13 +800,29 @@
                    return Laya.LocalStorage.getItem('_gameLevel') ? Number(Laya.LocalStorage.getItem('_gameLevel')) : 1;
                },
                set level(val) {
-                   Laya.LocalStorage.setItem('_gameLevel', val.toString());
+                   let diff = val - this.level;
+                   if (diff > 0) {
+                       this.maxLevel += diff;
+                   }
+                   console.log(this.level, val, this.loopLevel);
+                   if (this.level > this.loopLevel) {
+                       Laya.LocalStorage.setItem('_gameLevel', (1).toString());
+                   }
+                   else {
+                       Laya.LocalStorage.setItem('_gameLevel', (val).toString());
+                   }
                },
-               get practicalLevel() {
-                   return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : Admin._game.level;
+               get maxLevel() {
+                   return Laya.LocalStorage.getItem('_game_maxLevel') ? Number(Laya.LocalStorage.getItem('_game_maxLevel')) : this.level;
                },
-               set practicalLevel(val) {
-                   Laya.LocalStorage.setItem('_practicalLevel', val.toString());
+               set maxLevel(val) {
+                   Laya.LocalStorage.setItem('_game_maxLevel', val.toString());
+               },
+               get loopLevel() {
+                   return this['_gameloopLevel'] ? this['_gameloopLevel'] : -1;
+               },
+               set loopLevel(lev) {
+                   this['_gameloopLevel'] = lev;
                },
                LevelNode: new Laya.Sprite,
                _createLevel(parent, x, y) {
@@ -908,22 +924,19 @@
                }
            }
            Admin._unlockPreventClick = _unlockPreventClick;
-           let _Event;
-           (function (_Event) {
-               _Event["_FrontPage_Open"] = "_FrontPage_Open";
-               _Event["_FrontPage_Close"] = "_FrontPage_Close";
-           })(_Event = Admin._Event || (Admin._Event = {}));
            Admin._sceneControl = {};
            Admin._sceneScript = {};
-           let _OpenAniType;
-           (function (_OpenAniType) {
-               _OpenAniType["fadeOut"] = "fadeOut";
-               _OpenAniType["leftMove"] = "fadeOut";
-               _OpenAniType["rightMove"] = "rightMove";
-               _OpenAniType["centerRotate"] = "centerRotate";
-           })(_OpenAniType = Admin._OpenAniType || (Admin._OpenAniType = {}));
-           Admin._commonOpenAniType = _OpenAniType.fadeOut;
-           Admin._commonVanishAni = false;
+           Admin._sceneAnimation = {
+               type: {
+                   fadeOut: 'fadeOut',
+                   leftMove: 'leftMove',
+                   rightMove: 'rightMove',
+                   centerRotate: 'centerRotate',
+               },
+               vanishSwitch: false,
+               openSwitch: true,
+               presentAni: 'fadeOut',
+           };
            let _SceneName;
            (function (_SceneName) {
                _SceneName["UIPreLoad"] = "UIPreLoad";
@@ -1033,15 +1046,15 @@
                        func();
                    }
                };
-               if (!Admin._commonVanishAni) {
+               if (!Admin._sceneAnimation.vanishSwitch) {
                    closef();
                    return;
                }
                var vanishAni = () => {
                    let time = 0;
                    let delay = 0;
-                   switch (Admin._commonOpenAniType) {
-                       case _OpenAniType.fadeOut:
+                   switch (Admin._sceneAnimation.presentAni) {
+                       case Admin._sceneAnimation.type.fadeOut:
                            time = 150;
                            delay = 50;
                            if (Admin._sceneControl[closeName]['Background']) {
@@ -1051,7 +1064,7 @@
                                closef();
                            });
                            break;
-                       case _OpenAniType.leftMove:
+                       case Admin._sceneAnimation.type.leftMove:
                            break;
                        default:
                            break;
@@ -1087,8 +1100,8 @@
                        scene[scene.name].lwgBtnClick();
                    }
                };
-               switch (Admin._commonOpenAniType) {
-                   case _OpenAniType.fadeOut:
+               switch (Admin._sceneAnimation.presentAni) {
+                   case Admin._sceneAnimation.type.fadeOut:
                        time = 400;
                        delay = 300;
                        if (scene['Background']) {
@@ -1099,7 +1112,7 @@
                            afterAni();
                        });
                        break;
-                   case _OpenAniType.leftMove:
+                   case Admin._sceneAnimation.type.leftMove:
                        break;
                    default:
                        break;
@@ -6171,10 +6184,6 @@
        }
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-               if (Admin._game.level > 6) {
-                   Admin._game.level = 1;
-                   console.log(Admin._game.level);
-               }
                Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
                    if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
                        Admin._sceneControl[_SceneName.GameScene + Admin._game.level].addComponent(GameScene);
@@ -6215,6 +6224,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
+                   Admin._game.loopLevel = 4;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;

@@ -1107,18 +1107,36 @@ export module lwg {
         export let _game = {
             /**游戏控制开关*/
             switch: true,
+            /**实际关卡*/
             get level(): number {
                 return Laya.LocalStorage.getItem('_gameLevel') ? Number(Laya.LocalStorage.getItem('_gameLevel')) : 1;
             },
             set level(val) {
-                Laya.LocalStorage.setItem('_gameLevel', val.toString());
+                let diff = val - this.level;
+                if (diff > 0) {
+                    this.maxLevel += diff;
+                }
+                if (val > this.loopLevel) {
+                    Laya.LocalStorage.setItem('_gameLevel', (1).toString());
+                } else {
+                    Laya.LocalStorage.setItem('_gameLevel', (val).toString());
+                }
             },
-            get practicalLevel(): number {
-                return Laya.LocalStorage.getItem('_practicalLevel') ? Number(Laya.LocalStorage.getItem('_practicalLevel')) : _game.level;
+            /**最大关卡数*/
+            get maxLevel(): number {
+                return Laya.LocalStorage.getItem('_game_maxLevel') ? Number(Laya.LocalStorage.getItem('_game_maxLevel')) : this.level;
             },
-            set practicalLevel(val) {
-                Laya.LocalStorage.setItem('_practicalLevel', val.toString());
+            set maxLevel(val) {
+                Laya.LocalStorage.setItem('_game_maxLevel', val.toString());
             },
+            /**从第几关开始循环*/
+            get loopLevel(): number {
+                return this['_gameloopLevel'] ? this['_gameloopLevel'] : -1;
+            },
+            set loopLevel(lev: number) {
+                this['_gameloopLevel'] = lev;
+            },
+
             /**等级的显示节点*/
             LevelNode: new Laya.Sprite,
             _createLevel(parent: Laya.Sprite, x: number, y: number): void {
@@ -1237,42 +1255,23 @@ export module lwg {
                 __lockClick__.removeSelf();
             }
         }
-
-        // /**预制体池，每次创建一个新的预制体后，将会被保存在预制体池当中*/
-        // export let _prefabPool;
-        // /**
-        //  * 创建一个预制体，预制体必须在Prefab文件夹中
-        //  * @param name 预制体名称
-        // */
-        // export function _createPrefab(name): void {
-        //     let sp: Laya.Sprite;
-        //     Laya.loader.load('Prefab/GoldNode.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
-        //         let _prefab = new Laya.Prefab();
-        //         _prefab.json = prefab;
-        //         sp = Laya.Pool.getItemByCreateFun('gold', _prefab.create, _prefab);
-        //         let num = sp.getChildByName('Num') as Laya.Label;
-        //     }));
-        // }
-        export enum _Event {
-            _FrontPage_Open = '_FrontPage_Open',
-            _FrontPage_Close = '_FrontPage_Close',
-        }
         /**场景控制,访问特定场景用_sceneControl[name]访问*/
         export let _sceneControl: any = {};
         /**和场景名称一样的脚本,这个脚本唯一，不可调用*/
         export let _sceneScript: any = {};
 
-        /**场景动效类型*/
-        export enum _OpenAniType {
-            fadeOut = 'fadeOut',
-            leftMove = 'fadeOut',
-            rightMove = 'rightMove',
-            centerRotate = 'centerRotate',
+        /**通用动效*/
+        export let _sceneAnimation = {
+            type: {
+                fadeOut: 'fadeOut',
+                leftMove: 'leftMove',
+                rightMove: 'rightMove',
+                centerRotate: 'centerRotate',
+            },
+            vanishSwitch: false,
+            openSwitch: true,
+            presentAni: 'fadeOut',
         }
-        /**为了统一，每个游戏只有一种通用动效，在初始化的时候设置，默认为渐隐渐出，如果场景内的openAni函数启用，则这个场景的通用场景动效将会被替代*/
-        export let _commonOpenAniType: string = _OpenAniType.fadeOut;
-        /**有时候我们并不需要离场动画*/
-        export let _commonVanishAni: boolean = false;
 
         /**常用场景的名称，和脚本默认导出类名保持一致*/
         export enum _SceneName {
@@ -1405,7 +1404,7 @@ export module lwg {
                 }
             }
             // 如果关闭了场景消失动画，则不会执行任何动画
-            if (!_commonVanishAni) {
+            if (!_sceneAnimation.vanishSwitch) {
                 closef();
                 return;
             }
@@ -1413,8 +1412,8 @@ export module lwg {
             var vanishAni = () => {
                 let time = 0;
                 let delay = 0;
-                switch (_commonOpenAniType) {
-                    case _OpenAniType.fadeOut:
+                switch (_sceneAnimation.presentAni) {
+                    case _sceneAnimation.type.fadeOut:
                         time = 150;
                         delay = 50;
                         if (_sceneControl[closeName]['Background']) {
@@ -1424,7 +1423,7 @@ export module lwg {
                             closef();
                         })
                         break;
-                    case _OpenAniType.leftMove:
+                    case _sceneAnimation.type.leftMove:
 
                         break;
 
@@ -1463,8 +1462,8 @@ export module lwg {
                     scene[scene.name].lwgBtnClick();
                 }
             }
-            switch (_commonOpenAniType) {
-                case _OpenAniType.fadeOut:
+            switch (_sceneAnimation.presentAni) {
+                case _sceneAnimation.type.fadeOut:
                     time = 400;
                     delay = 300;
                     if (scene['Background']) {
@@ -1475,7 +1474,7 @@ export module lwg {
                         afterAni();
                     })
                     break;
-                case _OpenAniType.leftMove:
+                case _sceneAnimation.type.leftMove:
 
                     break;
 
