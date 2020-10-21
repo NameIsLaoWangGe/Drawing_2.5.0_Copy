@@ -1,10 +1,11 @@
 {
     "type":"View",
     "selectedBox":2,
+    "selecteID":13,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":200,
+    "maxID":201,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -289,7 +290,7 @@
                                     "props":{"zOrder":98,"y":336,"x":271.5,"width":191,"var":"Draw12","skin":"Game/UI/GameScene/Level3/youjiaomask.png","rotation":0,"pivotY":29,"pivotX":136,"name":"Draw12","height":110},
                                     "nodeParent":177,
                                     "label":"Draw12",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -297,27 +298,40 @@
                                     "child":[
                                         {
                                             "type":"Image",
-                                            "searchKey":"Image,Pic",
-                                            "props":{"skin":"Game/UI/GameScene/Level3/youjiao.png","name":"Pic"},
-                                            "nodeParent":174,
-                                            "label":"Pic",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":175,
-                                            "child":[
-                                                ]
-                                        },
-                                        {
-                                            "type":"Image",
                                             "searchKey":"Image",
-                                            "props":{"skin":"Game/UI/GameScene/Level3/youjiaomask.png","renderType":"mask"},
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/youjiaomask.png","renderType":"mask"},
                                             "nodeParent":174,
                                             "label":"Image",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
                                             "compId":189,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":17,"x":20,"width":150,"skin":"Game/UI/GameScene/Level3/youjiaomask.png","name":"MaskBoard","height":77},
+                                            "nodeParent":174,
+                                            "label":"MaskBoard",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":200,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/youjiao.png","name":"Pic"},
+                                            "nodeParent":174,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":175,
                                             "child":[
                                                 ]
                                         }]
@@ -635,7 +649,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"y",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":420,
@@ -644,7 +658,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"y",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":420,
@@ -652,10 +666,10 @@
                                 "tween":true,
                                 "target":176,
                                 "key":"y",
-                                "index":200
+                                "index":220
                             },
                             {
-                                "value":334,
+                                "value":459,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
@@ -663,13 +677,22 @@
                                 "index":230
                             },
                             {
-                                "value":334,
+                                "value":420,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
                                 "label":null,
                                 "key":"y",
-                                "index":290
+                                "index":240
+                            },
+                            {
+                                "value":459,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"y",
+                                "index":250
                             },
                             {
                                 "value":420,
@@ -678,7 +701,59 @@
                                 "target":176,
                                 "label":null,
                                 "key":"y",
-                                "index":320
+                                "index":260
+                            },
+                            {
+                                "value":420,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"y",
+                                "index":270
+                            },
+                            {
+                                "value":334,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"y",
+                                "index":285
+                            },
+                            {
+                                "value":334,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"y",
+                                "index":345
+                            },
+                            {
+                                "value":420,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":420,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":420,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -696,7 +771,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"x",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":287,
@@ -705,7 +780,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"x",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":287,
@@ -713,7 +788,7 @@
                                 "tween":true,
                                 "target":176,
                                 "key":"x",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":296,
@@ -721,7 +796,7 @@
                                 "tween":true,
                                 "target":176,
                                 "key":"x",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":296,
@@ -730,7 +805,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"x",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":287,
@@ -739,7 +814,25 @@
                                 "target":176,
                                 "label":null,
                                 "key":"x",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":287,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":287,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -791,7 +884,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":20,
@@ -800,15 +893,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"rotation",
-                                "index":160
-                            },
-                            {
-                                "value":-11,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":176,
-                                "key":"rotation",
-                                "index":180
+                                "index":170
                             },
                             {
                                 "value":0,
@@ -823,14 +908,16 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
+                                "label":null,
                                 "key":"rotation",
-                                "index":230
+                                "index":220
                             },
                             {
-                                "value":8,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
+                                "label":null,
                                 "key":"rotation",
                                 "index":240
                             },
@@ -839,14 +926,7 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
-                                "key":"rotation",
-                                "index":250
-                            },
-                            {
-                                "value":8,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":176,
+                                "label":null,
                                 "key":"rotation",
                                 "index":260
                             },
@@ -859,12 +939,61 @@
                                 "index":270
                             },
                             {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"rotation",
+                                "index":285
+                            },
+                            {
                                 "value":8,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":176,
                                 "key":"rotation",
-                                "index":280
+                                "index":295
+                            },
+                            {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"rotation",
+                                "index":305
+                            },
+                            {
+                                "value":8,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"rotation",
+                                "index":315
+                            },
+                            {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"rotation",
+                                "index":325
+                            },
+                            {
+                                "value":8,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "key":"rotation",
+                                "index":335
+                            },
+                            {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"rotation",
+                                "index":345
                             },
                             {
                                 "value":0,
@@ -873,7 +1002,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"rotation",
-                                "index":290
+                                "index":360
                             },
                             {
                                 "value":0,
@@ -882,7 +1011,16 @@
                                 "target":176,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }],
                         "pivotY":[
                             {
@@ -900,7 +1038,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"pivotY",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":401,
@@ -909,7 +1047,34 @@
                                 "target":176,
                                 "label":null,
                                 "key":"pivotY",
-                                "index":160
+                                "index":170
+                            },
+                            {
+                                "value":401,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":360
+                            },
+                            {
+                                "value":401,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":370
+                            },
+                            {
+                                "value":401,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":390
                             }],
                         "pivotX":[
                             {
@@ -927,7 +1092,7 @@
                                 "target":176,
                                 "label":null,
                                 "key":"pivotX",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":253,
@@ -936,7 +1101,34 @@
                                 "target":176,
                                 "label":null,
                                 "key":"pivotX",
-                                "index":160
+                                "index":170
+                            },
+                            {
+                                "value":253,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":360
+                            },
+                            {
+                                "value":253,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":370
+                            },
+                            {
+                                "value":253,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":176,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":390
                             }]
                     }
                 },
@@ -958,7 +1150,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"y",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":334,
@@ -966,7 +1158,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"y",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":334,
@@ -975,7 +1167,7 @@
                                 "target":177,
                                 "label":null,
                                 "key":"y",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":394,
@@ -984,7 +1176,25 @@
                                 "target":177,
                                 "label":null,
                                 "key":"y",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":394,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":394,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -1009,7 +1219,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"x",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":305,
@@ -1017,7 +1227,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"x",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":305,
@@ -1026,7 +1236,7 @@
                                 "target":177,
                                 "label":null,
                                 "key":"x",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":274,
@@ -1035,7 +1245,25 @@
                                 "target":177,
                                 "label":null,
                                 "key":"x",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":274,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":274,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -1052,7 +1280,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"rotation",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":17,
@@ -1060,7 +1288,7 @@
                                 "tween":true,
                                 "target":177,
                                 "key":"rotation",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":17,
@@ -1069,7 +1297,7 @@
                                 "target":177,
                                 "label":null,
                                 "key":"rotation",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":0,
@@ -1078,7 +1306,25 @@
                                 "target":177,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":177,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -1100,7 +1346,7 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"y",
-                                "index":29
+                                "index":30
                             },
                             {
                                 "value":336,
@@ -1132,7 +1378,7 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"y",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":336,
@@ -1140,22 +1386,13 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"y",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":336,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":174,
-                                "key":"y",
-                                "index":180
-                            },
-                            {
-                                "value":336,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":174,
-                                "label":null,
                                 "key":"y",
                                 "index":200
                             },
@@ -1166,15 +1403,7 @@
                                 "target":174,
                                 "label":null,
                                 "key":"y",
-                                "index":230
-                            },
-                            {
-                                "value":336,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":174,
-                                "key":"y",
-                                "index":290
+                                "index":220
                             },
                             {
                                 "value":336,
@@ -1183,7 +1412,51 @@
                                 "target":174,
                                 "label":null,
                                 "key":"y",
-                                "index":320
+                                "index":270
+                            },
+                            {
+                                "value":336,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"y",
+                                "index":285
+                            },
+                            {
+                                "value":336,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "key":"y",
+                                "index":345
+                            },
+                            {
+                                "value":336,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":336,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":336,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -1200,7 +1473,7 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"x",
-                                "index":29
+                                "index":30
                             },
                             {
                                 "value":271,
@@ -1232,7 +1505,7 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"x",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":271,
@@ -1240,22 +1513,13 @@
                                 "tween":true,
                                 "target":174,
                                 "key":"x",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":271,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":174,
-                                "key":"x",
-                                "index":180
-                            },
-                            {
-                                "value":271,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":174,
-                                "label":null,
                                 "key":"x",
                                 "index":200
                             },
@@ -1266,15 +1530,7 @@
                                 "target":174,
                                 "label":null,
                                 "key":"x",
-                                "index":230
-                            },
-                            {
-                                "value":271,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":174,
-                                "key":"x",
-                                "index":290
+                                "index":220
                             },
                             {
                                 "value":271,
@@ -1283,7 +1539,51 @@
                                 "target":174,
                                 "label":null,
                                 "key":"x",
-                                "index":320
+                                "index":270
+                            },
+                            {
+                                "value":271,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"x",
+                                "index":285
+                            },
+                            {
+                                "value":271,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "key":"x",
+                                "index":345
+                            },
+                            {
+                                "value":271,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"x",
+                                "index":360
+                            },
+                            {
+                                "value":271,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":271,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -1301,7 +1601,7 @@
                                 "target":174,
                                 "label":null,
                                 "key":"rotation",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":-134,
@@ -1310,7 +1610,7 @@
                                 "target":174,
                                 "label":null,
                                 "key":"rotation",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":-134,
@@ -1319,7 +1619,7 @@
                                 "target":174,
                                 "label":null,
                                 "key":"rotation",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":0,
@@ -1328,7 +1628,25 @@
                                 "target":174,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":174,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -1350,7 +1668,7 @@
                                 "tween":true,
                                 "target":172,
                                 "key":"y",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":340,
@@ -1359,7 +1677,7 @@
                                 "target":172,
                                 "label":null,
                                 "key":"y",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":331,
@@ -1368,7 +1686,25 @@
                                 "target":172,
                                 "label":null,
                                 "key":"y",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":331,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":331,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -1385,7 +1721,7 @@
                                 "tween":true,
                                 "target":172,
                                 "key":"x",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":218.5,
@@ -1394,7 +1730,7 @@
                                 "target":172,
                                 "label":null,
                                 "key":"x",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":217,
@@ -1403,7 +1739,25 @@
                                 "target":172,
                                 "label":null,
                                 "key":"x",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":217,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":217,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -1420,7 +1774,7 @@
                                 "tween":true,
                                 "target":172,
                                 "key":"rotation",
-                                "index":200
+                                "index":270
                             },
                             {
                                 "value":-61,
@@ -1428,7 +1782,7 @@
                                 "tween":true,
                                 "target":172,
                                 "key":"rotation",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":-61,
@@ -1437,7 +1791,7 @@
                                 "target":172,
                                 "label":null,
                                 "key":"rotation",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":0,
@@ -1446,7 +1800,25 @@
                                 "target":172,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":172,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -1501,7 +1873,7 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"y",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":184,
@@ -1509,22 +1881,13 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"y",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":184,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
-                                "key":"y",
-                                "index":180
-                            },
-                            {
-                                "value":184,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "label":null,
                                 "key":"y",
                                 "index":200
                             },
@@ -1533,38 +1896,16 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
+                                "label":null,
                                 "key":"y",
-                                "index":230
+                                "index":220
                             },
                             {
                                 "value":184,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
-                                "key":"y",
-                                "index":240
-                            },
-                            {
-                                "value":184,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "key":"y",
-                                "index":250
-                            },
-                            {
-                                "value":184,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "key":"y",
-                                "index":260
-                            },
-                            {
-                                "value":184,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
+                                "label":null,
                                 "key":"y",
                                 "index":270
                             },
@@ -1574,7 +1915,47 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"y",
-                                "index":280
+                                "index":285
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":295
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":305
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":315
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":325
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"y",
+                                "index":335
                             },
                             {
                                 "value":184,
@@ -1583,7 +1964,7 @@
                                 "target":168,
                                 "label":null,
                                 "key":"y",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":184,
@@ -1592,7 +1973,25 @@
                                 "target":168,
                                 "label":null,
                                 "key":"y",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":184,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -1642,7 +2041,7 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"x",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":160,
@@ -1650,22 +2049,13 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"x",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":160,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
-                                "key":"x",
-                                "index":180
-                            },
-                            {
-                                "value":160,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "label":null,
                                 "key":"x",
                                 "index":200
                             },
@@ -1674,38 +2064,16 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
+                                "label":null,
                                 "key":"x",
-                                "index":230
+                                "index":220
                             },
                             {
                                 "value":160,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
-                                "key":"x",
-                                "index":240
-                            },
-                            {
-                                "value":160,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "key":"x",
-                                "index":250
-                            },
-                            {
-                                "value":160,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "key":"x",
-                                "index":260
-                            },
-                            {
-                                "value":160,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
+                                "label":null,
                                 "key":"x",
                                 "index":270
                             },
@@ -1715,7 +2083,47 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"x",
-                                "index":280
+                                "index":285
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"x",
+                                "index":295
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"x",
+                                "index":305
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"x",
+                                "index":315
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"x",
+                                "index":325
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"x",
+                                "index":335
                             },
                             {
                                 "value":160,
@@ -1724,7 +2132,7 @@
                                 "target":168,
                                 "label":null,
                                 "key":"x",
-                                "index":290
+                                "index":345
                             },
                             {
                                 "value":160,
@@ -1733,7 +2141,25 @@
                                 "target":168,
                                 "label":null,
                                 "key":"x",
-                                "index":320
+                                "index":360
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":160,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -1784,7 +2210,7 @@
                                 "tween":true,
                                 "target":168,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":-37,
@@ -1793,41 +2219,24 @@
                                 "target":168,
                                 "label":null,
                                 "key":"rotation",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
-                                "key":"rotation",
-                                "index":180
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "label":null,
                                 "key":"rotation",
                                 "index":200
                             },
                             {
-                                "value":-135,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":168,
-                                "key":"rotation",
-                                "index":230
-                            },
-                            {
-                                "value":-135,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":168,
                                 "label":null,
                                 "key":"rotation",
-                                "index":290
+                                "index":220
                             },
                             {
                                 "value":0,
@@ -1836,7 +2245,51 @@
                                 "target":168,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":270
+                            },
+                            {
+                                "value":-135,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "key":"rotation",
+                                "index":285
+                            },
+                            {
+                                "value":-135,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"rotation",
+                                "index":345
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":168,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -1853,12 +2306,38 @@
                                 "index":0
                             },
                             {
+                                "value":157.44,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "key":"y",
+                                "index":200
+                            },
+                            {
+                                "value":157.44,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"y",
+                                "index":220
+                            },
+                            {
+                                "value":157.44,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"y",
+                                "index":270
+                            },
+                            {
                                 "value":165,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":170,
                                 "key":"y",
-                                "index":230
+                                "index":285
                             },
                             {
                                 "value":138,
@@ -1866,7 +2345,34 @@
                                 "tween":true,
                                 "target":170,
                                 "key":"y",
-                                "index":320
+                                "index":345
+                            },
+                            {
+                                "value":138,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":138,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":138,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -1918,7 +2424,7 @@
                                 "target":170,
                                 "label":null,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":-58,
@@ -1927,23 +2433,7 @@
                                 "target":170,
                                 "label":null,
                                 "key":"rotation",
-                                "index":160
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":180
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":190
+                                "index":170
                             },
                             {
                                 "value":0,
@@ -1954,62 +2444,13 @@
                                 "index":200
                             },
                             {
-                                "value":47,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":230
-                            },
-                            {
-                                "value":83,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":240
-                            },
-                            {
-                                "value":37,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":250
-                            },
-                            {
-                                "value":76,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":260
-                            },
-                            {
-                                "value":32,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "key":"rotation",
-                                "index":270
-                            },
-                            {
-                                "value":83,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":170,
                                 "label":null,
                                 "key":"rotation",
-                                "index":280
-                            },
-                            {
-                                "value":47,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":170,
-                                "label":null,
-                                "key":"rotation",
-                                "index":290
+                                "index":220
                             },
                             {
                                 "value":0,
@@ -2018,7 +2459,94 @@
                                 "target":170,
                                 "label":null,
                                 "key":"rotation",
-                                "index":320
+                                "index":270
+                            },
+                            {
+                                "value":47,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "key":"rotation",
+                                "index":285
+                            },
+                            {
+                                "value":92,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "key":"rotation",
+                                "index":295
+                            },
+                            {
+                                "value":24,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "key":"rotation",
+                                "index":305
+                            },
+                            {
+                                "value":92,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":315
+                            },
+                            {
+                                "value":24,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":325
+                            },
+                            {
+                                "value":92,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":335
+                            },
+                            {
+                                "value":47,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":345
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":170,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -2033,6 +2561,33 @@
                                 "target":164,
                                 "key":"zOrder",
                                 "index":0
+                            },
+                            {
+                                "value":98,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"zOrder",
+                                "index":360
+                            },
+                            {
+                                "value":98,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"zOrder",
+                                "index":370
+                            },
+                            {
+                                "value":98,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"zOrder",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -2042,6 +2597,33 @@
                                 "target":164,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":164,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -2097,7 +2679,7 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"y",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":168,
@@ -2105,7 +2687,7 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"y",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":163.5,
@@ -2114,7 +2696,25 @@
                                 "target":152,
                                 "label":null,
                                 "key":"y",
-                                "index":180
+                                "index":200
+                            },
+                            {
+                                "value":163.5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"y",
+                                "index":220
+                            },
+                            {
+                                "value":163.5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"y",
+                                "index":270
                             },
                             {
                                 "value":152,
@@ -2122,7 +2722,34 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"y",
-                                "index":290
+                                "index":345
+                            },
+                            {
+                                "value":152,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":152,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":152,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -2173,7 +2800,7 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"x",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":367,
@@ -2181,7 +2808,7 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"x",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":374.5,
@@ -2190,7 +2817,25 @@
                                 "target":152,
                                 "label":null,
                                 "key":"x",
-                                "index":180
+                                "index":200
+                            },
+                            {
+                                "value":374.5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"x",
+                                "index":220
+                            },
+                            {
+                                "value":374.5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"x",
+                                "index":270
                             },
                             {
                                 "value":380,
@@ -2198,7 +2843,34 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"x",
-                                "index":290
+                                "index":345
+                            },
+                            {
+                                "value":380,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"x",
+                                "index":360
+                            },
+                            {
+                                "value":380,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":380,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -2275,7 +2947,7 @@
                                 "tween":true,
                                 "target":152,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":27,
@@ -2284,15 +2956,7 @@
                                 "target":152,
                                 "label":null,
                                 "key":"rotation",
-                                "index":160
-                            },
-                            {
-                                "value":-15,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":152,
-                                "key":"rotation",
-                                "index":180
+                                "index":170
                             },
                             {
                                 "value":0,
@@ -2301,6 +2965,101 @@
                                 "target":152,
                                 "key":"rotation",
                                 "index":200
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":220
+                            },
+                            {
+                                "value":-17,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "key":"rotation",
+                                "index":230
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "key":"rotation",
+                                "index":240
+                            },
+                            {
+                                "value":-17,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":250
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":260
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":270
+                            },
+                            {
+                                "value":17,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "key":"rotation",
+                                "index":285
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "key":"rotation",
+                                "index":295
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":152,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
@@ -2356,7 +3115,7 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"y",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":160,
@@ -2364,7 +3123,7 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"y",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":144,
@@ -2373,7 +3132,52 @@
                                 "target":154,
                                 "label":null,
                                 "key":"y",
-                                "index":180
+                                "index":200
+                            },
+                            {
+                                "value":144,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"y",
+                                "index":220
+                            },
+                            {
+                                "value":144,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"y",
+                                "index":270
+                            },
+                            {
+                                "value":144,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":144,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":144,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"y",
+                                "index":390
                             }],
                         "x":[
                             {
@@ -2424,7 +3228,7 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"x",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":135,
@@ -2432,7 +3236,7 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"x",
-                                "index":160
+                                "index":170
                             },
                             {
                                 "value":120,
@@ -2441,7 +3245,52 @@
                                 "target":154,
                                 "label":null,
                                 "key":"x",
-                                "index":180
+                                "index":200
+                            },
+                            {
+                                "value":120,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"x",
+                                "index":220
+                            },
+                            {
+                                "value":120,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"x",
+                                "index":270
+                            },
+                            {
+                                "value":120,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"x",
+                                "index":360
+                            },
+                            {
+                                "value":120,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":120,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"x",
+                                "index":390
                             }],
                         "scaleY":[
                             {
@@ -2451,6 +3300,33 @@
                                 "target":154,
                                 "key":"scaleY",
                                 "index":0
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":390
                             }],
                         "rotation":[
                             {
@@ -2527,7 +3403,7 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":-32,
@@ -2536,16 +3412,33 @@
                                 "target":154,
                                 "label":null,
                                 "key":"rotation",
-                                "index":160
+                                "index":170
                             },
                             {
-                                "value":-9,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":154,
                                 "label":null,
                                 "key":"rotation",
-                                "index":180
+                                "index":200
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":220
+                            },
+                            {
+                                "value":13,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "key":"rotation",
+                                "index":230
                             },
                             {
                                 "value":0,
@@ -2553,13 +3446,145 @@
                                 "tween":true,
                                 "target":154,
                                 "key":"rotation",
-                                "index":200
+                                "index":240
+                            },
+                            {
+                                "value":13,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":250
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":260
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":270
+                            },
+                            {
+                                "value":-17,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "key":"rotation",
+                                "index":285
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "key":"rotation",
+                                "index":295
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":154,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
                             }]
                     }
                 },
                 {
                     "target":156,
                     "keyframes":{
+                        "y":[
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "key":"y",
+                                "index":200
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"y",
+                                "index":220
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"y",
+                                "index":270
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"y",
+                                "index":390
+                            }],
                         "scaleY":[
                             {
                                 "value":1,
@@ -2599,7 +3624,7 @@
                                 "tween":true,
                                 "target":156,
                                 "key":"scaleY",
-                                "index":135
+                                "index":145
                             },
                             {
                                 "value":0,
@@ -2607,7 +3632,7 @@
                                 "tween":true,
                                 "target":156,
                                 "key":"scaleY",
-                                "index":137
+                                "index":147
                             },
                             {
                                 "value":1,
@@ -2615,7 +3640,7 @@
                                 "tween":true,
                                 "target":156,
                                 "key":"scaleY",
-                                "index":139
+                                "index":149
                             },
                             {
                                 "value":1,
@@ -2623,15 +3648,7 @@
                                 "tween":true,
                                 "target":156,
                                 "key":"scaleY",
-                                "index":178
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":156,
-                                "key":"scaleY",
-                                "index":180
+                                "index":170
                             },
                             {
                                 "value":1,
@@ -2639,7 +3656,52 @@
                                 "tween":true,
                                 "target":156,
                                 "key":"scaleY",
-                                "index":182
+                                "index":200
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":220
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":270
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":390
                             }],
                         "scaleX":[
                             {
@@ -2655,14 +3717,95 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":156,
+                                "label":null,
                                 "key":"scaleX",
-                                "index":178
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":156,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":390
                             }]
                     }
                 },
                 {
                     "target":158,
                     "keyframes":{
+                        "y":[
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "key":"y",
+                                "index":200
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"y",
+                                "index":220
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"y",
+                                "index":270
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":228,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"y",
+                                "index":390
+                            }],
                         "scaleY":[
                             {
                                 "value":1,
@@ -2702,7 +3845,7 @@
                                 "tween":true,
                                 "target":158,
                                 "key":"scaleY",
-                                "index":135
+                                "index":145
                             },
                             {
                                 "value":0,
@@ -2710,7 +3853,7 @@
                                 "tween":true,
                                 "target":158,
                                 "key":"scaleY",
-                                "index":137
+                                "index":147
                             },
                             {
                                 "value":1,
@@ -2718,13 +3861,84 @@
                                 "tween":true,
                                 "target":158,
                                 "key":"scaleY",
-                                "index":139
+                                "index":149
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":158,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":390
                             }]
                     }
                 },
                 {
                     "target":162,
                     "keyframes":{
+                        "y":[
+                            {
+                                "value":355,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":355,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "key":"y",
+                                "index":200
+                            },
+                            {
+                                "value":355,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":355,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":355,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"y",
+                                "index":390
+                            }],
                         "scaleY":[
                             {
                                 "value":1,
@@ -2756,7 +3970,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleY",
-                                "index":58
+                                "index":59
                             },
                             {
                                 "value":1,
@@ -2764,7 +3978,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleY",
-                                "index":145
+                                "index":155
                             },
                             {
                                 "value":0.7,
@@ -2772,7 +3986,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleY",
-                                "index":150
+                                "index":160
                             },
                             {
                                 "value":1,
@@ -2780,7 +3994,34 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleY",
-                                "index":160
+                                "index":170
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":390
                             }],
                         "scaleX":[
                             {
@@ -2813,7 +4054,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleX",
-                                "index":58
+                                "index":59
                             },
                             {
                                 "value":1,
@@ -2821,7 +4062,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleX",
-                                "index":145
+                                "index":155
                             },
                             {
                                 "value":0.7,
@@ -2829,7 +4070,7 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleX",
-                                "index":150
+                                "index":160
                             },
                             {
                                 "value":1,
@@ -2837,13 +4078,112 @@
                                 "tween":true,
                                 "target":162,
                                 "key":"scaleX",
-                                "index":160
+                                "index":170
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":360
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":370
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":162,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":390
                             }]
                     }
                 },
                 {
                     "target":166,
                     "keyframes":{
+                        "y":[
+                            {
+                                "value":262,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":262,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"y",
+                                "index":360
+                            },
+                            {
+                                "value":262,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"y",
+                                "index":370
+                            },
+                            {
+                                "value":262,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"y",
+                                "index":390
+                            }],
+                        "x":[
+                            {
+                                "value":339,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"x",
+                                "index":0
+                            },
+                            {
+                                "value":339,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"x",
+                                "index":360
+                            },
+                            {
+                                "value":339,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"x",
+                                "index":370
+                            },
+                            {
+                                "value":339,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"x",
+                                "index":390
+                            }],
                         "rotation":[
                             {
                                 "value":0,
@@ -2860,14 +4200,6 @@
                                 "target":166,
                                 "key":"rotation",
                                 "index":30
-                            },
-                            {
-                                "value":-2,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":166,
-                                "key":"rotation",
-                                "index":43
                             },
                             {
                                 "value":-31,
@@ -2887,6 +4219,30 @@
                                 "index":90
                             },
                             {
+                                "value":-6,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"rotation",
+                                "index":95
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"rotation",
+                                "index":100
+                            },
+                            {
+                                "value":-6,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"rotation",
+                                "index":105
+                            },
+                            {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
@@ -2900,7 +4256,7 @@
                                 "tween":true,
                                 "target":166,
                                 "key":"rotation",
-                                "index":130
+                                "index":140
                             },
                             {
                                 "value":20,
@@ -2908,23 +4264,7 @@
                                 "tween":true,
                                 "target":166,
                                 "key":"rotation",
-                                "index":160
-                            },
-                            {
-                                "value":0,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":166,
-                                "key":"rotation",
-                                "index":180
-                            },
-                            {
-                                "value":-25,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":166,
-                                "key":"rotation",
-                                "index":190
+                                "index":170
                             },
                             {
                                 "value":0,
@@ -2939,40 +4279,61 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":220
+                            },
+                            {
+                                "value":10,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
                                 "key":"rotation",
                                 "index":230
                             },
                             {
-                                "value":-20,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":166,
+                                "label":null,
                                 "key":"rotation",
                                 "index":240
                             },
                             {
-                                "value":0,
+                                "value":10,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":166,
+                                "label":null,
                                 "key":"rotation",
                                 "index":250
                             },
                             {
-                                "value":-20,
+                                "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":166,
+                                "label":null,
                                 "key":"rotation",
                                 "index":260
                             },
                             {
-                                "value":0,
+                                "value":10,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":270
+                            },
+                            {
+                                "value":14,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":166,
                                 "key":"rotation",
-                                "index":270
+                                "index":285
                             },
                             {
                                 "value":-20,
@@ -2980,7 +4341,7 @@
                                 "tween":true,
                                 "target":166,
                                 "key":"rotation",
-                                "index":280
+                                "index":295
                             },
                             {
                                 "value":0,
@@ -2988,7 +4349,140 @@
                                 "tween":true,
                                 "target":166,
                                 "key":"rotation",
-                                "index":290
+                                "index":305
+                            },
+                            {
+                                "value":-20,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"rotation",
+                                "index":315
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"rotation",
+                                "index":325
+                            },
+                            {
+                                "value":-20,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":335
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":345
+                            },
+                            {
+                                "value":-20,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":360
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":370
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"rotation",
+                                "index":390
+                            }],
+                        "pivotY":[
+                            {
+                                "value":121,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"pivotY",
+                                "index":0
+                            },
+                            {
+                                "value":121,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":360
+                            },
+                            {
+                                "value":121,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":370
+                            },
+                            {
+                                "value":121,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":390
+                            }],
+                        "pivotX":[
+                            {
+                                "value":36,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "key":"pivotX",
+                                "index":0
+                            },
+                            {
+                                "value":36,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":360
+                            },
+                            {
+                                "value":36,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":370
+                            },
+                            {
+                                "value":36,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":166,
+                                "label":null,
+                                "key":"pivotX",
+                                "index":390
                             }]
                     }
                 }],
