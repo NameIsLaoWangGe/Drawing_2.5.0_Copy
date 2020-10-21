@@ -15,6 +15,7 @@ export default class UIInit extends Admin._Scene {
                     UIGuide: UIGuide,
                     UITask: UITask,
                     UIPreLoadSceneBefore: UIPreLoadSceneBefore,
+                    UIAds: '',
                 };
                 Admin._evaluating = false;
                 Admin._platform = Admin._platformTpye.Bytedance;

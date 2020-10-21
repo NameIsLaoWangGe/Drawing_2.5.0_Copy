@@ -1,5 +1,5 @@
-import { Admin, EventAdmin, Task, EasterEgg, PalyAudio, Dialog, Setting } from "../script/Frame/lwg";
-import UIAds from "../script/Game/UIAds";
+import lwg, { Admin, EventAdmin, PalyAudio, Setting, _SceneName } from "../Frame/Lwg";
+import { _Task } from "../Frame/_Task";
 export default class ADManager {
 
     public static ShowBanner() {
@@ -32,8 +32,8 @@ export default class ADManager {
     {
         if (Admin._evaluating) {
             rewardAction();
-            // EventAdmin.notify(Task.EventType.adsTime);
-            // EventAdmin.notify(EasterEgg.EventType.easterEggAds);
+            // EventAdmin._notify(Task.EventType.adsTime);
+            // EventAdmin._notify(EasterEgg.EventType.easterEggAds);
             return;
         }
 
@@ -49,8 +49,7 @@ export default class ADManager {
                 PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
                 if (rewardAction != null) {
                     rewardAction();
-                    EventAdmin.notify(Task.EventType.adsTime);
-                    EventAdmin.notify(EasterEgg.EventType.easterEggAds);
+                    EventAdmin._notify(_Task._Event.adsTime);
                 }
             });
 
@@ -61,10 +60,10 @@ export default class ADManager {
                     //UIMgr.show("UISubSkinTry", 2);
                     // Dialog.createHint_Middle(Dialog.HintContent["观看完整广告才能获取奖励哦！"]);
                     console.log('观看完整广告才能获取奖励哦！');
-                    Admin._openScene(Admin.SceneName.UIAds, null, () => {
+                    Admin._openScene(_SceneName.UIAds, null, () => {
                         console.log(Admin._sceneControl['UIAds']);
-                        // EventAdmin.notify('setCallBack', [rewardAction])
-                        Admin._sceneControl['UIAds'].getComponent(UIAds).setCallBack(rewardAction);
+                        // EventAdmin._notify('setCallBack', [rewardAction])
+                        Admin._sceneControl['UIAds']['UIAds'].setCallBack(rewardAction);
                     });
                     //TipPanel.ins.showString("观看完整广告才能获取奖励哦！");
                 }
@@ -73,7 +72,7 @@ export default class ADManager {
                 PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
 
                 //UIMgr.show("UISubSkinTry", 1);
-                Dialog.createHint_Middle(Dialog.HintContent["暂时没有广告，过会儿再试试吧！"]);
+                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["暂时没有广告，过会儿再试试吧！"]);
                 //TipPanel.ins.showString("暂时没有广告，过会儿再试试吧！");
             });
 

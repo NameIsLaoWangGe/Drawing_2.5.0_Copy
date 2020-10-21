@@ -42,8 +42,8 @@
            }
            Elect._createP201_01 = _createP201_01;
        })(Elect = lwg.Elect || (lwg.Elect = {}));
-       let Dialog;
-       (function (Dialog) {
+       let Dialogue;
+       (function (Dialogue) {
            let HintContent;
            (function (HintContent) {
                HintContent[HintContent["\u91D1\u5E01\u4E0D\u591F\u4E86\uFF01"] = 0] = "\u91D1\u5E01\u4E0D\u591F\u4E86\uFF01";
@@ -80,7 +80,7 @@
                HintContent[HintContent["\u724C\u6570\u592A\u5C11\uFF0C\u65E0\u6CD5\u4F7F\u7528\u9053\u5177\uFF01"] = 31] = "\u724C\u6570\u592A\u5C11\uFF0C\u65E0\u6CD5\u4F7F\u7528\u9053\u5177\uFF01";
                HintContent[HintContent["\u6CA1\u6709\u53EF\u4EE5\u8D2D\u4E70\u7684\u5361\u724C\u4E86\uFF01"] = 32] = "\u6CA1\u6709\u53EF\u4EE5\u8D2D\u4E70\u7684\u5361\u724C\u4E86\uFF01";
                HintContent[HintContent["\u656C\u8BF7\u671F\u5F85!"] = 33] = "\u656C\u8BF7\u671F\u5F85!";
-           })(HintContent = Dialog.HintContent || (Dialog.HintContent = {}));
+           })(HintContent = Dialogue.HintContent || (Dialogue.HintContent = {}));
            let Skin;
            (function (Skin) {
                Skin["blackBord"] = "Frame/UI/ui_orthogon_black.png";
@@ -131,16 +131,16 @@
                    });
                });
            }
-           Dialog.createHint_Middle = createHint_Middle;
-           Dialog._dialogContent = {
+           Dialogue.createHint_Middle = createHint_Middle;
+           Dialogue._dialogContent = {
                get Array() {
-                   return Laya.loader.getRes("GameData/Dialog/Dialog.json")['RECORDS'] !== null ? Laya.loader.getRes("GameData/Dialog/Dialog.json")['RECORDS'] : [];
+                   return Laya.loader.getRes("GameData/Dialogue/Dialogue.json")['RECORDS'] !== null ? Laya.loader.getRes("GameData/Dialogue/Dialogue.json")['RECORDS'] : [];
                },
            };
            function getDialogContent(useWhere, name) {
                let dia;
-               for (let index = 0; index < Dialog._dialogContent.Array.length; index++) {
-                   const element = Dialog._dialogContent.Array[index];
+               for (let index = 0; index < Dialogue._dialogContent.Array.length; index++) {
+                   const element = Dialogue._dialogContent.Array[index];
                    if (element['useWhere'] == useWhere && element['name'] == name) {
                        dia = element;
                        break;
@@ -157,7 +157,7 @@
                }
                return arr;
            }
-           Dialog.getDialogContent = getDialogContent;
+           Dialogue.getDialogContent = getDialogContent;
            function getDialogContent_Random(useWhere) {
                let contentArr = [];
                let whereArr = getUseWhere(useWhere);
@@ -172,37 +172,37 @@
                }
                return contentArr;
            }
-           Dialog.getDialogContent_Random = getDialogContent_Random;
+           Dialogue.getDialogContent_Random = getDialogContent_Random;
            function getUseWhere(useWhere) {
                let arr = [];
-               for (let index = 0; index < Dialog._dialogContent.Array.length; index++) {
-                   const element = Dialog._dialogContent.Array[index];
+               for (let index = 0; index < Dialogue._dialogContent.Array.length; index++) {
+                   const element = Dialogue._dialogContent.Array[index];
                    if (element['useWhere'] == useWhere) {
                        arr.push(element);
                    }
                }
                return arr;
            }
-           Dialog.getUseWhere = getUseWhere;
+           Dialogue.getUseWhere = getUseWhere;
            let UseWhere;
            (function (UseWhere) {
                UseWhere["scene1"] = "scene1";
                UseWhere["scene2"] = "scene2";
                UseWhere["scene3"] = "scene3";
-           })(UseWhere = Dialog.UseWhere || (Dialog.UseWhere = {}));
+           })(UseWhere = Dialogue.UseWhere || (Dialogue.UseWhere = {}));
            let DialogProperty;
            (function (DialogProperty) {
                DialogProperty["name"] = "name";
                DialogProperty["useWhere"] = "useWhere";
                DialogProperty["content"] = "content";
                DialogProperty["max"] = "max";
-           })(DialogProperty = Dialog.DialogProperty || (Dialog.DialogProperty = {}));
+           })(DialogProperty = Dialogue.DialogProperty || (Dialogue.DialogProperty = {}));
            let PlayMode;
            (function (PlayMode) {
                PlayMode["voluntarily"] = "voluntarily";
                PlayMode["manual"] = "manual";
                PlayMode["clickContent"] = "clickContent";
-           })(PlayMode = Dialog.PlayMode || (Dialog.PlayMode = {}));
+           })(PlayMode = Dialogue.PlayMode || (Dialogue.PlayMode = {}));
            function createVoluntarilyDialogue(x, y, useWhere, startDelayed, delayed, parent, content) {
                if (startDelayed == undefined) {
                    startDelayed = 0;
@@ -248,11 +248,11 @@
                                });
                            }
                        });
-                       Dialog.DialogueNode = Pre_Dialogue;
+                       Dialogue.DialogueNode = Pre_Dialogue;
                    }));
                });
            }
-           Dialog.createVoluntarilyDialogue = createVoluntarilyDialogue;
+           Dialogue.createVoluntarilyDialogue = createVoluntarilyDialogue;
            function createCommonDialog(parent, x, y, content) {
                let Dialogue_Common;
                Laya.loader.load('Prefab/Dialogue_Common.json', Laya.Handler.create(this, function (prefab) {
@@ -265,8 +265,8 @@
                    Content.text = content;
                }));
            }
-           Dialog.createCommonDialog = createCommonDialog;
-       })(Dialog = lwg.Dialog || (lwg.Dialog = {}));
+           Dialogue.createCommonDialog = createCommonDialog;
+       })(Dialogue = lwg.Dialogue || (lwg.Dialogue = {}));
        let Execution;
        (function (Execution) {
            Execution._execution = {
@@ -5272,7 +5272,7 @@
    let Click = lwg.Click;
    let Color = lwg.Color;
    let Effects = lwg.Effects;
-   let Dialog = lwg.Dialog;
+   let Dialogue = lwg.Dialogue;
    let Animation2D = lwg.Animation2D;
    let Animation3D = lwg.Animation3D;
    let Tools = lwg.Tools;
@@ -6226,6 +6226,7 @@
                        UIGuide: UIGuide,
                        UITask: UITask,
                        UIPreLoadSceneBefore: UIPreLoadSceneBefore,
+                       UIAds: '',
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;

@@ -50,7 +50,7 @@ export module lwg {
     }
 
     /**提示模块*/
-    export module Dialog {
+    export module Dialogue {
         /**提示文字的类型描述*/
         export enum HintContent {
             '金币不够了！',
@@ -154,7 +154,7 @@ export module lwg {
         /**获取对话框内容，内容必须已经预加载*/
         export let _dialogContent = {
             get Array(): Array<any> {
-                return Laya.loader.getRes("GameData/Dialog/Dialog.json")['RECORDS'] !== null ? Laya.loader.getRes("GameData/Dialog/Dialog.json")['RECORDS'] : [];
+                return Laya.loader.getRes("GameData/Dialogue/Dialogue.json")['RECORDS'] !== null ? Laya.loader.getRes("GameData/Dialogue/Dialogue.json")['RECORDS'] : [];
             },
         };
 
@@ -7126,7 +7126,7 @@ export let PalyAudio = lwg.PalyAudio;
 export let Click = lwg.Click;
 export let Color = lwg.Color;
 export let Effects = lwg.Effects;
-export let Dialog = lwg.Dialog;
+export let Dialogue = lwg.Dialogue;
 export let Animation2D = lwg.Animation2D;
 export let Animation3D = lwg.Animation3D;
 export let Tools = lwg.Tools;
