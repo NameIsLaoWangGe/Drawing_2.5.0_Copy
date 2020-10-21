@@ -2,29 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":13,
     "searchKey":"View",
     "referenceLines":[
-        {
-            "value":-231,
-            "type":1,
-            "id":1
-        },
-        {
-            "value":-185,
-            "type":1,
-            "id":2
-        },
-        {
-            "value":-398,
-            "type":1,
-            "id":3
-        },
-        {
-            "value":-241,
-            "type":1,
-            "id":4
-        },
         {
             "value":406,
             "type":1,

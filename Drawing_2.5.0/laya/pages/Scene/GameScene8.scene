@@ -6,41 +6,6 @@
     "searchKey":"View",
     "referenceLines":[
         {
-            "value":-231,
-            "type":1,
-            "id":1
-        },
-        {
-            "value":-185,
-            "type":1,
-            "id":2
-        },
-        {
-            "value":-398,
-            "type":1,
-            "id":3
-        },
-        {
-            "value":-241,
-            "type":1,
-            "id":4
-        },
-        {
-            "value":-449,
-            "type":1,
-            "id":5
-        },
-        {
-            "value":-409,
-            "type":1,
-            "id":6
-        },
-        {
-            "value":-428,
-            "type":0,
-            "id":7
-        },
-        {
             "value":141,
             "type":1,
             "id":8

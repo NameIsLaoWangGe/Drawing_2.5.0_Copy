@@ -6230,7 +6230,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
-                   Admin._game.loopLevel = 8;
+                   Admin._game.loopLevel = 9;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;
