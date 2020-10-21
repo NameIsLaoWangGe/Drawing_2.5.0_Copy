@@ -173,6 +173,7 @@ D Game/UI/UITask
 D Game/UI/UIVictory
 D Game/UI/UIVictoryBox
 D Game/UI/GameScene/design
+R FE705D2B 64F90506-AA36-40d0-B6B6-785F9B573671.png
 R 2170C7A5 FEF94069-25C9-4001-9DF0-23FE9A763236.png
 P 65FBBA7A lALPD26eM-Z81R3NAcrNAeI_482_458.png_720x720q90g.jpg
 R 8A3D0CE5 level1.png
@@ -310,6 +311,14 @@ P 328D801A yanjing.png
 P AD7FB515 yanjingmask.png
 P 90B9752E zui.png
 P 17F6D688 zuimask.png
+D Game/UI/GameScene/Level9
+P ACDA1BB6 lian.png
+P DEE964C2 lianmask.png
+P 8BE9968B shenzi.png
+P C5B15D64 shenzimask.png
+P ECC6B8F7 yanzhuzi .png
+P 28C12A3B zui.png
+P FEDA668C zuimask.png
 D Game/UI/GameScene/SinglePencils
 P 30AAF986 blue.png
 P B81FB0DF eraser.png

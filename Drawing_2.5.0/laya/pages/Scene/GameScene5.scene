@@ -1,11 +1,12 @@
 {
+    "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":13,
+    "selectedBox":220,
+    "selecteID":205,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":223,
+    "maxID":224,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -14,6 +15,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -27,6 +29,7 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
             "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":1280},
@@ -39,6 +42,7 @@
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Car,Car",
                     "props":{"y":609,"x":448,"width":465,"var":"Car","rotation":0,"pivotY":422,"pivotX":321,"name":"Car","height":422},
@@ -51,18 +55,20 @@
                     "compId":202,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Body",
                             "props":{"zOrder":98,"y":368,"x":233,"width":465,"pivotY":368,"pivotX":233,"name":"Body","height":368},
                             "nodeParent":202,
                             "label":"Body",
-                            "isOpen":false,
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
                             "compId":220,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw1,Draw1",
                                     "props":{"y":199,"x":237,"width":425,"var":"Draw1","skin":"Game/UI/GameScene/Level5/cheshenmask.png","pivotY":182,"pivotX":213,"name":"Draw1","height":363},
@@ -75,6 +81,7 @@
                                     "compId":201,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,MaskBoard",
                                             "props":{"y":35,"x":27,"width":369,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","name":"MaskBoard","height":300},
@@ -88,6 +95,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshen.png","name":"Pic"},
@@ -101,6 +109,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","renderType":"mask"},
@@ -115,6 +124,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
                                     "props":{"y":150,"x":177,"width":210,"var":"Draw4","skin":"Game/UI/GameScene/Level5/chechuangmask.png","pivotY":81,"pivotX":105,"name":"Draw4","height":161},
@@ -127,6 +137,7 @@
                                     "compId":205,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Mask",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","renderType":"mask","name":"Mask"},
@@ -140,6 +151,21 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
+                                            "type":"Image",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":21,"x":25,"width":160,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","name":"MaskBoard","height":120},
+                                            "nodeParent":205,
+                                            "label":"MaskBoard",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":223,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level5/chechuang.png","name":"Pic"},
@@ -155,6 +181,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw2,Draw2",
                             "props":{"zOrder":99,"y":339,"x":142,"width":163,"var":"Draw2","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw2","height":163},
@@ -207,6 +234,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw3,Draw3",
                             "props":{"zOrder":100,"y":339,"x":317,"width":163,"var":"Draw3","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw3","height":163},

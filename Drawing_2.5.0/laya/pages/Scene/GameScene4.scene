@@ -64,7 +64,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Draw2,Draw2",
-                            "props":{"y":235,"x":389,"width":445,"var":"Draw2","skin":"Game/UI/GameScene/Level4/shenzimask.png","pivotY":158,"pivotX":223,"name":"Draw2","height":316},
+                            "props":{"zOrder":95,"y":235,"x":389,"width":445,"var":"Draw2","skin":"Game/UI/GameScene/Level4/shenzimask.png","pivotY":158,"pivotX":223,"name":"Draw2","height":316},
                             "nodeParent":178,
                             "label":"Draw2",
                             "isOpen":false,
@@ -103,7 +103,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Draw3,Draw3",
-                            "props":{"y":208,"x":201,"width":188,"var":"Draw3","skin":"Game/UI/GameScene/Level4/yibamask.png","pivotY":147,"pivotX":168,"name":"Draw3","height":251},
+                            "props":{"zOrder":96,"y":208,"x":201,"width":188,"var":"Draw3","skin":"Game/UI/GameScene/Level4/yibamask.png","pivotY":147,"pivotX":168,"name":"Draw3","height":251},
                             "nodeParent":178,
                             "label":"Draw3",
                             "isOpen":true,
@@ -142,7 +142,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Draw5",
-                            "props":{"y":120,"x":403,"width":155,"var":"Draw5","skin":"Game/UI/GameScene/Level4/yuqimask.png","pivotY":122,"pivotX":78,"height":141},
+                            "props":{"zOrder":97,"y":120,"x":403,"width":155,"var":"Draw5","skin":"Game/UI/GameScene/Level4/yuqimask.png","pivotY":122,"pivotX":78,"height":141},
                             "nodeParent":178,
                             "label":"Draw5",
                             "isOpen":false,
@@ -181,7 +181,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Eye1",
-                            "props":{"y":205,"x":434,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye1","height":50},
+                            "props":{"zOrder":100,"y":205,"x":434,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye1","height":50},
                             "nodeParent":178,
                             "label":"Eye1",
                             "isDirectory":false,
@@ -194,7 +194,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Eye2",
-                            "props":{"y":205,"x":521,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye2","height":50},
+                            "props":{"zOrder":100,"y":205,"x":521,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye2","height":50},
                             "nodeParent":178,
                             "label":"Eye2",
                             "isDirectory":false,
@@ -207,7 +207,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Draw1,Draw1",
-                            "props":{"y":296,"x":481,"width":159,"var":"Draw1","skin":"Game/UI/GameScene/Level4/zuimask.png","pivotY":61,"pivotX":80,"name":"Draw1","height":121},
+                            "props":{"zOrder":98,"y":296,"x":481,"width":159,"var":"Draw1","skin":"Game/UI/GameScene/Level4/zuimask.png","pivotY":61,"pivotX":80,"name":"Draw1","height":121},
                             "nodeParent":178,
                             "label":"Draw1",
                             "isOpen":false,
@@ -246,7 +246,7 @@
                         {
                             "type":"Image",
                             "searchKey":"Image,Draw4,Draw4",
-                            "props":{"y":280,"x":316,"width":145,"var":"Draw4","skin":"Game/UI/GameScene/Level4/fuqimask.png","pivotY":31,"pivotX":89,"name":"Draw4","height":160},
+                            "props":{"zOrder":99,"y":280,"x":316,"width":145,"var":"Draw4","skin":"Game/UI/GameScene/Level4/fuqimask.png","pivotY":31,"pivotX":89,"name":"Draw4","height":160},
                             "nodeParent":178,
                             "label":"Draw4",
                             "isOpen":true,
@@ -1110,7 +1110,7 @@
                                 "index":120
                             },
                             {
-                                "value":40,
+                                "value":-20,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1118,7 +1118,7 @@
                                 "index":140
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1126,7 +1126,7 @@
                                 "index":160
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1134,7 +1134,7 @@
                                 "index":180
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1142,7 +1142,7 @@
                                 "index":200
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1150,7 +1150,7 @@
                                 "index":220
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1158,7 +1158,7 @@
                                 "index":240
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1166,7 +1166,7 @@
                                 "index":245
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1174,23 +1174,25 @@
                                 "index":250
                             },
                             {
-                                "value":40,
-                                "tweenMethod":"linearNone",
-                                "tween":true,
-                                "target":195,
-                                "key":"rotation",
-                                "index":255
-                            },
-                            {
                                 "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
+                                "label":null,
+                                "key":"rotation",
+                                "index":255
+                            },
+                            {
+                                "value":40,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":195,
+                                "label":null,
                                 "key":"rotation",
                                 "index":260
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1199,7 +1201,7 @@
                                 "index":265
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1208,7 +1210,7 @@
                                 "index":270
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1217,7 +1219,7 @@
                                 "index":275
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1226,7 +1228,7 @@
                                 "index":280
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1235,7 +1237,7 @@
                                 "index":285
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1244,7 +1246,7 @@
                                 "index":290
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1253,7 +1255,7 @@
                                 "index":295
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1262,7 +1264,7 @@
                                 "index":300
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1271,7 +1273,7 @@
                                 "index":305
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1280,7 +1282,7 @@
                                 "index":310
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1289,7 +1291,7 @@
                                 "index":315
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1298,7 +1300,7 @@
                                 "index":320
                             },
                             {
-                                "value":40,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1307,7 +1309,7 @@
                                 "index":325
                             },
                             {
-                                "value":-40,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
@@ -1316,10 +1318,11 @@
                                 "index":330
                             },
                             {
-                                "value":-10,
+                                "value":-40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
+                                "label":null,
                                 "key":"rotation",
                                 "index":335
                             },
@@ -1360,10 +1363,11 @@
                                 "index":355
                             },
                             {
-                                "value":30,
+                                "value":40,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":195,
+                                "label":null,
                                 "key":"rotation",
                                 "index":360
                             },
