@@ -5609,6 +5609,12 @@
                        _Game._stepOrderImg[index].visible = false;
                    }
                }
+               let Img = _Game._stepOrderImg[_Game._stepIndex.present];
+               let ImgParent = Img.parent;
+               if (ImgParent != this.ImgVar('DrawRoot')) {
+                   ImgParent.zOrder = 200;
+               }
+               Img.zOrder = 200;
            });
            EventAdmin._register(_Game._Event.showStepBtn, this, () => {
                if (_Game._stepIndex.present == 0) {
@@ -5629,7 +5635,7 @@
            EventAdmin._register(_Game._Event.lastStep, this, () => {
                if (_Game._stepIndex.present - 1 >= 0) {
                    let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
-                   let parent0 = Img0.parent;
+                   let Img0Parent = Img0.parent;
                    Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                        let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
@@ -5643,8 +5649,8 @@
                            this['BtnStepClose'] = false;
                            this.drawState.frontPos = null;
                            EventAdmin._notify(_Game._Event.restoreZOder);
-                           if (parent0 != this.ImgVar('DrawRoot')) {
-                               parent0.zOrder = 200;
+                           if (Img0Parent != this.ImgVar('DrawRoot')) {
+                               Img0Parent.zOrder = 200;
                            }
                            Img0.zOrder = 200;
                        });
@@ -5664,13 +5670,13 @@
                        let Img0 = _Game._stepOrderImg[_Game._stepIndex.present + 1];
                        Img0.visible = true;
                        Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
-                           let parent0 = Img0.parent;
+                           let Img0Parent = Img0.parent;
                            _Game._stepIndex.present++;
                            if (!_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
                                this.BtnNextStep.visible = false;
                            }
-                           if (parent0 != this.ImgVar('DrawRoot')) {
-                               parent0.zOrder = 200;
+                           if (Img0Parent != this.ImgVar('DrawRoot')) {
+                               Img0Parent.zOrder = 200;
                            }
                            Img0.zOrder = 200;
                            this['BtnStepClose'] = false;
