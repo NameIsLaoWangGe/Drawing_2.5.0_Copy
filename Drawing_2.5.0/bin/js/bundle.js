@@ -5401,7 +5401,6 @@
                this['maxIndex'] = val;
            },
        };
-       _Game._drawSwitch = false;
        _Game._Pencils = {
            type: {
                SingleColor: 'SingleColor',
@@ -5526,21 +5525,28 @@
                },
            };
            this.drawState = {
+               switch: false,
                EraserSp: null,
                DrawSp: null,
                frontPos: null,
                endPos: null,
                radius: {
                    get value() {
-                       return Admin._game.level >= 10 ? 8 : 15;
+                       return Admin._game.level >= 10 ? 8 : 12;
                    }
+               },
+               restoration: () => {
+                   this.drawState.switch = false;
+                   this.drawState.frontPos = null;
+                   this.drawState.endPos = null;
+                   this.drawState.DrawSp = null;
+                   this.drawState.EraserSp = null;
                },
            };
        }
        lwgOnAwake() {
-           _Game._passLenght = 100;
+           _Game._passLenght = 50;
            _Game._stepIndex.present = 0;
-           _Game._drawSwitch = false;
            _Game._stepIndex.present = 0;
            _Game._stepIndex.max = 0;
            _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
@@ -5582,7 +5588,6 @@
                this.self['Draw' + index].skin = null;
                index++;
            }
-           console.log(_Game._stepOrderImg);
        }
        lwgOnEnable() {
            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
@@ -5606,7 +5611,7 @@
        }
        lwgEventRegister() {
            EventAdmin._register(_Game._Event.start, this, () => {
-               _Game._drawSwitch = true;
+               this.drawState.switch = true;
                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                    if (_Game._stepIndex.present >= index) {
                        _Game._stepOrderImg[index].visible = true;
@@ -5639,6 +5644,7 @@
                }
            });
            EventAdmin._register(_Game._Event.lastStep, this, () => {
+               this.drawState.restoration();
                if (_Game._stepIndex.present - 1 >= 0) {
                    let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                    let Img0Parent = Img0.parent;
@@ -5652,19 +5658,20 @@
                            if (_Game._stepIndex.present == 0) {
                                this.BtnLastStep.visible = false;
                            }
-                           this['BtnStepClose'] = false;
-                           this.drawState.frontPos = null;
                            EventAdmin._notify(_Game._Event.restoreZOder);
                            if (Img0Parent != this.ImgVar('DrawRoot')) {
                                Img0Parent.zOrder = 200;
                            }
                            Img0.zOrder = 200;
+                           this['BtnStepClose'] = false;
+                           this.drawState.switch = true;
                        });
                    });
                }
            });
            EventAdmin._register(_Game._Event.nextStep, this, () => {
                EventAdmin._notify(_Game._Event.restoreZOder);
+               this.drawState.restoration();
                if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                    EventAdmin._notify(_Game._Event.compelet);
                    Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
@@ -5686,7 +5693,7 @@
                            }
                            Img0.zOrder = 200;
                            this['BtnStepClose'] = false;
-                           this.drawState.frontPos = null;
+                           this.drawState.switch = true;
                        });
                    });
                }
@@ -5705,7 +5712,7 @@
            });
            EventAdmin._register(_Game._Event.compelet, this, () => {
                EventAdmin._notify(_Game._Event.restoreZOder);
-               _Game._drawSwitch = false;
+               this.drawState.switch = false;
                this.BtnNextStep.visible = false;
                this.BtnLastStep.visible = false;
                this.BtnPlayAni.visible = true;
@@ -5723,7 +5730,7 @@
                DrawBoard.height = DrawRoot.height;
                Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, (e) => {
                    let Sp;
-                   if (index == _Game._stepIndex.present && _Game._drawSwitch) {
+                   if (index == _Game._stepIndex.present && this.drawState.switch) {
                        let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                        this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
@@ -5738,7 +5745,7 @@
                        Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
                    }
                }, (e) => {
-                   if (this.drawState.frontPos && index == _Game._stepIndex.present && _Game._drawSwitch) {
+                   if (this.drawState.frontPos && index == _Game._stepIndex.present && this.drawState.switch) {
                        let DrawBoard = DrawRoot.getChildByName('DrawBoard');
                        let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
@@ -6234,7 +6241,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
-                   Admin._game.loopLevel = 10;
+                   Admin._game.loopLevel = 11;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;

@@ -48,8 +48,6 @@ export module _Game {
             this['maxIndex'] = val;
         },
     }
-    /**绘画开关*/
-    export let _drawSwitch: boolean = false;
     /**铅笔种类*/
     export let _Pencils = {
         type: {
@@ -176,9 +174,8 @@ export default class GameScene extends Admin._Scene {
     }
 
     lwgOnAwake(): void {
-        _Game._passLenght = 100;
+        _Game._passLenght = 50;
         _Game._stepIndex.present = 0;
-        _Game._drawSwitch = false;
         _Game._stepIndex.present = 0;
         _Game._stepIndex.max = 0;
         _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
@@ -281,7 +278,7 @@ export default class GameScene extends Admin._Scene {
     }
     lwgEventRegister(): void {
         EventAdmin._register(_Game._Event.start, this, () => {
-            _Game._drawSwitch = true;
+            this.drawState.switch = true;
             for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                 if (_Game._stepIndex.present >= index) {
                     _Game._stepOrderImg[index].visible = true;
@@ -314,6 +311,7 @@ export default class GameScene extends Admin._Scene {
         });
 
         EventAdmin._register(_Game._Event.lastStep, this, () => {
+            this.drawState.restoration();
             if (_Game._stepIndex.present - 1 >= 0) {
                 let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                 let Img0Parent = Img0.parent as Laya.Image;
@@ -328,13 +326,13 @@ export default class GameScene extends Admin._Scene {
                             this.BtnLastStep.visible = false;
                         }
                         // console.log(_Game._stepIndex, _Game._stepIndex.max);
-                        this['BtnStepClose'] = false;
-                        this.drawState.frontPos = null;
                         EventAdmin._notify(_Game._Event.restoreZOder);
                         if (Img0Parent != this.ImgVar('DrawRoot')) {
                             Img0Parent.zOrder = 200;
                         }
                         Img0.zOrder = 200;
+                        this['BtnStepClose'] = false;
+                        this.drawState.switch = true;
                     })
                 });
             }
@@ -342,6 +340,7 @@ export default class GameScene extends Admin._Scene {
 
         EventAdmin._register(_Game._Event.nextStep, this, () => {
             EventAdmin._notify(_Game._Event.restoreZOder);
+            this.drawState.restoration();
             if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                 EventAdmin._notify(_Game._Event.compelet);
                 Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
@@ -363,7 +362,7 @@ export default class GameScene extends Admin._Scene {
                         // console.log(_Game._stepIndex, _Game._stepIndex.max);
                         Img0.zOrder = 200;
                         this['BtnStepClose'] = false;
-                        this.drawState.frontPos = null;
+                        this.drawState.switch = true;
                     })
                 });
             }
@@ -384,7 +383,7 @@ export default class GameScene extends Admin._Scene {
 
         EventAdmin._register(_Game._Event.compelet, this, () => {
             EventAdmin._notify(_Game._Event.restoreZOder);
-            _Game._drawSwitch = false;
+            this.drawState.switch = false;
             // Animation2D.move_Scale(this.ImgVar('DrawRoot'), 1, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y - 200, 0.7, 500, null, null, () => {
             this.BtnNextStep.visible = false;
             this.BtnLastStep.visible = false;
@@ -397,14 +396,22 @@ export default class GameScene extends Admin._Scene {
 
     /**绘画状态控制*/
     drawState = {
+        switch: false,
         EraserSp: null,
         DrawSp: null,
         frontPos: null,
         endPos: null,
         radius: {
             get value(): number {
-                return Admin._game.level >= 10 ? 8 : 15;
+                return Admin._game.level >= 10 ? 8 : 12;
             }
+        },
+        restoration: () => {
+            this.drawState.switch = false;
+            this.drawState.frontPos = null;
+            this.drawState.endPos = null;
+            this.drawState.DrawSp = null;
+            this.drawState.EraserSp = null;
         },
     }
     lwgBtnClick(): void {
@@ -422,7 +429,7 @@ export default class GameScene extends Admin._Scene {
                 (e: Laya.Event) => {
                     // 初始化一个绘制节点
                     let Sp: Laya.Sprite;
-                    if (index == _Game._stepIndex.present && _Game._drawSwitch) {
+                    if (index == _Game._stepIndex.present && this.drawState.switch) {
                         let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                         this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                         if (_Game._SingleColorPencils._pitchName == 'eraser') {
@@ -438,7 +445,7 @@ export default class GameScene extends Admin._Scene {
                 },
                 // 移动
                 (e: Laya.Event) => {
-                    if (this.drawState.frontPos && index == _Game._stepIndex.present && _Game._drawSwitch) {
+                    if (this.drawState.frontPos && index == _Game._stepIndex.present && this.drawState.switch) {
                         let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                         let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                         if (_Game._SingleColorPencils._pitchName == 'eraser') {
