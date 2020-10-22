@@ -37,15 +37,15 @@ export module _Game {
         },
         set present(val: number) {
             this['presentIndex'] = val;
-            if (this['presentIndex'] > _stepIndex.mask) {
-                _stepIndex.mask = this['presentIndex'];
+            if (this['presentIndex'] > _stepIndex.max) {
+                _stepIndex.max = this['presentIndex'];
             }
         },
-        get mask(): number {
-            return this['maskIndex'] ? this['maskIndex'] : 0;
+        get max(): number {
+            return this['maxIndex'] ? this['maxIndex'] : 0;
         },
-        set mask(val: number) {
-            this['maskIndex'] = val;
+        set max(val: number) {
+            this['maxIndex'] = val;
         },
     }
     /**绘画开关*/
@@ -164,7 +164,7 @@ export default class GameScene extends Admin._Scene {
             return this['len'] ? this['len'] : 0;
         },
         set value(val: number) {
-            if (_Game._stepIndex.present == _Game._stepIndex.mask) {
+            if (_Game._stepIndex.present == _Game._stepIndex.max) {
                 this['len'] = val;
                 if (this['len'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
                     EventAdmin._notify(_Game._Event.showStepBtn);
@@ -180,7 +180,7 @@ export default class GameScene extends Admin._Scene {
         _Game._stepIndex.present = 0;
         _Game._drawSwitch = false;
         _Game._stepIndex.present = 0;
-        _Game._stepIndex.mask = 0;
+        _Game._stepIndex.max = 0;
         _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
         this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
         _Game._PencilsList.array = _Game._SingleColorPencils._data;
@@ -321,13 +321,13 @@ export default class GameScene extends Admin._Scene {
                     let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                     Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                         _Game._stepIndex.present--;
-                        if (_Game._stepIndex.present < _Game._stepIndex.mask) {
+                        if (_Game._stepIndex.present < _Game._stepIndex.max) {
                             this.BtnNextStep.visible = true;
                         }
                         if (_Game._stepIndex.present == 0) {
                             this.BtnLastStep.visible = false;
                         }
-                        // console.log(_Game._stepIndex, _Game._stepIndex.mask);
+                        // console.log(_Game._stepIndex, _Game._stepIndex.max);
                         this['BtnStepClose'] = false;
                         this.drawState.frontPos = null;
                         EventAdmin._notify(_Game._Event.restoreZOder);
@@ -360,7 +360,7 @@ export default class GameScene extends Admin._Scene {
                         if (Img0Parent != this.ImgVar('DrawRoot')) {
                             Img0Parent.zOrder = 200;
                         }
-                        // console.log(_Game._stepIndex, _Game._stepIndex.mask);
+                        // console.log(_Game._stepIndex, _Game._stepIndex.max);
                         Img0.zOrder = 200;
                         this['BtnStepClose'] = false;
                         this.drawState.frontPos = null;
@@ -397,10 +397,15 @@ export default class GameScene extends Admin._Scene {
 
     /**绘画状态控制*/
     drawState = {
-        frontPos: null,
-        endPos: null,
         EraserSp: null,
         DrawSp: null,
+        frontPos: null,
+        endPos: null,
+        radius: {
+            get value(): number {
+                return Admin._game.level >= 10 ? 8 : 15;
+            }
+        },
     }
     lwgBtnClick(): void {
 
@@ -428,7 +433,7 @@ export default class GameScene extends Admin._Scene {
                             this.drawState.DrawSp.blendMode = "none";
                         }
                         DrawBoard.addChild(Sp)['pos'](0, 0);
-                        Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, 15, _Game._SingleColorPencils._pitchColor);
+                        Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
                     }
                 },
                 // 移动
@@ -438,18 +443,16 @@ export default class GameScene extends Admin._Scene {
                         let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                         if (_Game._SingleColorPencils._pitchName == 'eraser') {
                             if (this.drawState.EraserSp) {
-                                let radius = 25;
-                                this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', radius * 2);
-                                this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
+                                this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
+                                this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
                                 // this._drawingLenth.value -= (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                             }
                         } else {
                             if (this.drawState.DrawSp) {
                                 // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
                                 // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                                let radius = 15;
-                                this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, radius * 2);
-                                this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, radius, _Game._SingleColorPencils._pitchColor);
+                                this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
+                                this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
                                 this._drawingLenth.value += (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                             }
                         }

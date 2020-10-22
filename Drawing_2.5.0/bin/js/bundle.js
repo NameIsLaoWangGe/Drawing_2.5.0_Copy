@@ -5390,15 +5390,15 @@
            },
            set present(val) {
                this['presentIndex'] = val;
-               if (this['presentIndex'] > _Game._stepIndex.mask) {
-                   _Game._stepIndex.mask = this['presentIndex'];
+               if (this['presentIndex'] > _Game._stepIndex.max) {
+                   _Game._stepIndex.max = this['presentIndex'];
                }
            },
-           get mask() {
-               return this['maskIndex'] ? this['maskIndex'] : 0;
+           get max() {
+               return this['maxIndex'] ? this['maxIndex'] : 0;
            },
-           set mask(val) {
-               this['maskIndex'] = val;
+           set max(val) {
+               this['maxIndex'] = val;
            },
        };
        _Game._drawSwitch = false;
@@ -5515,7 +5515,7 @@
                    return this['len'] ? this['len'] : 0;
                },
                set value(val) {
-                   if (_Game._stepIndex.present == _Game._stepIndex.mask) {
+                   if (_Game._stepIndex.present == _Game._stepIndex.max) {
                        this['len'] = val;
                        if (this['len'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
                            EventAdmin._notify(_Game._Event.showStepBtn);
@@ -5526,10 +5526,15 @@
                },
            };
            this.drawState = {
-               frontPos: null,
-               endPos: null,
                EraserSp: null,
                DrawSp: null,
+               frontPos: null,
+               endPos: null,
+               radius: {
+                   get value() {
+                       return Admin._game.level >= 10 ? 8 : 15;
+                   }
+               },
            };
        }
        lwgOnAwake() {
@@ -5537,7 +5542,7 @@
            _Game._stepIndex.present = 0;
            _Game._drawSwitch = false;
            _Game._stepIndex.present = 0;
-           _Game._stepIndex.mask = 0;
+           _Game._stepIndex.max = 0;
            _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
            this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
            _Game._PencilsList.array = _Game._SingleColorPencils._data;
@@ -5577,6 +5582,7 @@
                this.self['Draw' + index].skin = null;
                index++;
            }
+           console.log(_Game._stepOrderImg);
        }
        lwgOnEnable() {
            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
@@ -5640,7 +5646,7 @@
                        let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                        Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                            _Game._stepIndex.present--;
-                           if (_Game._stepIndex.present < _Game._stepIndex.mask) {
+                           if (_Game._stepIndex.present < _Game._stepIndex.max) {
                                this.BtnNextStep.visible = true;
                            }
                            if (_Game._stepIndex.present == 0) {
@@ -5729,7 +5735,7 @@
                            this.drawState.DrawSp.blendMode = "none";
                        }
                        DrawBoard.addChild(Sp)['pos'](0, 0);
-                       Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, 15, _Game._SingleColorPencils._pitchColor);
+                       Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
                    }
                }, (e) => {
                    if (this.drawState.frontPos && index == _Game._stepIndex.present && _Game._drawSwitch) {
@@ -5737,16 +5743,14 @@
                        let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                        if (_Game._SingleColorPencils._pitchName == 'eraser') {
                            if (this.drawState.EraserSp) {
-                               let radius = 25;
-                               this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', radius * 2);
-                               this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, radius, '#000000');
+                               this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
+                               this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
                            }
                        }
                        else {
                            if (this.drawState.DrawSp) {
-                               let radius = 15;
-                               this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, radius * 2);
-                               this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, radius, _Game._SingleColorPencils._pitchColor);
+                               this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
+                               this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
                                this._drawingLenth.value += this.drawState.frontPos.distance(endPos.x, endPos.y);
                            }
                        }
@@ -6230,7 +6234,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
-                   Admin._game.loopLevel = 9;
+                   Admin._game.loopLevel = 10;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;
