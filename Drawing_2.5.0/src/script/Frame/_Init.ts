@@ -18,12 +18,9 @@ export default class UIInit extends Admin._Scene {
                     UIAds: '',
                 };
                 Admin._evaluating = false;
-                Admin._platform = Admin._platformTpye.WebTest;
-                Laya.LocalStorage.clear();
+                Admin._platform.value = Admin._platform.tpye.Web;
                 Admin._game.loopLevel = 12;
-
             }());
-
             (function date() {
                 DateAdmin._loginNumber.value++;
             });

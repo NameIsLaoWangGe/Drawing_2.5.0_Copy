@@ -785,16 +785,26 @@
        })(TimerAdmin = lwg.TimerAdmin || (lwg.TimerAdmin = {}));
        let Admin;
        (function (Admin) {
-           let _platformTpye;
-           (function (_platformTpye) {
-               _platformTpye["Bytedance"] = "Bytedance";
-               _platformTpye["WeChat"] = "WeChat";
-               _platformTpye["OPPO"] = "OPPO";
-               _platformTpye["VIVO"] = "VIVO";
-               _platformTpye["All"] = "All";
-               _platformTpye["WebTest"] = "WebTest";
-           })(_platformTpye = Admin._platformTpye || (Admin._platformTpye = {}));
-           Admin._platform = _platformTpye.Bytedance;
+           Admin._platform = {
+               tpye: {
+                   Bytedance: 'Bytedance',
+                   WeChat: 'WeChat',
+                   OPPO: 'OPPO',
+                   VIVO: 'VIVO',
+                   All: 'All',
+                   Web: 'Web',
+                   WebTest: 'WebTest',
+               },
+               get value() {
+                   return this['_platform_value'] ? this['_platform_value'] : Admin._platform.tpye.Bytedance;
+               },
+               set value(val) {
+                   this['_platform_value'] = val;
+                   if (val == Admin._platform.tpye.WebTest) {
+                       Laya.LocalStorage.clear();
+                   }
+               }
+           };
            Admin._evaluating = false;
            Admin._game = {
                switch: true,
@@ -6271,8 +6281,7 @@
                        UIAds: '',
                    };
                    Admin._evaluating = false;
-                   Admin._platform = Admin._platformTpye.WebTest;
-                   Laya.LocalStorage.clear();
+                   Admin._platform.value = Admin._platform.tpye.Web;
                    Admin._game.loopLevel = 12;
                }());
                (function date() {

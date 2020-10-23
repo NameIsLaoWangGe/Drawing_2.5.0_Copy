@@ -740,6 +740,24 @@
                                 "target":251,
                                 "key":"y",
                                 "index":530
+                            },
+                            {
+                                "value":284,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":284,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -784,6 +802,24 @@
                                 "label":null,
                                 "key":"x",
                                 "index":190
+                            },
+                            {
+                                "value":522,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"x",
+                                "index":685
+                            },
+                            {
+                                "value":522,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -960,13 +996,58 @@
                                 "index":610
                             },
                             {
+                                "value":40,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"rotation",
+                                "index":625
+                            },
+                            {
+                                "value":-40,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"rotation",
+                                "index":640
+                            },
+                            {
+                                "value":40,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"rotation",
+                                "index":655
+                            },
+                            {
+                                "value":-40,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"rotation",
+                                "index":670
+                            },
+                            {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":251,
                                 "label":null,
                                 "key":"rotation",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":251,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }]
                     }
                 },
@@ -998,6 +1079,24 @@
                                 "label":null,
                                 "key":"x",
                                 "index":160
+                            },
+                            {
+                                "value":134,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"x",
+                                "index":685
+                            },
+                            {
+                                "value":134,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -1091,6 +1190,24 @@
                                 "target":231,
                                 "key":"scaleY",
                                 "index":540
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "scaleX":[
                             {
@@ -1126,6 +1243,24 @@
                                 "label":null,
                                 "key":"scaleX",
                                 "index":160
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":231,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":705
                             }]
                     }
                 },
@@ -1157,6 +1292,24 @@
                                 "label":null,
                                 "key":"x",
                                 "index":160
+                            },
+                            {
+                                "value":212,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"x",
+                                "index":685
+                            },
+                            {
+                                "value":212,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -1250,6 +1403,24 @@
                                 "target":232,
                                 "key":"scaleY",
                                 "index":540
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "scaleX":[
                             {
@@ -1302,6 +1473,24 @@
                                 "label":null,
                                 "key":"scaleX",
                                 "index":160
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":232,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":705
                             }]
                     }
                 },
@@ -1333,6 +1522,24 @@
                                 "label":null,
                                 "key":"y",
                                 "index":160
+                            },
+                            {
+                                "value":191,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":291,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":191,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":291,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -1359,6 +1566,24 @@
                                 "label":null,
                                 "key":"x",
                                 "index":160
+                            },
+                            {
+                                "value":201,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":291,
+                                "label":null,
+                                "key":"x",
+                                "index":685
+                            },
+                            {
+                                "value":201,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":291,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }]
                     }
                 },
@@ -1390,6 +1615,24 @@
                                 "label":null,
                                 "key":"y",
                                 "index":160
+                            },
+                            {
+                                "value":191,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":290,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":191,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":290,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -1416,6 +1659,24 @@
                                 "label":null,
                                 "key":"x",
                                 "index":160
+                            },
+                            {
+                                "value":136,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":290,
+                                "label":null,
+                                "key":"x",
+                                "index":685
+                            },
+                            {
+                                "value":136,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":290,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }]
                     }
                 },
@@ -1447,6 +1708,24 @@
                                 "label":null,
                                 "key":"scaleX",
                                 "index":160
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -1674,20 +1953,67 @@
                                 "index":600
                             },
                             {
-                                "value":-48,
+                                "value":-46,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":233,
+                                "label":null,
                                 "key":"rotation",
                                 "index":615
+                            },
+                            {
+                                "value":30,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"rotation",
+                                "index":630
+                            },
+                            {
+                                "value":-46,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"rotation",
+                                "index":645
+                            },
+                            {
+                                "value":30,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"rotation",
+                                "index":660
+                            },
+                            {
+                                "value":-46,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"rotation",
+                                "index":675
                             },
                             {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":233,
+                                "label":null,
                                 "key":"rotation",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":233,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }]
                     }
                 },
@@ -1719,6 +2045,24 @@
                                 "label":null,
                                 "key":"scaleX",
                                 "index":160
+                            },
+                            {
+                                "value":-1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":685
+                            },
+                            {
+                                "value":-1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"scaleX",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -1946,20 +2290,67 @@
                                 "index":600
                             },
                             {
-                                "value":-27,
+                                "value":-21,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":242,
+                                "label":null,
                                 "key":"rotation",
                                 "index":615
+                            },
+                            {
+                                "value":48,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"rotation",
+                                "index":630
+                            },
+                            {
+                                "value":-21,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"rotation",
+                                "index":645
+                            },
+                            {
+                                "value":48,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"rotation",
+                                "index":660
+                            },
+                            {
+                                "value":-21,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"rotation",
+                                "index":675
                             },
                             {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":242,
+                                "label":null,
                                 "key":"rotation",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":242,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }]
                     }
                 },
@@ -2128,8 +2519,18 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":261,
+                                "label":null,
                                 "key":"y",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":161,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -2170,8 +2571,18 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":261,
+                                "label":null,
                                 "key":"x",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":154,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -2449,12 +2860,58 @@
                                 "index":615
                             },
                             {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"rotation",
+                                "index":625
+                            },
+                            {
+                                "value":5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"rotation",
+                                "index":635
+                            },
+                            {
+                                "value":-5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"rotation",
+                                "index":645
+                            },
+                            {
+                                "value":5,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"rotation",
+                                "index":655
+                            },
+                            {
                                 "value":0,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":261,
+                                "label":null,
                                 "key":"rotation",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":261,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }]
                     }
                 },
@@ -2625,15 +3082,25 @@
                                 "target":225,
                                 "label":null,
                                 "key":"y",
-                                "index":620
+                                "index":675
                             },
                             {
                                 "value":182,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":225,
+                                "label":null,
                                 "key":"y",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":182,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":225,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -2674,8 +3141,18 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":225,
+                                "label":null,
                                 "key":"x",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":317,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":225,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }]
                     }
                 },
@@ -2846,15 +3323,25 @@
                                 "target":280,
                                 "label":null,
                                 "key":"y",
-                                "index":620
+                                "index":675
                             },
                             {
                                 "value":326,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":280,
+                                "label":null,
                                 "key":"y",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":326,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":280,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "x":[
                             {
@@ -2895,8 +3382,18 @@
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":280,
+                                "label":null,
                                 "key":"x",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":303,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":280,
+                                "label":null,
+                                "key":"x",
+                                "index":705
                             }]
                     }
                 },
@@ -2927,6 +3424,24 @@
                                 "target":252,
                                 "key":"y",
                                 "index":565
+                            },
+                            {
+                                "value":436,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":436,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -3088,15 +3603,25 @@
                                 "target":252,
                                 "label":null,
                                 "key":"scaleY",
-                                "index":620
+                                "index":675
                             },
                             {
-                                "value":0.98,
+                                "value":1,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":252,
+                                "label":null,
                                 "key":"scaleY",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -3106,6 +3631,24 @@
                                 "target":252,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"rotation",
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }],
                         "pivotY":[
                             {
@@ -3123,6 +3666,24 @@
                                 "target":252,
                                 "key":"pivotY",
                                 "index":520
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":685
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":252,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":705
                             }]
                     }
                 },
@@ -3169,7 +3730,25 @@
                                 "target":248,
                                 "label":null,
                                 "key":"y",
-                                "index":620
+                                "index":675
+                            },
+                            {
+                                "value":439,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":439,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -3331,15 +3910,25 @@
                                 "target":248,
                                 "label":null,
                                 "key":"scaleY",
-                                "index":620
+                                "index":675
                             },
                             {
                                 "value":1,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":248,
+                                "label":null,
                                 "key":"scaleY",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -3349,6 +3938,24 @@
                                 "target":248,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"rotation",
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }],
                         "pivotY":[
                             {
@@ -3366,6 +3973,24 @@
                                 "target":248,
                                 "key":"pivotY",
                                 "index":520
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":685
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":248,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":705
                             }]
                     }
                 },
@@ -3396,6 +4021,24 @@
                                 "target":256,
                                 "key":"y",
                                 "index":565
+                            },
+                            {
+                                "value":432,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":432,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -3549,15 +4192,25 @@
                                 "target":256,
                                 "label":null,
                                 "key":"scaleY",
-                                "index":620
+                                "index":675
                             },
                             {
                                 "value":1,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":256,
+                                "label":null,
                                 "key":"scaleY",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -3567,6 +4220,24 @@
                                 "target":256,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"rotation",
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }],
                         "pivotY":[
                             {
@@ -3584,6 +4255,24 @@
                                 "target":256,
                                 "key":"pivotY",
                                 "index":520
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":685
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":256,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":705
                             }]
                     }
                 },
@@ -3614,6 +4303,24 @@
                                 "target":255,
                                 "key":"y",
                                 "index":565
+                            },
+                            {
+                                "value":434,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"y",
+                                "index":685
+                            },
+                            {
+                                "value":434,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"y",
+                                "index":705
                             }],
                         "scaleY":[
                             {
@@ -3775,15 +4482,25 @@
                                 "target":255,
                                 "label":null,
                                 "key":"scaleY",
-                                "index":620
+                                "index":675
                             },
                             {
                                 "value":1,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
                                 "target":255,
+                                "label":null,
                                 "key":"scaleY",
-                                "index":630
+                                "index":685
+                            },
+                            {
+                                "value":1,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"scaleY",
+                                "index":705
                             }],
                         "rotation":[
                             {
@@ -3793,6 +4510,24 @@
                                 "target":255,
                                 "key":"rotation",
                                 "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"rotation",
+                                "index":685
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"rotation",
+                                "index":705
                             }],
                         "pivotY":[
                             {
@@ -3810,6 +4545,24 @@
                                 "target":255,
                                 "key":"pivotY",
                                 "index":520
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":685
+                            },
+                            {
+                                "value":219,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":255,
+                                "label":null,
+                                "key":"pivotY",
+                                "index":705
                             }]
                     }
                 }],

@@ -1089,19 +1089,31 @@ export module lwg {
     }
     /**游戏整体控制*/
     export module Admin {
-        /**渠道类型*/
-        export enum _platformTpye {
-            Bytedance = 'Bytedance',
-            WeChat = 'WeChat',
-            OPPO = 'OPPO',
-            VIVO = 'VIVO',
-            /**通用*/
-            All = 'All',
-            /**web测试包*/
-            WebTest = 'WebTest',
-        }
         /**渠道，控制一些节点的变化,默认为字节*/
-        export let _platform: string = _platformTpye.Bytedance;
+        export let _platform = {
+            /**渠道类型*/
+            tpye: {
+                Bytedance: 'Bytedance',
+                WeChat: 'WeChat',
+                OPPO: 'OPPO',
+                VIVO: 'VIVO',
+                /**通用*/
+                All: 'All',
+                /**web测试包*/
+                Web: 'Web',
+                /**web测试包,会清除本地数据*/
+                WebTest: 'WebTest',
+            },
+            get value(): string {
+                return this['_platform_value'] ? this['_platform_value'] : _platform.tpye.Bytedance;
+            },
+            set value(val: string) {
+                this['_platform_value'] = val;
+                if (val == _platform.tpye.WebTest) {
+                    Laya.LocalStorage.clear();
+                }
+            }
+        };
 
         /**是否为评测包，评测包广告默认关闭，默认为非评测包，直接获得广告奖励*/
         export let _evaluating: boolean = false;
