@@ -1116,7 +1116,7 @@ export module lwg {
                 if (diff > 0) {
                     this.maxLevel += diff;
                 }
-                if (val > this.loopLevel&& this.loopLevel!=-1) {
+                if (val > this.loopLevel && this.loopLevel != -1) {
                     Laya.LocalStorage.setItem('_gameLevel', (1).toString());
                 } else {
                     Laya.LocalStorage.setItem('_gameLevel', (val).toString());
@@ -6693,7 +6693,9 @@ export module lwg {
         export let _mesh3D: Array<string> = [];
         /**材质详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
         export let _material: Array<string> = [];
-        /**纹理加载详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
+        /**2D纹理*/
+        export let _texture: Array<string> = [];
+        /**3D纹理加载详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
         export let _texture2D: Array<string> = [];
 
         /**需要加载的图片资源列表,一般是界面的图片*/
@@ -6722,6 +6724,7 @@ export module lwg {
             prefab3D = 'prefab3D',
             mesh3D = 'mesh3D',
             material = 'material',
+            texture = 'texture',
             texture2D = 'texture2D',
             pic2D = 'pic2D',
             scene2D = 'scene2D',
@@ -6825,6 +6828,9 @@ export module lwg {
                                         case _ListName.skeleton:
                                             _skeleton.push(element);
                                             break;
+                                        case _ListName.texture:
+                                            _texture.push(element);
+                                            break;
                                         default:
                                             break;
                                     }
@@ -6922,11 +6928,12 @@ export module lwg {
                         break;
 
                     case _scene3D:
-                        Laya.Scene3D.load(_scene3D[index], Laya.Handler.create(this, (any) => {
-                            if (any == null) {
-                                console.log('XXXXXXXXXXX3D场景' + _scene3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                        Laya.Scene3D.load(_scene3D[index]['url'], Laya.Handler.create(this, (Scene: Laya.Scene3D) => {
+                            if (Scene == null) {
+                                console.log('XXXXXXXXXXX3D场景' + _scene3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('3D场景' + _scene3D[index] + '加载完成！', '数组下标为：', index);
+                                _scene3D[index]['scene'] = Scene;
+                                console.log('3D场景' + _scene3D[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
 
@@ -6934,11 +6941,12 @@ export module lwg {
                         break;
 
                     case _prefab3D:
-                        Laya.Sprite3D.load(_prefab3D[index], Laya.Handler.create(this, (any) => {
-                            if (any == null) {
-                                console.log('XXXXXXXXXXX3D预设体' + _prefab3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                        Laya.Sprite3D.load(_prefab3D[index]['url'], Laya.Handler.create(this, (Sp: Laya.Sprite3D) => {
+                            if (Sp == null) {
+                                console.log('XXXXXXXXXXX3D预设体' + _prefab3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('3D预制体' + _prefab3D[index] + '加载完成！', '数组下标为：', index);
+                                _prefab3D[index]['prefab'] = Sp;
+                                console.log('3D预制体' + _prefab3D[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
 
@@ -6946,34 +6954,47 @@ export module lwg {
                         break;
 
                     case _mesh3D:
-                        Laya.Mesh.load(_mesh3D[index], Laya.Handler.create(this, (any) => {
+                        Laya.Mesh.load(_mesh3D[index]['url'], Laya.Handler.create(this, (any) => {
                             if (any == null) {
-                                console.log('XXXXXXXXXXX3D网格' + _mesh3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                console.log('XXXXXXXXXXX3D网格' + _mesh3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('3D网格' + _mesh3D[index] + '加载完成！', '数组下标为：', index);
+                                console.log('3D网格' + _mesh3D[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
 
                         }));
                         break;
 
-                    case _texture2D:
-                        Laya.Texture2D.load(_texture2D[index], Laya.Handler.create(this, (any) => {
-                            if (any == null) {
-                                console.log('XXXXXXXXXXX2D纹理' + _texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                    case _texture:
+                        Laya.Texture2D.load(_texture[index]['url'], Laya.Handler.create(this, (tex: Laya.Texture2D) => {
+                            if (tex == null) {
+                                console.log('XXXXXXXXXXX2D纹理' + _texture[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('2D纹理' + _texture2D[index] + '加载完成！', '数组下标为：', index);
+                                _texture[index]['texture2D'] = tex;
+                                console.log('2D纹理' + _texture[index]['url'] + '加载完成！', '数组下标为：', index);
+                            }
+                            EventAdmin._notify(_Event.progress);
+                        }));
+                        break;
+
+                    case _texture2D:
+                        Laya.Texture2D.load(_texture2D[index]['url'], Laya.Handler.create(this, (tex: Laya.Texture2D) => {
+                            if (tex == null) {
+                                console.log('XXXXXXXXXXX2D纹理' + _texture2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                            } else {
+                                _texture2D[index]['texture2D'] = tex;
+                                console.log('2D纹理' + _texture2D[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
                         }));
                         break;
 
                     case _material:
-                        Laya.Material.load(_material[index], Laya.Handler.create(this, (any) => {
+                        Laya.Material.load(_material[index]['url'], Laya.Handler.create(this, (any) => {
                             if (any == null) {
-                                console.log('XXXXXXXXXXX材质' + _material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                console.log('XXXXXXXXXXX材质' + _material[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                console.log('材质' + _material[index] + '加载完成！', '数组下标为：', index);
+                                console.log('材质' + _material[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
                         }));
@@ -6998,7 +7019,7 @@ export module lwg {
                             EventAdmin._notify(_Event.progress);
                         });
                         _skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
-                            console.log('骨骼动画', _skeleton[index]['templet'], '加载完成！', '数组下标为：', index);
+                            console.log('骨骼动画', _skeleton[index]['templet']['url'], '加载完成！', '数组下标为：', index);
                             EventAdmin._notify(_Event.progress);
                         });
                         _skeleton[index]['templet'].loadAni(_skeleton[index]['url']);
@@ -7007,13 +7028,13 @@ export module lwg {
                     case _prefab2D:
                         Laya.loader.load(_prefab2D[index]['url'], Laya.Handler.create(this, (prefab: Laya.Prefab) => {
                             if (prefab == null) {
-                                console.log('XXXXXXXXXXX数据表' + _prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                console.log('XXXXXXXXXXX数据表' + _prefab2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
                                 let _prefab = new Laya.Prefab();
                                 _prefab.json = prefab;
                                 _prefab2D[index]['prefab'] = _prefab;
 
-                                console.log('2D预制体' + _prefab2D[index] + '加载完成！', '数组下标为：', index);
+                                console.log('2D预制体' + _prefab2D[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
 

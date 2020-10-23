@@ -19,7 +19,7 @@ export default class UIInit extends Admin._Scene {
                 };
                 Admin._evaluating = false;
                 Admin._platform = Admin._platformTpye.Bytedance;
-                Admin._game.loopLevel = 11;
+                Admin._game.loopLevel = 12;
             }());
 
             (function date() {

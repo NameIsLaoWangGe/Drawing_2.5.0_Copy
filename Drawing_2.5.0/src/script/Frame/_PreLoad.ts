@@ -2,10 +2,16 @@ import { EventAdmin, _PreLoad, _SceneName } from "./Lwg";
 export module _PreloadUrl {
     export let _list = {
         // scene3D: {
-        //     // "_Lwg3D/_Scene/LayaScene_GameMain/Conventional/GameMain.ls"
+        //     main3D: {
+        //         url: "_Lwg3D/_Scene/LayaScene_GameMain/Conventional/GameMain.ls",
+        //         scene: new Laya.Scene3D,
+        //     },
         // },
         // prefab3D: {
-        //     // "_Lwg3D/_Prefab/LayaScene_GameMain/Conventional/CardContainer.lh"
+        //     Level1: {
+        //         url: '_Lwg3D/_Prefab/LayaScene_GameMain/Conventional/CardContainer.lh',
+        //         prefab: new Laya.Sprite3D,
+        //     }
         // },
         // pic2D: {
         //     // "res/atlas/Frame/Effects.png",
@@ -33,9 +39,19 @@ export module _PreloadUrl {
                 prefab: new Laya.Prefab,
             }
         },
-        texture2D: {
-            star1: 'Frame/Effects/hua4.png',
+        texture: {
+            star1: {
+                url: 'Frame/Effects/hua4.png',
+                texture:  Laya.Texture,
+            },
         },
+        texture2D: {
+            star1: {
+                url: 'Frame/Effects/hua4.png',
+                texture:  Laya.Texture2D,
+            },
+        },
+        /**通过直接获取场景的显示和打开，和scene关联，实现，先加载，然后直接切换*/
         scene2D: {
             UIStart: "Scene/" + _SceneName.UIStart + '.json',
             GameScene: "Scene/" + _SceneName.GameScene + '.json',
@@ -71,7 +87,6 @@ export default class UIPreLoad extends _PreLoad._PreLoadScene {
         // this.self['Progress'].mask.x = 0;
         return 200;
     }
-
 
 }
 

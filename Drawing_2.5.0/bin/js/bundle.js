@@ -4864,6 +4864,7 @@
            _PreLoad._prefab3D = [];
            _PreLoad._mesh3D = [];
            _PreLoad._material = [];
+           _PreLoad._texture = [];
            _PreLoad._texture2D = [];
            _PreLoad._pic2D = [];
            _PreLoad._scene2D = [];
@@ -4880,6 +4881,7 @@
                _ListName["prefab3D"] = "prefab3D";
                _ListName["mesh3D"] = "mesh3D";
                _ListName["material"] = "material";
+               _ListName["texture"] = "texture";
                _ListName["texture2D"] = "texture2D";
                _ListName["pic2D"] = "pic2D";
                _ListName["scene2D"] = "scene2D";
@@ -4980,6 +4982,9 @@
                                            case _ListName.skeleton:
                                                _PreLoad._skeleton.push(element);
                                                break;
+                                           case _ListName.texture:
+                                               _PreLoad._texture.push(element);
+                                               break;
                                            default:
                                                break;
                                        }
@@ -5071,56 +5076,71 @@
                            }), null, Laya.Loader.JSON);
                            break;
                        case _PreLoad._scene3D:
-                           Laya.Scene3D.load(_PreLoad._scene3D[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad._scene3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                           Laya.Scene3D.load(_PreLoad._scene3D[index]['url'], Laya.Handler.create(this, (Scene) => {
+                               if (Scene == null) {
+                                   console.log('XXXXXXXXXXX3D场景' + _PreLoad._scene3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D场景' + _PreLoad._scene3D[index] + '加载完成！', '数组下标为：', index);
+                                   _PreLoad._scene3D[index]['scene'] = Scene;
+                                   console.log('3D场景' + _PreLoad._scene3D[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
                        case _PreLoad._prefab3D:
-                           Laya.Sprite3D.load(_PreLoad._prefab3D[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad._prefab3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                           Laya.Sprite3D.load(_PreLoad._prefab3D[index]['url'], Laya.Handler.create(this, (Sp) => {
+                               if (Sp == null) {
+                                   console.log('XXXXXXXXXXX3D预设体' + _PreLoad._prefab3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D预制体' + _PreLoad._prefab3D[index] + '加载完成！', '数组下标为：', index);
+                                   _PreLoad._prefab3D[index]['prefab'] = Sp;
+                                   console.log('3D预制体' + _PreLoad._prefab3D[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
                        case _PreLoad._mesh3D:
-                           Laya.Mesh.load(_PreLoad._mesh3D[index], Laya.Handler.create(this, (any) => {
+                           Laya.Mesh.load(_PreLoad._mesh3D[index]['url'], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad._mesh3D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX3D网格' + _PreLoad._mesh3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('3D网格' + _PreLoad._mesh3D[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('3D网格' + _PreLoad._mesh3D[index]['url'] + '加载完成！', '数组下标为：', index);
+                               }
+                               EventAdmin._notify(_Event.progress);
+                           }));
+                           break;
+                       case _PreLoad._texture:
+                           Laya.Texture2D.load(_PreLoad._texture[index]['url'], Laya.Handler.create(this, (tex) => {
+                               if (tex == null) {
+                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad._texture[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                               }
+                               else {
+                                   _PreLoad._texture[index]['texture2D'] = tex;
+                                   console.log('2D纹理' + _PreLoad._texture[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
                        case _PreLoad._texture2D:
-                           Laya.Texture2D.load(_PreLoad._texture2D[index], Laya.Handler.create(this, (any) => {
-                               if (any == null) {
-                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad._texture2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                           Laya.Texture2D.load(_PreLoad._texture2D[index]['url'], Laya.Handler.create(this, (tex) => {
+                               if (tex == null) {
+                                   console.log('XXXXXXXXXXX2D纹理' + _PreLoad._texture2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('2D纹理' + _PreLoad._texture2D[index] + '加载完成！', '数组下标为：', index);
+                                   _PreLoad._texture2D[index]['texture2D'] = tex;
+                                   console.log('2D纹理' + _PreLoad._texture2D[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
                            break;
                        case _PreLoad._material:
-                           Laya.Material.load(_PreLoad._material[index], Laya.Handler.create(this, (any) => {
+                           Laya.Material.load(_PreLoad._material[index]['url'], Laya.Handler.create(this, (any) => {
                                if (any == null) {
-                                   console.log('XXXXXXXXXXX材质' + _PreLoad._material[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX材质' + _PreLoad._material[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
-                                   console.log('材质' + _PreLoad._material[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('材质' + _PreLoad._material[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
@@ -5143,7 +5163,7 @@
                                EventAdmin._notify(_Event.progress);
                            });
                            _PreLoad._skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
-                               console.log('骨骼动画', _PreLoad._skeleton[index]['templet'], '加载完成！', '数组下标为：', index);
+                               console.log('骨骼动画', _PreLoad._skeleton[index]['templet']['url'], '加载完成！', '数组下标为：', index);
                                EventAdmin._notify(_Event.progress);
                            });
                            _PreLoad._skeleton[index]['templet'].loadAni(_PreLoad._skeleton[index]['url']);
@@ -5151,13 +5171,13 @@
                        case _PreLoad._prefab2D:
                            Laya.loader.load(_PreLoad._prefab2D[index]['url'], Laya.Handler.create(this, (prefab) => {
                                if (prefab == null) {
-                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._prefab2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                   console.log('XXXXXXXXXXX数据表' + _PreLoad._prefab2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                }
                                else {
                                    let _prefab = new Laya.Prefab();
                                    _prefab.json = prefab;
                                    _PreLoad._prefab2D[index]['prefab'] = _prefab;
-                                   console.log('2D预制体' + _PreLoad._prefab2D[index] + '加载完成！', '数组下标为：', index);
+                                   console.log('2D预制体' + _PreLoad._prefab2D[index]['url'] + '加载完成！', '数组下标为：', index);
                                }
                                EventAdmin._notify(_Event.progress);
                            }));
@@ -5326,8 +5346,17 @@
                    prefab: new Laya.Prefab,
                }
            },
+           texture: {
+               star1: {
+                   url: 'Frame/Effects/hua4.png',
+                   texture: Laya.Texture,
+               },
+           },
            texture2D: {
-               star1: 'Frame/Effects/hua4.png',
+               star1: {
+                   url: 'Frame/Effects/hua4.png',
+                   texture: Laya.Texture2D,
+               },
            },
            scene2D: {
                UIStart: "Scene/" + _SceneName.UIStart + '.json',
@@ -6241,7 +6270,7 @@
                    };
                    Admin._evaluating = false;
                    Admin._platform = Admin._platformTpye.Bytedance;
-                   Admin._game.loopLevel = 11;
+                   Admin._game.loopLevel = 12;
                }());
                (function date() {
                    DateAdmin._loginNumber.value++;

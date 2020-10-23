@@ -26,8 +26,6 @@ export module _Game {
     export let _stepOrderImg: Array<Laya.Image> = [];
     /**每个阶段需要过关的绘画长度*/
     export let _passLenght: number = 100;
-    // // /**当前正在哪一步绘画*/
-    // export let _stepIndex: number = 0;
     /**当前最高绘制到哪一步*/
     export let _stepMaskIndex: number = 0;
 
