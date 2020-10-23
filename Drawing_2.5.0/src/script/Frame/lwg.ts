@@ -1091,11 +1091,14 @@ export module lwg {
     export module Admin {
         /**渠道类型*/
         export enum _platformTpye {
+            Bytedance = 'Bytedance',
             WeChat = 'WeChat',
             OPPO = 'OPPO',
-            Bytedance = 'Bytedance',
+            VIVO = 'VIVO',
             /**通用*/
             All = 'All',
+            /**web测试包*/
+            WebTest = 'WebTest',
         }
         /**渠道，控制一些节点的变化,默认为字节*/
         export let _platform: string = _platformTpye.Bytedance;

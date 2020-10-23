@@ -787,10 +787,12 @@
        (function (Admin) {
            let _platformTpye;
            (function (_platformTpye) {
+               _platformTpye["Bytedance"] = "Bytedance";
                _platformTpye["WeChat"] = "WeChat";
                _platformTpye["OPPO"] = "OPPO";
-               _platformTpye["Bytedance"] = "Bytedance";
+               _platformTpye["VIVO"] = "VIVO";
                _platformTpye["All"] = "All";
+               _platformTpye["WebTest"] = "WebTest";
            })(_platformTpye = Admin._platformTpye || (Admin._platformTpye = {}));
            Admin._platform = _platformTpye.Bytedance;
            Admin._evaluating = false;
@@ -6269,7 +6271,8 @@
                        UIAds: '',
                    };
                    Admin._evaluating = false;
-                   Admin._platform = Admin._platformTpye.Bytedance;
+                   Admin._platform = Admin._platformTpye.WebTest;
+                   Laya.LocalStorage.clear();
                    Admin._game.loopLevel = 12;
                }());
                (function date() {
