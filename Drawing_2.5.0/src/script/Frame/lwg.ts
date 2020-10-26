@@ -630,7 +630,7 @@ export module lwg {
         /**类粒子特效的通用父类*/
         export class GoldAniBase extends Laya.Script {
             /**挂载当前脚本的节点*/
-            self: Laya.Sprite;
+            Owner: Laya.Sprite;
             /**所在场景*/
             selfScene: Laya.Scene;
             /**移动开关*/
@@ -668,11 +668,11 @@ export module lwg {
                 this.initProperty();
             }
             onEnable(): void {
-                this.self = this.owner as Laya.Sprite;
-                this.selfScene = this.self.scene;
+                this.Owner = this.owner as Laya.Sprite;
+                this.selfScene = this.Owner.scene;
                 let calssName = this['__proto__']['constructor'].name;
-                this.self[calssName] = this;
-                // console.log(this.self.getBounds());
+                this.Owner[calssName] = this;
+                // console.log(this.Owner.getBounds());
                 this.timer = 0;
                 this.lwgInit();
                 this.propertyAssign();
@@ -687,13 +687,13 @@ export module lwg {
             /**一些节点上的初始属性赋值*/
             propertyAssign(): void {
                 if (this.startAlpha) {
-                    this.self.alpha = this.startAlpha;
+                    this.Owner.alpha = this.startAlpha;
                 }
                 if (this.startScale) {
-                    this.self.scale(this.startScale, this.startScale);
+                    this.Owner.scale(this.startScale, this.startScale);
                 }
                 if (this.startRotat) {
-                    this.self.rotation = this.startRotat;
+                    this.Owner.rotation = this.startRotat;
                 }
             }
             /**
@@ -702,8 +702,8 @@ export module lwg {
               * @param basedSpeed 基础速度
               */
             commonSpeedXYByAngle(angle, speed) {
-                this.self.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
-                this.self.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
+                this.Owner.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
+                this.Owner.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
             }
             /**移动规则*/
             moveRules(): void {
@@ -712,7 +712,7 @@ export module lwg {
                 this.moveRules();
             }
             onDisable(): void {
-                Laya.Pool.recover(this.self.name, this.self);
+                Laya.Pool.recover(this.Owner.name, this.Owner);
                 this.destroy();//删除自己，下次重新添加
                 Laya.Tween.clearAll(this);
                 Laya.timer.clearAll(this);
@@ -730,10 +730,10 @@ export module lwg {
             /**回调函数*/
             func: any
             lwgInit(): void {
-                this.self.width = 115;
-                this.self.height = 111;
-                this.self.pivotX = this.self.width / 2;
-                this.self.pivotY = this.self.height / 2;
+                this.Owner.width = 115;
+                this.Owner.height = 111;
+                this.Owner.pivotX = this.Owner.width / 2;
+                this.Owner.pivotY = this.Owner.height / 2;
             }
             initProperty(): void {
             }
@@ -741,8 +741,8 @@ export module lwg {
                 if (this.moveSwitch) {
                     this.timer++;
                     if (this.timer > 0) {
-                        lwg.Animation2D.move_Scale(this.self, 1, this.self.x, this.self.y, this.targetX, this.targetY, 0.35, 250, 0, f => {
-                            this.self.removeSelf();
+                        lwg.Animation2D.move_Scale(this.Owner, 1, this.Owner.x, this.Owner.y, this.targetX, this.targetY, 0.35, 250, 0, f => {
+                            this.Owner.removeSelf();
                             if (this.func !== null) {
                                 this.func();
                             }
@@ -915,9 +915,9 @@ export module lwg {
 
 
     /**
-    * 时间管理
-    * 计时器的封装
-   */
+     * 时间管理
+     * 计时器的封装
+    */
     export module TimerAdmin {
         /**
          * 普通无限循环，基于帧
@@ -1089,7 +1089,7 @@ export module lwg {
     }
     /**游戏整体控制*/
     export module Admin {
-        /**渠道，控制一些节点的变化,默认为字节*/
+        /**渠道，控制一些节点的变化,默认为null*/
         export let _platform = {
             /**渠道类型*/
             tpye: {
@@ -1098,17 +1098,17 @@ export module lwg {
                 OPPO: 'OPPO',
                 VIVO: 'VIVO',
                 /**通用*/
-                All: 'All',
-                /**web测试包*/
+                General: 'General',
+                /**web包*/
                 Web: 'Web',
                 /**web测试包,会清除本地数据*/
                 WebTest: 'WebTest',
             },
-            get value(): string {
-                return this['_platform_value'] ? this['_platform_value'] : _platform.tpye.Bytedance;
+            get name(): string {
+                return this['_platform_name'] ? this['_platform_name'] : null;
             },
-            set value(val: string) {
-                this['_platform_value'] = val;
+            set name(val: string) {
+                this['_platform_name'] = val;
                 if (val == _platform.tpye.WebTest) {
                     Laya.LocalStorage.clear();
                 }
@@ -1272,7 +1272,7 @@ export module lwg {
         }
         /**场景控制,访问特定场景用_sceneControl[name]访问*/
         export let _sceneControl: any = {};
-        /**和场景名称一样的脚本,这个脚本唯一，不可调用*/
+        /**和场景名称一样的脚本,这个脚本唯一，不可随意调用*/
         export let _sceneScript: any = {};
 
         /**通用动效*/
@@ -1535,17 +1535,20 @@ export module lwg {
         }
         /**2D场景通用父类*/
         export class _Scene extends Laya.Script {
-            /**挂载当前脚本的节点*/
-            self: Laya.Scene;
+            // Owner: Laya.Scene;
             /**类名*/
             calssName: string = _SceneName.UIPreLoad;
             constructor() {
                 super();
             }
+            /**挂载当前脚本的节点*/
+            get Owner(): Laya.Scene {
+                return this.owner as Laya.Scene;
+            }
             // 常用节点获取
             SpriteVar(str: string): Laya.Sprite {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.Sprite;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Sprite;
                 } else {
                     console.log('场景内不存在全局节点：', str);
                     return undefined;
@@ -1553,51 +1556,50 @@ export module lwg {
             }
             /**常用动画组件获取*/
             AniVar(str: string): Laya.Animation {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.Animation;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Animation;
                 } else {
                     console.log('场景内不存在动画：', str);
                     return undefined;
                 }
             }
             btnVar(str: string): Laya.Sprite {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.Image;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Image;
                 } else {
                     console.log('场景内不存在全局按钮：', str);
                     return undefined;
                 }
             }
             ImgVar(str: string): Laya.Image {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.Image;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Image;
                 } else {
                     console.log('场景内不存在全局节点：', str);
                     return undefined;
                 }
             }
             ListVar(str: string): Laya.List {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.List;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.List;
                 } else {
                     console.log('场景内不存在全局节点：', str);
                 }
             }
             TapVar(str: string): Laya.Tab {
-                if (this.self[str]) {
-                    return this.self[str] as Laya.Tab;
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Tab;
                 } else {
                     console.log('场景内不存在全局节点：', str);
                 }
             }
             onAwake(): void {
-                this.self = this.owner as Laya.Scene;
                 // 类名
-                if (this.self.name == null) {
+                if (this.Owner.name == null) {
                     console.log('场景名称失效，脚本赋值失败');
                 } else {
-                    this.calssName = this.self.name;
-                    this.self[this.calssName] = this;
+                    this.calssName = this.Owner.name;
+                    this.Owner[this.calssName] = this;
                 }
                 // 组件变为的self属性
                 gameState(this.calssName);
@@ -1630,6 +1632,23 @@ export module lwg {
                 this.moduleOnStart();
                 this.lwgOnStart();
             }
+            /**
+              * 打开场景
+              * @param openSceneName 需要打开的场景名称
+              * @param cloesSceneName 需要关闭的场景，默认为null
+              * @param func 完成回调，默认为null
+              * @param zOder 指定层级
+             */
+            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
+                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+            }
+            /**
+             * 关闭自己
+             * @param func 关闭后的回调函数
+             * */
+            lwgCloseScene(func?: Function): void {
+                Admin._closeScene(this.Owner.name, func);
+            }
             /**初始化完毕后，onUpdate前执行一次，重写覆盖*/
             lwgOnStart(): void { }
             moduleOnStart(): void { }
@@ -1643,7 +1662,7 @@ export module lwg {
                         this.lwgBtnClick();
                     });
                 } else {
-                    time = _commonOpenAni(this.self);
+                    time = _commonOpenAni(this.Owner);
                 }
             }
             /**开场或者离场动画单位时间,默认为100*/
@@ -1666,7 +1685,7 @@ export module lwg {
             /**离场动画*/
             lwgVanishAni(): number { return null };
             onDisable(): void {
-                Animation2D.fadeOut(this.self, 1, 0, 2000, 1);
+                Animation2D.fadeOut(this.Owner, 1, 0, 2000, 1);
                 this.lwgOnDisable();
                 Laya.timer.clearAll(this);
                 Laya.Tween.clearAll(this);
@@ -1679,14 +1698,23 @@ export module lwg {
 
         /**2D角色通用父类*/
         export class _Person extends Laya.Script {
-            /**挂载当前脚本的节点*/
-            self: Laya.Sprite;
-            /**所在场景*/
-            selfScene: Laya.Scene;
             /**物理组件*/
-            rig: Laya.RigidBody;
             constructor() {
                 super();
+            }
+            /**挂载当前脚本的节点*/
+            get Owner(): Laya.Sprite {
+                return this.owner as Laya.Sprite;
+            }
+            get OwnerScene(): Laya.Sprite {
+                return this.owner.scene as Laya.Scene;
+            }
+            /**物理组件*/
+            get OwnerRig(): Laya.RigidBody {
+                if (!this.Owner['_OwnerRig']) {
+                    this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.RigidBody)
+                }
+                return this.Owner['_OwnerRig'];
             }
             onAwake(): void {
                 this.lwgOnAwake();
@@ -1694,13 +1722,10 @@ export module lwg {
             lwgOnAwake(): void {
             }
             onEnable(): void {
-                this.self = this.owner as Laya.Sprite;
-                this.selfScene = this.self.scene;
-                this.rig = this.self.getComponent(Laya.RigidBody);
                 // 类名
                 let calssName = this['__proto__']['constructor'].name;
                 // 组件变为的self属性
-                this.self[calssName] = this;
+                this.Owner[calssName] = this;
                 this.lwgOnEnable();
             }
             /**初始化，在onEnable中执行，重写即可覆盖*/
@@ -1711,23 +1736,28 @@ export module lwg {
 
         /**2D物件通用父类*/
         export class _Object extends Laya.Script {
-            /**挂载当前脚本的节点*/
-            self: Laya.Sprite;
-            /**所在场景*/
-            selfScene: Laya.Scene;
-            /**物理组件*/
-            rig: Laya.RigidBody;
             constructor() {
                 super();
             }
+            /**挂载当前脚本的节点*/
+            get Owner(): Laya.Sprite {
+                return this.owner as Laya.Sprite;
+            }
+            get OwnerScene(): Laya.Sprite {
+                return this.owner.scene as Laya.Scene;
+            }
+            /**物理组件*/
+            get OwnerRig(): Laya.RigidBody {
+                if (!this.Owner['_OwnerRig']) {
+                    this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.RigidBody)
+                }
+                return this.Owner['_OwnerRig'];
+            }
             onAwake(): void {
-                this.self = this.owner as Laya.Sprite;
-                this.selfScene = this.self.scene;
                 // 类名
                 let calssName = this['__proto__']['constructor'].name;
                 // 组件变为的self属性
-                this.self[calssName] = this;
-                // this.rig = this.self.getComponent(Laya.RigidBody);
+                this.Owner[calssName] = this;
                 this.lwgOnAwake();
             }
             /**声明一些节点*/
@@ -1764,7 +1794,7 @@ export module lwg {
     /**滤镜模块,主要是为节点和场景等进行颜色变化设置*/
     export module Color {
         /**
-         * RGB三个颜色值转换成16进制的字符串‘000000’，需要加上‘#’；
+         * RGB三个颜色值转换成16进制的字符串‘#000000’；
          * @param r 
          * @param g
          * @param b
@@ -1850,7 +1880,7 @@ export module lwg {
         }
 
         /**
-         * 颜色变化后不会消失，除非手动清除颜色，可以循环使用
+         * 颜色变化后不会消失，除非手动清除颜色，可以循环变化，平滑过渡
          * @param node 节点
          * @param RGBA1 颜色区间1值[];
          * @param RGBA2 颜色区间2值[];
@@ -3764,7 +3794,6 @@ export module lwg {
             }
         }
 
-
         /**
          *  类似气球消失，所有子节点按顺序消失
           * @param node 节点
@@ -4080,7 +4109,7 @@ export module lwg {
             get switch(): boolean {
                 return Laya.LocalStorage.getItem('Setting_sound') == '0' ? false : true;
             },
-            /**次数写数字*/
+            /**0表示关闭，1表示开启*/
             set switch(value: boolean) {
                 let val;
                 if (value) {
@@ -4097,7 +4126,7 @@ export module lwg {
             get switch(): boolean {
                 return Laya.LocalStorage.getItem('Setting_bgMusic') == '0' ? false : true;
             },
-            /**开关*/
+            /**0表示关闭，1表示开启*/
             set switch(value: boolean) {
                 let val;
                 if (value) {
@@ -4117,7 +4146,7 @@ export module lwg {
             get switch(): boolean {
                 return Laya.LocalStorage.getItem('Setting_shake') == '0' ? false : true;
             },
-            /**次数写数字*/
+            /**0表示关闭，1表示开启*/
             set switch(value: boolean) {
                 let val;
                 if (value) {
@@ -4140,46 +4169,29 @@ export module lwg {
          * @param url 图片地址没有则是默认图片
          * @param parent 父节点，不传则就在舞台上
         */
-        export function createSetBtn(x: number, y: number, width?: number, height?: number, url?: string, parent?: Laya.Sprite): void {
-            let _url = 'Frame/UI/icon_set.png';
+        export function createSetBtn(x: number, y: number, width?: number, height?: number, skin?: string, parent?: Laya.Sprite, ZOder?: number): Laya.Image {
             let btn = new Laya.Image;
-            if (width) {
-                btn.width = width;
-            } else {
-                btn.width = 100;
-            }
-            if (height) {
-                btn.height = height;
-            } else {
-                btn.height = 100;
-            }
-            if (url) {
-                btn.skin = url;
-            } else {
-                btn.skin = _url;
-            }
+            btn.width = width ? width : 100;
+            btn.height = width ? width : 100;
+            btn.skin = skin ? skin : 'Frame/UI/icon_set.png';
             if (parent) {
                 parent.addChild(btn);
             } else {
                 Laya.stage.addChild(btn);
             }
-
             btn.pivotX = btn.width / 2;
             btn.pivotY = btn.height / 2;
-
             btn.x = x;
             btn.y = y;
-
-            btn.zOrder = 100;
+            btn.zOrder = ZOder ? ZOder : 100;
             var btnSetUp = function (e: Laya.Event): void {
                 e.stopPropagation();
                 Admin._openScene(Admin._SceneName.UISet);
             }
             Click._on(Click._Type.largen, btn, null, null, btnSetUp, null);
-
             BtnSetNode = btn;
             BtnSetNode.name = 'BtnSetNode';
-
+            return btn;
         }
 
         /**
@@ -4226,11 +4238,9 @@ export module lwg {
     }
 
     /**
-     * number.这里导出的是模块不是类，没有this，所以此模块的回调函数要写成func=>{}这种箭头函数，箭头函数会把{}里面的this指向原来的this。
      * 2.音乐播放模块
      */
     export module PalyAudio {
-
         /**音效地址*/
         export enum voiceUrl {
             btn = 'Frame/Voice/btn.wav',
@@ -5781,8 +5791,8 @@ export module lwg {
         export class ShopScene extends Admin._Scene {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
-                Shop._ShopTap = this.self['MyTap'];
-                Shop._ShopList = this.self['MyList'];
+                Shop._ShopTap = this.Owner['MyTap'];
+                Shop._ShopList = this.Owner['MyList'];
                 if (!Shop.allSkin) {
                     Shop.allSkin = Tools.jsonCompare('GameData/Shop/Skin.json', GoodsClass.Skin, GoodsProperty.name);
                 }
@@ -5911,7 +5921,7 @@ export module lwg {
         export class VictoryBoxScene extends Admin._Scene {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
-                VictoryBox._BoxList = this.self['MyList'];
+                VictoryBox._BoxList = this.Owner['MyList'];
                 //注意这里要复制数组，不可以直接赋值
                 _BoxArray = Tools.objArray_Copy(Laya.loader.getRes("GameData/VictoryBox/VictoryBox.json")['RECORDS']);
                 _selectBox = null;
@@ -6096,7 +6106,7 @@ export module lwg {
         export class CheckInScene extends Admin._Scene {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
-                CheckIn._checkList = this.self['CheckList'];
+                CheckIn._checkList = this.Owner['CheckList'];
                 //注意这里要复制数组，不可以直接赋值
                 _checkArray = Tools.jsonCompare('GameData/CheckIn/CheckIn.json', CheckClass.chek_7Days, CheckProPerty.name);
             }
@@ -6243,8 +6253,8 @@ export module lwg {
         export class SkinScene extends Admin._Scene {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
-                Skin._SkinTap = this.self['SkinTap'];
-                Skin._SkinList = this.self['SkinList'];
+                Skin._SkinTap = this.Owner['SkinTap'];
+                Skin._SkinList = this.Owner['SkinList'];
 
                 _skinClassArr = [_eyeSkinArr, _headSkinArr];
             }
@@ -6777,6 +6787,7 @@ export module lwg {
                 }
             },
         };
+
         /**事件类型*/
         export enum _Event {
             importList = '_PreLoad_importList',
@@ -6804,6 +6815,10 @@ export module lwg {
         export class _PreLoadScene extends Admin._Scene {
             moduleOnAwake(): void {
                 _PreLoad._remakeLode();
+            }
+            /**开始加载*/
+            lwgStartLoding(any: any): void {
+                EventAdmin._notify(_PreLoad._Event.importList, (any));
             }
             moduleEventRegister(): void {
                 EventAdmin._register(_Event.importList, this, (listObj: {}) => {
@@ -6874,8 +6889,8 @@ export module lwg {
                     let time = this.lwgAllComplete();
                     Laya.timer.once(time, this, () => { })
                     // 通过预加载进入页面
-                    this.self.name = _whereToLoad;
-                    Admin._sceneControl[_whereToLoad] = this.self;
+                    this.Owner.name = _whereToLoad;
+                    Admin._sceneControl[_whereToLoad] = this.Owner;
                     if (_whereToLoad !== Admin._SceneName.UIPreLoad) {
                         if (Admin._preLoadOpenSceneLater.openSceneName) {
                             Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
@@ -7060,42 +7075,51 @@ export module lwg {
                         break;
                 }
             }
-            /**每个资源加载成功后，进度条每次增加后的回调，第一次加载将会在openAni动画结束之后*/
+            /**每单个资源加载成功后，进度条每次增加后的回调，第一次加载将会在openAni动画结束之后*/
             lwgStepComplete(): void { }
-            /**资源全部加载完成回调,每个游戏不一样,此方法执行后，自动进入UIStrat界面，可以延时进入*/
+            /**资源全部加载完成回调,每个游戏不一样,此方法执行后，自动进入init界面，也可以延时进入*/
             lwgAllComplete(): number { return 0 };
         }
     }
     /**资源准备模块，拉去资源，分包等*/
-    export module _ResPrepare {
-        export let _pkgStep: number;
-        export let _pkgInfo = [];
-        export enum EventType {
+    export module _Init {
+        /**分包加载步骤*/ 
+        export let _pkgStep: number = 0;
+        /**分包信息*/ 
+        export let _pkgInfo = [
+            { name: "sp1", root: "res" },
+            { name: "sp2", root: "3DScene" },
+            { name: "sp3", root: "3DPrefab" },
+        ];
+        export enum _Event {
             start = '_ResPrepare_start',
             nextStep = '_ResPrepare_nextStep',
             compelet = '_ResPrepare_compelet',
         }
         /**开始*/
-        export function _init(_completeFunc?) {
-            this.completeFunc = _completeFunc;
-            this.loadPkg_wx();
-            this.loadPkg_VIVO();
-            this.completeFunc();
+        export function _init() {
+            switch (Admin._platform.name) {
+                case Admin._platform.tpye.WeChat:
+                    _loadPkg_Wechat();
+                    break;
+                case Admin._platform.tpye.OPPO || Admin._platform.tpye.VIVO:
+                    _loadPkg_VIVO();
+                    break;
+                default:
+                    break;
+            }
+            Admin._openScene(_SceneName.UIPreLoad);
         }
         /**OV*/
-        export function loadPkg_VIVO() {
-            if (this._pkgStep == this.pkgInfo.length) {
-                if (this.completeFunc) {
-                    this.completeFunc();
-                }
-            } else {
-                let info = this.pkgInfo[this._pkgStep];
+        export function _loadPkg_VIVO() {
+            if (_pkgStep !== _pkgInfo.length) {
+                let info = _pkgInfo[_pkgStep];
                 let name = info.name;
                 Laya.Browser.window.qg.loadSubpackage({
                     name: name,
                     success: (res) => {
-                        this._pkgStep++;
-                        this.loadPkg_VIVO();
+                        _pkgStep++;
+                        _loadPkg_VIVO();
                     },
                     fail: (res) => {
                         console.error(`load ${name} err: `, res);
@@ -7104,13 +7128,9 @@ export module lwg {
             }
         }
         /**WX*/
-        export function loadPkg_Wechat() {
-            if (this._pkgStep == this.pkgInfo.length) {
-                if (this.completeFunc) {
-                    this.completeFunc();
-                }
-            } else {
-                let info = this.pkgInfo[this._pkgStep];
+        export function _loadPkg_Wechat() {
+            if (_pkgStep !== _pkgInfo.length) {
+                let info = _pkgInfo[_pkgStep];
                 let name = info.name;
                 let root = info.root;
                 Laya.Browser.window.wx.loadSubpackage({
@@ -7119,9 +7139,9 @@ export module lwg {
                         console.log(`load ${name} suc`);
                         Laya.MiniAdpter.subNativeFiles[name] = root;
                         Laya.MiniAdpter.nativefiles.push(root);
-                        this._pkgStep++;
-                        console.log("加载次数", this._pkgStep);
-                        this.loadPkg_wx();
+                        _pkgStep++;
+                        console.log("加载次数", _pkgStep);
+                        _loadPkg_Wechat();
                     },
                     fail: (res) => {
                         console.error(`load ${name} err: `, res);
@@ -7129,21 +7149,16 @@ export module lwg {
                 });
             }
         }
-        export class _ResPrepareScene extends Admin._Scene {
+        export class _InitScene extends Admin._Scene {
             moduleOnAwake(): void {
-                // 默认
-                _ResPrepare._pkgInfo = [
-                    { name: "sp1", root: "res" },
-                    { name: "sp2", root: "3DScene" },
-                    { name: "sp3", root: "3DPrefab" },
-                ];
-                _ResPrepare._pkgStep = 0;
             };
             moduleEventRegister(): void {
             };
             moduleOnStart(): void {
-                _ResPrepare._init();
+                _Init._init();
             };
+            lwgCompelet():void{
+            }
         }
     }
 }
@@ -7170,8 +7185,8 @@ export let Elect = lwg.Elect;
 //场景相关 
 export let _PreLoad = lwg._PreLoad;
 export let _PreLoadScene = lwg._PreLoad._PreLoadScene;
-export let _ResPrepare = lwg._ResPrepare;
-export let _ResPrepareScene = lwg._ResPrepare._ResPrepareScene;
+export let _Init = lwg._Init;
+export let _InitScene = lwg._Init._InitScene;
 
 export let Shop = lwg.Shop;
 export let ShopScene = lwg.Shop.ShopScene;

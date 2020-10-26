@@ -42,13 +42,13 @@ export module _PreloadUrl {
         texture: {
             star1: {
                 url: 'Frame/Effects/hua4.png',
-                texture:  Laya.Texture,
+                texture: Laya.Texture,
             },
         },
         texture2D: {
             star1: {
                 url: 'Frame/Effects/hua4.png',
-                texture:  Laya.Texture2D,
+                texture: Laya.Texture2D,
             },
         },
         /**通过直接获取场景的显示和打开，和scene关联，实现，先加载，然后直接切换*/
@@ -77,7 +77,7 @@ export module _PreloadUrl {
 }
 export default class UIPreLoad extends _PreLoad._PreLoadScene {
     lwgOnStart(): void {
-        EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl._list]));
+        EventAdmin._notify(_PreLoad._Event.importList, (_PreloadUrl._list));
     }
     lwgOpenAni(): number { return 0; }
     lwgStepComplete(): void {
@@ -87,6 +87,5 @@ export default class UIPreLoad extends _PreLoad._PreLoadScene {
         // this.self['Progress'].mask.x = 0;
         return 200;
     }
-
 }
 

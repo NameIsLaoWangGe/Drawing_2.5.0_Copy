@@ -1,4 +1,4 @@
-import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting, Dialog, Backpack, PalyAudio, _SceneName } from "./Lwg";
+import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting,  Backpack, PalyAudio, _SceneName } from "./Lwg";
 import ADManager from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { _Guide } from "./_Guide";
@@ -21,12 +21,12 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
       
         // 开始一个一个翻牌
         EventAdmin._register('flop', this, () => {
-            if (!this.self['cardIndex']) {
-                this.self['cardIndex'] = 0;
+            if (!this.Owner['cardIndex']) {
+                this.Owner['cardIndex'] = 0;
             }
-            let Card = this.self['CardParent'].getChildByName('Card' + this.self['cardIndex']) as Laya.Sprite;
+            let Card = this.Owner['CardParent'].getChildByName('Card' + this.Owner['cardIndex']) as Laya.Sprite;
             if (!Card) {
-                this.self['cardIndex'] = null;
+                this.Owner['cardIndex'] = null;
                 Laya.timer.once(500, this, () => {
                     RecordManager.stopAutoRecord();
                     Admin._openScene(_SceneName.UIShare, null, () => { Share._fromWhich = _SceneName.UIDrawCard });
@@ -34,7 +34,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 return;
             }
             var func = () => {
-                this.self['cardIndex']++;
+                this.Owner['cardIndex']++;
                 EventAdmin._notify('flop');
             }
             PalyAudio.playSound('Game/Voice/fanpai.wav');
@@ -49,7 +49,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
             //     // console.log(Card['objData'][Game3D.CardProperty.quality]);
             //     if (Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SR || Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SSR) {
 
-            //         Card.zOrder = (this.self['cardIndex'] + 1) * 10;
+            //         Card.zOrder = (this.Owner['cardIndex'] + 1) * 10;
             //         let x = Card.x;
             //         let y = Card.y;
             //         let ReflectPic = Card.getChildByName('Reflect') as Laya.Image;
@@ -72,7 +72,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
             //                 for (let index = 0; index < 5; index++) {
             //                     let pointAarr = Tools.point_RandomPointByCenter(new Laya.Point(globalPos.x, globalPos.y), 200, 100);
             //                     Laya.timer.once(300 * index, this, () => {
-            //                         Effects.createExplosion_Rotate(this.self['CardParent'], 25, pointAarr[0].x, pointAarr[0].y, 'star', 10, 10);
+            //                         Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, pointAarr[0].x, pointAarr[0].y, 'star', 10, 10);
             //                     });
             //                 }
             //                 Animation2D.move_Scale(Card, 3, Card.x, Card.y, x, y, 1, 200, 2000, null, () => {
@@ -89,13 +89,13 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
 
         // 关闭分享界面，我都要按钮出现
         EventAdmin._register(_SceneName.UIShare + _SceneName.UIDrawCard, this, () => {
-            this.self['BtnTake'].visible = true;
+            this.Owner['BtnTake'].visible = true;
             EventAdmin._notify(_Guide._Event.onStep);
         })
     }
 
     lwgBtnClick(): void {
-        Click._on(Click._Type.largen, this.self['BtnFree'], this, null, null, () => {
+        Click._on(Click._Type.largen, this.Owner['BtnFree'], this, null, null, () => {
             if (!_Guide._complete.bool) {
                 return;
             }
@@ -104,13 +104,13 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 if (DrawCard._freeAds.num % 3 == 0 && DrawCard._freeAds.num !== 0) {
                     DrawCard._freeAds.num = 0;
                     DrawCard._residueDraw.num++;
-                    this.self['ResidueNum'].text = DrawCard._residueDraw.num.toString();
+                    this.Owner['ResidueNum'].text = DrawCard._residueDraw.num.toString();
                 }
-                this.self['FreeAds'].value = (DrawCard._freeAds.num % 3).toString();
+                this.Owner['FreeAds'].value = (DrawCard._freeAds.num % 3).toString();
             })
         });
 
-        Click._on(Click._Type.largen, this.self['BtnBack'], this, null, null, () => {
+        Click._on(Click._Type.largen, this.Owner['BtnBack'], this, null, null, () => {
             if (!_Guide._complete.bool) {
                 if (_Guide._whichStepNum == 5) {
                     // Admin._openScene(_SceneName.UIStart,null, Laya.stage.numChildren - 4);
@@ -118,21 +118,21 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 }
                 return;
             } else {
-                // Admin._openScene(_SceneName.UIStart, this.self);
+                // Admin._openScene(_SceneName.UIStart, this.Owner);
             }
         });
 
-        Click._on(Click._Type.noEffect, this.self['DrawDisPlay'], this, (e: Laya.Event) => {
+        Click._on(Click._Type.noEffect, this.Owner['DrawDisPlay'], this, (e: Laya.Event) => {
             e.stopPropagation();
         });
 
-        Click._on(Click._Type.largen, this.self['BtnTake'], this, null, null, (e: Laya.Event) => {
+        Click._on(Click._Type.largen, this.Owner['BtnTake'], this, null, null, (e: Laya.Event) => {
             EventAdmin._notify(_Guide._Event.stepComplete);
             Admin._clickLock.switch = true;
             let arrRepetitionCard = [];
             let arrCard = [];
-            for (let index = 0; index < this.self['CardParent'].numChildren; index++) {
-                let Card = this.self['CardParent'].getChildAt(index) as Laya.Sprite;
+            for (let index = 0; index < this.Owner['CardParent'].numChildren; index++) {
+                let Card = this.Owner['CardParent'].getChildAt(index) as Laya.Sprite;
                 if (Card['objData']['repetitionCard']) {
                     arrRepetitionCard.push(Card);
                 } else {
@@ -140,14 +140,14 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 }
             }
             var anifunc = () => {
-                Animation2D.fadeOut(this.self['DrawDisPlay'], 1, 0, 200, 0, () => {
+                Animation2D.fadeOut(this.Owner['DrawDisPlay'], 1, 0, 200, 0, () => {
 
                     EventAdmin._notify(_Guide._Event.onStep);
-                    this.self['DrawDisPlay'].x = -800;
-                    this.self['DrawDisPlay'].alpha = 1;
+                    this.Owner['DrawDisPlay'].x = -800;
+                    this.Owner['DrawDisPlay'].alpha = 1;
                     Admin._clickLock.switch = false;
                 })
-                Tools.node_RemoveAllChildren(this.self['CardParent']);
+                Tools.node_RemoveAllChildren(this.Owner['CardParent']);
             }
             var arrCardAni = () => {
                 for (let i = 0; i < arrCard.length; i++) {
@@ -167,7 +167,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                     const Card = arrRepetitionCard[j];
                     let globalPos = Card.localToGlobal(new Laya.Point(Card.width / 2, Card.height / 2));
                     Laya.timer.once((j + 1) * 150, this, () => {
-                        // Effects.createExplosion_Rotate(this.self['CardParent'], 25, globalPos.x, globalPos.y, Effects.SkinStyle.dot, 10, 10);
+                        // Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, globalPos.x, globalPos.y, Effects.SkinStyle.dot, 10, 10);
                         Card.visible = false;
                         Gold.getGoldAni_Heap(Laya.stage, 8, 88, 69, 'Game/UI/Common/jinbi.png', new Laya.Point(globalPos.x, globalPos.y), new Laya.Point(Gold.GoldNode.x - 80, Gold.GoldNode.y), null, () => {
                             // Gold.addGold(Card['objData'][Game3D.CardProperty.repetition]);
@@ -189,7 +189,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
             }
         });
 
-        Click._on(Click._Type.noEffect, this.self['Surface'], this,
+        Click._on(Click._Type.noEffect, this.Owner['Surface'], this,
             // 按下
             (e: Laya.Event) => {
                 if (!_Guide._complete.bool) {
@@ -201,57 +201,57 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 RecordManager.startAutoRecord();
                 EventAdmin._notify(_Guide._Event.stepComplete);
                 // 初始化一个绘制节点
-                if (!this.self.getChildByName('DrawSp')) {
-                    this.self['Drawlength'] = 0;
+                if (!this.Owner.getChildByName('DrawSp')) {
+                    this.Owner['Drawlength'] = 0;
                     let DrawSp = new Laya.Sprite();
-                    this.self.addChild(DrawSp);
+                    this.Owner.addChild(DrawSp);
                     DrawSp.name = 'DrawSp';
                     DrawSp.pos(0, 0);
-                    this.self['DrawSp'] = DrawSp;
+                    this.Owner['DrawSp'] = DrawSp;
                 }
                 // 初始化初始位置
-                this.self['DrawPosArr'] = new Laya.Point(e.stageX, e.stageY);
+                this.Owner['DrawPosArr'] = new Laya.Point(e.stageX, e.stageY);
                 this['middleOff'] = true;
             },
             // 移动
             (e: Laya.Event) => {
                 // 范围控制
-                let Img = this.self['Surface'] as Laya.Sprite;
+                let Img = this.Owner['Surface'] as Laya.Sprite;
                 let globalPos = Img.localToGlobal(new Laya.Point(Img.width / 2, Img.height / 2));
                 if (new Laya.Point(e.stageX, e.stageY).distance(globalPos.x, globalPos.y) > Img.width / 2) {
-                    this.self['DrawPosArr'] = null;
+                    this.Owner['DrawPosArr'] = null;
                     return;
                 }
                 // 画线
-                if (this.self['DrawPosArr']) {
-                    this.self['DrawSp'].graphics.drawLine(this.self['DrawPosArr'].x, this.self['DrawPosArr'].y, e.stageX, e.stageY, "#000000", 8);
+                if (this.Owner['DrawPosArr']) {
+                    this.Owner['DrawSp'].graphics.drawLine(this.Owner['DrawPosArr'].x, this.Owner['DrawPosArr'].y, e.stageX, e.stageY, "#000000", 8);
 
-                    this.self['DrawSp'].graphics.drawCircle(e.stageX, e.stageY, 4, "#000000");
+                    this.Owner['DrawSp'].graphics.drawCircle(e.stageX, e.stageY, 4, "#000000");
 
-                    this.self['Drawlength'] += (this.self['DrawPosArr'] as Laya.Point).distance(e.stageX, e.stageY);
-                    this.self['DrawPosArr'] = new Laya.Point(e.stageX, e.stageY);
+                    this.Owner['Drawlength'] += (this.Owner['DrawPosArr'] as Laya.Point).distance(e.stageX, e.stageY);
+                    this.Owner['DrawPosArr'] = new Laya.Point(e.stageX, e.stageY);
                 }
             },
             // 抬起
             () => {
-                if (this.self.getChildByName('DrawSp')) {
-                    this.self.getChildByName('DrawSp').removeSelf();
+                if (this.Owner.getChildByName('DrawSp')) {
+                    this.Owner.getChildByName('DrawSp').removeSelf();
                 } else {
                     return;
                 }
                 EventAdmin._notify('drawCardEvent');
-                this.self['DrawPosArr'] = null;
+                this.Owner['DrawPosArr'] = null;
                 this['middleOff'] = false;
             },
             // 出图片
             () => {
-                if (this.self.getChildByName('DrawSp')) {
-                    this.self.getChildByName('DrawSp').removeSelf();
+                if (this.Owner.getChildByName('DrawSp')) {
+                    this.Owner.getChildByName('DrawSp').removeSelf();
                 } else {
                     return;
                 }
                 EventAdmin._notify('drawCardEvent');
-                this.self['DrawPosArr'] = null;
+                this.Owner['DrawPosArr'] = null;
                 this['middleOff'] = false;
             });
     }

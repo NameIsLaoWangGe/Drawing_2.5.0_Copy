@@ -146,8 +146,8 @@ export module _Game {
     /**画笔脚本*/
     export class _PencilsListItem extends Admin._Object {
         lwgBtnClick(): void {
-            Click._on(Click._Type.largen, this.self, this, null, null, () => {
-                _SingleColorPencils._setPitchByName(this.self['_dataSource'][_SingleColorPencils._property.name]);
+            Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
+                _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
                 _PencilsList.refresh();
             });
         }
@@ -177,7 +177,7 @@ export default class GameScene extends Admin._Scene {
         _Game._stepIndex.present = 0;
         _Game._stepIndex.max = 0;
         _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-        this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
+        this.Owner.addChild(_Game._PencilsList)['pos'](108, 1085);
         _Game._PencilsList.array = _Game._SingleColorPencils._data;
         _Game._PencilsList.selectEnable = true;
         _Game._PencilsList.vScrollBarSkin = "";
@@ -204,8 +204,8 @@ export default class GameScene extends Admin._Scene {
         }
         _Game._stepOrderImg = [];
         let index = 1;
-        while (this.self['Draw' + index]) {
-            let Img = this.self['Draw' + index] as Laya.Image;
+        while (this.Owner['Draw' + index]) {
+            let Img = this.Owner['Draw' + index] as Laya.Image;
             _Game._stepOrderImg.push(Img);
             Img[_Game._drawBoardProperty.originalZOder] = Img.zOrder;
             let parent = Img.parent as Laya.Image;
@@ -213,7 +213,7 @@ export default class GameScene extends Admin._Scene {
                 parent[_Game._drawBoardProperty.originalZOder] = parent.zOrder;
                 parent[_Game._drawBoardProperty.whetherPass] = false;
             }
-            this.self['Draw' + index].skin = null;
+            this.Owner['Draw' + index].skin = null;
             index++;
         }
         // console.log(_Game._stepOrderImg);
@@ -251,7 +251,7 @@ export default class GameScene extends Admin._Scene {
     BtnBack: Laya.Image;
     lwgOnEnable(): void {
         this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
-        this.self.addChild(this.StepSwitch);
+        this.Owner.addChild(this.StepSwitch);
         this.StepSwitch.pos(194.5, 900);
         this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
         this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
@@ -259,12 +259,12 @@ export default class GameScene extends Admin._Scene {
         this.BtnLastStep.visible = false;
 
         this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab) as Laya.Image;
-        this.self.addChild(this.BtnPlayAni);
+        this.Owner.addChild(this.BtnPlayAni);
         this.BtnPlayAni.visible = false;
         this.BtnPlayAni.pos(361, 920);
 
         this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab) as Laya.Image;
-        this.self.addChild(this.BtnBack);
+        this.Owner.addChild(this.BtnBack);
         this.BtnBack.visible = false;
         this.BtnBack.pos(96, 97);
 
@@ -506,7 +506,7 @@ export default class GameScene extends Admin._Scene {
         });
         Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
             Admin._game.level++;
-            Admin._openScene(Admin._SceneName.UIStart, this.calssName);
+            this.lwgOpenScene(Admin._SceneName.UIStart, this.calssName)
         });
     }
 }

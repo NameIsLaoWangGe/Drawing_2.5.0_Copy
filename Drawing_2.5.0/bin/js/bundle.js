@@ -501,10 +501,10 @@
                    this.initProperty();
                }
                onEnable() {
-                   this.self = this.owner;
-                   this.selfScene = this.self.scene;
+                   this.Owner = this.owner;
+                   this.selfScene = this.Owner.scene;
                    let calssName = this['__proto__']['constructor'].name;
-                   this.self[calssName] = this;
+                   this.Owner[calssName] = this;
                    this.timer = 0;
                    this.lwgInit();
                    this.propertyAssign();
@@ -515,18 +515,18 @@
                }
                propertyAssign() {
                    if (this.startAlpha) {
-                       this.self.alpha = this.startAlpha;
+                       this.Owner.alpha = this.startAlpha;
                    }
                    if (this.startScale) {
-                       this.self.scale(this.startScale, this.startScale);
+                       this.Owner.scale(this.startScale, this.startScale);
                    }
                    if (this.startRotat) {
-                       this.self.rotation = this.startRotat;
+                       this.Owner.rotation = this.startRotat;
                    }
                }
                commonSpeedXYByAngle(angle, speed) {
-                   this.self.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
-                   this.self.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
+                   this.Owner.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
+                   this.Owner.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
                }
                moveRules() {
                }
@@ -534,7 +534,7 @@
                    this.moveRules();
                }
                onDisable() {
-                   Laya.Pool.recover(this.self.name, this.self);
+                   Laya.Pool.recover(this.Owner.name, this.Owner);
                    this.destroy();
                    Laya.Tween.clearAll(this);
                    Laya.timer.clearAll(this);
@@ -543,10 +543,10 @@
            Gold_1.GoldAniBase = GoldAniBase;
            class AddGold extends GoldAniBase {
                lwgInit() {
-                   this.self.width = 115;
-                   this.self.height = 111;
-                   this.self.pivotX = this.self.width / 2;
-                   this.self.pivotY = this.self.height / 2;
+                   this.Owner.width = 115;
+                   this.Owner.height = 111;
+                   this.Owner.pivotX = this.Owner.width / 2;
+                   this.Owner.pivotY = this.Owner.height / 2;
                }
                initProperty() {
                }
@@ -554,8 +554,8 @@
                    if (this.moveSwitch) {
                        this.timer++;
                        if (this.timer > 0) {
-                           lwg.Animation2D.move_Scale(this.self, 1, this.self.x, this.self.y, this.targetX, this.targetY, 0.35, 250, 0, f => {
-                               this.self.removeSelf();
+                           lwg.Animation2D.move_Scale(this.Owner, 1, this.Owner.x, this.Owner.y, this.targetX, this.targetY, 0.35, 250, 0, f => {
+                               this.Owner.removeSelf();
                                if (this.func !== null) {
                                    this.func();
                                }
@@ -1165,9 +1165,12 @@
                    this.aniTime = 100;
                    this.aniDelayde = 100;
                }
+               get Owner() {
+                   return this.owner;
+               }
                SpriteVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在全局节点：', str);
@@ -1175,8 +1178,8 @@
                    }
                }
                AniVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在动画：', str);
@@ -1184,8 +1187,8 @@
                    }
                }
                btnVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在全局按钮：', str);
@@ -1193,8 +1196,8 @@
                    }
                }
                ImgVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在全局节点：', str);
@@ -1202,29 +1205,28 @@
                    }
                }
                ListVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在全局节点：', str);
                    }
                }
                TapVar(str) {
-                   if (this.self[str]) {
-                       return this.self[str];
+                   if (this.Owner[str]) {
+                       return this.Owner[str];
                    }
                    else {
                        console.log('场景内不存在全局节点：', str);
                    }
                }
                onAwake() {
-                   this.self = this.owner;
-                   if (this.self.name == null) {
+                   if (this.Owner.name == null) {
                        console.log('场景名称失效，脚本赋值失败');
                    }
                    else {
-                       this.calssName = this.self.name;
-                       this.self[this.calssName] = this;
+                       this.calssName = this.Owner.name;
+                       this.Owner[this.calssName] = this;
                    }
                    gameState(this.calssName);
                    this.moduleOnAwake();
@@ -1252,6 +1254,12 @@
                    this.moduleOnStart();
                    this.lwgOnStart();
                }
+               lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
+                   Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+               }
+               lwgCloseScene(func) {
+                   Admin._closeScene(this.Owner.name, func);
+               }
                lwgOnStart() { }
                moduleOnStart() { }
                btnAndlwgOpenAni() {
@@ -1264,7 +1272,7 @@
                        });
                    }
                    else {
-                       time = _commonOpenAni(this.self);
+                       time = _commonOpenAni(this.Owner);
                    }
                }
                lwgOpenAni() { return null; }
@@ -1283,7 +1291,7 @@
                lwgVanishAni() { return null; }
                ;
                onDisable() {
-                   Animation2D.fadeOut(this.self, 1, 0, 2000, 1);
+                   Animation2D.fadeOut(this.Owner, 1, 0, 2000, 1);
                    this.lwgOnDisable();
                    Laya.timer.clearAll(this);
                    Laya.Tween.clearAll(this);
@@ -1297,17 +1305,26 @@
                constructor() {
                    super();
                }
+               get Owner() {
+                   return this.owner;
+               }
+               get OwnerScene() {
+                   return this.owner.scene;
+               }
+               get OwnerRig() {
+                   if (!this.Owner['_OwnerRig']) {
+                       this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.RigidBody);
+                   }
+                   return this.Owner['_OwnerRig'];
+               }
                onAwake() {
                    this.lwgOnAwake();
                }
                lwgOnAwake() {
                }
                onEnable() {
-                   this.self = this.owner;
-                   this.selfScene = this.self.scene;
-                   this.rig = this.self.getComponent(Laya.RigidBody);
                    let calssName = this['__proto__']['constructor'].name;
-                   this.self[calssName] = this;
+                   this.Owner[calssName] = this;
                    this.lwgOnEnable();
                }
                lwgOnEnable() {
@@ -1319,11 +1336,21 @@
                constructor() {
                    super();
                }
+               get Owner() {
+                   return this.owner;
+               }
+               get OwnerScene() {
+                   return this.owner.scene;
+               }
+               get OwnerRig() {
+                   if (!this.Owner['_OwnerRig']) {
+                       this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.RigidBody);
+                   }
+                   return this.Owner['_OwnerRig'];
+               }
                onAwake() {
-                   this.self = this.owner;
-                   this.selfScene = this.self.scene;
                    let calssName = this['__proto__']['constructor'].name;
-                   this.self[calssName] = this;
+                   this.Owner[calssName] = this;
                    this.lwgOnAwake();
                }
                lwgOnAwake() { }
@@ -4178,8 +4205,8 @@
            })(EventType = Shop.EventType || (Shop.EventType = {}));
            class ShopScene extends Admin._Scene {
                moduleOnAwake() {
-                   Shop._ShopTap = this.self['MyTap'];
-                   Shop._ShopList = this.self['MyList'];
+                   Shop._ShopTap = this.Owner['MyTap'];
+                   Shop._ShopList = this.Owner['MyList'];
                    if (!Shop.allSkin) {
                        Shop.allSkin = Tools.jsonCompare('GameData/Shop/Skin.json', GoodsClass.Skin, GoodsProperty.name);
                    }
@@ -4270,7 +4297,7 @@
            })(EventType = VictoryBox.EventType || (VictoryBox.EventType = {}));
            class VictoryBoxScene extends Admin._Scene {
                moduleOnAwake() {
-                   VictoryBox._BoxList = this.self['MyList'];
+                   VictoryBox._BoxList = this.Owner['MyList'];
                    VictoryBox._BoxArray = Tools.objArray_Copy(Laya.loader.getRes("GameData/VictoryBox/VictoryBox.json")['RECORDS']);
                    VictoryBox._selectBox = null;
                    VictoryBox._canOpenNum = 3;
@@ -4404,7 +4431,7 @@
            })(EventType = CheckIn.EventType || (CheckIn.EventType = {}));
            class CheckInScene extends Admin._Scene {
                moduleOnAwake() {
-                   CheckIn._checkList = this.self['CheckList'];
+                   CheckIn._checkList = this.Owner['CheckList'];
                    CheckIn._checkArray = Tools.jsonCompare('GameData/CheckIn/CheckIn.json', CheckClass.chek_7Days, CheckProPerty.name);
                }
                moduleOnEnable() {
@@ -4507,8 +4534,8 @@
            })(EventType = Skin.EventType || (Skin.EventType = {}));
            class SkinScene extends Admin._Scene {
                moduleOnAwake() {
-                   Skin._SkinTap = this.self['SkinTap'];
-                   Skin._SkinList = this.self['SkinList'];
+                   Skin._SkinTap = this.Owner['SkinTap'];
+                   Skin._SkinList = this.Owner['SkinList'];
                    Skin._skinClassArr = [Skin._eyeSkinArr, Skin._headSkinArr];
                }
                moduleOnEnable() {
@@ -4956,6 +4983,9 @@
                moduleOnAwake() {
                    _PreLoad._remakeLode();
                }
+               lwgStartLoding(any) {
+                   EventAdmin._notify(_PreLoad._Event.importList, (any));
+               }
                moduleEventRegister() {
                    EventAdmin._register(_Event.importList, this, (listObj) => {
                        for (const key in listObj) {
@@ -5024,8 +5054,8 @@
                    EventAdmin._register(_Event.complete, this, () => {
                        let time = this.lwgAllComplete();
                        Laya.timer.once(time, this, () => { });
-                       this.self.name = _PreLoad._whereToLoad;
-                       Admin._sceneControl[_PreLoad._whereToLoad] = this.self;
+                       this.Owner.name = _PreLoad._whereToLoad;
+                       Admin._sceneControl[_PreLoad._whereToLoad] = this.Owner;
                        if (_PreLoad._whereToLoad !== Admin._SceneName.UIPreLoad) {
                            if (Admin._preLoadOpenSceneLater.openSceneName) {
                                Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
@@ -5389,7 +5419,7 @@
    })(_PreloadUrl || (_PreloadUrl = {}));
    class UIPreLoad extends _PreLoad._PreLoadScene {
        lwgOnStart() {
-           EventAdmin._notify(_PreLoad._Event.importList, ([_PreloadUrl._list]));
+           EventAdmin._notify(_PreLoad._Event.importList, (_PreloadUrl._list));
        }
        lwgOpenAni() { return 0; }
        lwgStepComplete() {
@@ -5539,8 +5569,8 @@
        _Game._init = _init;
        class _PencilsListItem extends Admin._Object {
            lwgBtnClick() {
-               Click._on(Click._Type.largen, this.self, this, null, null, () => {
-                   _SingleColorPencils._setPitchByName(this.self['_dataSource'][_SingleColorPencils._property.name]);
+               Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
+                   _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
                    _Game._PencilsList.refresh();
                });
            }
@@ -5591,7 +5621,7 @@
            _Game._stepIndex.present = 0;
            _Game._stepIndex.max = 0;
            _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-           this.self.addChild(_Game._PencilsList)['pos'](108, 1085);
+           this.Owner.addChild(_Game._PencilsList)['pos'](108, 1085);
            _Game._PencilsList.array = _Game._SingleColorPencils._data;
            _Game._PencilsList.selectEnable = true;
            _Game._PencilsList.vScrollBarSkin = "";
@@ -5617,8 +5647,8 @@
            }
            _Game._stepOrderImg = [];
            let index = 1;
-           while (this.self['Draw' + index]) {
-               let Img = this.self['Draw' + index];
+           while (this.Owner['Draw' + index]) {
+               let Img = this.Owner['Draw' + index];
                _Game._stepOrderImg.push(Img);
                Img[_Game._drawBoardProperty.originalZOder] = Img.zOrder;
                let parent = Img.parent;
@@ -5626,24 +5656,24 @@
                    parent[_Game._drawBoardProperty.originalZOder] = parent.zOrder;
                    parent[_Game._drawBoardProperty.whetherPass] = false;
                }
-               this.self['Draw' + index].skin = null;
+               this.Owner['Draw' + index].skin = null;
                index++;
            }
        }
        lwgOnEnable() {
            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
-           this.self.addChild(this.StepSwitch);
+           this.Owner.addChild(this.StepSwitch);
            this.StepSwitch.pos(194.5, 900);
            this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
            this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
            this.BtnNextStep.visible = false;
            this.BtnLastStep.visible = false;
            this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
-           this.self.addChild(this.BtnPlayAni);
+           this.Owner.addChild(this.BtnPlayAni);
            this.BtnPlayAni.visible = false;
            this.BtnPlayAni.pos(361, 920);
            this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
-           this.self.addChild(this.BtnBack);
+           this.Owner.addChild(this.BtnBack);
            this.BtnBack.visible = false;
            this.BtnBack.pos(96, 97);
        }
@@ -5846,7 +5876,7 @@
            });
            Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
                Admin._game.level++;
-               Admin._openScene(Admin._SceneName.UIStart, this.calssName);
+               this.lwgOpenScene(Admin._SceneName.UIStart, this.calssName);
            });
        }
    }
@@ -6241,7 +6271,7 @@
        }
        lwgBtnClick() {
            Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-               Admin._openScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
+               this.lwgOpenScene(_SceneName.GameScene + Admin._game.level, _SceneName.UIStart, () => {
                    if (!Admin._sceneControl[_SceneName.GameScene + Admin._game.level].getComponent(GameScene)) {
                        Admin._sceneControl[_SceneName.GameScene + Admin._game.level].addComponent(GameScene);
                    }
