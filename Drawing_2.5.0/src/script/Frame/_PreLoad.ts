@@ -1,4 +1,4 @@
-import { EventAdmin, _PreLoad, _SceneName } from "./Lwg";
+import { Admin, EventAdmin, _LwgPreLoad, _SceneName } from "./Lwg";
 export module _PreloadUrl {
     export let _list = {
         // scene3D: {
@@ -53,9 +53,9 @@ export module _PreloadUrl {
         },
         /**通过直接获取场景的显示和打开，和scene关联，实现，先加载，然后直接切换*/
         scene2D: {
-            UIStart: "Scene/" + _SceneName.UIStart + '.json',
-            GameScene: "Scene/" + _SceneName.GameScene + '.json',
-            UIPreLoad: "Scene/" + _SceneName.UIPreLoad + '.json',
+            UIStart: "Scene/" + _SceneName.Start + '.json',
+            GameScene: "Scene/" + _SceneName.Game + '.json',
+            UIPreLoad: "Scene/" + _SceneName.PreLoad + '.json',
         },
         json: {
             SingleColor: {
@@ -75,17 +75,23 @@ export module _PreloadUrl {
         // }
     }
 }
-export default class UIPreLoad extends _PreLoad._PreLoadScene {
-    lwgOnStart(): void {
-        EventAdmin._notify(_PreLoad._Event.importList, (_PreloadUrl._list));
-    }
-    lwgOpenAni(): number { return 0; }
-    lwgStepComplete(): void {
-        // this.self['Progress'].mask.x = -425 + 425 * Lwg_Loding.currentProgress.value / Lwg_Loding.sumProgress;
-    }
-    lwgAllComplete(): number {
-        // this.self['Progress'].mask.x = 0;
-        return 200;
+
+export module _PreLoad {
+    export class PreLoad extends _LwgPreLoad._PreLoadScene {
+        lwgOnStart(): void {
+            EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+        }
+        lwgOpenAni(): number { return 0; }
+        lwgStepComplete(): void {
+            // this.self['Progress'].mask.x = -425 + 425 * Lwg_Loding.currentProgress.value / Lwg_Loding.sumProgress;
+        }
+        lwgAllComplete(): number {
+            // this.self['Progress'].mask.x = 0;
+            return 200;
+        }
     }
 }
+
+export default PreLoad;
+
 

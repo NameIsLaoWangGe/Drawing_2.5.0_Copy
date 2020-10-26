@@ -1,3 +1,5 @@
+import LwgInit from "./LwgInit";
+
 /**综合模板*/
 export module lwg {
     /**暂停模块，控制游戏的暂停和开启*/
@@ -1115,7 +1117,7 @@ export module lwg {
             }
         };
 
-        /**是否为评测包，评测包广告默认关闭，默认为非评测包，直接获得广告奖励*/
+        /**是否为评测版本，评测版本广告默认关闭，默认为非评测包，直接获得广告奖励*/
         export let _evaluating: boolean = false;
 
         /**等级*/
@@ -1151,7 +1153,6 @@ export module lwg {
             set loopLevel(lev: number) {
                 this['_gameloopLevel'] = lev;
             },
-
             /**等级的显示节点*/
             LevelNode: new Laya.Sprite,
             _createLevel(parent: Laya.Sprite, x: number, y: number): void {
@@ -1164,54 +1165,30 @@ export module lwg {
                     sp.pos(x, y);
                     sp.zOrder = 0;
                     let level = sp.getChildByName('level') as Laya.Label;
-                    _LevelNode = sp;
+                    _game.LevelNode = sp;
                 }));
+            },
+            /***/
+            pause: {
+                get switch(): boolean {
+                    return _game.switch;
+                },
+                set switch(bool: boolean) {
+                    this.bool = bool;
+                    if (bool) {
+                        _game.switch = false;
+                        Laya.timer.pause();
+                    } else {
+                        _game.switch = true;
+                        Laya.timer.resume();
+                    }
+                }
             }
         }
-
         /**可替代上述等级对象*/
         export class _Game {
 
         }
-        /**等级的显示节点*/
-        export let _LevelNode: Laya.Sprite;
-        /**
-         * 创建一个等级的显示节点
-         * @param parent 父节点
-         * @param x x位置
-         * @param y y位置
-         */
-        export function _createLevel(parent: Laya.Sprite, x: number, y: number): void {
-            let sp: Laya.Sprite;
-            Laya.loader.load('prefab/LevelNode.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
-                let _prefab = new Laya.Prefab();
-                _prefab.json = prefab;
-                sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
-                parent.addChild(sp);
-                sp.pos(x, y);
-                sp.zOrder = 0;
-                let level = sp.getChildByName('level') as Laya.Label;
-                _LevelNode = sp;
-            }));
-        }
-
-        /**暂停当前游戏*/
-        export let _pause = {
-            get switch(): boolean {
-                return _game.switch;
-            },
-            set switch(bool: boolean) {
-                this.bool = bool;
-                if (bool) {
-                    _game.switch = false;
-                    Laya.timer.pause();
-                } else {
-                    _game.switch = true;
-                    Laya.timer.resume();
-                }
-            }
-        }
-
         /**整个stage内关闭点击事件*/
         export let _clickLock = {
             get switch(): boolean {
@@ -1274,7 +1251,8 @@ export module lwg {
         export let _sceneControl: any = {};
         /**和场景名称一样的脚本,这个脚本唯一，不可随意调用*/
         export let _sceneScript: any = {};
-
+        /**场景模块*/
+        export let _moudel: any = {};
         /**通用动效*/
         export let _sceneAnimation = {
             type: {
@@ -1282,50 +1260,47 @@ export module lwg {
                 leftMove: 'leftMove',
                 rightMove: 'rightMove',
                 centerRotate: 'centerRotate',
+                drawUp: 'drawUp',
             },
             vanishSwitch: false,
             openSwitch: true,
             presentAni: 'fadeOut',
         }
-
         /**常用场景的名称，和脚本默认导出类名保持一致*/
         export enum _SceneName {
-            UIPreLoad = 'UIPreLoad',
-            UIStart = 'UIStart',
-            UIGuide = 'UIGuide',
-            UISkin = 'UISkin',
-            UIShop = 'UIShop',
-            UITask = 'UITask',
-            UISet = 'UISet',
-            UIPifu = 'UIPifu',
-            UIPuase = 'UIPuase',
-            UIShare = 'UIShare',
-            GameMain3D = 'GameMain3D',
-            UIVictory = 'UIVictory',
-            UIDefeated = 'UIDefeated',
-            UIPassHint = 'UIPassHint',
-            UISkinQualified = 'UISkinQualified',
-            UISkinTry = 'UISkinTry',
-            UIRedeem = 'UIRedeem',
-            UIAnchorXD = 'UIAnchorXD',
-            UITurntable = 'UITurntable',
-            UICaiDanQiang = 'UICaiDanQiang',
-            UICaidanPifu = 'UICaidanPifu',
-            UIOperation = 'UIOperation',
-            UIVictoryBox = 'UIVictoryBox',
-            UICheckIn = 'UICheckIn',
-            UIResurgence = 'UIResurgence',
-            UIEaste_registerg = 'UIEaste_registerg',
-            UIAds = 'UIAds',
-            UILwgInit = 'UILwgInit',
-            GameScene = 'GameScene',
-            UISmallHint = 'UISmallHint',
-            UIExecutionHint = 'UIExecutionHint',
-            UIDrawCard = 'UIDrawCard',
-            UIPropTry = 'UIPropTry',
-            UICard = 'UICard',
-            UIInit = 'UIInit',
-            UIPreLoadSceneBefore = 'UIPreLoadSceneBefore',
+            PreLoad = 'PreLoad',
+            Start = 'Start',
+            Guide = 'Guide',
+            Shop = 'Shop',
+            Task = 'Task',
+            Set = 'Set',
+            Skin = 'Skin',
+            Puase = 'Puase',
+            Share = 'Share',
+            Game3D = 'Game3D',
+            Victory = 'Victory',
+            Defeated = 'Defeated',
+            PassHint = 'PassHint',
+            SkinQualified = 'SkinQualified',
+            SkinTry = 'SkinTry',
+            Redeem = 'Redeem',
+            Turntable = 'Turntable',
+            CaidanPifu = 'CaidanPifu',
+            Operation = 'Operation',
+            VictoryBox = 'VictoryBox',
+            CheckIn = 'CheckIn',
+            Resurgence = 'Resurgence',
+            Easte_registerg = 'Easte_registerg',
+            Ads = 'Ads',
+            LwgInit = 'LwgInit',
+            Game = 'Game',
+            SmallHint = 'SmallHint',
+            ExecutionHint = 'ExecutionHint',
+            DrawCard = 'DrawCard',
+            PropTry = 'PropTry',
+            Card = 'Card',
+            Init = 'Init',
+            PreLoadSceneBefore = 'PreLoadSceneBefore',
         }
 
         /**
@@ -1336,7 +1311,7 @@ export module lwg {
          * @param {number} [zOder] 指定层级，默认为最上层
          */
         export function _preLoadOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number) {
-            _openScene(_SceneName.UIPreLoadSceneBefore);
+            _openScene(_SceneName.PreLoadSceneBefore);
             _preLoadOpenSceneLater.openSceneName = openSceneName;
             _preLoadOpenSceneLater.cloesSceneName = cloesSceneName;
             _preLoadOpenSceneLater.func = func;
@@ -1349,7 +1324,6 @@ export module lwg {
             func: null,
             zOder: null,
         }
-
         /**
           * 打开场景
           * @param openSceneName 需要打开的场景名称
@@ -1360,9 +1334,11 @@ export module lwg {
         export function _openScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
             Admin._clickLock.switch = true;
             Laya.Scene.load('Scene/' + openSceneName + '.json', Laya.Handler.create(this, function (scene: Laya.Scene) {
-                if (_sceneScript[openSceneName]) {
-                    if (!scene.getComponent(_sceneScript[openSceneName])) {
-                        scene.addComponent(_sceneScript[openSceneName]);
+                if (_moudel['_' + openSceneName]) {
+                    if (_moudel['_' + openSceneName][openSceneName]) {
+                        if (!scene.getComponent(_moudel['_' + openSceneName][openSceneName])) {
+                            scene.addComponent(_moudel['_' + openSceneName][openSceneName]);
+                        }
                     }
                 } else {
                     console.log('当前场景没有同名脚本！');
@@ -1371,7 +1347,7 @@ export module lwg {
                 scene.height = Laya.stage.height;
                 var openf = () => {
                     if (Tools.node_CheckChildren(Laya.stage, openSceneName)) {
-                        console.log('场景重复出现！请检查代码');
+                        console.log(openSceneName, '场景重复出现！请检查代码');
                         return;
                     }
                     if (zOder) {
@@ -1517,16 +1493,16 @@ export module lwg {
         /**游戏当前的状态,有些页面没有状态*/
         export function gameState(calssName): void {
             switch (calssName) {
-                case _SceneName.UIStart:
+                case _SceneName.Start:
                     _gameState = _GameState.Start;
                     break;
-                case _SceneName.GameScene:
+                case _SceneName.Game:
                     _gameState = _GameState.Play;
                     break;
-                case _SceneName.UIDefeated:
+                case _SceneName.Defeated:
                     _gameState = _GameState.Defeated;
                     break;
-                case _SceneName.UIVictory:
+                case _SceneName.Victory:
                     _gameState = _GameState.Victory;
                     break;
                 default:
@@ -1534,10 +1510,10 @@ export module lwg {
             }
         }
         /**2D场景通用父类*/
-        export class _Scene extends Laya.Script {
+        export class _SceneBase extends Laya.Script {
             // Owner: Laya.Scene;
             /**类名*/
-            calssName: string = _SceneName.UIPreLoad;
+            calssName: string = _SceneName.PreLoad;
             constructor() {
                 super();
             }
@@ -4186,7 +4162,7 @@ export module lwg {
             btn.zOrder = ZOder ? ZOder : 100;
             var btnSetUp = function (e: Laya.Event): void {
                 e.stopPropagation();
-                Admin._openScene(Admin._SceneName.UISet);
+                Admin._openScene(Admin._SceneName.Set);
             }
             Click._on(Click._Type.largen, btn, null, null, btnSetUp, null);
             BtnSetNode = btn;
@@ -5788,7 +5764,7 @@ export module lwg {
             select = 'select',
         }
 
-        export class ShopScene extends Admin._Scene {
+        export class ShopScene extends Admin._SceneBase {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
                 Shop._ShopTap = this.Owner['MyTap'];
@@ -5918,7 +5894,7 @@ export module lwg {
             openBox = 'openBox',
         }
         /**胜利宝箱场景父类*/
-        export class VictoryBoxScene extends Admin._Scene {
+        export class VictoryBoxScene extends Admin._SceneBase {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
                 VictoryBox._BoxList = this.Owner['MyList'];
@@ -5960,7 +5936,7 @@ export module lwg {
     /**签到模块*/
     export module CheckIn {
         /**从哪个界面弹出的签到*/
-        export let _fromWhich: string = Admin._SceneName.UIPreLoad;
+        export let _fromWhich: string = Admin._SceneName.PreLoad;
         /**签到list列表*/
         export let _checkList: Laya.List;
         /**列表信息*/
@@ -6046,10 +6022,10 @@ export module lwg {
         export function openCheckIn(): void {
             if (!_todayCheckIn.bool) {
                 console.log('没有签到过，弹出签到页面！');
-                Admin._openScene(Admin._SceneName.UICheckIn);
+                Admin._openScene(Admin._SceneName.CheckIn);
             } else {
                 if (SkinQualified._adsNum.value < 7) {
-                    Admin._openScene(Admin._SceneName.UISkinQualified);
+                    Admin._openScene(Admin._SceneName.SkinQualified);
                 }
                 console.log('签到过了，今日不可以再签到');
             }
@@ -6103,7 +6079,7 @@ export module lwg {
             removeCheckBtn = 'removeCheckBtn',
         }
 
-        export class CheckInScene extends Admin._Scene {
+        export class CheckInScene extends Admin._SceneBase {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
                 CheckIn._checkList = this.Owner['CheckList'];
@@ -6164,7 +6140,7 @@ export module lwg {
             if (_adsNum.value >= _needAdsNum) {
                 return;
             } else {
-                Admin._openScene(Admin._SceneName.UISkinQualified);
+                Admin._openScene(Admin._SceneName.SkinQualified);
                 _fromScene = fromScene;
             }
         }
@@ -6175,7 +6151,7 @@ export module lwg {
         }
 
         /**限定皮肤场景父类*/
-        export class SkinQualifiedScene extends Admin._Scene {
+        export class SkinQualifiedScene extends Admin._SceneBase {
             moduleOnEnable(): void {
                 _needAdsNum = 3;
             }
@@ -6250,7 +6226,7 @@ export module lwg {
             /**选择*/
             select = 'select',
         }
-        export class SkinScene extends Admin._Scene {
+        export class SkinScene extends Admin._SceneBase {
             moduleOnAwake(): void {
                 /**结构，如果没有则为null*/
                 Skin._SkinTap = this.Owner['SkinTap'];
@@ -6476,7 +6452,7 @@ export module lwg {
         }
 
         /**彩蛋场景继承类*/
-        export class Easte_registergScene extends Admin._Scene {
+        export class Easte_registergScene extends Admin._SceneBase {
             moduleOnAwake(): void {
             }
             /**初始化json数据*/
@@ -6491,7 +6467,7 @@ export module lwg {
 
     /**胜利模块*/
     export module Victory {
-        export class VictoryScene extends Admin._Scene {
+        export class VictoryScene extends Admin._SceneBase {
             moduleOnAwake(): void {
 
             };
@@ -6505,7 +6481,7 @@ export module lwg {
     }
     /**失败模块*/
     export module Defeated {
-        export class DefeatedScene extends Admin._Scene {
+        export class DefeatedScene extends Admin._SceneBase {
             moduleOnAwake(): void {
 
             };
@@ -6558,7 +6534,7 @@ export module lwg {
         }
 
         /**抽奖通用场景*/
-        export class DrawCardScene extends Admin._Scene {
+        export class DrawCardScene extends Admin._SceneBase {
             moduleOnAwake(): void {
 
             };
@@ -6577,9 +6553,9 @@ export module lwg {
     export module Share {
 
         /**从哪个界面弹出的分享*/
-        export let _fromWhich: string = Admin._SceneName.UIVictory;
+        export let _fromWhich: string = Admin._SceneName.Victory;
 
-        export class ShareScene extends Admin._Scene {
+        export class ShareScene extends Admin._SceneBase {
             moduleOnAwake(): void {
 
             };
@@ -6594,7 +6570,7 @@ export module lwg {
 
     /**道具试用模块*/
     export module PropTry {
-        export class PropTryScene extends Admin._Scene {
+        export class PropTryScene extends Admin._SceneBase {
             moduleOnAwake(): void {
 
             };
@@ -6699,7 +6675,7 @@ export module lwg {
          * */
         export let _backpackArray: Array<Array<{}>> = [];
 
-        export class BackpackScene extends Admin._Scene {
+        export class BackpackScene extends Admin._SceneBase {
             moduleOnAwake(): void {
             };
             moduleEventRegister(): void {
@@ -6709,7 +6685,7 @@ export module lwg {
         }
     }
 
-    export module _PreLoad {
+    export module LwgPreLoad {
         /**3D场景的加载，其他3D物体，贴图，Mesh详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
         export let _scene3D: Array<string> = [];
         /**3D预设的加载，其他3D物体，贴图，Mesh详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
@@ -6743,7 +6719,7 @@ export module lwg {
         export let _loadOrderIndex: number = 0;
 
         /**在何处加载，是初始化加载还是页面中加载*/
-        export let _whereToLoad: string = Admin._SceneName.UIPreLoad;
+        export let _whereToLoad: string = Admin._SceneName.PreLoad;
         export enum _ListName {
             scene3D = 'scene3D',
             prefab3D = 'prefab3D',
@@ -6773,7 +6749,7 @@ export module lwg {
                     console.log('当前进度条进度为:', _currentProgress.value / _sumProgress);
                     console.log('进度条停止！');
                     console.log('所有资源加载完成！此时所有资源可通过例如 Laya.loader.getRes("url")获取');
-                    EventAdmin._notify(_PreLoad._Event.complete);
+                    EventAdmin._notify(LwgPreLoad._Event.complete);
                 } else {
                     // 当前进度达到当前长度节点时,去到下一个数组加载
                     let number = 0;
@@ -6783,7 +6759,7 @@ export module lwg {
                     if (this['len'] == number) {
                         _loadOrderIndex++;
                     }
-                    EventAdmin._notify(_PreLoad._Event.startLoding);
+                    EventAdmin._notify(LwgPreLoad._Event.startLoding);
                 }
             },
         };
@@ -6812,13 +6788,13 @@ export module lwg {
             _loadOrderIndex = 0;
             _currentProgress.value = 0;
         }
-        export class _PreLoadScene extends Admin._Scene {
+        export class _PreLoadScene extends Admin._SceneBase {
             moduleOnAwake(): void {
-                _PreLoad._remakeLode();
+                LwgPreLoad._remakeLode();
             }
             /**开始加载*/
             lwgStartLoding(any: any): void {
-                EventAdmin._notify(_PreLoad._Event.importList, (any));
+                EventAdmin._notify(LwgPreLoad._Event.importList, (any));
             }
             moduleEventRegister(): void {
                 EventAdmin._register(_Event.importList, this, (listObj: {}) => {
@@ -6881,7 +6857,7 @@ export module lwg {
                         time = 0;
                     }
                     Laya.timer.once(time, this, () => {
-                        EventAdmin._notify(_PreLoad._Event.startLoding);
+                        EventAdmin._notify(LwgPreLoad._Event.startLoding);
                     })
                 });
                 EventAdmin._register(_Event.startLoding, this, () => { this.startLodingRule() });
@@ -6891,7 +6867,7 @@ export module lwg {
                     // 通过预加载进入页面
                     this.Owner.name = _whereToLoad;
                     Admin._sceneControl[_whereToLoad] = this.Owner;
-                    if (_whereToLoad !== Admin._SceneName.UIPreLoad) {
+                    if (_whereToLoad !== Admin._SceneName.PreLoad) {
                         if (Admin._preLoadOpenSceneLater.openSceneName) {
                             Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
                                 Admin._preLoadOpenSceneLater.func;
@@ -6899,10 +6875,20 @@ export module lwg {
                             }, Admin._preLoadOpenSceneLater.zOder);
                         }
                     } else {
-                        EventAdmin._notify(_SceneName.UIInit);
+                        //首次是进入游戏时的加载
+                        for (const key in Admin._moudel) {
+                            if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
+                                const element = Admin._moudel[key];
+                                if (element['_init']) {
+                                    element['_init']();
+                                } else {
+                                    console.log(element, '模块没有初始化函数！');
+                                }
+                            }
+                        }
                         PalyAudio.playMusic();
                         Admin._closeScene(_whereToLoad, () => {
-                            _whereToLoad = Admin._SceneName.UIPreLoadSceneBefore;
+                            _whereToLoad = Admin._SceneName.PreLoadSceneBefore;
                         });
                     }
                 });
@@ -6922,7 +6908,7 @@ export module lwg {
             private startLodingRule(): void {
                 if (_loadOrder.length <= 0) {
                     console.log('没有加载项');
-                    EventAdmin._notify(_PreLoad._Event.complete);
+                    EventAdmin._notify(LwgPreLoad._Event.complete);
                     return;
                 }
                 // 已经加载过的分类数组的长度
@@ -7081,11 +7067,11 @@ export module lwg {
             lwgAllComplete(): number { return 0 };
         }
     }
-    /**资源准备模块，拉去资源，分包等*/
-    export module _Init {
-        /**分包加载步骤*/ 
+    /**配置模块，拉去资源，分包等*/
+    export module _LwgInit {
+        /**分包加载步骤*/
         export let _pkgStep: number = 0;
-        /**分包信息*/ 
+        /**分包信息*/
         export let _pkgInfo = [
             { name: "sp1", root: "res" },
             { name: "sp2", root: "3DScene" },
@@ -7108,7 +7094,6 @@ export module lwg {
                 default:
                     break;
             }
-            Admin._openScene(_SceneName.UIPreLoad);
         }
         /**OV*/
         export function _loadPkg_VIVO() {
@@ -7149,22 +7134,20 @@ export module lwg {
                 });
             }
         }
-        export class _InitScene extends Admin._Scene {
-            moduleOnAwake(): void {
-            };
-            moduleEventRegister(): void {
-            };
+        export class _LwgInitScene extends Admin._SceneBase {
             moduleOnStart(): void {
-                _Init._init();
+                _init();
+                this.lwgOpenScene(_SceneName.PreLoad, null, () => {
+                    // this.Owner.close();
+                });
             };
-            lwgCompelet():void{
-            }
         }
     }
 }
 export default lwg;
 // 全局控制
 export let Admin = lwg.Admin;
+export let _SceneBase = Admin._SceneBase;
 export let _SceneName = Admin._SceneName;
 export let EventAdmin = lwg.EventAdmin;
 export let DateAdmin = lwg.DateAdmin;
@@ -7183,10 +7166,10 @@ export let Animation3D = lwg.Animation3D;
 export let Tools = lwg.Tools;
 export let Elect = lwg.Elect;
 //场景相关 
-export let _PreLoad = lwg._PreLoad;
-export let _PreLoadScene = lwg._PreLoad._PreLoadScene;
-export let _Init = lwg._Init;
-export let _InitScene = lwg._Init._InitScene;
+export let _LwgPreLoad = lwg.LwgPreLoad;
+export let _PreLoadScene = lwg.LwgPreLoad._PreLoadScene;
+export let _LwgInit = lwg._LwgInit;
+export let _LwgInitScene = lwg._LwgInit._LwgInitScene;
 
 export let Shop = lwg.Shop;
 export let ShopScene = lwg.Shop.ShopScene;

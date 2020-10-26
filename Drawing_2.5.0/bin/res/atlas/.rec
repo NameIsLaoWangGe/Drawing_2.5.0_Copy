@@ -141,21 +141,29 @@ R 6E72E92F wancheng.wav
 D Game/Skeleton
 D Game/UI
 D Game/Voice
+D Game/UI/AdsHint
+D Game/UI/Card
+D Game/UI/CheckIn
 D Game/UI/Common
+D Game/UI/Defeated
 D Game/UI/DesignPic
+R 22791D75 loding.png
+D Game/UI/DrawCard
 D Game/UI/GameScene
 P E1951C3C face.png
 P 22966FDB Petal.png
 P CDE12E69 PetalMask.png
-D Game/UI/UIAdsHint
-D Game/UI/UICard
-D Game/UI/UICheckIn
-D Game/UI/UIDefeated
-D Game/UI/UIDrawCard
-D Game/UI/UILoding
-D Game/UI/UIPropTry
-D Game/UI/UIResurgence
-D Game/UI/UISet
+D Game/UI/PreLoad
+P A706EC07 baifenbi.png
+P 15FFD6DD bi.png
+R 4414DBFC bj.png
+P 221BB173 jdk.png
+P 35503251 jindutiao.png
+P 9A32446C ty.png
+R 18763D65 tyxhs.png
+D Game/UI/PropTry
+D Game/UI/Resurgence
+D Game/UI/Set
 P A7A6D598 di1.png
 P 4B6DCFBD di2.png
 P 156EDBC6 guan.png
@@ -164,14 +172,14 @@ P B3373FD9 shehzi.png
 P 59203D00 yinxiao.png
 P 0DF2AC23 yinyue.png
 P 7023981F zhendong.png
-D Game/UI/UIShare
-D Game/UI/UIShop
-D Game/UI/UISkin
-D Game/UI/UISkinQualified
-D Game/UI/UIStart
-D Game/UI/UITask
-D Game/UI/UIVictory
-D Game/UI/UIVictoryBox
+D Game/UI/Share
+D Game/UI/Shop
+D Game/UI/Skin
+D Game/UI/SkinQualified
+D Game/UI/Start
+D Game/UI/Task
+D Game/UI/Victory
+D Game/UI/VictoryBox
 D Game/UI/GameScene/design
 R 8A3D0CE5 level1.png
 P 68EF1D68 Level10.png

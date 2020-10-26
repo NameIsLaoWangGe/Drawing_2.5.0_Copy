@@ -204,11 +204,11 @@ export module _Task {
     }
 
     /**对任务场景进行初始化*/
-    export class _TaskScene extends Admin._Scene {
+    export class _TaskBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             _allClassifyArr = [_Task._everydayTask];
-            _Task._TaskTap = this.self['TaskTap'];
-            _Task._TaskList = this.self['TaskList'];
+            _Task._TaskTap = this.Owner['TaskTap'];
+            _Task._TaskList = this.Owner['TaskList'];
         }
         moduleOnEnable(): void {
             this.lwgTapCreate();
@@ -246,13 +246,14 @@ export module _Task {
             }
         }
     }
-}
+    /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
+    export  class Task extends _Task._TaskBase {
+    }
 
-/**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
-export default class UITask extends _Task._TaskScene {
-}
+    /**列表脚本*/
+    export class TaskItem extends Admin._Object {
 
-/**列表脚本*/
-export class TaskItem extends Admin._Object {
-
+    }
 }
+export default _Task.Task
+

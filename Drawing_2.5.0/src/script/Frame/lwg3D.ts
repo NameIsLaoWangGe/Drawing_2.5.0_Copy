@@ -2,23 +2,23 @@
 /**管理3D的模块*/
 export module lwg3D {
     /**3D场景通用父类*/
-    export class Scene3D extends Laya.Script3D {
-        /**挂载当前脚本的节点*/
-        self: Laya.Scene3D;
+    export class _Scene3DBase extends Laya.Script3D {
         /**类名*/
         calssName: string;
-        /**摄像机节点*/
-        MainCamera: Laya.MeshSprite3D | Laya.Camera;
         /**摄像机的初始位置*/
         mainCameraFpos: Laya.Vector3 = new Laya.Vector3();
         constructor() {
             super();
         }
+        public get Owner(): Laya.Scene3D {
+            return this.owner as Laya.Scene3D;
+        }
+        public get MainCamera(): Laya.Camera {
+            return this.Owner.getChildByName("Main Camera") as Laya.Camera;
+        }
         onAwake(): void {
-            this.self = this.owner as Laya.Scene3D;
             // 类名
             this.calssName = this['__proto__']['constructor'].name;
-            this.MainCamera = this.self.getChildByName("Main Camera") as Laya.MeshSprite3D;
             if (this.MainCamera) {
                 this.mainCameraFpos.x = this.MainCamera.transform.localPositionX;
                 this.mainCameraFpos.y = this.MainCamera.transform.localPositionY;
@@ -32,7 +32,7 @@ export module lwg3D {
         }
         onEnable() {
             // 组件变为的self属性
-            this.self[this.calssName] = this;
+            this.Owner[this.calssName] = this;
             this.lwgEventReg();
             this.lwgOnEnable();
             this.lwgBtnClick();
@@ -79,11 +79,8 @@ export module lwg3D {
 
         }
     }
-
     /**3D物件通用父类*/
-    export class Object3D extends Laya.Script3D {
-        /**挂载当前脚本的节点*/
-        self: Laya.MeshSprite3D;
+    export class _Object3D extends Laya.Script3D {
         /**所在的3D场景*/
         selfScene: Laya.Scene3D;
         /***/
@@ -95,16 +92,31 @@ export module lwg3D {
         constructor() {
             super();
         }
+        get Owner(): Laya.Sprite3D {
+            return this.owner as Laya.Sprite3D;
+        }
+        get OwnerTransform(): Laya.Transform3D {
+            return (this.owner.scene as Laya.Sprite3D).transform;
+        }
+        get OwnerScene(): Laya.Scene3D {
+            return this.owner.scene as Laya.Scene3D;
+        }
+        /**物理组件*/
+        get OwnerRig(): Laya.RigidBody {
+            if (!this.Owner['_OwnerRig']) {
+                this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.Rigidbody3D);
+            }
+            return this.Owner['_OwnerRig'];
+        }
+        /**物理组件*/
+        get OwnerBox(): Laya.RigidBody {
+            if (!this.Owner['_OwnerRig']) {
+                this.Owner['_OwnerRig'] = this.Owner.getComponent(Laya.Rigidbody3D);
+            }
+            return this.Owner['_OwnerRig'];
+        }
         onAwake(): void {
-            this.self = this.owner as Laya.MeshSprite3D;
-            this.selfTransform = this.self.transform;
-            this.selfScene = this.self.scene;
-            // 类名
-            let calssName = this['__proto__']['constructor'].name;
             // 组件变为的self属性
-            this.self[calssName] = this;
-            this.rig3D = this.self.getComponent(Laya.Rigidbody3D);
-            this.BoxCol3D = this.self.getComponent(Laya.PhysicsCollider) as Laya.PhysicsCollider;
             this.lwgNodeDec();
         }
         lwgNodeDec(): void { }
@@ -134,7 +146,6 @@ export module lwg3D {
         }
         /**离开时执行，子类不执行onDisable，只执行lwgDisable*/
         lwgOnDisable(): void {
-
         }
     }
 }

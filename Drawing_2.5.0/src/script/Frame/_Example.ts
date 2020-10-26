@@ -133,7 +133,7 @@ export module _Example {
 
     }
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
-    export class _ExampleScene extends Admin._Scene {
+    export class _ExampleBase extends Admin._SceneBase {
         moduleOnAwake(): void {
         }
         moduleOnEnable(): void {
@@ -143,32 +143,33 @@ export module _Example {
         moduleOnStart(): void {
         }
     }
-
-}
-/**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
-export default class UIExample extends _Example._ExampleScene {
-    lwgOnAwake(): void {
-        // 模块中临时变量赋值方法,这种赋值必须只用在当前脚本，否则必须枚举
-        _Example['name'] = '大王哥';
-        console.log(_Example, parent, _Example['name']);
-        // 类中
-        this['name'] = '老王哥';
-        console.log(this, this['name']);
-        // 数据表
-        _Example._data.getFunc2('any');
-        _Example._data.setFunc2('测试设置');
+    /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
+    export class Example extends _Example._ExampleBase {
+        lwgOnAwake(): void {
+            // 模块中临时变量赋值方法,这种赋值必须只用在当前脚本，否则必须枚举
+            _Example['name'] = '大王哥';
+            console.log(_Example, parent, _Example['name']);
+            // 类中
+            this['name'] = '老王哥';
+            console.log(this, this['name']);
+            // 数据表
+            _Example._data.getFunc2('any');
+            _Example._data.setFunc2('测试设置');
+        }
+        lwgOnEnable(): void { }
+        lwgEventRegister(): void { }
+        lwgOnStart(): void { }
+        lwgAdaptive(): void { }
+        lwgOpenAni(): number { return 100; }
+        lwgBtnClick(): void { }
+        lwgVanishAni(): number { return 100; }
+        lwgOnUpdate(): void { }
+        lwgOnDisable(): void { }
     }
-    lwgOnEnable(): void { }
-    lwgEventRegister(): void { }
-    lwgOnStart(): void { }
-    lwgAdaptive(): void { }
-    lwgOpenAni(): number { return 100; }
-    lwgBtnClick(): void { }
-    lwgVanishAni(): number { return 100; }
-    lwgOnUpdate(): void { }
-    lwgOnDisable(): void { }
-}
-export class UIExampleItem extends Admin._Object {
+    export class UIExampleItem extends Admin._Object {
 
+    }
 }
+export default _Example.Example;
+
 

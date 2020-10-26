@@ -363,11 +363,11 @@ export module _Shop {
         select = 'select',
     }
 
-    export class _ShopScene extends Admin._Scene {
+    export class _ShopBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             /**结构，如果没有则为null*/
-            _Shop._ShopTap = this.self['MyTap'];
-            _Shop._ShopList = this.self['MyList'];
+            _Shop._ShopTap = this.Owner['MyTap'];
+            _Shop._ShopList = this.Owner['MyList'];
             if (!_Shop._allSkin) {
                 _Shop._allSkin = Tools.jsonCompare('GameData/_Shop/Skin.json', GoodsClass.Skin, _Property.name);
             }

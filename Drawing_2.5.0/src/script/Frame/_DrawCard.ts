@@ -1,4 +1,4 @@
-import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting,  Backpack, PalyAudio, _SceneName } from "./Lwg";
+import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting, Backpack, PalyAudio, _SceneName } from "./Lwg";
 import ADManager from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { _Guide } from "./_Guide";
@@ -18,7 +18,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
 
     lwgEvent_register(): void {
         // 引导的时候，用两个遮罩盖住按钮的点击
-      
+
         // 开始一个一个翻牌
         EventAdmin._register('flop', this, () => {
             if (!this.Owner['cardIndex']) {
@@ -29,7 +29,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                 this.Owner['cardIndex'] = null;
                 Laya.timer.once(500, this, () => {
                     RecordManager.stopAutoRecord();
-                    Admin._openScene(_SceneName.UIShare, null, () => { Share._fromWhich = _SceneName.UIDrawCard });
+                    Admin._openScene(_SceneName.Share, null, () => { Share._fromWhich = _SceneName.DrawCard });
                 })
                 return;
             }
@@ -46,49 +46,49 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                     Animation2D.bombs_Appear(New, 0, 1, 1.1, 5, 100, 200, 250);
                 }
             }, 100, 50, () => {
-            //     // console.log(Card['objData'][Game3D.CardProperty.quality]);
-            //     if (Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SR || Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SSR) {
+                //     // console.log(Card['objData'][Game3D.CardProperty.quality]);
+                //     if (Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SR || Card['objData'][Game3D.CardProperty.quality] == Game3D.Quality.SSR) {
 
-            //         Card.zOrder = (this.Owner['cardIndex'] + 1) * 10;
-            //         let x = Card.x;
-            //         let y = Card.y;
-            //         let ReflectPic = Card.getChildByName('Reflect') as Laya.Image;
+                //         Card.zOrder = (this.Owner['cardIndex'] + 1) * 10;
+                //         let x = Card.x;
+                //         let y = Card.y;
+                //         let ReflectPic = Card.getChildByName('Reflect') as Laya.Image;
 
-            //         TimerAdmin._frameRandomLoop(15, 35, this, () => {
-            //             for (let index = 0; index < 1; index++) {
-            //                 Laya.timer.once(index * 200, this, () => {
-            //                     Effects.aureole_Continuous(Card, new Laya.Point(Card.width / 2, Card.height / 2), 41.5, 55, null, ['Frame/Effects/ui_square_guang2.png'], 0.1, 0.002);
-            //                 })
-            //             }
-            //         }, true)
-            //         Animation2D.leftRight_Shake(Card, 20, 100, 300, () => {
-            //             PalyAudio.playSound('Game/Voice/xiyoukazhanshi.wav');
-            //             Animation2D.rotate_Scale(Card, 0, 1, 1, 720, 3, 3, 400, 200, () => {
-            //                 Animation2D.move_Simple(ReflectPic.getChildByName('LiuGuang'), -21, -9, 131, 180, 500, 400, () => {
-            //                     Animation2D.fadeOut(ReflectPic.getChildByName('Guang'), 0, 1, 250, 0, () => {
-            //                         Animation2D.fadeOut(ReflectPic.getChildByName('Guang'), 1, 0, 200, 0);
-            //                     });
-            //                 }, Laya.Ease.expoIn);
-            //                 for (let index = 0; index < 5; index++) {
-            //                     let pointAarr = Tools.point_RandomPointByCenter(new Laya.Point(globalPos.x, globalPos.y), 200, 100);
-            //                     Laya.timer.once(300 * index, this, () => {
-            //                         Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, pointAarr[0].x, pointAarr[0].y, 'star', 10, 10);
-            //                     });
-            //                 }
-            //                 Animation2D.move_Scale(Card, 3, Card.x, Card.y, x, y, 1, 200, 2000, null, () => {
-            //                     func();
-            //                 });
-            //             });
-            //             Animation2D.move_Simple(Card, x, y, globalPos.x, globalPos.y, 250, 100);
-            //         });
-            //     } else {
-            //         func();
-            //     }
+                //         TimerAdmin._frameRandomLoop(15, 35, this, () => {
+                //             for (let index = 0; index < 1; index++) {
+                //                 Laya.timer.once(index * 200, this, () => {
+                //                     Effects.aureole_Continuous(Card, new Laya.Point(Card.width / 2, Card.height / 2), 41.5, 55, null, ['Frame/Effects/ui_square_guang2.png'], 0.1, 0.002);
+                //                 })
+                //             }
+                //         }, true)
+                //         Animation2D.leftRight_Shake(Card, 20, 100, 300, () => {
+                //             PalyAudio.playSound('Game/Voice/xiyoukazhanshi.wav');
+                //             Animation2D.rotate_Scale(Card, 0, 1, 1, 720, 3, 3, 400, 200, () => {
+                //                 Animation2D.move_Simple(ReflectPic.getChildByName('LiuGuang'), -21, -9, 131, 180, 500, 400, () => {
+                //                     Animation2D.fadeOut(ReflectPic.getChildByName('Guang'), 0, 1, 250, 0, () => {
+                //                         Animation2D.fadeOut(ReflectPic.getChildByName('Guang'), 1, 0, 200, 0);
+                //                     });
+                //                 }, Laya.Ease.expoIn);
+                //                 for (let index = 0; index < 5; index++) {
+                //                     let pointAarr = Tools.point_RandomPointByCenter(new Laya.Point(globalPos.x, globalPos.y), 200, 100);
+                //                     Laya.timer.once(300 * index, this, () => {
+                //                         Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, pointAarr[0].x, pointAarr[0].y, 'star', 10, 10);
+                //                     });
+                //                 }
+                //                 Animation2D.move_Scale(Card, 3, Card.x, Card.y, x, y, 1, 200, 2000, null, () => {
+                //                     func();
+                //                 });
+                //             });
+                //             Animation2D.move_Simple(Card, x, y, globalPos.x, globalPos.y, 250, 100);
+                //         });
+                //     } else {
+                //         func();
+                //     }
             });
         })
 
         // 关闭分享界面，我都要按钮出现
-        EventAdmin._register(_SceneName.UIShare + _SceneName.UIDrawCard, this, () => {
+        EventAdmin._register(_SceneName.Share + _SceneName.DrawCard, this, () => {
             this.Owner['BtnTake'].visible = true;
             EventAdmin._notify(_Guide._Event.onStep);
         })
