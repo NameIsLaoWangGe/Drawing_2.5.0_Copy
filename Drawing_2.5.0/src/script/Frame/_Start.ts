@@ -1,4 +1,4 @@
-import { Admin, Click, _SceneName } from "./Lwg";
+import lwg, { Admin, Click, Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
 
 /**测试模块,每个模块分开，默认导出一个类，这个类是默认挂载的脚本类，如果有多个脚本，
@@ -8,17 +8,11 @@ export module _Start {
         let name = {
             dsfa: status,
         }
-        console.log(`load ${name} suc`);
     }
     /**通用类，进行通用初始化，可在每个游戏中重复使用重复*/
     export class _StartScene extends Admin._SceneBase {
         moduleOnAwake(): void {
-        }
-        moduleOnEnable(): void {
-        }
-        moduleEventRegister(): void {
-        }
-        moduleOnStart(): void {
+            Gold.createGoldNode(38, 68);
         }
     }
     export class Start extends _StartScene {

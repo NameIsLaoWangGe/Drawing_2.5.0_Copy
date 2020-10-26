@@ -67,6 +67,8 @@ D Frame/UI
 P 5FCECF63 icon_cusp.png
 P C36AA67B icon_execution.png
 P A5763191 icon_gold.png
+P 7A9D5B20 icon_hand.png
+P BF63B6AC icon_set.png
 P CD257D00 reverseMask.png
 P A173F0A1 ui_circle_001.png
 P 14E83654 ui_circle_002.png
@@ -145,18 +147,31 @@ D Game/UI/AdsHint
 D Game/UI/Card
 D Game/UI/CheckIn
 D Game/UI/Common
+P 50A4ECB6 a.png
+R 4414DBFC bj.png
+P 3F3A6FD8 jb.png
+P 8380A47D zan.png
 D Game/UI/Defeated
 D Game/UI/DesignPic
+R 3D70B944 game.png
 R 22791D75 loding.png
+R 8DAFDA6B settle.png
+R 6762E2C4 start.png
 D Game/UI/DrawCard
 D Game/UI/GameScene
+P 4F02661D 9999.png
+R AD876E59 d.png
 P E1951C3C face.png
+P 954962E8 lan.png
 P 22966FDB Petal.png
 P CDE12E69 PetalMask.png
+P CE863BBF wc.png
+P AD6768B2 xp.png
+P ABC0EF21 y.png
+P E95EECB0 z.png
 D Game/UI/PreLoad
 P A706EC07 baifenbi.png
-P 15FFD6DD bi.png
-R 4414DBFC bj.png
+P 99D990F7 bi.png
 P 221BB173 jdk.png
 P 35503251 jindutiao.png
 P 9A32446C ty.png
@@ -172,11 +187,37 @@ P B3373FD9 shehzi.png
 P 59203D00 yinxiao.png
 P 0DF2AC23 yinyue.png
 P 7023981F zhendong.png
+D Game/UI/Settle
+P 50A4ECB6 an.png
+P 20958F6C an1.png
+P FDFEF0BF an2.png
+P ABF9DAC7 an3.png
+P 12C29C90 fx.png
+P CC68C899 g.png
+P 3F3A6FD8 jb.png
+P A6DDA20F jx.png
+P 325C7ADA lan.png
+P AD1107FB s.png
+P 4F02661D sz.png
+P E708242A x.png
+P 409DB881 y.png
+P 2F4BEF3D zan.png
 D Game/UI/Share
 D Game/UI/Shop
 D Game/UI/Skin
 D Game/UI/SkinQualified
 D Game/UI/Start
+P 50A4ECB6 an.png
+P 10895799 an1.png
+P 7EDE2982 cd.png
+R 6C3949D7 daping.png
+P F48C3762 dh.png
+P 657F1FB4 gqan.png
+P 09886A27 hf.png
+P 3F3A6FD8 jb.png
+P CBD5A38C ksyx.png
+P 4F02661D sz.png
+P 7C3E1466 xd.png
 D Game/UI/Task
 D Game/UI/Victory
 D Game/UI/VictoryBox
@@ -395,6 +436,19 @@ P ECC6B8F7 yanzhuzi .png
 P 28C12A3B zui.png
 P 8D06BA1B zuimask.png
 D Game/UI/GameScene/SinglePencils
-P 30AAF986 blue.png
-P B81FB0DF eraser.png
-P 6D8F77A9 green.png
+P 1D4044CC b10.png
+P C3B3868A b11.png
+P 8B1CE38A b12.png
+P 20048C3B b13.png
+P A3E1ED13 b14.png
+P 0EE0063A b15.png
+P 5A162B05 b3.png
+P 910F2AAA b4.png
+P 97ED9C42 b5.png
+P 0F174C1E b6.png
+P CD895047 b7.png
+P 1E3C4591 b8.png
+P 1473B122 b9.png
+P B82B99D6 blue.png
+P 5A162B05 eraser.png
+P BE308544 green.png

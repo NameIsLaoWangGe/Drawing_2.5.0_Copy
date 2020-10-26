@@ -436,7 +436,7 @@ export module lwg {
          * @param y y位置
          * @param parent 父节点，不传则是舞台
          */
-        export function createGoldNode(x, y, parent?: Laya.Sprite): void {
+        export function createGoldNode(x: number, y: number, parent?: Laya.Sprite): void {
             if (!parent) {
                 parent = Laya.stage;
             }
@@ -444,14 +444,13 @@ export module lwg {
                 GoldNode.removeSelf();
             }
             let sp: Laya.Sprite;
-            Laya.loader.load('Prefab/P_registerold.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
+            Laya.loader.load('Prefab/LwgGold.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
                 let _prefab = new Laya.Prefab();
                 _prefab.json = prefab;
                 sp = Laya.Pool.getItemByCreateFun('gold', _prefab.create, _prefab);
                 let Num = sp.getChildByName('Num') as Laya.Label;
                 Num.text = _num.value.toString();
                 parent.addChild(sp);
-                let Pic = sp.getChildByName('Pic') as Laya.Image;
                 sp.pos(x, y);
                 sp.zOrder = 100;
                 GoldNode = sp;
@@ -1256,7 +1255,10 @@ export module lwg {
         /**通用动效*/
         export let _sceneAnimation = {
             type: {
+                /**渐隐渐出*/ 
                 fadeOut: 'fadeOut',
+                /**类似于用手拿着一角放入，对节点摆放有需求，需要整理节点，通过大块父节点将琐碎的scene中的直接子节点减少，并且锚点要在最左或者最右，否则达不到最佳效果*/ 
+                stickIn: 'stickIn',
                 leftMove: 'leftMove',
                 rightMove: 'rightMove',
                 centerRotate: 'centerRotate',
@@ -6863,34 +6865,35 @@ export module lwg {
                 EventAdmin._register(_Event.startLoding, this, () => { this.startLodingRule() });
                 EventAdmin._register(_Event.complete, this, () => {
                     let time = this.lwgAllComplete();
-                    Laya.timer.once(time, this, () => { })
-                    // 通过预加载进入页面
-                    this.Owner.name = _whereToLoad;
-                    Admin._sceneControl[_whereToLoad] = this.Owner;
-                    if (_whereToLoad !== Admin._SceneName.PreLoad) {
-                        if (Admin._preLoadOpenSceneLater.openSceneName) {
-                            Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
-                                Admin._preLoadOpenSceneLater.func;
-                                Admin._closeScene(_whereToLoad);
-                            }, Admin._preLoadOpenSceneLater.zOder);
-                        }
-                    } else {
-                        //首次是进入游戏时的加载
-                        for (const key in Admin._moudel) {
-                            if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
-                                const element = Admin._moudel[key];
-                                if (element['_init']) {
-                                    element['_init']();
-                                } else {
-                                    console.log(element, '模块没有初始化函数！');
+                    Laya.timer.once(time, this, () => {
+                        // 通过预加载进入页面
+                        this.Owner.name = _whereToLoad;
+                        Admin._sceneControl[_whereToLoad] = this.Owner;
+                        if (_whereToLoad !== Admin._SceneName.PreLoad) {
+                            if (Admin._preLoadOpenSceneLater.openSceneName) {
+                                Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
+                                    Admin._preLoadOpenSceneLater.func;
+                                    Admin._closeScene(_whereToLoad);
+                                }, Admin._preLoadOpenSceneLater.zOder);
+                            }
+                        } else {
+                            //首次是进入游戏时的加载
+                            for (const key in Admin._moudel) {
+                                if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
+                                    const element = Admin._moudel[key];
+                                    if (element['_init']) {
+                                        element['_init']();
+                                    } else {
+                                        console.log(element, '模块没有初始化函数！');
+                                    }
                                 }
                             }
+                            PalyAudio.playMusic();
+                            Admin._closeScene(_whereToLoad, () => {
+                                _whereToLoad = Admin._SceneName.PreLoadSceneBefore;
+                            });
                         }
-                        PalyAudio.playMusic();
-                        Admin._closeScene(_whereToLoad, () => {
-                            _whereToLoad = Admin._SceneName.PreLoadSceneBefore;
-                        });
-                    }
+                    })
                 });
 
                 EventAdmin._register(_Event.progress, this, () => {

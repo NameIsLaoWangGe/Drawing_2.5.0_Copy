@@ -352,14 +352,13 @@
                     Gold_1.GoldNode.removeSelf();
                 }
                 let sp;
-                Laya.loader.load('Prefab/P_registerold.json', Laya.Handler.create(this, function (prefab) {
+                Laya.loader.load('Prefab/LwgGold.json', Laya.Handler.create(this, function (prefab) {
                     let _prefab = new Laya.Prefab();
                     _prefab.json = prefab;
                     sp = Laya.Pool.getItemByCreateFun('gold', _prefab.create, _prefab);
                     let Num = sp.getChildByName('Num');
                     Num.text = Gold_1._num.value.toString();
                     parent.addChild(sp);
-                    let Pic = sp.getChildByName('Pic');
                     sp.pos(x, y);
                     sp.zOrder = 100;
                     Gold_1.GoldNode = sp;
@@ -5025,34 +5024,35 @@
                     EventAdmin._register(_Event.startLoding, this, () => { this.startLodingRule(); });
                     EventAdmin._register(_Event.complete, this, () => {
                         let time = this.lwgAllComplete();
-                        Laya.timer.once(time, this, () => { });
-                        this.Owner.name = LwgPreLoad._whereToLoad;
-                        Admin._sceneControl[LwgPreLoad._whereToLoad] = this.Owner;
-                        if (LwgPreLoad._whereToLoad !== Admin._SceneName.PreLoad) {
-                            if (Admin._preLoadOpenSceneLater.openSceneName) {
-                                Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
-                                    Admin._preLoadOpenSceneLater.func;
-                                    Admin._closeScene(LwgPreLoad._whereToLoad);
-                                }, Admin._preLoadOpenSceneLater.zOder);
-                            }
-                        }
-                        else {
-                            for (const key in Admin._moudel) {
-                                if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
-                                    const element = Admin._moudel[key];
-                                    if (element['_init']) {
-                                        element['_init']();
-                                    }
-                                    else {
-                                        console.log(element, '模块没有初始化函数！');
-                                    }
+                        Laya.timer.once(time, this, () => {
+                            this.Owner.name = LwgPreLoad._whereToLoad;
+                            Admin._sceneControl[LwgPreLoad._whereToLoad] = this.Owner;
+                            if (LwgPreLoad._whereToLoad !== Admin._SceneName.PreLoad) {
+                                if (Admin._preLoadOpenSceneLater.openSceneName) {
+                                    Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
+                                        Admin._preLoadOpenSceneLater.func;
+                                        Admin._closeScene(LwgPreLoad._whereToLoad);
+                                    }, Admin._preLoadOpenSceneLater.zOder);
                                 }
                             }
-                            PalyAudio.playMusic();
-                            Admin._closeScene(LwgPreLoad._whereToLoad, () => {
-                                LwgPreLoad._whereToLoad = Admin._SceneName.PreLoadSceneBefore;
-                            });
-                        }
+                            else {
+                                for (const key in Admin._moudel) {
+                                    if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
+                                        const element = Admin._moudel[key];
+                                        if (element['_init']) {
+                                            element['_init']();
+                                        }
+                                        else {
+                                            console.log(element, '模块没有初始化函数！');
+                                        }
+                                    }
+                                }
+                                PalyAudio.playMusic();
+                                Admin._closeScene(LwgPreLoad._whereToLoad, () => {
+                                    LwgPreLoad._whereToLoad = Admin._SceneName.PreLoadSceneBefore;
+                                });
+                            }
+                        });
                     });
                     EventAdmin._register(_Event.progress, this, () => {
                         LwgPreLoad._currentProgress.value++;
@@ -5345,6 +5345,10 @@
     (function (_PreloadUrl) {
         _PreloadUrl._list = {
             prefab2D: {
+                LwgGold: {
+                    url: 'Prefab/LwgGold.json',
+                    prefab: new Laya.Prefab,
+                },
                 PencilsList: {
                     url: 'Prefab/PencilsList.json',
                     prefab: new Laya.Prefab,
@@ -5395,13 +5399,16 @@
     (function (_PreLoad) {
         class PreLoad extends _LwgPreLoad._PreLoadScene {
             lwgOnStart() {
-                EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+                this.AniVar('ani1').play(0, false);
+                this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
+                    EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+                });
             }
             lwgOpenAni() { return 0; }
             lwgStepComplete() {
             }
             lwgAllComplete() {
-                return 200;
+                return 1000;
             }
         }
         _PreLoad.PreLoad = PreLoad;
@@ -6083,17 +6090,11 @@
             let name = {
                 dsfa: status,
             };
-            console.log(`load ${name} suc`);
         }
         _Start._init = _init;
         class _StartScene extends Admin._SceneBase {
             moduleOnAwake() {
-            }
-            moduleOnEnable() {
-            }
-            moduleEventRegister() {
-            }
-            moduleOnStart() {
+                Gold.createGoldNode(38, 68);
             }
         }
         _Start._StartScene = _StartScene;
@@ -6305,7 +6306,6 @@
             _LwgInit._pkgInfo = [];
             Admin._platform.name = Admin._platform.tpye.General;
             Admin._evaluating = false;
-            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.drawUp;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
                 _Guide: _Guide,

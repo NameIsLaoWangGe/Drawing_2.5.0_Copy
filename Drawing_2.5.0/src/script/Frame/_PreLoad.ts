@@ -22,6 +22,10 @@ export module _PreloadUrl {
         // mesh3D: {},
         // material: {},
         prefab2D: {
+            LwgGold: {
+                url: 'Prefab/LwgGold.json',
+                prefab: new Laya.Prefab,
+            },
             PencilsList: {
                 url: 'Prefab/PencilsList.json',
                 prefab: new Laya.Prefab,
@@ -79,7 +83,10 @@ export module _PreloadUrl {
 export module _PreLoad {
     export class PreLoad extends _LwgPreLoad._PreLoadScene {
         lwgOnStart(): void {
-            EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+            this.AniVar('ani1').play(0, false);
+            this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
+                EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+            })
         }
         lwgOpenAni(): number { return 0; }
         lwgStepComplete(): void {
@@ -87,7 +94,7 @@ export module _PreLoad {
         }
         lwgAllComplete(): number {
             // this.self['Progress'].mask.x = 0;
-            return 200;
+            return 1000;
         }
     }
 }

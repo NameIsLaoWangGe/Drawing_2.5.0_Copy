@@ -1,0 +1,1 @@
+{"type":"View","props":{"width":720,"height":1280},"compId":2,"child":[{"type":"Image","props":{"y":0,"x":0,"var":"Background","skin":"Game/UI/Common/bj.png","sizeGrid":"6,8,15,15","name":"Background"},"compId":3}],"loadList":["Game/UI/Common/bj.png"],"loadList3D":[]}

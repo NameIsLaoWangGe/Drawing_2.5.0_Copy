@@ -17,7 +17,6 @@ export default class LwgInit extends _LwgInitScene {
         ];
         Admin._platform.name = Admin._platform.tpye.General;
         Admin._evaluating = false;
-        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.drawUp
         Admin._moudel = {
             _PreLoad: _PreLoad,
             _Guide: _Guide,
