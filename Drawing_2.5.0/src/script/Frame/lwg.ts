@@ -1252,27 +1252,13 @@ export module lwg {
         export let _sceneScript: any = {};
         /**场景模块*/
         export let _moudel: any = {};
-        /**通用动效*/
-        export let _sceneAnimation = {
-            type: {
-                /**渐隐渐出*/ 
-                fadeOut: 'fadeOut',
-                /**类似于用手拿着一角放入，对节点摆放有需求，需要整理节点，通过大块父节点将琐碎的scene中的直接子节点减少，并且锚点要在最左或者最右，否则达不到最佳效果*/ 
-                stickIn: 'stickIn',
-                leftMove: 'leftMove',
-                rightMove: 'rightMove',
-                centerRotate: 'centerRotate',
-                drawUp: 'drawUp',
-            },
-            vanishSwitch: false,
-            openSwitch: true,
-            presentAni: 'fadeOut',
-        }
+
         /**常用场景的名称，和脚本默认导出类名保持一致*/
         export enum _SceneName {
             PreLoad = 'PreLoad',
-            Start = 'Start',
+            PreLoadStep = 'PreLoadStep',
             Guide = 'Guide',
+            Start = 'Start',
             Shop = 'Shop',
             Task = 'Task',
             Set = 'Set',
@@ -1283,7 +1269,6 @@ export module lwg {
             Victory = 'Victory',
             Defeated = 'Defeated',
             PassHint = 'PassHint',
-            SkinQualified = 'SkinQualified',
             SkinTry = 'SkinTry',
             Redeem = 'Redeem',
             Turntable = 'Turntable',
@@ -1292,17 +1277,16 @@ export module lwg {
             VictoryBox = 'VictoryBox',
             CheckIn = 'CheckIn',
             Resurgence = 'Resurgence',
-            Easte_registerg = 'Easte_registerg',
             Ads = 'Ads',
             LwgInit = 'LwgInit',
             Game = 'Game',
             SmallHint = 'SmallHint',
-            ExecutionHint = 'ExecutionHint',
             DrawCard = 'DrawCard',
             PropTry = 'PropTry',
             Card = 'Card',
-            Init = 'Init',
-            PreLoadSceneBefore = 'PreLoadSceneBefore',
+            ExecutionHint = 'ExecutionHint',
+            SkinQualified = 'SkinQualified',
+            Eastereggister = 'Eastereggister',
         }
 
         /**
@@ -1313,7 +1297,7 @@ export module lwg {
          * @param {number} [zOder] 指定层级，默认为最上层
          */
         export function _preLoadOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number) {
-            _openScene(_SceneName.PreLoadSceneBefore);
+            _openScene(_SceneName.PreLoadStep);
             _preLoadOpenSceneLater.openSceneName = openSceneName;
             _preLoadOpenSceneLater.cloesSceneName = cloesSceneName;
             _preLoadOpenSceneLater.func = func;
@@ -1348,7 +1332,7 @@ export module lwg {
                 scene.width = Laya.stage.width;
                 scene.height = Laya.stage.height;
                 var openf = () => {
-                    if (Tools.node_CheckChildren(Laya.stage, openSceneName)) {
+                    if (Tools.Node.checkChildren(Laya.stage, openSceneName)) {
                         console.log(openSceneName, '场景重复出现！请检查代码');
                         return;
                     }
@@ -1401,29 +1385,6 @@ export module lwg {
                 closef();
                 return;
             }
-            /**消失动画*/
-            var vanishAni = () => {
-                let time = 0;
-                let delay = 0;
-                switch (_sceneAnimation.presentAni) {
-                    case _sceneAnimation.type.fadeOut:
-                        time = 150;
-                        delay = 50;
-                        if (_sceneControl[closeName]['Background']) {
-                            Animation2D.fadeOut(_sceneControl[closeName], 1, 0, time / 2);
-                        }
-                        Animation2D.fadeOut(_sceneControl[closeName], 1, 0, time, delay, () => {
-                            closef();
-                        })
-                        break;
-                    case _sceneAnimation.type.leftMove:
-
-                        break;
-
-                    default:
-                        break;
-                }
-            }
             //如果内部场景消失动画被重写了，则执行内部场景消失动画，而不执行通用动画
             let cloesSceneScript = _sceneControl[closeName][_sceneControl[closeName].name];
             if (cloesSceneScript) {
@@ -1437,80 +1398,139 @@ export module lwg {
                             _clickLock.switch = false;
                         })
                     } else {
-                        cloesSceneScript.lwgBeforeVanishAni();
-                        vanishAni();
+                        _commonVanishAni(_sceneControl[closeName], closef);
                     }
                 }
             }
         }
+        /**通用动效*/
+        export let _sceneAnimation = {
+            type: {
+                /**渐隐渐出*/
+                fadeOut: 'fadeOut',
+                /**类似于用手拿着一角放入，对节点摆放有需求，需要整理节点，通过大块父节点将琐碎的scene中的直接子节点减少，并且锚点要在最左或者最右，否则达不到最佳效果*/
+                stickIn: 'stickIn',
+                leftMove: 'leftMove',
+                rightMove: 'rightMove',
+                centerRotate: 'centerRotate',
+                drawUp: 'drawUp',
+            },
+            vanishSwitch: false,
+            openSwitch: true,
+            presentAni: 'fadeOut',
+        }
+
+        /**通用场景消失动画*/
+        function _commonVanishAni(CloseScene: Laya.Scene, closeFunc: Function) {
+            CloseScene[CloseScene.name].lwgBeforeVanishAni();
+            let time: number;
+            let delay: number;
+            switch (_sceneAnimation.presentAni) {
+                case _sceneAnimation.type.fadeOut:
+                    time = 150;
+                    delay = 50;
+                    if (CloseScene['Background']) {
+                        Animation2D.fadeOut(CloseScene, 1, 0, time / 2);
+                    }
+                    Animation2D.fadeOut(CloseScene, 1, 0, time, delay, () => {
+                        closeFunc();
+                    })
+                    break;
+                case _sceneAnimation.type.stickIn:
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         /**通用场景进场动画*/
-        export function _commonOpenAni(scene: Laya.Scene): number {
-            let time = 0;
-            let delay = 0;
+        function _commonOpenAni(Scene: Laya.Scene): number {
+            let time: number;
+            let delay: number;
+            let sumDelay: number;//总延迟
             var afterAni = () => {
                 _clickLock.switch = false;
-                if (scene[scene.name]) {
-                    scene[scene.name].lwgOpenAniAfter();
-                    scene[scene.name].lwgBtnClick();
+                if (Scene[Scene.name]) {
+                    Scene[Scene.name].lwgOpenAniAfter();
+                    Scene[Scene.name].lwgBtnClick();
                 }
             }
             switch (_sceneAnimation.presentAni) {
                 case _sceneAnimation.type.fadeOut:
                     time = 400;
                     delay = 300;
-                    if (scene['Background']) {
-                        Animation2D.fadeOut(scene, 0, 1, time / 2, delay);
+                    if (Scene['Background']) {
+                        Animation2D.fadeOut(Scene, 0, 1, time / 2, delay);
                     }
-                    Animation2D.fadeOut(scene, 0, 1, time, 0);
-                    Laya.timer.once(500, this, () => {
-                        afterAni();
-                    })
+                    Animation2D.fadeOut(Scene, 0, 1, time, 0);
+                    sumDelay = 400;
                     break;
-                case _sceneAnimation.type.leftMove:
-
+                case _sceneAnimation.type.stickIn:
+                    time = 500;
+                    delay = 150;
+                    if (Scene.getChildByName('Background')) {
+                        Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
+                    }
+                    for (let index = 0; index < Scene.numChildren; index++) {
+                        const element = Scene.getChildAt(index) as Laya.Sprite;
+                        if (element.name !== 'Background') {
+                            element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                            let originalX = element.x;
+                            let originalY = element.y;
+                            element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
+                            element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
+                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
+                            Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index);
+                        }
+                    }
+                    sumDelay = Scene.numChildren * delay + time + 200;
                     break;
-
                 default:
                     break;
             }
+            Laya.timer.once(sumDelay, this, () => {
+                afterAni();
+            })
             return time;
         }
 
         /**游戏当前处于什么状态中，并非是当前打开的场景*/
-        export let _gameState: string;
-        /**游戏当前的状态*/
-        export enum _GameState {
-            /**开始界面*/
-            Start = 'Start',
-            /**游戏中*/
-            Play = 'Play',
-            /**暂停中*/
-            Pause = 'pause',
-            /**胜利*/
-            Victory = 'victory',
-            /**失败*/
-            Defeated = 'defeated',
-        }
-        /**游戏当前的状态,有些页面没有状态*/
-        export function gameState(calssName): void {
-            switch (calssName) {
-                case _SceneName.Start:
-                    _gameState = _GameState.Start;
-                    break;
-                case _SceneName.Game:
-                    _gameState = _GameState.Play;
-                    break;
-                case _SceneName.Defeated:
-                    _gameState = _GameState.Defeated;
-                    break;
-                case _SceneName.Victory:
-                    _gameState = _GameState.Victory;
-                    break;
-                default:
-                    break;
+        export let _gameState = {
+            type: {
+                /**开始界面*/
+                Start: 'Start',
+                /**游戏中*/
+                Play: 'Play',
+                /**暂停中*/
+                Pause: 'pause',
+                /**胜利*/
+                Victory: 'victory',
+                /**失败*/
+                Defeated: 'defeated',
+            },
+            state: 'Start',
+            setState(calssName: string): void {
+                switch (calssName) {
+                    case _SceneName.Start:
+                        _gameState.state = _gameState.type.Start;
+                        break;
+                    case _SceneName.Game:
+                        _gameState.state = _gameState.type.Play;
+                        break;
+                    case _SceneName.Defeated:
+                        _gameState.state = _gameState.type.Defeated;
+                        break;
+                    case _SceneName.Victory:
+                        _gameState.state = _gameState.type.Victory;
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
+        };
+
         /**2D场景通用父类*/
         export class _SceneBase extends Laya.Script {
             // Owner: Laya.Scene;
@@ -1580,7 +1600,7 @@ export module lwg {
                     this.Owner[this.calssName] = this;
                 }
                 // 组件变为的self属性
-                gameState(this.calssName);
+                _gameState.setState(this.calssName);
                 this.moduleOnAwake();
                 this.lwgOnAwake();
                 this.lwgAdaptive();
@@ -1633,8 +1653,8 @@ export module lwg {
             /**通过openni返回的时间来延时开启点击事件*/
             private btnAndlwgOpenAni(): void {
                 let time = this.lwgOpenAni();
-                if (time) {
-                    Laya.timer.once(time, this, f => {
+                if (time !== null) {
+                    Laya.timer.once(time, this, () => {
                         _clickLock.switch = false;
                         this.lwgOpenAniAfter();
                         this.lwgBtnClick();
@@ -1647,7 +1667,7 @@ export module lwg {
             aniTime: number = 100;
             /**开场或者离场动画单位延迟时间,默认为100*/
             aniDelayde: number = 100;
-            /**开场动画,返回的数字为时间倒计时，倒计时结束后开启点击事件*/
+            /**开场动画,返回的数字为时间倒计时，倒计时结束后开启点击事件,也可以用来屏蔽通用动画，只需返回一个数字即可,如果场景内节点是以prefab添加进去的，那么必须卸载lwgOpenAni之前*/
             lwgOpenAni(): number { return null };
             /**开场动画之后执行*/
             lwgOpenAniAfter(): void { };
@@ -1660,7 +1680,7 @@ export module lwg {
             lwgOnUpdate(): void { };
             /**离场动画前执行*/
             lwgBeforeVanishAni(): void { }
-            /**离场动画*/
+            /**离场动画,也可以用来屏蔽通用动画，只需返回一个数字即可*/
             lwgVanishAni(): number { return null };
             onDisable(): void {
                 Animation2D.fadeOut(this.Owner, 1, 0, 2000, 1);
@@ -3572,14 +3592,14 @@ export module lwg {
         export function cardRotateX_TowFace(node: Laya.Sprite, time: number, func1?: Function, delayed?: number, func2?: Function): void {
             Laya.Tween.to(node, { scaleX: 0 }, time, null, Laya.Handler.create(this, function () {
                 // 所有子节点消失
-                Tools.node_2DChildrenVisible(node, false);
+                Tools.Node.childrenVisible2D(node, false);
                 if (func1) {
                     func1();
                 }
                 Laya.Tween.to(node, { scaleX: 1 }, time * 0.9, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleX: 0 }, time * 0.8, null, Laya.Handler.create(this, function () {
 
-                        Tools.node_2DChildrenVisible(node, true);
+                        Tools.Node.childrenVisible2D(node, true);
 
                         Laya.Tween.to(node, { scaleX: 1 }, time * 0.7, null, Laya.Handler.create(this, function () {
                             if (func2) {
@@ -3625,14 +3645,14 @@ export module lwg {
         export function cardRotateY_TowFace(node: Laya.Sprite, time: number, func1?: Function, delayed?: number, func2?: Function): void {
             Laya.Tween.to(node, { scaleY: 0 }, time, null, Laya.Handler.create(this, function () {
                 // 所有子节点消失
-                Tools.node_2DChildrenVisible(node, false);
+                Tools.Node.childrenVisible2D(node, false);
                 if (func1) {
                     func1();
                 }
                 Laya.Tween.to(node, { scaleY: 1 }, time, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleY: 0 }, time, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleY: 1 }, time * 1 / 2, null, Laya.Handler.create(this, function () {
-                            Tools.node_2DChildrenVisible(node, true);
+                            Tools.Node.childrenVisible2D(node, true);
                             if (func2) {
                                 func2();
                             }
@@ -4361,228 +4381,230 @@ export module lwg {
         export function format_NumAddStr(num: number, str: string): number {
             return Number(str) + num;
         }
+        export module Node {
 
-        /**
-         * 根据子节点的某个属性，获取相同属性的数组
-         * @param node 节点
-         * @param property 属性值
-         * @param value 值
-         * */
-        export function node_GetChildArrByProperty(node: Laya.Node, property: string, value: any): Array<Laya.Node> {
-            let childArr = [];
-            for (let index = 0; index < node.numChildren; index++) {
-                const element = node.getChildAt(index);
-                if (element[property] == value) {
-                    childArr.push(element);
+            /**
+              * 根据子节点的某个属性包括手动赋值的node['属性']，获取相同属性的数组
+              * @param node 节点
+              * @param property 属性值
+              * @param value 值
+              * */
+            export function getChildArrByProperty(node: Laya.Node, property: string, value: any): Array<Laya.Node> {
+                let childArr = [];
+                for (let index = 0; index < node.numChildren; index++) {
+                    const element = node.getChildAt(index);
+                    if (element[property] == value) {
+                        childArr.push(element);
+                    }
                 }
+                return childArr;
             }
-            return childArr;
-        }
-        /**
-         * 随机出数个子节点，返回这个子节点数组
-         * @param node 节点
-         * @param num 数量，默认为1
-         */
-        export function node_RandomChildren(node: Laya.Node, num?: number): Array<Laya.Node> {
-            let childArr = [];
-            let indexArr = [];
-            for (let i = 0; i < node.numChildren; i++) {
-                indexArr.push(i);
+            /**
+             * 随机出数个子节点，返回这个子节点数组
+             * @param node 节点
+             * @param num 数量，默认为1
+             */
+            export function randomChildren(node: Laya.Node, num?: number): Array<Laya.Node> {
+                let childArr = [];
+                let indexArr = [];
+                for (let i = 0; i < node.numChildren; i++) {
+                    indexArr.push(i);
+                }
+                let randomIndex = Tools.arrayRandomGetOut(indexArr, num);
+                for (let j = 0; j < randomIndex.length; j++) {
+                    childArr.push(node.getChildAt(randomIndex[j]));
+                }
+                return childArr;
             }
-            let randomIndex = Tools.arrayRandomGetOut(indexArr, num);
-            for (let j = 0; j < randomIndex.length; j++) {
-                childArr.push(node.getChildAt(randomIndex[j]));
-            }
-            return childArr;
-        }
 
-        /**
-         * 移除该节点的所有子节点，没有子节点则无操作
-         * @param node 节点
-         */
-        export function node_RemoveAllChildren(node: Laya.Node): void {
-            if (node.numChildren > 0) {
-                node.removeChildren(0, node.numChildren - 1);
-            }
-        }
-        /**
-          * 通过某个节点名称移除某个子节点
-          * @param nodeName 节点名称
-          */
-        export function node_RemoveOneChildren(node: Laya.Node, nodeName: string): void {
-            for (let index = 0; index < node.numChildren; index++) {
-                const element = node.getChildAt(index);
-                // console.log(element);
-                if (element.name == nodeName) {
-                    element.removeSelf();
+            /**
+             * 移除该节点的所有子节点，没有子节点则无操作
+             * @param node 节点
+             */
+            export function removeAllChildren(node: Laya.Node): void {
+                if (node.numChildren > 0) {
+                    node.removeChildren(0, node.numChildren - 1);
                 }
             }
-        }
-        /**
-         * 通过某个节点名判断是否是另一个节点的子节点
-         * @param nodeName 节点名称
-        */
-        export function node_CheckChildren(node: Laya.Node, nodeName: string): boolean {
-            let bool = false;
-            for (let index = 0; index < node.numChildren; index++) {
-                const element = node.getChildAt(index);
-                if (element.name == nodeName) {
-                    bool = true;
+            /**
+              * 通过某个节点名称移除某个子节点
+              * @param nodeName 节点名称
+              */
+            export function removeOneChildren(node: Laya.Node, nodeName: string): void {
+                for (let index = 0; index < node.numChildren; index++) {
+                    const element = node.getChildAt(index);
+                    // console.log(element);
+                    if (element.name == nodeName) {
+                        element.removeSelf();
+                    }
                 }
             }
-            return bool;
-        }
-        /**
-         * 切换显示或隐藏子节点，当输入的名称数组是显示时，其他子节点则是隐藏
-         * @param node 节点
-         * @param childNameArr 子节点名称数组
-         * @param bool 隐藏还是显示，true为显示，flase为隐藏，默认为true
-         */
-        export function node_2DShowExcludedChild(node: Laya.Sprite, childNameArr: Array<string>, bool?: boolean): void {
-            for (let i = 0; i < node.numChildren; i++) {
-                let Child = node.getChildAt(i) as Laya.Sprite;
-                for (let j = 0; j < childNameArr.length; j++) {
-                    if (Child.name == childNameArr[j]) {
-                        if (bool || bool == undefined) {
-                            Child.visible = true;
+            /**
+             * 通过某个节点名判断是否是另一个节点的子节点
+             * @param nodeName 节点名称
+            */
+            export function checkChildren(node: Laya.Node, nodeName: string): boolean {
+                let bool = false;
+                for (let index = 0; index < node.numChildren; index++) {
+                    const element = node.getChildAt(index);
+                    if (element.name == nodeName) {
+                        bool = true;
+                    }
+                }
+                return bool;
+            }
+            /**
+             * 切换显示或隐藏子节点，当输入的名称数组是显示时，其他子节点则是隐藏
+             * @param node 节点
+             * @param childNameArr 子节点名称数组
+             * @param bool 隐藏还是显示，true为显示，flase为隐藏，默认为true
+             */
+            export function showExcludedChild2D(node: Laya.Sprite, childNameArr: Array<string>, bool?: boolean): void {
+                for (let i = 0; i < node.numChildren; i++) {
+                    let Child = node.getChildAt(i) as Laya.Sprite;
+                    for (let j = 0; j < childNameArr.length; j++) {
+                        if (Child.name == childNameArr[j]) {
+                            if (bool || bool == undefined) {
+                                Child.visible = true;
+                            } else {
+                                Child.visible = false;
+                            }
                         } else {
-                            Child.visible = false;
-                        }
-                    } else {
-                        if (bool || bool == undefined) {
-                            Child.visible = false;
-                        } else {
-                            Child.visible = true;
+                            if (bool || bool == undefined) {
+                                Child.visible = false;
+                            } else {
+                                Child.visible = true;
+                            }
                         }
                     }
                 }
             }
-        }
-        /**
-         * 切换隐藏或显示子节点，当输入的名称数组是隐藏时，其他子节点则是显示
-         * @param node 节点
-         * @param childNameArr 子节点名称数组
-         * @param bool 隐藏还是显示，true为显示，flase为隐藏
-         */
-        export function node_3DShowExcludedChild(node: Laya.MeshSprite3D, childNameArr: Array<string>, bool?: boolean): void {
-            for (let i = 0; i < node.numChildren; i++) {
-                let Child = node.getChildAt(i) as Laya.MeshSprite3D;
-                for (let j = 0; j < childNameArr.length; j++) {
-                    if (Child.name == childNameArr[j]) {
-                        if (bool || bool == undefined) {
-                            Child.active = true;
+            /**
+             * 切换隐藏或显示子节点，当输入的名称数组是隐藏时，其他子节点则是显示
+             * @param node 节点
+             * @param childNameArr 子节点名称数组
+             * @param bool 隐藏还是显示，true为显示，flase为隐藏
+             */
+            export function showExcludedChild3D(node: Laya.MeshSprite3D, childNameArr: Array<string>, bool?: boolean): void {
+                for (let i = 0; i < node.numChildren; i++) {
+                    let Child = node.getChildAt(i) as Laya.MeshSprite3D;
+                    for (let j = 0; j < childNameArr.length; j++) {
+                        if (Child.name == childNameArr[j]) {
+                            if (bool || bool == undefined) {
+                                Child.active = true;
+                            } else {
+                                Child.active = false;
+                            }
                         } else {
-                            Child.active = false;
-                        }
-                    } else {
-                        if (bool || bool == undefined) {
-                            Child.active = false;
-                        } else {
-                            Child.active = true;
+                            if (bool || bool == undefined) {
+                                Child.active = false;
+                            } else {
+                                Child.active = true;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        /**
-         *通prefab过prefab创建一个实例
-         * @param {Laya.Prefab} prefab 预制体
-         * @param {string} [name] 名称
-         * @return {*}  {Laya.Sprite}
-         */
-        export function node_PrefabCreate(prefab: Laya.Prefab, name?: string): Laya.Sprite {
-            let sp: Laya.Sprite = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
-            return sp;
-        }
+            /**
+             *通prefab过prefab创建一个实例
+             * @param {Laya.Prefab} prefab 预制体
+             * @param {string} [name] 名称
+             * @return {*}  {Laya.Sprite}
+             */
+            export function prefabCreate(prefab: Laya.Prefab, name?: string): Laya.Sprite {
+                let sp: Laya.Sprite = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
+                return sp;
+            }
 
-        /**
-         *2D隐藏或者打开所有子节点
-         * @param node 节点
-         * @param bool visible控制
-        */
-        export function node_2DChildrenVisible(node: Laya.Sprite, bool: boolean): void {
-            for (let index = 0; index < node.numChildren; index++) {
-                const element = node.getChildAt(index) as Laya.Sprite;
-                if (bool) {
-                    element.visible = true;
-                } else {
-                    element.visible = false;
+            /**
+             *2D隐藏或者打开所有子节点
+             * @param node 节点
+             * @param bool visible控制
+            */
+            export function childrenVisible2D(node: Laya.Sprite, bool: boolean): void {
+                for (let index = 0; index < node.numChildren; index++) {
+                    const element = node.getChildAt(index) as Laya.Sprite;
+                    if (bool) {
+                        element.visible = true;
+                    } else {
+                        element.visible = false;
+                    }
                 }
             }
-        }
 
-        /**
-         *3D隐藏或者打开所有子节点
-         * @param node 节点
-         * @param bool visible控制
-        */
-        export function node_3DChildrenVisible(node: Laya.MeshSprite3D, bool: boolean): void {
-            for (let index = 0; index < node.numChildren; index++) {
-                const element = node.getChildAt(index) as Laya.MeshSprite3D;
-                if (bool) {
-                    element.active = true;
-                } else {
-                    element.active = false;
+            /**
+             *3D隐藏或者打开所有子节点
+             * @param node 节点
+             * @param bool visible控制
+            */
+            export function childrenVisible3D(node: Laya.MeshSprite3D, bool: boolean): void {
+                for (let index = 0; index < node.numChildren; index++) {
+                    const element = node.getChildAt(index) as Laya.MeshSprite3D;
+                    if (bool) {
+                        element.active = true;
+                    } else {
+                        element.active = false;
+                    }
                 }
             }
-        }
 
-        /**3D递归向下查找子节点*/
-        export function node_3dFindChild(parent: any, name: string): Laya.MeshSprite3D {
-            var item: Laya.MeshSprite3D = null;
-            //寻找自身一级目录下的子物体有没有该名字的子物体
-            item = parent.getChildByName(name) as Laya.MeshSprite3D;
-            //如果有，返回他
-            if (item != null) return item;
-            var go: Laya.MeshSprite3D = null;
-            //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
-            for (var i = 0; i < parent.numChildren; i++) {
-                go = node_3dFindChild(parent.getChildAt(i) as Laya.MeshSprite3D, name);
-                if (go != null)
-                    return go;
+            /**3D递归向下查找子节点*/
+            export function findChild3D(parent: any, name: string): Laya.MeshSprite3D {
+                var item: Laya.MeshSprite3D = null;
+                //寻找自身一级目录下的子物体有没有该名字的子物体
+                item = parent.getChildByName(name) as Laya.MeshSprite3D;
+                //如果有，返回他
+                if (item != null) return item;
+                var go: Laya.MeshSprite3D = null;
+                //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
+                for (var i = 0; i < parent.numChildren; i++) {
+                    go = findChild3D(parent.getChildAt(i) as Laya.MeshSprite3D, name);
+                    if (go != null)
+                        return go;
+                }
+                return null;
             }
-            return null;
-        }
 
-        /**2D递归向下查找子节点*/
-        export function node_2dFindChild(parent: any, name: string): Laya.Sprite {
-            var item: Laya.Sprite = null;
-            //寻找自身一级目录下的子物体有没有该名字的子物体
-            item = parent.getChildByName(name) as Laya.Sprite;
-            //如果有，返回他
-            if (item != null) return item;
-            var go: Laya.Sprite = null;
-            //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
-            for (var i = 0; i < parent.numChildren; i++) {
-                go = node_2dFindChild(parent.getChildAt(i) as Laya.Sprite, name);
-                if (go != null)
-                    return go;
+            /**2D递归向下查找子节点*/
+            export function findChild2D(parent: any, name: string): Laya.Sprite {
+                var item: Laya.Sprite = null;
+                //寻找自身一级目录下的子物体有没有该名字的子物体
+                item = parent.getChildByName(name) as Laya.Sprite;
+                //如果有，返回他
+                if (item != null) return item;
+                var go: Laya.Sprite = null;
+                //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
+                for (var i = 0; i < parent.numChildren; i++) {
+                    go = findChild2D(parent.getChildAt(i) as Laya.Sprite, name);
+                    if (go != null)
+                        return go;
+                }
+                return null;
             }
-            return null;
-        }
 
-        /**
-         * 通过一个名称的一部分查找整个节点下面的所有有这个名称的子节点,例如输入'name',那么以'name'为开头的命名的节点'name1'则会被找到
-         * */
-        export function node_2dFindChildByName(parent: any, name: string): Array<Laya.Sprite> {
-            let arr = [];
+            /**
+             * 通过一个名称的一部分查找整个节点下面的所有有这个名称的子节点,例如输入'name',那么以'name'为开头的命名的节点'name1'则会被找到
+             * */
+            export function findChildByName2D(parent: any, name: string): Array<Laya.Sprite> {
+                let arr = [];
 
-            // var item: Laya.Sprite = null;
-            // //寻找自身一级目录下的子物体有没有该名字的子物体
-            // item = parent.getChildByName(name) as Laya.Sprite;
-            // //如果有，返回他
-            // if (item != null) return item;
-            // var go: Laya.Sprite = null;
-            // //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
-            // for (var i = 0; i < parent.numChildren; i++) {
-            //     go = node_2dFindChild(parent.getChildAt(i) as Laya.Sprite, name);
-            //     if (go == null) {
-            //         arr.push(go);
+                // var item: Laya.Sprite = null;
+                // //寻找自身一级目录下的子物体有没有该名字的子物体
+                // item = parent.getChildByName(name) as Laya.Sprite;
+                // //如果有，返回他
+                // if (item != null) return item;
+                // var go: Laya.Sprite = null;
+                // //如果没有，就吧该父物体所有一级子物体下所有的二级子物体找一遍(以此类推)
+                // for (var i = 0; i < parent.numChildren; i++) {
+                //     go = node_2dFindChild(parent.getChildAt(i) as Laya.Sprite, name);
+                //     if (go == null) {
+                //         arr.push(go);
 
-            //     }
-            // }
-            return arr;
+                //     }
+                // }
+                return arr;
+            }
         }
 
         /**
@@ -4908,6 +4930,7 @@ export module lwg {
                 return drawPie;
             }
 
+
             /**
              * 在一个节点上绘制一个圆形反向遮罩,可以绘制很多个，清除直接删除node中的子节点即可
              * 圆角矩形的中心点在节点的中间
@@ -4919,7 +4942,7 @@ export module lwg {
              */
             export function reverseRoundMask(node, x: number, y: number, radius: number, eliminate?: boolean): Laya.Sprite {
                 if (eliminate == undefined || eliminate == true) {
-                    node_RemoveAllChildren(node);
+                    Node.removeAllChildren(node);
                 }
                 let interactionArea = new Laya.Sprite();
                 interactionArea.name = 'reverseRoundMask';
@@ -4947,7 +4970,7 @@ export module lwg {
              */
             export function reverseRoundrectMask(node, x: number, y: number, width: number, height: number, round: number, eliminate?: boolean): void {
                 if (eliminate == undefined || eliminate == true) {
-                    node_RemoveAllChildren(node);
+                    Node.removeAllChildren(node);
                 }
                 let interactionArea = new Laya.Sprite();
                 interactionArea.name = 'reverseRoundrectMask';
@@ -6689,29 +6712,29 @@ export module lwg {
 
     export module LwgPreLoad {
         /**3D场景的加载，其他3D物体，贴图，Mesh详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
-        export let _scene3D: Array<string> = [];
+        let _scene3D: Array<string> = [];
         /**3D预设的加载，其他3D物体，贴图，Mesh详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
-        export let _prefab3D: Array<any> = [];
+        let _prefab3D: Array<any> = [];
         /**模型网格详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
-        export let _mesh3D: Array<string> = [];
+        let _mesh3D: Array<string> = [];
         /**材质详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
-        export let _material: Array<string> = [];
+        let _material: Array<string> = [];
         /**2D纹理*/
-        export let _texture: Array<string> = [];
+        let _texture: Array<string> = [];
         /**3D纹理加载详见：  https://ldc2.layabox.com/doc/?nav=zh-ts-4-3-1   */
-        export let _texture2D: Array<string> = [];
+        let _texture2D: Array<string> = [];
 
         /**需要加载的图片资源列表,一般是界面的图片*/
-        export let _pic2D: Array<string> = [];
+        let _pic2D: Array<string> = [];
         /**2D场景*/
-        export let _scene2D: Array<string> = [];
+        let _scene2D: Array<string> = [];
         /**2D预制体*/
-        export let _prefab2D: Array<string> = [];
+        let _prefab2D: Array<string> = [];
 
         /**数据表、场景和预制体的加载，在框架中，json数据表为必须加载的项目*/
-        export let _json: Array<string> = [];
+        let _json: Array<string> = [];
         /**数据表、场景和预制体的加载，在框架中，json数据表为必须加载的项目*/
-        export let _skeleton: Array<string> = [];
+        let _skeleton: Array<string> = [];
 
         /**进度条总长度,长度为以上三个加载资源类型的数组总长度*/
         export let _sumProgress: number = 0;
@@ -6877,7 +6900,7 @@ export module lwg {
                                 }, Admin._preLoadOpenSceneLater.zOder);
                             }
                         } else {
-                            //首次是进入游戏时的加载
+                            //初始化所有添加过的模块
                             for (const key in Admin._moudel) {
                                 if (Object.prototype.hasOwnProperty.call(Admin._moudel, key)) {
                                     const element = Admin._moudel[key];
@@ -6890,7 +6913,7 @@ export module lwg {
                             }
                             PalyAudio.playMusic();
                             Admin._closeScene(_whereToLoad, () => {
-                                _whereToLoad = Admin._SceneName.PreLoadSceneBefore;
+                                _whereToLoad = Admin._SceneName.PreLoadStep;
                             });
                         }
                     })

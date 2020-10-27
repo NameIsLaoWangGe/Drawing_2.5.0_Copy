@@ -150,7 +150,8 @@ D Game/UI/Common
 P 50A4ECB6 a.png
 R 4414DBFC bj.png
 P 3F3A6FD8 jb.png
-P 8380A47D zan.png
+P 325C7ADA lan.png
+P 2F4BEF3D zan.png
 D Game/UI/Defeated
 D Game/UI/DesignPic
 R 3D70B944 game.png
@@ -196,12 +197,10 @@ P 12C29C90 fx.png
 P CC68C899 g.png
 P 3F3A6FD8 jb.png
 P A6DDA20F jx.png
-P 325C7ADA lan.png
 P AD1107FB s.png
 P 4F02661D sz.png
 P E708242A x.png
 P 409DB881 y.png
-P 2F4BEF3D zan.png
 D Game/UI/Share
 D Game/UI/Shop
 D Game/UI/Skin

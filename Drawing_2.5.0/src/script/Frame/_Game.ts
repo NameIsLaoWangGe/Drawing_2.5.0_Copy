@@ -1,7 +1,7 @@
 import { Admin, Animation2D, Click, EventAdmin, Tools, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 
-/**游戏场景模块*/ 
+/**游戏场景模块*/
 export module _Game {
     export enum _Event {
         start = '_Game_start',
@@ -220,7 +220,9 @@ export module _Game {
             }
             // console.log(_Game._stepOrderImg);
         }
-
+        lwgOpenAni(): number {
+            return 100;
+        }
         /**按钮管理*/
         // PrefabAdmin = {
         //     StepSwitch: null,
@@ -252,7 +254,7 @@ export module _Game {
         /**返回按钮*/
         BtnBack: Laya.Image;
         lwgOnEnable(): void {
-            this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
+            this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
             this.Owner.addChild(this.StepSwitch);
             this.StepSwitch.pos(194.5, 900);
             this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
@@ -260,12 +262,12 @@ export module _Game {
             this.BtnNextStep.visible = false;
             this.BtnLastStep.visible = false;
 
-            this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab) as Laya.Image;
+            this.BtnPlayAni = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab) as Laya.Image;
             this.Owner.addChild(this.BtnPlayAni);
             this.BtnPlayAni.visible = false;
             this.BtnPlayAni.pos(361, 920);
 
-            this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab) as Laya.Image;
+            this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnContinue.prefab) as Laya.Image;
             this.Owner.addChild(this.BtnBack);
             this.BtnBack.visible = false;
             this.BtnBack.pos(96, 97);

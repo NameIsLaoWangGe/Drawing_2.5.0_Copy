@@ -147,7 +147,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                     this.Owner['DrawDisPlay'].alpha = 1;
                     Admin._clickLock.switch = false;
                 })
-                Tools.node_RemoveAllChildren(this.Owner['CardParent']);
+                Tools.Node.removeAllChildren(this.Owner['CardParent']);
             }
             var arrCardAni = () => {
                 for (let i = 0; i < arrCard.length; i++) {

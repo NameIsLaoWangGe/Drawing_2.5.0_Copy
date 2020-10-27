@@ -1,6 +1,6 @@
 import { Admin, EventAdmin, _LwgPreLoad, _SceneName } from "./Lwg";
-export module _PreLoadSceneBeforeUrl {
-    export let _gameScene = {
+export module _PreLoadStepUrl {
+    export let _game = {
         //     scene3D: {
         //         // "_Lwg3D/_Scene/LayaScene_GameMain/Conventional/GameMain.ls"
         //     },
@@ -34,7 +34,7 @@ export module _PreLoadStep {
         lwgOnStart(): void {
             switch (Admin._preLoadOpenSceneLater.openSceneName) {
                 case _SceneName.Game:
-                    EventAdmin._notify(_LwgPreLoad._Event.importList, ([_PreLoadSceneBeforeUrl._gameScene]));
+                    EventAdmin._notify(_LwgPreLoad._Event.importList, ([_PreLoadStepUrl._game]));
                     break;
                 default:
                     break;

@@ -16,6 +16,7 @@ export default class LwgInit extends _LwgInitScene {
             // { name: "sp3", root: "3DPrefab" },
         ];
         Admin._platform.name = Admin._platform.tpye.General;
+        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn;
         Admin._evaluating = false;
         Admin._moudel = {
             _PreLoad: _PreLoad,

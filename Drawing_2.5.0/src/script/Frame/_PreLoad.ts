@@ -34,14 +34,18 @@ export module _PreloadUrl {
                 url: 'Prefab/StepSwitch.json',
                 prefab: new Laya.Prefab,
             },
-            BtnBack: {
-                url: 'Prefab/BtnBack.json',
-                prefab: new Laya.Prefab,
-            },
             BtnPlayAni: {
                 url: 'Prefab/BtnPlayAni.json',
                 prefab: new Laya.Prefab,
-            }
+            },
+            BtnContinue: {
+                url: 'Prefab/BtnContinue.json',
+                prefab: new Laya.Prefab,
+            },
+            BtnShare: {
+                url: 'Prefab/BtnShare.json',
+                prefab: new Laya.Prefab,
+            },
         },
         texture: {
             star1: {
@@ -88,17 +92,14 @@ export module _PreLoad {
                 EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
             })
         }
-        lwgOpenAni(): number { return 0; }
+        lwgOpenAni(): number { return 1; }
         lwgStepComplete(): void {
-            // this.self['Progress'].mask.x = -425 + 425 * Lwg_Loding.currentProgress.value / Lwg_Loding.sumProgress;
         }
         lwgAllComplete(): number {
-            // this.self['Progress'].mask.x = 0;
             return 1000;
         }
     }
 }
-
 export default PreLoad;
 
 

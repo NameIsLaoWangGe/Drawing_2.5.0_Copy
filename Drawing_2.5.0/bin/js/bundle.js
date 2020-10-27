@@ -923,23 +923,12 @@
             Admin._sceneControl = {};
             Admin._sceneScript = {};
             Admin._moudel = {};
-            Admin._sceneAnimation = {
-                type: {
-                    fadeOut: 'fadeOut',
-                    leftMove: 'leftMove',
-                    rightMove: 'rightMove',
-                    centerRotate: 'centerRotate',
-                    drawUp: 'drawUp',
-                },
-                vanishSwitch: false,
-                openSwitch: true,
-                presentAni: 'fadeOut',
-            };
             let _SceneName;
             (function (_SceneName) {
                 _SceneName["PreLoad"] = "PreLoad";
-                _SceneName["Start"] = "Start";
+                _SceneName["PreLoadStep"] = "PreLoadStep";
                 _SceneName["Guide"] = "Guide";
+                _SceneName["Start"] = "Start";
                 _SceneName["Shop"] = "Shop";
                 _SceneName["Task"] = "Task";
                 _SceneName["Set"] = "Set";
@@ -950,7 +939,6 @@
                 _SceneName["Victory"] = "Victory";
                 _SceneName["Defeated"] = "Defeated";
                 _SceneName["PassHint"] = "PassHint";
-                _SceneName["SkinQualified"] = "SkinQualified";
                 _SceneName["SkinTry"] = "SkinTry";
                 _SceneName["Redeem"] = "Redeem";
                 _SceneName["Turntable"] = "Turntable";
@@ -959,20 +947,19 @@
                 _SceneName["VictoryBox"] = "VictoryBox";
                 _SceneName["CheckIn"] = "CheckIn";
                 _SceneName["Resurgence"] = "Resurgence";
-                _SceneName["Easte_registerg"] = "Easte_registerg";
                 _SceneName["Ads"] = "Ads";
                 _SceneName["LwgInit"] = "LwgInit";
                 _SceneName["Game"] = "Game";
                 _SceneName["SmallHint"] = "SmallHint";
-                _SceneName["ExecutionHint"] = "ExecutionHint";
                 _SceneName["DrawCard"] = "DrawCard";
                 _SceneName["PropTry"] = "PropTry";
                 _SceneName["Card"] = "Card";
-                _SceneName["Init"] = "Init";
-                _SceneName["PreLoadSceneBefore"] = "PreLoadSceneBefore";
+                _SceneName["ExecutionHint"] = "ExecutionHint";
+                _SceneName["SkinQualified"] = "SkinQualified";
+                _SceneName["Eastereggister"] = "Eastereggister";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
             function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOder) {
-                _openScene(_SceneName.PreLoadSceneBefore);
+                _openScene(_SceneName.PreLoadStep);
                 Admin._preLoadOpenSceneLater.openSceneName = openSceneName;
                 Admin._preLoadOpenSceneLater.cloesSceneName = cloesSceneName;
                 Admin._preLoadOpenSceneLater.func = func;
@@ -1001,7 +988,7 @@
                     scene.width = Laya.stage.width;
                     scene.height = Laya.stage.height;
                     var openf = () => {
-                        if (Tools.node_CheckChildren(Laya.stage, openSceneName)) {
+                        if (Tools.Node.checkChildren(Laya.stage, openSceneName)) {
                             console.log(openSceneName, '场景重复出现！请检查代码');
                             return;
                         }
@@ -1047,26 +1034,6 @@
                     closef();
                     return;
                 }
-                var vanishAni = () => {
-                    let time = 0;
-                    let delay = 0;
-                    switch (Admin._sceneAnimation.presentAni) {
-                        case Admin._sceneAnimation.type.fadeOut:
-                            time = 150;
-                            delay = 50;
-                            if (Admin._sceneControl[closeName]['Background']) {
-                                Animation2D.fadeOut(Admin._sceneControl[closeName], 1, 0, time / 2);
-                            }
-                            Animation2D.fadeOut(Admin._sceneControl[closeName], 1, 0, time, delay, () => {
-                                closef();
-                            });
-                            break;
-                        case Admin._sceneAnimation.type.leftMove:
-                            break;
-                        default:
-                            break;
-                    }
-                };
                 let cloesSceneScript = Admin._sceneControl[closeName][Admin._sceneControl[closeName].name];
                 if (cloesSceneScript) {
                     if (cloesSceneScript) {
@@ -1080,70 +1047,123 @@
                             });
                         }
                         else {
-                            cloesSceneScript.lwgBeforeVanishAni();
-                            vanishAni();
+                            _commonVanishAni(Admin._sceneControl[closeName], closef);
                         }
                     }
                 }
             }
             Admin._closeScene = _closeScene;
-            function _commonOpenAni(scene) {
-                let time = 0;
-                let delay = 0;
+            Admin._sceneAnimation = {
+                type: {
+                    fadeOut: 'fadeOut',
+                    stickIn: 'stickIn',
+                    leftMove: 'leftMove',
+                    rightMove: 'rightMove',
+                    centerRotate: 'centerRotate',
+                    drawUp: 'drawUp',
+                },
+                vanishSwitch: false,
+                openSwitch: true,
+                presentAni: 'fadeOut',
+            };
+            function _commonVanishAni(CloseScene, closeFunc) {
+                CloseScene[CloseScene.name].lwgBeforeVanishAni();
+                let time;
+                let delay;
+                switch (Admin._sceneAnimation.presentAni) {
+                    case Admin._sceneAnimation.type.fadeOut:
+                        time = 150;
+                        delay = 50;
+                        if (CloseScene['Background']) {
+                            Animation2D.fadeOut(CloseScene, 1, 0, time / 2);
+                        }
+                        Animation2D.fadeOut(CloseScene, 1, 0, time, delay, () => {
+                            closeFunc();
+                        });
+                        break;
+                    case Admin._sceneAnimation.type.stickIn:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            function _commonOpenAni(Scene) {
+                let time;
+                let delay;
+                let sumDelay;
                 var afterAni = () => {
                     Admin._clickLock.switch = false;
-                    if (scene[scene.name]) {
-                        scene[scene.name].lwgOpenAniAfter();
-                        scene[scene.name].lwgBtnClick();
+                    if (Scene[Scene.name]) {
+                        Scene[Scene.name].lwgOpenAniAfter();
+                        Scene[Scene.name].lwgBtnClick();
                     }
                 };
                 switch (Admin._sceneAnimation.presentAni) {
                     case Admin._sceneAnimation.type.fadeOut:
                         time = 400;
                         delay = 300;
-                        if (scene['Background']) {
-                            Animation2D.fadeOut(scene, 0, 1, time / 2, delay);
+                        if (Scene['Background']) {
+                            Animation2D.fadeOut(Scene, 0, 1, time / 2, delay);
                         }
-                        Animation2D.fadeOut(scene, 0, 1, time, 0);
-                        Laya.timer.once(500, this, () => {
-                            afterAni();
-                        });
+                        Animation2D.fadeOut(Scene, 0, 1, time, 0);
+                        sumDelay = 400;
                         break;
-                    case Admin._sceneAnimation.type.leftMove:
+                    case Admin._sceneAnimation.type.stickIn:
+                        time = 500;
+                        delay = 150;
+                        if (Scene.getChildByName('Background')) {
+                            Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
+                        }
+                        for (let index = 0; index < Scene.numChildren; index++) {
+                            const element = Scene.getChildAt(index);
+                            if (element.name !== 'Background') {
+                                element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                                let originalX = element.x;
+                                let originalY = element.y;
+                                element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
+                                element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
+                                Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
+                                Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index);
+                            }
+                        }
+                        sumDelay = Scene.numChildren * delay + time + 200;
                         break;
                     default:
                         break;
                 }
+                Laya.timer.once(sumDelay, this, () => {
+                    afterAni();
+                });
                 return time;
             }
-            Admin._commonOpenAni = _commonOpenAni;
-            let _GameState;
-            (function (_GameState) {
-                _GameState["Start"] = "Start";
-                _GameState["Play"] = "Play";
-                _GameState["Pause"] = "pause";
-                _GameState["Victory"] = "victory";
-                _GameState["Defeated"] = "defeated";
-            })(_GameState = Admin._GameState || (Admin._GameState = {}));
-            function gameState(calssName) {
-                switch (calssName) {
-                    case _SceneName.Start:
-                        Admin._gameState = _GameState.Start;
-                        break;
-                    case _SceneName.Game:
-                        Admin._gameState = _GameState.Play;
-                        break;
-                    case _SceneName.Defeated:
-                        Admin._gameState = _GameState.Defeated;
-                        break;
-                    case _SceneName.Victory:
-                        Admin._gameState = _GameState.Victory;
-                        break;
-                    default:
-                        break;
+            Admin._gameState = {
+                type: {
+                    Start: 'Start',
+                    Play: 'Play',
+                    Pause: 'pause',
+                    Victory: 'victory',
+                    Defeated: 'defeated',
+                },
+                state: 'Start',
+                setState(calssName) {
+                    switch (calssName) {
+                        case _SceneName.Start:
+                            Admin._gameState.state = Admin._gameState.type.Start;
+                            break;
+                        case _SceneName.Game:
+                            Admin._gameState.state = Admin._gameState.type.Play;
+                            break;
+                        case _SceneName.Defeated:
+                            Admin._gameState.state = Admin._gameState.type.Defeated;
+                            break;
+                        case _SceneName.Victory:
+                            Admin._gameState.state = Admin._gameState.type.Victory;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            Admin.gameState = gameState;
+            };
             class _SceneBase extends Laya.Script {
                 constructor() {
                     super();
@@ -1214,7 +1234,7 @@
                         this.calssName = this.Owner.name;
                         this.Owner[this.calssName] = this;
                     }
-                    gameState(this.calssName);
+                    Admin._gameState.setState(this.calssName);
                     this.moduleOnAwake();
                     this.lwgOnAwake();
                     this.lwgAdaptive();
@@ -1250,8 +1270,8 @@
                 moduleOnStart() { }
                 btnAndlwgOpenAni() {
                     let time = this.lwgOpenAni();
-                    if (time) {
-                        Laya.timer.once(time, this, f => {
+                    if (time !== null) {
+                        Laya.timer.once(time, this, () => {
                             Admin._clickLock.switch = false;
                             this.lwgOpenAniAfter();
                             this.lwgBtnClick();
@@ -2645,13 +2665,13 @@
             Animation2D.goUp_Simple = goUp_Simple;
             function cardRotateX_TowFace(node, time, func1, delayed, func2) {
                 Laya.Tween.to(node, { scaleX: 0 }, time, null, Laya.Handler.create(this, function () {
-                    Tools.node_2DChildrenVisible(node, false);
+                    Tools.Node.childrenVisible2D(node, false);
                     if (func1) {
                         func1();
                     }
                     Laya.Tween.to(node, { scaleX: 1 }, time * 0.9, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleX: 0 }, time * 0.8, null, Laya.Handler.create(this, function () {
-                            Tools.node_2DChildrenVisible(node, true);
+                            Tools.Node.childrenVisible2D(node, true);
                             Laya.Tween.to(node, { scaleX: 1 }, time * 0.7, null, Laya.Handler.create(this, function () {
                                 if (func2) {
                                     func2();
@@ -2677,14 +2697,14 @@
             Animation2D.cardRotateX_OneFace = cardRotateX_OneFace;
             function cardRotateY_TowFace(node, time, func1, delayed, func2) {
                 Laya.Tween.to(node, { scaleY: 0 }, time, null, Laya.Handler.create(this, function () {
-                    Tools.node_2DChildrenVisible(node, false);
+                    Tools.Node.childrenVisible2D(node, false);
                     if (func1) {
                         func1();
                     }
                     Laya.Tween.to(node, { scaleY: 1 }, time, null, Laya.Handler.create(this, function () {
                         Laya.Tween.to(node, { scaleY: 0 }, time, null, Laya.Handler.create(this, function () {
                             Laya.Tween.to(node, { scaleY: 1 }, time * 1 / 2, null, Laya.Handler.create(this, function () {
-                                Tools.node_2DChildrenVisible(node, true);
+                                Tools.Node.childrenVisible2D(node, true);
                                 if (func2) {
                                     func2();
                                 }
@@ -3162,166 +3182,169 @@
                 return Number(str) + num;
             }
             Tools.format_NumAddStr = format_NumAddStr;
-            function node_GetChildArrByProperty(node, property, value) {
-                let childArr = [];
-                for (let index = 0; index < node.numChildren; index++) {
-                    const element = node.getChildAt(index);
-                    if (element[property] == value) {
-                        childArr.push(element);
+            let Node;
+            (function (Node) {
+                function getChildArrByProperty(node, property, value) {
+                    let childArr = [];
+                    for (let index = 0; index < node.numChildren; index++) {
+                        const element = node.getChildAt(index);
+                        if (element[property] == value) {
+                            childArr.push(element);
+                        }
+                    }
+                    return childArr;
+                }
+                Node.getChildArrByProperty = getChildArrByProperty;
+                function randomChildren(node, num) {
+                    let childArr = [];
+                    let indexArr = [];
+                    for (let i = 0; i < node.numChildren; i++) {
+                        indexArr.push(i);
+                    }
+                    let randomIndex = Tools.arrayRandomGetOut(indexArr, num);
+                    for (let j = 0; j < randomIndex.length; j++) {
+                        childArr.push(node.getChildAt(randomIndex[j]));
+                    }
+                    return childArr;
+                }
+                Node.randomChildren = randomChildren;
+                function removeAllChildren(node) {
+                    if (node.numChildren > 0) {
+                        node.removeChildren(0, node.numChildren - 1);
                     }
                 }
-                return childArr;
-            }
-            Tools.node_GetChildArrByProperty = node_GetChildArrByProperty;
-            function node_RandomChildren(node, num) {
-                let childArr = [];
-                let indexArr = [];
-                for (let i = 0; i < node.numChildren; i++) {
-                    indexArr.push(i);
-                }
-                let randomIndex = Tools.arrayRandomGetOut(indexArr, num);
-                for (let j = 0; j < randomIndex.length; j++) {
-                    childArr.push(node.getChildAt(randomIndex[j]));
-                }
-                return childArr;
-            }
-            Tools.node_RandomChildren = node_RandomChildren;
-            function node_RemoveAllChildren(node) {
-                if (node.numChildren > 0) {
-                    node.removeChildren(0, node.numChildren - 1);
-                }
-            }
-            Tools.node_RemoveAllChildren = node_RemoveAllChildren;
-            function node_RemoveOneChildren(node, nodeName) {
-                for (let index = 0; index < node.numChildren; index++) {
-                    const element = node.getChildAt(index);
-                    if (element.name == nodeName) {
-                        element.removeSelf();
+                Node.removeAllChildren = removeAllChildren;
+                function removeOneChildren(node, nodeName) {
+                    for (let index = 0; index < node.numChildren; index++) {
+                        const element = node.getChildAt(index);
+                        if (element.name == nodeName) {
+                            element.removeSelf();
+                        }
                     }
                 }
-            }
-            Tools.node_RemoveOneChildren = node_RemoveOneChildren;
-            function node_CheckChildren(node, nodeName) {
-                let bool = false;
-                for (let index = 0; index < node.numChildren; index++) {
-                    const element = node.getChildAt(index);
-                    if (element.name == nodeName) {
-                        bool = true;
+                Node.removeOneChildren = removeOneChildren;
+                function checkChildren(node, nodeName) {
+                    let bool = false;
+                    for (let index = 0; index < node.numChildren; index++) {
+                        const element = node.getChildAt(index);
+                        if (element.name == nodeName) {
+                            bool = true;
+                        }
                     }
+                    return bool;
                 }
-                return bool;
-            }
-            Tools.node_CheckChildren = node_CheckChildren;
-            function node_2DShowExcludedChild(node, childNameArr, bool) {
-                for (let i = 0; i < node.numChildren; i++) {
-                    let Child = node.getChildAt(i);
-                    for (let j = 0; j < childNameArr.length; j++) {
-                        if (Child.name == childNameArr[j]) {
-                            if (bool || bool == undefined) {
-                                Child.visible = true;
+                Node.checkChildren = checkChildren;
+                function showExcludedChild2D(node, childNameArr, bool) {
+                    for (let i = 0; i < node.numChildren; i++) {
+                        let Child = node.getChildAt(i);
+                        for (let j = 0; j < childNameArr.length; j++) {
+                            if (Child.name == childNameArr[j]) {
+                                if (bool || bool == undefined) {
+                                    Child.visible = true;
+                                }
+                                else {
+                                    Child.visible = false;
+                                }
                             }
                             else {
-                                Child.visible = false;
+                                if (bool || bool == undefined) {
+                                    Child.visible = false;
+                                }
+                                else {
+                                    Child.visible = true;
+                                }
                             }
+                        }
+                    }
+                }
+                Node.showExcludedChild2D = showExcludedChild2D;
+                function showExcludedChild3D(node, childNameArr, bool) {
+                    for (let i = 0; i < node.numChildren; i++) {
+                        let Child = node.getChildAt(i);
+                        for (let j = 0; j < childNameArr.length; j++) {
+                            if (Child.name == childNameArr[j]) {
+                                if (bool || bool == undefined) {
+                                    Child.active = true;
+                                }
+                                else {
+                                    Child.active = false;
+                                }
+                            }
+                            else {
+                                if (bool || bool == undefined) {
+                                    Child.active = false;
+                                }
+                                else {
+                                    Child.active = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                Node.showExcludedChild3D = showExcludedChild3D;
+                function prefabCreate(prefab, name) {
+                    let sp = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
+                    return sp;
+                }
+                Node.prefabCreate = prefabCreate;
+                function childrenVisible2D(node, bool) {
+                    for (let index = 0; index < node.numChildren; index++) {
+                        const element = node.getChildAt(index);
+                        if (bool) {
+                            element.visible = true;
                         }
                         else {
-                            if (bool || bool == undefined) {
-                                Child.visible = false;
-                            }
-                            else {
-                                Child.visible = true;
-                            }
+                            element.visible = false;
                         }
                     }
                 }
-            }
-            Tools.node_2DShowExcludedChild = node_2DShowExcludedChild;
-            function node_3DShowExcludedChild(node, childNameArr, bool) {
-                for (let i = 0; i < node.numChildren; i++) {
-                    let Child = node.getChildAt(i);
-                    for (let j = 0; j < childNameArr.length; j++) {
-                        if (Child.name == childNameArr[j]) {
-                            if (bool || bool == undefined) {
-                                Child.active = true;
-                            }
-                            else {
-                                Child.active = false;
-                            }
+                Node.childrenVisible2D = childrenVisible2D;
+                function childrenVisible3D(node, bool) {
+                    for (let index = 0; index < node.numChildren; index++) {
+                        const element = node.getChildAt(index);
+                        if (bool) {
+                            element.active = true;
                         }
                         else {
-                            if (bool || bool == undefined) {
-                                Child.active = false;
-                            }
-                            else {
-                                Child.active = true;
-                            }
+                            element.active = false;
                         }
                     }
                 }
-            }
-            Tools.node_3DShowExcludedChild = node_3DShowExcludedChild;
-            function node_PrefabCreate(prefab, name) {
-                let sp = Laya.Pool.getItemByCreateFun(name ? name : prefab.json['props']['name'], prefab.create, prefab);
-                return sp;
-            }
-            Tools.node_PrefabCreate = node_PrefabCreate;
-            function node_2DChildrenVisible(node, bool) {
-                for (let index = 0; index < node.numChildren; index++) {
-                    const element = node.getChildAt(index);
-                    if (bool) {
-                        element.visible = true;
+                Node.childrenVisible3D = childrenVisible3D;
+                function findChild3D(parent, name) {
+                    var item = null;
+                    item = parent.getChildByName(name);
+                    if (item != null)
+                        return item;
+                    var go = null;
+                    for (var i = 0; i < parent.numChildren; i++) {
+                        go = findChild3D(parent.getChildAt(i), name);
+                        if (go != null)
+                            return go;
                     }
-                    else {
-                        element.visible = false;
+                    return null;
+                }
+                Node.findChild3D = findChild3D;
+                function findChild2D(parent, name) {
+                    var item = null;
+                    item = parent.getChildByName(name);
+                    if (item != null)
+                        return item;
+                    var go = null;
+                    for (var i = 0; i < parent.numChildren; i++) {
+                        go = findChild2D(parent.getChildAt(i), name);
+                        if (go != null)
+                            return go;
                     }
+                    return null;
                 }
-            }
-            Tools.node_2DChildrenVisible = node_2DChildrenVisible;
-            function node_3DChildrenVisible(node, bool) {
-                for (let index = 0; index < node.numChildren; index++) {
-                    const element = node.getChildAt(index);
-                    if (bool) {
-                        element.active = true;
-                    }
-                    else {
-                        element.active = false;
-                    }
+                Node.findChild2D = findChild2D;
+                function findChildByName2D(parent, name) {
+                    let arr = [];
+                    return arr;
                 }
-            }
-            Tools.node_3DChildrenVisible = node_3DChildrenVisible;
-            function node_3dFindChild(parent, name) {
-                var item = null;
-                item = parent.getChildByName(name);
-                if (item != null)
-                    return item;
-                var go = null;
-                for (var i = 0; i < parent.numChildren; i++) {
-                    go = node_3dFindChild(parent.getChildAt(i), name);
-                    if (go != null)
-                        return go;
-                }
-                return null;
-            }
-            Tools.node_3dFindChild = node_3dFindChild;
-            function node_2dFindChild(parent, name) {
-                var item = null;
-                item = parent.getChildByName(name);
-                if (item != null)
-                    return item;
-                var go = null;
-                for (var i = 0; i < parent.numChildren; i++) {
-                    go = node_2dFindChild(parent.getChildAt(i), name);
-                    if (go != null)
-                        return go;
-                }
-                return null;
-            }
-            Tools.node_2dFindChild = node_2dFindChild;
-            function node_2dFindChildByName(parent, name) {
-                let arr = [];
-                return arr;
-            }
-            Tools.node_2dFindChildByName = node_2dFindChildByName;
+                Node.findChildByName2D = findChildByName2D;
+            })(Node = Tools.Node || (Tools.Node = {}));
             function randomOneHalf() {
                 let number;
                 number = Math.floor(Math.random() * 2);
@@ -3553,7 +3576,7 @@
                 Draw.drawPieMask = drawPieMask;
                 function reverseRoundMask(node, x, y, radius, eliminate) {
                     if (eliminate == undefined || eliminate == true) {
-                        node_RemoveAllChildren(node);
+                        Node.removeAllChildren(node);
                     }
                     let interactionArea = new Laya.Sprite();
                     interactionArea.name = 'reverseRoundMask';
@@ -3567,7 +3590,7 @@
                 Draw.reverseRoundMask = reverseRoundMask;
                 function reverseRoundrectMask(node, x, y, width, height, round, eliminate) {
                     if (eliminate == undefined || eliminate == true) {
-                        node_RemoveAllChildren(node);
+                        Node.removeAllChildren(node);
                     }
                     let interactionArea = new Laya.Sprite();
                     interactionArea.name = 'reverseRoundrectMask';
@@ -4870,17 +4893,17 @@
         })(Backpack = lwg.Backpack || (lwg.Backpack = {}));
         let LwgPreLoad;
         (function (LwgPreLoad) {
-            LwgPreLoad._scene3D = [];
-            LwgPreLoad._prefab3D = [];
-            LwgPreLoad._mesh3D = [];
-            LwgPreLoad._material = [];
-            LwgPreLoad._texture = [];
-            LwgPreLoad._texture2D = [];
-            LwgPreLoad._pic2D = [];
-            LwgPreLoad._scene2D = [];
-            LwgPreLoad._prefab2D = [];
-            LwgPreLoad._json = [];
-            LwgPreLoad._skeleton = [];
+            let _scene3D = [];
+            let _prefab3D = [];
+            let _mesh3D = [];
+            let _material = [];
+            let _texture = [];
+            let _texture2D = [];
+            let _pic2D = [];
+            let _scene2D = [];
+            let _prefab2D = [];
+            let _json = [];
+            let _skeleton = [];
             LwgPreLoad._sumProgress = 0;
             LwgPreLoad._loadOrder = [];
             LwgPreLoad._loadOrderIndex = 0;
@@ -4934,16 +4957,16 @@
                 _Event["progress"] = "_PreLoad_progress";
             })(_Event = LwgPreLoad._Event || (LwgPreLoad._Event = {}));
             function _remakeLode() {
-                LwgPreLoad._scene3D = [];
-                LwgPreLoad._prefab3D = [];
-                LwgPreLoad._mesh3D = [];
-                LwgPreLoad._material = [];
-                LwgPreLoad._texture2D = [];
-                LwgPreLoad._pic2D = [];
-                LwgPreLoad._scene2D = [];
-                LwgPreLoad._prefab2D = [];
-                LwgPreLoad._json = [];
-                LwgPreLoad._skeleton = [];
+                _scene3D = [];
+                _prefab3D = [];
+                _mesh3D = [];
+                _material = [];
+                _texture2D = [];
+                _pic2D = [];
+                _scene2D = [];
+                _prefab2D = [];
+                _json = [];
+                _skeleton = [];
                 LwgPreLoad._loadOrder = [];
                 LwgPreLoad._sumProgress = 0;
                 LwgPreLoad._loadOrderIndex = 0;
@@ -4966,37 +4989,37 @@
                                         const element = listObj[key][key1];
                                         switch (key) {
                                             case _ListName.json:
-                                                LwgPreLoad._json.push(element);
+                                                _json.push(element);
                                                 break;
                                             case _ListName.material:
-                                                LwgPreLoad._material.push(element);
+                                                _material.push(element);
                                                 break;
                                             case _ListName.mesh3D:
-                                                LwgPreLoad._mesh3D.push(element);
+                                                _mesh3D.push(element);
                                                 break;
                                             case _ListName.pic2D:
-                                                LwgPreLoad._pic2D.push(element);
+                                                _pic2D.push(element);
                                                 break;
                                             case _ListName.prefab2D:
-                                                LwgPreLoad._prefab2D.push(element);
+                                                _prefab2D.push(element);
                                                 break;
                                             case _ListName.prefab3D:
-                                                LwgPreLoad._prefab3D.push(element);
+                                                _prefab3D.push(element);
                                                 break;
                                             case _ListName.scene2D:
-                                                LwgPreLoad._scene2D.push(element);
+                                                _scene2D.push(element);
                                                 break;
                                             case _ListName.scene3D:
-                                                LwgPreLoad._scene3D.push(element);
+                                                _scene3D.push(element);
                                                 break;
                                             case _ListName.texture2D:
-                                                LwgPreLoad._texture2D.push(element);
+                                                _texture2D.push(element);
                                                 break;
                                             case _ListName.skeleton:
-                                                LwgPreLoad._skeleton.push(element);
+                                                _skeleton.push(element);
                                                 break;
                                             case _ListName.texture:
-                                                LwgPreLoad._texture.push(element);
+                                                _texture.push(element);
                                                 break;
                                             default:
                                                 break;
@@ -5005,7 +5028,7 @@
                                 }
                             }
                         }
-                        LwgPreLoad._loadOrder = [LwgPreLoad._pic2D, LwgPreLoad._scene2D, LwgPreLoad._prefab2D, LwgPreLoad._scene3D, LwgPreLoad._prefab3D, LwgPreLoad._json, LwgPreLoad._texture2D, LwgPreLoad._mesh3D, LwgPreLoad._material, LwgPreLoad._skeleton];
+                        LwgPreLoad._loadOrder = [_pic2D, _scene2D, _prefab2D, _scene3D, _prefab3D, _json, _texture2D, _mesh3D, _material, _skeleton];
                         for (let index = 0; index < LwgPreLoad._loadOrder.length; index++) {
                             LwgPreLoad._sumProgress += LwgPreLoad._loadOrder[index].length;
                             if (LwgPreLoad._loadOrder[index].length <= 0) {
@@ -5049,7 +5072,7 @@
                                 }
                                 PalyAudio.playMusic();
                                 Admin._closeScene(LwgPreLoad._whereToLoad, () => {
-                                    LwgPreLoad._whereToLoad = Admin._SceneName.PreLoadSceneBefore;
+                                    LwgPreLoad._whereToLoad = Admin._SceneName.PreLoadStep;
                                 });
                             }
                         });
@@ -5077,131 +5100,131 @@
                     }
                     let index = LwgPreLoad._currentProgress.value - alreadyPro;
                     switch (LwgPreLoad._loadOrder[LwgPreLoad._loadOrderIndex]) {
-                        case LwgPreLoad._pic2D:
-                            Laya.loader.load(LwgPreLoad._pic2D[index], Laya.Handler.create(this, (any) => {
+                        case _pic2D:
+                            Laya.loader.load(_pic2D[index], Laya.Handler.create(this, (any) => {
                                 if (any == null) {
-                                    console.log('XXXXXXXXXXX2D资源' + LwgPreLoad._pic2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX2D资源' + _pic2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    console.log('2D图片' + LwgPreLoad._pic2D[index] + '加载完成！', '数组下标为：', index);
+                                    console.log('2D图片' + _pic2D[index] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._scene2D:
-                            Laya.loader.load(LwgPreLoad._scene2D[index], Laya.Handler.create(this, (any) => {
+                        case _scene2D:
+                            Laya.loader.load(_scene2D[index], Laya.Handler.create(this, (any) => {
                                 if (any == null) {
-                                    console.log('XXXXXXXXXXX数据表' + LwgPreLoad._scene2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX数据表' + _scene2D[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    console.log('2D场景' + LwgPreLoad._scene2D[index] + '加载完成！', '数组下标为：', index);
+                                    console.log('2D场景' + _scene2D[index] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }), null, Laya.Loader.JSON);
                             break;
-                        case LwgPreLoad._scene3D:
-                            Laya.Scene3D.load(LwgPreLoad._scene3D[index]['url'], Laya.Handler.create(this, (Scene) => {
+                        case _scene3D:
+                            Laya.Scene3D.load(_scene3D[index]['url'], Laya.Handler.create(this, (Scene) => {
                                 if (Scene == null) {
-                                    console.log('XXXXXXXXXXX3D场景' + LwgPreLoad._scene3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX3D场景' + _scene3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    LwgPreLoad._scene3D[index]['scene'] = Scene;
-                                    console.log('3D场景' + LwgPreLoad._scene3D[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _scene3D[index]['scene'] = Scene;
+                                    console.log('3D场景' + _scene3D[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._prefab3D:
-                            Laya.Sprite3D.load(LwgPreLoad._prefab3D[index]['url'], Laya.Handler.create(this, (Sp) => {
+                        case _prefab3D:
+                            Laya.Sprite3D.load(_prefab3D[index]['url'], Laya.Handler.create(this, (Sp) => {
                                 if (Sp == null) {
-                                    console.log('XXXXXXXXXXX3D预设体' + LwgPreLoad._prefab3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX3D预设体' + _prefab3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    LwgPreLoad._prefab3D[index]['prefab'] = Sp;
-                                    console.log('3D预制体' + LwgPreLoad._prefab3D[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _prefab3D[index]['prefab'] = Sp;
+                                    console.log('3D预制体' + _prefab3D[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._mesh3D:
-                            Laya.Mesh.load(LwgPreLoad._mesh3D[index]['url'], Laya.Handler.create(this, (any) => {
+                        case _mesh3D:
+                            Laya.Mesh.load(_mesh3D[index]['url'], Laya.Handler.create(this, (any) => {
                                 if (any == null) {
-                                    console.log('XXXXXXXXXXX3D网格' + LwgPreLoad._mesh3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX3D网格' + _mesh3D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    console.log('3D网格' + LwgPreLoad._mesh3D[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    console.log('3D网格' + _mesh3D[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._texture:
-                            Laya.Texture2D.load(LwgPreLoad._texture[index]['url'], Laya.Handler.create(this, (tex) => {
+                        case _texture:
+                            Laya.Texture2D.load(_texture[index]['url'], Laya.Handler.create(this, (tex) => {
                                 if (tex == null) {
-                                    console.log('XXXXXXXXXXX2D纹理' + LwgPreLoad._texture[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX2D纹理' + _texture[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    LwgPreLoad._texture[index]['texture2D'] = tex;
-                                    console.log('2D纹理' + LwgPreLoad._texture[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _texture[index]['texture2D'] = tex;
+                                    console.log('2D纹理' + _texture[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._texture2D:
-                            Laya.Texture2D.load(LwgPreLoad._texture2D[index]['url'], Laya.Handler.create(this, (tex) => {
+                        case _texture2D:
+                            Laya.Texture2D.load(_texture2D[index]['url'], Laya.Handler.create(this, (tex) => {
                                 if (tex == null) {
-                                    console.log('XXXXXXXXXXX2D纹理' + LwgPreLoad._texture2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX2D纹理' + _texture2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    LwgPreLoad._texture2D[index]['texture2D'] = tex;
-                                    console.log('2D纹理' + LwgPreLoad._texture2D[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _texture2D[index]['texture2D'] = tex;
+                                    console.log('2D纹理' + _texture2D[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._material:
-                            Laya.Material.load(LwgPreLoad._material[index]['url'], Laya.Handler.create(this, (any) => {
+                        case _material:
+                            Laya.Material.load(_material[index]['url'], Laya.Handler.create(this, (any) => {
                                 if (any == null) {
-                                    console.log('XXXXXXXXXXX材质' + LwgPreLoad._material[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX材质' + _material[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    console.log('材质' + LwgPreLoad._material[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    console.log('材质' + _material[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
                             break;
-                        case LwgPreLoad._json:
-                            Laya.loader.load(LwgPreLoad._json[index]['url'], Laya.Handler.create(this, (data) => {
+                        case _json:
+                            Laya.loader.load(_json[index]['url'], Laya.Handler.create(this, (data) => {
                                 if (data == null) {
-                                    console.log('XXXXXXXXXXX数据表' + LwgPreLoad._json[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX数据表' + _json[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
-                                    LwgPreLoad._json[index]['data'] = data["RECORDS"];
-                                    console.log('数据表' + LwgPreLoad._json[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _json[index]['data'] = data["RECORDS"];
+                                    console.log('数据表' + _json[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }), null, Laya.Loader.JSON);
                             break;
-                        case LwgPreLoad._skeleton:
-                            LwgPreLoad._skeleton[index]['templet'].on(Laya.Event.ERROR, this, () => {
-                                console.log('XXXXXXXXXXX骨骼动画' + LwgPreLoad._skeleton[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                        case _skeleton:
+                            _skeleton[index]['templet'].on(Laya.Event.ERROR, this, () => {
+                                console.log('XXXXXXXXXXX骨骼动画' + _skeleton[index] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 EventAdmin._notify(_Event.progress);
                             });
-                            LwgPreLoad._skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
-                                console.log('骨骼动画', LwgPreLoad._skeleton[index]['templet']['url'], '加载完成！', '数组下标为：', index);
+                            _skeleton[index]['templet'].on(Laya.Event.COMPLETE, this, () => {
+                                console.log('骨骼动画', _skeleton[index]['templet']['url'], '加载完成！', '数组下标为：', index);
                                 EventAdmin._notify(_Event.progress);
                             });
-                            LwgPreLoad._skeleton[index]['templet'].loadAni(LwgPreLoad._skeleton[index]['url']);
+                            _skeleton[index]['templet'].loadAni(_skeleton[index]['url']);
                             break;
-                        case LwgPreLoad._prefab2D:
-                            Laya.loader.load(LwgPreLoad._prefab2D[index]['url'], Laya.Handler.create(this, (prefab) => {
+                        case _prefab2D:
+                            Laya.loader.load(_prefab2D[index]['url'], Laya.Handler.create(this, (prefab) => {
                                 if (prefab == null) {
-                                    console.log('XXXXXXXXXXX数据表' + LwgPreLoad._prefab2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
+                                    console.log('XXXXXXXXXXX数据表' + _prefab2D[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                                 }
                                 else {
                                     let _prefab = new Laya.Prefab();
                                     _prefab.json = prefab;
-                                    LwgPreLoad._prefab2D[index]['prefab'] = _prefab;
-                                    console.log('2D预制体' + LwgPreLoad._prefab2D[index]['url'] + '加载完成！', '数组下标为：', index);
+                                    _prefab2D[index]['prefab'] = _prefab;
+                                    console.log('2D预制体' + _prefab2D[index]['url'] + '加载完成！', '数组下标为：', index);
                                 }
                                 EventAdmin._notify(_Event.progress);
                             }));
@@ -5404,7 +5427,7 @@
                     EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
                 });
             }
-            lwgOpenAni() { return 0; }
+            lwgOpenAni() { return 1; }
             lwgStepComplete() {
             }
             lwgAllComplete() {
@@ -5645,19 +5668,22 @@
                     index++;
                 }
             }
+            lwgOpenAni() {
+                return 100;
+            }
             lwgOnEnable() {
-                this.StepSwitch = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
+                this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
                 this.Owner.addChild(this.StepSwitch);
                 this.StepSwitch.pos(194.5, 900);
                 this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
                 this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
                 this.BtnNextStep.visible = false;
                 this.BtnLastStep.visible = false;
-                this.BtnPlayAni = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
+                this.BtnPlayAni = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
                 this.Owner.addChild(this.BtnPlayAni);
                 this.BtnPlayAni.visible = false;
                 this.BtnPlayAni.pos(361, 920);
-                this.BtnBack = Tools.node_PrefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
+                this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
                 this.Owner.addChild(this.BtnBack);
                 this.BtnBack.visible = false;
                 this.BtnBack.pos(96, 97);
@@ -6062,17 +6088,17 @@
     })(_Guide || (_Guide = {}));
     var _Guide$1 = _Guide.Guide;
 
-    var _PreLoadSceneBeforeUrl;
-    (function (_PreLoadSceneBeforeUrl) {
-        _PreLoadSceneBeforeUrl._gameScene = {};
-    })(_PreLoadSceneBeforeUrl || (_PreLoadSceneBeforeUrl = {}));
+    var _PreLoadStepUrl;
+    (function (_PreLoadStepUrl) {
+        _PreLoadStepUrl._game = {};
+    })(_PreLoadStepUrl || (_PreLoadStepUrl = {}));
     var _PreLoadStep;
     (function (_PreLoadStep) {
         class PreLoadStep extends _LwgPreLoad._PreLoadScene {
             lwgOnStart() {
                 switch (Admin._preLoadOpenSceneLater.openSceneName) {
                     case _SceneName.Game:
-                        EventAdmin._notify(_LwgPreLoad._Event.importList, ([_PreLoadSceneBeforeUrl._gameScene]));
+                        EventAdmin._notify(_LwgPreLoad._Event.importList, ([_PreLoadStepUrl._game]));
                         break;
                     default:
                         break;
@@ -6305,6 +6331,7 @@
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
             Admin._platform.name = Admin._platform.tpye.General;
+            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn;
             Admin._evaluating = false;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
