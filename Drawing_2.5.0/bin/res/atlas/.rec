@@ -187,12 +187,12 @@ P E6449A72 anb.png
 P 79172350 bi.png
 P 6679A4C9 bz.png
 P C22B6FB7 dw.png
-P 6C96A803 dwdi.png
+P 4BB3B516 dwdi.png
 P 63F6C9BD dyxd.png
 P 1BAE3336 e.png
 P A4E7EB8E hf.png
-P 7237D9A0 hong.png
-P 6909074B huang.png
+P 961491C3 hong.png
+P 3E5E73CA huang.png
 P 3F3A6FD8 jb.png
 P 4F02661D jiu.png
 P 215D1BF0 ks.png
@@ -201,11 +201,13 @@ R 2786EDAB sc.png
 P D4D8F8E8 shu.png
 P 36732A27 sp.png
 P F0ABED94 suo.png
-R B0C84884 xianlu.png
+R 96D1BAF1 xianlu.png
+P 0CB6901E xianlu1.png
+P 9188B8FD xianlu2.png
 P B6F0119A y.png
 P FC08AE87 yuan.png
 P 4A6923CF zhiwu.png
-P 281C85C9 zhiwudi.png
+P 1B4E2786 zhiwudi.png
 D Game/UI/Set
 P A7A6D598 di1.png
 P 4B6DCFBD di2.png

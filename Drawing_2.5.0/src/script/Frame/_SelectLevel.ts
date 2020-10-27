@@ -17,6 +17,36 @@ export module _SelectLevel {
             botany: 'botany',
             other: 'other',
         };
+        static _pich = {
+            get classify(): string {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
+            },
+            set classify(str: string) {
+                _MyList.array = _data._getClassifyArr(str);
+                _MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
+            },
+            get customs(): string {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
+            },
+            set customs(str: string) {
+                _MyList.array = _data._getClassifyArr(str);
+                _MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
+            }
+        };
+        static _getClassifyArr(classify: string): Array<any> {
+            let _arr = [];
+            for (const key in this._arr) {
+                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                    const element = this._arr[key];
+                    if (element[this._property.classify] == classify) {
+                        _arr.push(element);
+                    }
+                }
+            }
+            return _arr;
+        };
         static _unlockWay = {
             free: 'free',
             gold: 'gold',
@@ -31,6 +61,7 @@ export module _SelectLevel {
         static set _arr(array: Array<string>) {
             this['_SelectLevel_Data'] = array;
         };
+
         static get _getLimitArr(): Array<any> {
             let _arr = [];
             for (const key in this._arr) {
@@ -132,14 +163,14 @@ export module _SelectLevel {
         event2 = '_Example_Event2',
     }
     export function _init(): void {
-        console.log(_data._arr);
-    }
 
+    }
     export let _MyList: Laya.List;
-    export let _MYTap: Laya.Tab;
+    export let _MyTap: Laya.Tab;
     export class _SelectLevelItem extends Admin._Object {
         lwgBtnClick(): void {
-            Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
+            let BtnContent = (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('BtnContent');
+            Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
                 // _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
                 // _PencilsList.refresh();
             });
@@ -148,6 +179,78 @@ export module _SelectLevel {
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
     export class SelectLevelBase extends Admin._SceneBase {
         moduleOnAwake(): void {
+            _MyList = this.ListVar('MyList');
+            _MyList.array = _data._getClassifyArr(_data._pich.classify);
+            _MyList.selectEnable = true;
+            _MyList.vScrollBarSkin = "";
+            // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
+            // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
+            _MyList.selectHandler = new Laya.Handler(this, (index: number) => { });
+            _MyList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
+                let _dataSource = cell.dataSource;
+                let Content = cell.getChildByName('Content') as Laya.Image;
+                let BtnContent = Content.getChildByName('BtnContent') as Laya.Image;
+                let Name = BtnContent.getChildByName('Name') as Laya.Image;
+                Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
+                let Xianlu = Content.getChildByName('Xianlu') as Laya.Image;
+                let IconPen = Content.getChildByName('IconPen') as Laya.Image;
+                if (index % 2 !== 0) {
+                    Content.pos(27, 8);
+                    Xianlu.pos(104, 189);
+                    Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
+                    IconPen.scaleX = 1;
+                    IconPen.pos(350, 219);
+                } else {
+                    Content.pos(363, 10);
+                    Xianlu.pos(-175, 195);
+                    Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
+                    IconPen.scaleX = -1;
+                    IconPen.pos(-31, 195);
+                }
+
+
+                let IconAds = BtnContent.getChildByName('IconAds') as Laya.Image;
+                let IconLock = BtnContent.getChildByName('IconLock') as Laya.Image;
+                let GoldNum = BtnContent.getChildByName('GoldNum') as Laya.Label;
+                let GoldBoard = BtnContent.getChildByName('GoldBoard') as Laya.Image;
+
+                if (!_dataSource[_data._property.unlock]) {
+                    switch (_dataSource[_data._property.unlockWay]) {
+                        case _data._unlockWay.ads:
+                            GoldBoard.visible = GoldNum.visible = false;
+                            IconLock.visible = IconAds.visible = true;
+                            break;
+                        case _data._unlockWay.free:
+                            GoldBoard.visible = GoldNum.visible = false;
+                            IconLock.visible = IconAds.visible = false;
+                            break;
+                        case _data._unlockWay.gold:
+                            GoldNum.text = _dataSource[_data._property.condition];
+                            GoldBoard.visible = GoldNum.visible = true;
+                            IconLock.visible = IconAds.visible = false;
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    IconAds.visible = false;
+                    IconLock.visible = false;
+                    GoldNum.visible = false;
+                    GoldBoard.visible = false;
+                }
+
+
+                cell.zOrder = index;
+
+            });
+            if (_MyList.cells.length !== 0) {
+                for (let index = 0; index < _MyList.cells.length; index++) {
+                    const element = _MyList.cells[index];
+                    if (!element.getComponent(_SelectLevelItem)) {
+                        element.addComponent(_SelectLevelItem);
+                    }
+                }
+            }
         }
         moduleOnEnable(): void {
         }
@@ -159,13 +262,34 @@ export module _SelectLevel {
     /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
     export class SelectLevel extends _SelectLevel.SelectLevelBase {
         lwgOnAwake(): void {
+
         }
         lwgOnEnable(): void { }
         lwgEventRegister(): void { }
         lwgOnStart(): void { }
         lwgAdaptive(): void { }
         lwgOpenAni(): number { return 100; }
-        lwgBtnClick(): void { }
+        lwgBtnClick(): void {
+            for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
+                if (element.name == _data._pich.classify) {
+                    element.y = 11;
+                } else {
+                    element.y = 69;
+                }
+                Click._on(Click._Type.largen, element, this, null, null, (e: Laya.Event) => {
+                    for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                        const Btn = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
+                        if (Btn == e.currentTarget) {
+                            Btn.y = 11;
+                            _data._pich.classify = Btn.name;
+                        } else {
+                            Btn.y = 69;
+                        }
+                    }
+                });
+            }
+        }
         lwgVanishAni(): number { return 100; }
         lwgOnUpdate(): void { }
         lwgOnDisable(): void { }

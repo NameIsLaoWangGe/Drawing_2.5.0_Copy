@@ -6139,6 +6139,19 @@
     var _SelectLevel;
     (function (_SelectLevel) {
         class _data {
+            static _getClassifyArr(classify) {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == classify) {
+                            _arr.push(element);
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
             static get _arr() {
                 if (!this['_SelectLevel_Data']) {
                     this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
@@ -6265,6 +6278,24 @@
             botany: 'botany',
             other: 'other',
         };
+        _data._pich = {
+            get classify() {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
+            },
+            set classify(str) {
+                _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                _SelectLevel._MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
+            },
+            get customs() {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
+            },
+            set customs(str) {
+                _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                _SelectLevel._MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
+            }
+        };
         _data._unlockWay = {
             free: 'free',
             gold: 'gold',
@@ -6277,18 +6308,84 @@
             _Event["event2"] = "_Example_Event2";
         })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
         function _init() {
-            console.log(_data._arr);
         }
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
             lwgBtnClick() {
-                Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
+                let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
+                Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
                 });
             }
         }
         _SelectLevel._SelectLevelItem = _SelectLevelItem;
         class SelectLevelBase extends Admin._SceneBase {
             moduleOnAwake() {
+                _SelectLevel._MyList = this.ListVar('MyList');
+                _SelectLevel._MyList.array = _data._getClassifyArr(_data._pich.classify);
+                _SelectLevel._MyList.selectEnable = true;
+                _SelectLevel._MyList.vScrollBarSkin = "";
+                _SelectLevel._MyList.selectHandler = new Laya.Handler(this, (index) => { });
+                _SelectLevel._MyList.renderHandler = new Laya.Handler(this, (cell, index) => {
+                    let _dataSource = cell.dataSource;
+                    let Content = cell.getChildByName('Content');
+                    let BtnContent = Content.getChildByName('BtnContent');
+                    let Name = BtnContent.getChildByName('Name');
+                    Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
+                    let Xianlu = Content.getChildByName('Xianlu');
+                    let IconPen = Content.getChildByName('IconPen');
+                    if (index % 2 !== 0) {
+                        Content.pos(27, 8);
+                        Xianlu.pos(104, 189);
+                        Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
+                        IconPen.scaleX = 1;
+                        IconPen.pos(350, 219);
+                    }
+                    else {
+                        Content.pos(363, 10);
+                        Xianlu.pos(-175, 195);
+                        Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
+                        IconPen.scaleX = -1;
+                        IconPen.pos(-31, 195);
+                    }
+                    let IconAds = BtnContent.getChildByName('IconAds');
+                    let IconLock = BtnContent.getChildByName('IconLock');
+                    let GoldNum = BtnContent.getChildByName('GoldNum');
+                    let GoldBoard = BtnContent.getChildByName('GoldBoard');
+                    if (!_dataSource[_data._property.unlock]) {
+                        switch (_dataSource[_data._property.unlockWay]) {
+                            case _data._unlockWay.ads:
+                                GoldBoard.visible = GoldNum.visible = false;
+                                IconLock.visible = IconAds.visible = true;
+                                break;
+                            case _data._unlockWay.free:
+                                GoldBoard.visible = GoldNum.visible = false;
+                                IconLock.visible = IconAds.visible = false;
+                                break;
+                            case _data._unlockWay.gold:
+                                GoldNum.text = _dataSource[_data._property.condition];
+                                GoldBoard.visible = GoldNum.visible = true;
+                                IconLock.visible = IconAds.visible = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        IconAds.visible = false;
+                        IconLock.visible = false;
+                        GoldNum.visible = false;
+                        GoldBoard.visible = false;
+                    }
+                    cell.zOrder = index;
+                });
+                if (_SelectLevel._MyList.cells.length !== 0) {
+                    for (let index = 0; index < _SelectLevel._MyList.cells.length; index++) {
+                        const element = _SelectLevel._MyList.cells[index];
+                        if (!element.getComponent(_SelectLevelItem)) {
+                            element.addComponent(_SelectLevelItem);
+                        }
+                    }
+                }
             }
             moduleOnEnable() {
             }
@@ -6306,7 +6403,29 @@
             lwgOnStart() { }
             lwgAdaptive() { }
             lwgOpenAni() { return 100; }
-            lwgBtnClick() { }
+            lwgBtnClick() {
+                for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                    const element = this.ImgVar('CutBtn').getChildAt(index);
+                    if (element.name == _data._pich.classify) {
+                        element.y = 11;
+                    }
+                    else {
+                        element.y = 69;
+                    }
+                    Click._on(Click._Type.largen, element, this, null, null, (e) => {
+                        for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                            const Btn = this.ImgVar('CutBtn').getChildAt(index);
+                            if (Btn == e.currentTarget) {
+                                Btn.y = 11;
+                                _data._pich.classify = Btn.name;
+                            }
+                            else {
+                                Btn.y = 69;
+                            }
+                        }
+                    });
+                }
+            }
             lwgVanishAni() { return 100; }
             lwgOnUpdate() { }
             lwgOnDisable() { }
