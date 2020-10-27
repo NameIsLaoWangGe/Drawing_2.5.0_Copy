@@ -957,6 +957,7 @@
                 _SceneName["ExecutionHint"] = "ExecutionHint";
                 _SceneName["SkinQualified"] = "SkinQualified";
                 _SceneName["Eastereggister"] = "Eastereggister";
+                _SceneName["SelectLevel"] = "SelectLevel";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
             function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOder) {
                 _openScene(_SceneName.PreLoadStep);
@@ -1082,6 +1083,7 @@
                         });
                         break;
                     case Admin._sceneAnimation.type.stickIn:
+                        closeFunc();
                         break;
                     default:
                         break;
@@ -1118,12 +1120,18 @@
                             const element = Scene.getChildAt(index);
                             if (element.name !== 'Background') {
                                 element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                                let originalPovitX = element.pivotX;
+                                let originalPovitY = element.pivotY;
+                                Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, 0);
                                 let originalX = element.x;
                                 let originalY = element.y;
                                 element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                                 element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
                                 Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
-                                Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index);
+                                ;
+                                Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
+                                    Tools.Node.changePovit(element, originalPovitX, originalPovitY);
+                                });
                             }
                         }
                         sumDelay = Scene.numChildren * delay + time + 200;
@@ -3184,6 +3192,16 @@
             Tools.format_NumAddStr = format_NumAddStr;
             let Node;
             (function (Node) {
+                function changePovit(sp, _pivotX, _pivotY) {
+                    let originalPovitX = sp.pivotX;
+                    let originalPovitY = sp.pivotY;
+                    if (sp.width) {
+                        sp.pivot(_pivotX, _pivotY);
+                        sp.x += (sp.pivotX - originalPovitX);
+                        sp.y += (sp.pivotY - originalPovitY);
+                    }
+                }
+                Node.changePovit = changePovit;
                 function getChildArrByProperty(node, property, value) {
                     let childArr = [];
                     for (let index = 0; index < node.numChildren; index++) {
@@ -3896,7 +3914,7 @@
             function jsonCompare(url, storageName, propertyName) {
                 let dataArr;
                 try {
-                    console.log(Laya.LocalStorage.getJSON(storageName));
+                    Laya.LocalStorage.getJSON(storageName);
                 }
                 catch (error) {
                     dataArr = Laya.loader.getRes(url)['RECORDS'];
@@ -5380,14 +5398,18 @@
                     url: 'Prefab/StepSwitch.json',
                     prefab: new Laya.Prefab,
                 },
-                BtnBack: {
-                    url: 'Prefab/BtnBack.json',
-                    prefab: new Laya.Prefab,
-                },
                 BtnPlayAni: {
                     url: 'Prefab/BtnPlayAni.json',
                     prefab: new Laya.Prefab,
-                }
+                },
+                BtnContinue: {
+                    url: 'Prefab/BtnContinue.json',
+                    prefab: new Laya.Prefab,
+                },
+                BtnShare: {
+                    url: 'Prefab/BtnShare.json',
+                    prefab: new Laya.Prefab,
+                },
             },
             texture: {
                 star1: {
@@ -5413,6 +5435,10 @@
                 },
                 Colours: {
                     url: "_LwgData" + "/_Game/Colours" + ".json",
+                    data: new Array,
+                },
+                SelectLevel: {
+                    url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
                     data: new Array,
                 }
             },
@@ -5522,7 +5548,6 @@
         };
         class _SingleColorPencils {
             static _init() {
-                Admin._game.loopLevel = 12;
                 this._data = Tools.objArray_Copy(_PreloadUrl._list.json.SingleColor.data);
                 this._setPitchByName(this._data[0][this._property.name]);
             }
@@ -5571,6 +5596,7 @@
             _drawBoardProperty["whetherPass"] = "whetherPass";
         })(_drawBoardProperty = _Game._drawBoardProperty || (_Game._drawBoardProperty = {}));
         function _init() {
+            Admin._game.loopLevel = 12;
             _SingleColorPencils._init();
             _StarsPencils._init();
             _ColoursPencils._init();
@@ -5683,7 +5709,7 @@
                 this.Owner.addChild(this.BtnPlayAni);
                 this.BtnPlayAni.visible = false;
                 this.BtnPlayAni.pos(361, 920);
-                this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnBack.prefab);
+                this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnContinue.prefab);
                 this.Owner.addChild(this.BtnBack);
                 this.BtnBack.visible = false;
                 this.BtnBack.pos(96, 97);
@@ -6110,6 +6136,188 @@
     ;
     var _PreLoadStep$1 = _PreLoadStep.PreLoadStep;
 
+    var _SelectLevel;
+    (function (_SelectLevel) {
+        class _data {
+            static get _arr() {
+                if (!this['_SelectLevel_Data']) {
+                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
+                }
+                return this['_SelectLevel_Data'];
+            }
+            ;
+            static set _arr(array) {
+                this['_SelectLevel_Data'] = array;
+            }
+            ;
+            static get _getLimitArr() {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == this._classify.limit) {
+                            _arr.push(element);
+                            break;
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static get _botanyArr() {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == this._classify.botany) {
+                            _arr.push(element);
+                            break;
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static get _getAnimalArr() {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == this._classify.animal) {
+                            _arr.push(element);
+                            break;
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static get _getOtherArr() {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == this._classify.other) {
+                            _arr.push(element);
+                            break;
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static getUnlockByName(name) {
+                let bool;
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            bool = element[this._property.unlock];
+                            break;
+                        }
+                    }
+                    return bool;
+                }
+            }
+            ;
+            static getProperty(name, pro) {
+                let value;
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            value = element[pro];
+                            break;
+                        }
+                    }
+                }
+                return value;
+            }
+            ;
+            static setProperty(name, pro, value) {
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            element[pro] = value;
+                            _SelectLevel._MyList.refresh();
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                            break;
+                        }
+                    }
+                }
+                return value;
+            }
+            ;
+        }
+        _data._property = {
+            name: 'name',
+            chName: 'chName',
+            classify: 'classify',
+            unlockWay: 'unlockWay',
+            condition: 'condition',
+            resCondition: 'resCondition',
+            unlock: 'unlock',
+        };
+        _data._classify = {
+            limit: 'limit',
+            animal: 'animal',
+            botany: 'botany',
+            other: 'other',
+        };
+        _data._unlockWay = {
+            free: 'free',
+            gold: 'gold',
+            ads: 'ads',
+        };
+        _SelectLevel._data = _data;
+        let _Event;
+        (function (_Event) {
+            _Event["event1"] = "_Example_Event1";
+            _Event["event2"] = "_Example_Event2";
+        })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
+        function _init() {
+            console.log(_data._arr);
+        }
+        _SelectLevel._init = _init;
+        class _SelectLevelItem extends Admin._Object {
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
+                });
+            }
+        }
+        _SelectLevel._SelectLevelItem = _SelectLevelItem;
+        class SelectLevelBase extends Admin._SceneBase {
+            moduleOnAwake() {
+            }
+            moduleOnEnable() {
+            }
+            moduleEventRegister() {
+            }
+            moduleOnStart() {
+            }
+        }
+        _SelectLevel.SelectLevelBase = SelectLevelBase;
+        class SelectLevel extends _SelectLevel.SelectLevelBase {
+            lwgOnAwake() {
+            }
+            lwgOnEnable() { }
+            lwgEventRegister() { }
+            lwgOnStart() { }
+            lwgAdaptive() { }
+            lwgOpenAni() { return 100; }
+            lwgBtnClick() { }
+            lwgVanishAni() { return 100; }
+            lwgOnUpdate() { }
+            lwgOnDisable() { }
+        }
+        _SelectLevel.SelectLevel = SelectLevel;
+        class UIExampleItem extends Admin._Object {
+        }
+        _SelectLevel.UIExampleItem = UIExampleItem;
+    })(_SelectLevel || (_SelectLevel = {}));
+    var _SelectLevel$1 = _SelectLevel.SelectLevel;
+
     var _Start;
     (function (_Start) {
         function _init() {
@@ -6129,11 +6337,7 @@
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-                    this.lwgOpenScene(_SceneName.Game + Admin._game.level, _SceneName.Start, () => {
-                        if (!Admin._sceneControl[_SceneName.Game + Admin._game.level].getComponent(_Game.Game)) {
-                            Admin._sceneControl[_SceneName.Game + Admin._game.level].addComponent(_Game.Game);
-                        }
-                    });
+                    this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
                 });
             }
         }
@@ -6340,6 +6544,7 @@
                 _Game: _Game,
                 _Task: _Task,
                 _PreLoadStep: _PreLoadStep,
+                _SelectLevel: _SelectLevel
             };
         }
     }

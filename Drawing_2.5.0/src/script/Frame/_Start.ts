@@ -20,11 +20,12 @@ export module _Start {
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-                this.lwgOpenScene(_SceneName.Game + Admin._game.level, _SceneName.Start, () => {
-                    if (!Admin._sceneControl[_SceneName.Game + Admin._game.level].getComponent(_Game.Game)) {
-                        Admin._sceneControl[_SceneName.Game + Admin._game.level].addComponent(_Game.Game);
-                    }
-                });
+                this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
+                // this.lwgOpenScene(_SceneName.Game + Admin._game.level, _SceneName.Start, () => {
+                //     if (!Admin._sceneControl[_SceneName.Game + Admin._game.level].getComponent(_Game.Game)) {
+                //         Admin._sceneControl[_SceneName.Game + Admin._game.level].addComponent(_Game.Game);
+                //     }
+                // });
             })
         }
     }

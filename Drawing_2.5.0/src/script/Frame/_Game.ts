@@ -95,7 +95,6 @@ export module _Game {
             pitch: 'pitch',
         };
         static _init(): void {
-            Admin._game.loopLevel = 12;
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.SingleColor.data);
             this._setPitchByName(this._data[0][this._property.name]);
         }
@@ -139,6 +138,7 @@ export module _Game {
         whetherPass = 'whetherPass',
     }
     export function _init(): void {
+        Admin._game.loopLevel = 12;
         _SingleColorPencils._init();
         _StarsPencils._init();
         _ColoursPencils._init();

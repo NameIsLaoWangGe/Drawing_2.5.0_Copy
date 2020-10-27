@@ -73,6 +73,10 @@ export module _PreloadUrl {
             Colours: {
                 url: "_LwgData" + "/_Game/Colours" + ".json",
                 data: new Array,
+            },
+            SelectLevel: {
+                url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
+                data: new Array,
             }
         },
         // skeleton: {

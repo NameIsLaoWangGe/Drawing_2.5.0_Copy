@@ -1287,6 +1287,7 @@ export module lwg {
             ExecutionHint = 'ExecutionHint',
             SkinQualified = 'SkinQualified',
             Eastereggister = 'Eastereggister',
+            SelectLevel = 'SelectLevel',
         }
 
         /**
@@ -1437,7 +1438,7 @@ export module lwg {
                     })
                     break;
                 case _sceneAnimation.type.stickIn:
-
+                    closeFunc();
                     break;
 
                 default:
@@ -1477,12 +1478,17 @@ export module lwg {
                         const element = Scene.getChildAt(index) as Laya.Sprite;
                         if (element.name !== 'Background') {
                             element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                            let originalPovitX = element.pivotX;
+                            let originalPovitY = element.pivotY;
+                            Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, 0);
                             let originalX = element.x;
                             let originalY = element.y;
                             element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                             element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
-                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
-                            Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index);
+                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);;
+                            Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
+                                Tools.Node.changePovit(element, originalPovitX, originalPovitY);
+                            });
                         }
                     }
                     sumDelay = Scene.numChildren * delay + time + 200;
@@ -4382,7 +4388,21 @@ export module lwg {
             return Number(str) + num;
         }
         export module Node {
-
+            /**
+             * @export 更改中心点但是不改位置
+             * @param {Laya.Sprite} sp 节点
+             * @param {number} _pivotX 
+             * @param {number} _pivotY
+             */
+            export function changePovit(sp: Laya.Sprite, _pivotX: number, _pivotY: number): void {
+                let originalPovitX = sp.pivotX;
+                let originalPovitY = sp.pivotY;
+                if (sp.width) {
+                    sp.pivot(_pivotX, _pivotY);
+                    sp.x += (sp.pivotX - originalPovitX);
+                    sp.y += (sp.pivotY - originalPovitY);
+                }
+            }
             /**
               * 根据子节点的某个属性包括手动赋值的node['属性']，获取相同属性的数组
               * @param node 节点
@@ -5395,9 +5415,9 @@ export module lwg {
             // 第二步，如果本地缓存有，那么需要和数据表中的数据进行对比，把缓存没有的新增对象复制进去
             // 第三步，如果本地缓存没有，那么直接从数据表获取
             let dataArr;
-
             try {
-                console.log(Laya.LocalStorage.getJSON(storageName));
+                Laya.LocalStorage.getJSON(storageName)
+                // console.log(Laya.LocalStorage.getJSON(storageName));
             } catch (error) {
                 dataArr = Laya.loader.getRes(url)['RECORDS'];
                 let data = {};
@@ -5405,7 +5425,6 @@ export module lwg {
                 Laya.LocalStorage.setJSON(storageName, JSON.stringify(data));
                 return dataArr;
             }
-
             if (Laya.LocalStorage.getJSON(storageName)) {
                 dataArr = JSON.parse(Laya.LocalStorage.getJSON(storageName))[storageName];
                 console.log(storageName + '从本地缓存中获取到数据,将和文件夹的json文件进行对比');

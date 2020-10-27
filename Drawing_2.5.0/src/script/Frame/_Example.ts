@@ -21,16 +21,16 @@ export module _Example {
             this['data'] = arr;
         },
         // 获取方法
-        getFunc1: (): any => {
+        getProperty1Func: (any): any => {
             return '测试1';
         },
-        getFunc2: (any): any => {
+        getProperty2Func: (any): any => {
             return;
         },
         // 设置方法
-        setFunc1: () => {
+        setProperty1Func: () => {
         },
-        setFunc2: (any) => {
+        setProperty2Func: (any) => {
             console.log(any);
         },
         // 检查方法
@@ -62,20 +62,24 @@ export module _Example {
     /**类模式，用于可继承时，或者多列时，例如商店中的商品种类*/
     export class _Classify1 {
         static _property = {
-            index: 'index',
-            name: 'name',
-            color: 'color',
+            pro1: 'pro1',
+            pro2: 'pro2',
+            pro3: 'pro3',
         };
-        static _init(): void {
-        }
-        /**当前选中画笔*/
-        static _pitchName: string = '';
-        /**当前选中画笔的颜色*/
-        static _pitchColor: string = '';
+        static _variable1: string = '';
+        static _variable2: string = '';
         static _data: Array<any> = [];
-        /**设置选中*/
-        static _setPitchByName(name: string): void {
+        static _init(): void { }
+        static _setVariable1(name: string): void {
         }
+        static _setVariable2(name: string): void {
+        }
+        public get variable3(): string {
+            return this['_variable3'] ? this['_variable3'] : null;
+        };
+        public set variable3(v: string) {
+            this['_variable3'] = v;
+        };
     }
     export class _Classify2 extends _Classify1 {
         static _init(): void {
@@ -133,7 +137,7 @@ export module _Example {
 
     }
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
-    export class _ExampleBase extends Admin._SceneBase {
+    export class ExampleBase extends Admin._SceneBase {
         moduleOnAwake(): void {
         }
         moduleOnEnable(): void {
@@ -144,7 +148,7 @@ export module _Example {
         }
     }
     /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
-    export class Example extends _Example._ExampleBase {
+    export class Example extends _Example.ExampleBase {
         lwgOnAwake(): void {
             // 模块中临时变量赋值方法,这种赋值必须只用在当前脚本，否则必须枚举
             _Example['name'] = '大王哥';
@@ -153,8 +157,8 @@ export module _Example {
             this['name'] = '老王哥';
             console.log(this, this['name']);
             // 数据表
-            _Example._data.getFunc2('any');
-            _Example._data.setFunc2('测试设置');
+            _Example._data.getProperty1Func('any');
+            _Example._data.getProperty2Func('测试设置');
         }
         lwgOnEnable(): void { }
         lwgEventRegister(): void { }

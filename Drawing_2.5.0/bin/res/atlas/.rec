@@ -148,6 +148,7 @@ D Game/UI/Card
 D Game/UI/CheckIn
 D Game/UI/Common
 P 50A4ECB6 a.png
+R 5F25687D bg1.png
 R 4414DBFC bj.png
 P 3F3A6FD8 jb.png
 P 325C7ADA lan.png
@@ -156,6 +157,7 @@ D Game/UI/Defeated
 D Game/UI/DesignPic
 R 3D70B944 game.png
 R 22791D75 loding.png
+R 361B735A SelectLevel.png
 R 8DAFDA6B settle.png
 R 6762E2C4 start.png
 D Game/UI/DrawCard
@@ -179,6 +181,31 @@ P 9A32446C ty.png
 R 18763D65 tyxhs.png
 D Game/UI/PropTry
 D Game/UI/Resurgence
+D Game/UI/SelectLevel
+P 50A4ECB6 an1.png
+P E6449A72 anb.png
+P 79172350 bi.png
+P 6679A4C9 bz.png
+P C22B6FB7 dw.png
+P 6C96A803 dwdi.png
+P 63F6C9BD dyxd.png
+P 1BAE3336 e.png
+P A4E7EB8E hf.png
+P 7237D9A0 hong.png
+P 6909074B huang.png
+P 3F3A6FD8 jb.png
+P 4F02661D jiu.png
+P 215D1BF0 ks.png
+P 0941D66B qt.png
+R 2786EDAB sc.png
+P D4D8F8E8 shu.png
+P 36732A27 sp.png
+P F0ABED94 suo.png
+R B0C84884 xianlu.png
+P B6F0119A y.png
+P FC08AE87 yuan.png
+P 4A6923CF zhiwu.png
+P 281C85C9 zhiwudi.png
 D Game/UI/Set
 P A7A6D598 di1.png
 P 4B6DCFBD di2.png
@@ -220,6 +247,7 @@ P 7C3E1466 xd.png
 D Game/UI/Task
 D Game/UI/Victory
 D Game/UI/VictoryBox
+D Game/UI/CheckIn/SelectLevel
 D Game/UI/GameScene/design
 R 8A3D0CE5 level1.png
 P 68EF1D68 Level10.png
@@ -451,3 +479,16 @@ P 1473B122 b9.png
 P B82B99D6 blue.png
 P 5A162B05 eraser.png
 P BE308544 green.png
+D Game/UI/SelectLevel/Name
+P E6875BCE dinglaotai.png
+P 43B7BC6A dinglaotou.png
+P 512E216B haitun.png
+P 26CF8D2B maomaochong.png
+P 1C15D9A9 maotouying.png
+P 3137AD3A wanshengnangua.png
+P 89212C67 wugui.png
+P 0DDA05BE xiaohonghua.png
+P 42CABCFA xiaohuamao.png
+P 30CAB7B3 xiaonainiu.png
+P 87AC5571 xiaoqiche.png
+P 48E6A39F zhangyugege.png

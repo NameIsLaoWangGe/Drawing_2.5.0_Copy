@@ -32,7 +32,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,BtnStart,BtnStart",
-            "props":{"x":360,"width":284,"var":"BtnStart","skin":"Game/UI/Common/zan.png","sizeGrid":"15,16,18,10","pivotY":64,"pivotX":142,"name":"BtnStart","height":127,"centerY":458},
+            "props":{"x":358,"width":269,"var":"BtnStart","skin":"Game/UI/Common/zan.png","sizeGrid":"15,16,18,10","rotation":0,"pivotY":64,"pivotX":135,"name":"BtnStart","height":128,"centerY":483},
             "nodeParent":2,
             "label":"BtnStart",
             "isOpen":true,
