@@ -1,7 +1,11 @@
-import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, Gold, TimerAdmin, Setting, Backpack, PalyAudio, _SceneName } from "./Lwg";
+import { Admin, DrawCard, Click, Tools, EventAdmin, Animation2D, Effects, Share, _Gold, TimerAdmin, Setting, Backpack, PalyAudio, _SceneName } from "./Lwg";
 import ADManager from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { _Guide } from "./_Guide";
+
+
+
+
 
 export default class UIDrawCard extends DrawCard.DrawCardScene {
     /** @prop {name:Card, tips:"选项卡预制体", type:Prefab}*/
@@ -169,7 +173,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                     Laya.timer.once((j + 1) * 150, this, () => {
                         // Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, globalPos.x, globalPos.y, Effects.SkinStyle.dot, 10, 10);
                         Card.visible = false;
-                        Gold.getGoldAni_Heap(Laya.stage, 8, 88, 69, 'Game/UI/Common/jinbi.png', new Laya.Point(globalPos.x, globalPos.y), new Laya.Point(Gold.GoldNode.x - 80, Gold.GoldNode.y), null, () => {
+                       _Gold.getGoldAni_Heap(Laya.stage, 8, 88, 69, 'Game/UI/Common/jinbi.png', new Laya.Point(globalPos.x, globalPos.y), new Laya.Point(_Gold.GoldNode.x - 80, _Gold.GoldNode.y), null, () => {
                             // Gold.addGold(Card['objData'][Game3D.CardProperty.repetition]);
                             if (j == arrRepetitionCard.length - 1) {
                                 if (j == 9) {

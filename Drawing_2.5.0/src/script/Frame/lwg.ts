@@ -1474,8 +1474,10 @@ export module lwg {
                     if (Scene.getChildByName('Background')) {
                         Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
                     }
-                    for (let index = 0; index < Scene.numChildren; index++) {
-                        const element = Scene.getChildAt(index) as Laya.Sprite;
+                    let arr = Tools.Node.zOrderByY(Scene, false);
+
+                    for (let index = 0; index < arr.length; index++) {
+                        const element = arr[index] as Laya.Image;
                         if (element.name !== 'Background') {
                             element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
                             let originalPovitX = element.pivotX;
@@ -1736,6 +1738,23 @@ export module lwg {
             lwgOnEnable(): void {
                 console.log('父类的初始化！');
             }
+            /**
+                * 打开场景
+                * @param openSceneName 需要打开的场景名称
+                * @param cloesSceneName 需要关闭的场景，默认为null
+                * @param func 完成回调，默认为null
+                * @param zOder 指定层级
+               */
+            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
+                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+            }
+            /**
+             * 关闭自己
+             * @param func 关闭后的回调函数
+             * */
+            lwgCloseScene(func?: Function): void {
+                Admin._closeScene(this.Owner.name, func);
+            }
         }
 
         /**2D物件通用父类*/
@@ -1763,6 +1782,23 @@ export module lwg {
                 // 组件变为的self属性
                 this.Owner[calssName] = this;
                 this.lwgOnAwake();
+            }
+            /**
+            * 打开场景
+            * @param openSceneName 需要打开的场景名称
+            * @param cloesSceneName 需要关闭的场景，默认为null
+            * @param func 完成回调，默认为null
+            * @param zOder 指定层级
+           */
+            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
+                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+            }
+            /**
+             * 关闭自己
+             * @param func 关闭后的回调函数
+             * */
+            lwgCloseScene(func?: Function): void {
+                Admin._closeScene(this.Owner.name, func);
             }
             /**声明一些节点*/
             lwgOnAwake(): void { }
@@ -4388,12 +4424,49 @@ export module lwg {
             return Number(str) + num;
         }
         export module Node {
+
+
             /**
-             * @export 更改中心点但是不改位置
+             * @export 返回子节点随着Y轴进行排序数组
              * @param {Laya.Sprite} sp 节点
-             * @param {number} _pivotX 
-             * @param {number} _pivotY
+             * @param {boolean} zOrder 是否改变其层级，默认为true,按照0起始的整数开始排序
+             * @param {boolean} [along] 默认为true，Y坐标越大层级越高.false则反向
              */
+            export function zOrderByY(sp: Laya.Sprite, zOrder?: boolean, along?: boolean): Array<Laya.Sprite> {
+                let arr = [];
+                if (sp.numChildren == 0) {
+                    return arr;
+                };
+                for (let index = 0; index < sp.numChildren; index++) {
+                    const element = sp.getChildAt(index);
+                    arr.push(element);
+                }
+                Tools.objArrPropertySort(arr, 'y');
+                if (zOrder) {
+                    for (let index = 0; index < arr.length; index++) {
+                        const element = arr[index];
+                        element['zOrder'] = index;
+                    }
+                }
+                if (along) {
+                    let arr0 = [];
+                    // for (let index = arr.length; index < 0; index--) {
+                    //     const element = arr[index];
+                    //     element['zOrder'] = index;
+                    //     arr.splice(index, 1);
+                    //     console.log(element);
+                    // }
+                    // for (let index = arr.length - 1; index <= 0; index--) {
+                    //     const element = arr[index];
+                    //     console.log(element);
+                    //     element['zOrder'] = arr.length - index;
+                    //     arr0.push(element);
+                    // }
+                    return arr0;
+                } else {
+                    return arr;
+                }
+            }
             export function changePovit(sp: Laya.Sprite, _pivotX: number, _pivotY: number): void {
                 let originalPovitX = sp.pivotX;
                 let originalPovitY = sp.pivotY;
@@ -7199,7 +7272,7 @@ export let DateAdmin = lwg.DateAdmin;
 export let TimerAdmin = lwg.TimerAdmin;
 export let Pause = lwg.Pause;
 export let Execution = lwg.Execution;
-export let Gold = lwg.Gold;
+export let _Gold = lwg.Gold;
 export let Setting = lwg.Setting;
 export let PalyAudio = lwg.PalyAudio;
 export let Click = lwg.Click;

@@ -26,7 +26,7 @@ export default class LwgInit extends _LwgInitScene {
             _Game: _Game,
             _Task: _Task,
             _PreLoadStep: _PreLoadStep,
-            _SelectLevel: _SelectLevel
+            _SelectLevel: _SelectLevel,
         };
     }
 }

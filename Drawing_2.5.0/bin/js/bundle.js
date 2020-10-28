@@ -1116,8 +1116,9 @@
                         if (Scene.getChildByName('Background')) {
                             Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
                         }
-                        for (let index = 0; index < Scene.numChildren; index++) {
-                            const element = Scene.getChildAt(index);
+                        let arr = Tools.Node.zOrderByY(Scene, false);
+                        for (let index = 0; index < arr.length; index++) {
+                            const element = arr[index];
                             if (element.name !== 'Background') {
                                 element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
                                 let originalPovitX = element.pivotX;
@@ -1344,6 +1345,12 @@
                 lwgOnEnable() {
                     console.log('父类的初始化！');
                 }
+                lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
+                    Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+                }
+                lwgCloseScene(func) {
+                    Admin._closeScene(this.Owner.name, func);
+                }
             }
             Admin._Person = _Person;
             class _Object extends Laya.Script {
@@ -1366,6 +1373,12 @@
                     let calssName = this['__proto__']['constructor'].name;
                     this.Owner[calssName] = this;
                     this.lwgOnAwake();
+                }
+                lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
+                    Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+                }
+                lwgCloseScene(func) {
+                    Admin._closeScene(this.Owner.name, func);
                 }
                 lwgOnAwake() { }
                 onEnable() {
@@ -3192,6 +3205,38 @@
             Tools.format_NumAddStr = format_NumAddStr;
             let Node;
             (function (Node) {
+                function zOrderByY(sp, zOrder, along) {
+                    let arr = [];
+                    if (sp.numChildren == 0) {
+                        return arr;
+                    }
+                    ;
+                    for (let index = 0; index < sp.numChildren; index++) {
+                        const element = sp.getChildAt(index);
+                        arr.push(element);
+                    }
+                    Tools.objArrPropertySort(arr, 'y');
+                    if (zOrder) {
+                        for (let index = 0; index < arr.length; index++) {
+                            const element = arr[index];
+                            element['zOrder'] = index;
+                        }
+                    }
+                    if (!along) {
+                        let arr0 = [];
+                        for (let index = arr.length; index < 0; index--) {
+                            const element = arr[index];
+                            element['zOrder'] = index;
+                            arr.splice(index, 1);
+                            console.log(element);
+                        }
+                        return arr0;
+                    }
+                    else {
+                        return arr;
+                    }
+                }
+                Node.zOrderByY = zOrderByY;
                 function changePovit(sp, _pivotX, _pivotY) {
                     let originalPovitX = sp.pivotX;
                     let originalPovitY = sp.pivotY;
@@ -5343,7 +5388,7 @@
     let TimerAdmin = lwg.TimerAdmin;
     let Pause = lwg.Pause;
     let Execution = lwg.Execution;
-    let Gold = lwg.Gold;
+    let _Gold = lwg.Gold;
     let Setting = lwg.Setting;
     let PalyAudio = lwg.PalyAudio;
     let Click = lwg.Click;
@@ -6136,337 +6181,6 @@
     ;
     var _PreLoadStep$1 = _PreLoadStep.PreLoadStep;
 
-    var _SelectLevel;
-    (function (_SelectLevel) {
-        class _data {
-            static _getClassifyArr(classify) {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == classify) {
-                            _arr.push(element);
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
-            static get _arr() {
-                if (!this['_SelectLevel_Data']) {
-                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
-                }
-                return this['_SelectLevel_Data'];
-            }
-            ;
-            static set _arr(array) {
-                this['_SelectLevel_Data'] = array;
-            }
-            ;
-            static get _getLimitArr() {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == this._classify.limit) {
-                            _arr.push(element);
-                            break;
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
-            static get _botanyArr() {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == this._classify.botany) {
-                            _arr.push(element);
-                            break;
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
-            static get _getAnimalArr() {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == this._classify.animal) {
-                            _arr.push(element);
-                            break;
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
-            static get _getOtherArr() {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == this._classify.other) {
-                            _arr.push(element);
-                            break;
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
-            static getUnlockByName(name) {
-                let bool;
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.name] == name) {
-                            bool = element[this._property.unlock];
-                            break;
-                        }
-                    }
-                    return bool;
-                }
-            }
-            ;
-            static getProperty(name, pro) {
-                let value;
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.name] == name) {
-                            value = element[pro];
-                            break;
-                        }
-                    }
-                }
-                return value;
-            }
-            ;
-            static setProperty(name, pro, value) {
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.name] == name) {
-                            element[pro] = value;
-                            _SelectLevel._MyList.refresh();
-                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
-                            break;
-                        }
-                    }
-                }
-                return value;
-            }
-            ;
-        }
-        _data._property = {
-            name: 'name',
-            chName: 'chName',
-            classify: 'classify',
-            unlockWay: 'unlockWay',
-            condition: 'condition',
-            resCondition: 'resCondition',
-            unlock: 'unlock',
-        };
-        _data._classify = {
-            limit: 'limit',
-            animal: 'animal',
-            botany: 'botany',
-            other: 'other',
-        };
-        _data._pich = {
-            get classify() {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
-            },
-            set classify(str) {
-                _SelectLevel._MyList.array = _data._getClassifyArr(str);
-                _SelectLevel._MyList.refresh();
-                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
-            },
-            get customs() {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
-            },
-            set customs(str) {
-                _SelectLevel._MyList.array = _data._getClassifyArr(str);
-                _SelectLevel._MyList.refresh();
-                Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
-            }
-        };
-        _data._unlockWay = {
-            free: 'free',
-            gold: 'gold',
-            ads: 'ads',
-        };
-        _SelectLevel._data = _data;
-        let _Event;
-        (function (_Event) {
-            _Event["event1"] = "_Example_Event1";
-            _Event["event2"] = "_Example_Event2";
-        })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
-        function _init() {
-        }
-        _SelectLevel._init = _init;
-        class _SelectLevelItem extends Admin._Object {
-            lwgBtnClick() {
-                let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
-                Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
-                });
-            }
-        }
-        _SelectLevel._SelectLevelItem = _SelectLevelItem;
-        class SelectLevelBase extends Admin._SceneBase {
-            moduleOnAwake() {
-                _SelectLevel._MyList = this.ListVar('MyList');
-                _SelectLevel._MyList.array = _data._getClassifyArr(_data._pich.classify);
-                _SelectLevel._MyList.selectEnable = true;
-                _SelectLevel._MyList.vScrollBarSkin = "";
-                _SelectLevel._MyList.selectHandler = new Laya.Handler(this, (index) => { });
-                _SelectLevel._MyList.renderHandler = new Laya.Handler(this, (cell, index) => {
-                    let _dataSource = cell.dataSource;
-                    let Content = cell.getChildByName('Content');
-                    let BtnContent = Content.getChildByName('BtnContent');
-                    let Name = BtnContent.getChildByName('Name');
-                    Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
-                    let Xianlu = Content.getChildByName('Xianlu');
-                    let IconPen = Content.getChildByName('IconPen');
-                    if (index % 2 !== 0) {
-                        Content.pos(27, 8);
-                        Xianlu.pos(104, 189);
-                        Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
-                        IconPen.scaleX = 1;
-                        IconPen.pos(350, 219);
-                    }
-                    else {
-                        Content.pos(363, 10);
-                        Xianlu.pos(-175, 195);
-                        Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
-                        IconPen.scaleX = -1;
-                        IconPen.pos(-31, 195);
-                    }
-                    let IconAds = BtnContent.getChildByName('IconAds');
-                    let IconLock = BtnContent.getChildByName('IconLock');
-                    let GoldNum = BtnContent.getChildByName('GoldNum');
-                    let GoldBoard = BtnContent.getChildByName('GoldBoard');
-                    if (!_dataSource[_data._property.unlock]) {
-                        switch (_dataSource[_data._property.unlockWay]) {
-                            case _data._unlockWay.ads:
-                                GoldBoard.visible = GoldNum.visible = false;
-                                IconLock.visible = IconAds.visible = true;
-                                break;
-                            case _data._unlockWay.free:
-                                GoldBoard.visible = GoldNum.visible = false;
-                                IconLock.visible = IconAds.visible = false;
-                                break;
-                            case _data._unlockWay.gold:
-                                GoldNum.text = _dataSource[_data._property.condition];
-                                GoldBoard.visible = GoldNum.visible = true;
-                                IconLock.visible = IconAds.visible = false;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    else {
-                        IconAds.visible = false;
-                        IconLock.visible = false;
-                        GoldNum.visible = false;
-                        GoldBoard.visible = false;
-                    }
-                    cell.zOrder = index;
-                });
-                if (_SelectLevel._MyList.cells.length !== 0) {
-                    for (let index = 0; index < _SelectLevel._MyList.cells.length; index++) {
-                        const element = _SelectLevel._MyList.cells[index];
-                        if (!element.getComponent(_SelectLevelItem)) {
-                            element.addComponent(_SelectLevelItem);
-                        }
-                    }
-                }
-            }
-            moduleOnEnable() {
-            }
-            moduleEventRegister() {
-            }
-            moduleOnStart() {
-            }
-        }
-        _SelectLevel.SelectLevelBase = SelectLevelBase;
-        class SelectLevel extends _SelectLevel.SelectLevelBase {
-            lwgOnAwake() {
-            }
-            lwgOnEnable() { }
-            lwgEventRegister() { }
-            lwgOnStart() { }
-            lwgAdaptive() { }
-            lwgOpenAni() { return 100; }
-            lwgBtnClick() {
-                for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
-                    const element = this.ImgVar('CutBtn').getChildAt(index);
-                    if (element.name == _data._pich.classify) {
-                        element.y = 11;
-                    }
-                    else {
-                        element.y = 69;
-                    }
-                    Click._on(Click._Type.largen, element, this, null, null, (e) => {
-                        for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
-                            const Btn = this.ImgVar('CutBtn').getChildAt(index);
-                            if (Btn == e.currentTarget) {
-                                Btn.y = 11;
-                                _data._pich.classify = Btn.name;
-                            }
-                            else {
-                                Btn.y = 69;
-                            }
-                        }
-                    });
-                }
-            }
-            lwgVanishAni() { return 100; }
-            lwgOnUpdate() { }
-            lwgOnDisable() { }
-        }
-        _SelectLevel.SelectLevel = SelectLevel;
-        class UIExampleItem extends Admin._Object {
-        }
-        _SelectLevel.UIExampleItem = UIExampleItem;
-    })(_SelectLevel || (_SelectLevel = {}));
-    var _SelectLevel$1 = _SelectLevel.SelectLevel;
-
-    var _Start;
-    (function (_Start) {
-        function _init() {
-            let name = {
-                dsfa: status,
-            };
-        }
-        _Start._init = _init;
-        class _StartScene extends Admin._SceneBase {
-            moduleOnAwake() {
-                Gold.createGoldNode(38, 68);
-            }
-        }
-        _Start._StartScene = _StartScene;
-        class Start extends _StartScene {
-            lwgOnAwake() {
-            }
-            lwgBtnClick() {
-                Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-                    this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
-                });
-            }
-        }
-        _Start.Start = Start;
-        class StartItem extends Admin._Object {
-        }
-        _Start.StartItem = StartItem;
-    })(_Start || (_Start = {}));
-    var _Start$1 = _Start.Start;
-
     var _Task;
     (function (_Task) {
         _Task._allClassifyArr = [];
@@ -6647,6 +6361,480 @@
     })(_Task || (_Task = {}));
     var _Task$1 = _Task.Task;
 
+    class ADManager {
+        static ShowBanner() {
+            let p = new TJ.ADS.Param();
+            p.place = TJ.ADS.Place.BOTTOM | TJ.ADS.Place.CENTER;
+            TJ.ADS.Api.ShowBanner(p);
+        }
+        static CloseBanner() {
+            let p = new TJ.ADS.Param();
+            p.place = TJ.ADS.Place.BOTTOM | TJ.ADS.Place.CENTER;
+            TJ.ADS.Api.RemoveBanner(p);
+        }
+        static ShowNormal() {
+            TJ.API.AdService.ShowNormal(new TJ.API.AdService.Param());
+        }
+        static showNormal2() {
+            TJ.API.AdService.ShowNormal(new TJ.API.AdService.Param());
+        }
+        static ShowReward(rewardAction, CDTime = 500) {
+            if (Admin._evaluating) {
+                rewardAction();
+                return;
+            }
+            if (ADManager.CanShowCD) {
+                PalyAudio.stopMusic();
+                console.log("?????");
+                let p = new TJ.ADS.Param();
+                p.extraAd = true;
+                let getReward = false;
+                p.cbi.Add(TJ.Define.Event.Reward, () => {
+                    getReward = true;
+                    PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
+                    if (rewardAction != null) {
+                        rewardAction();
+                        EventAdmin._notify(_Task._Event.adsTime);
+                    }
+                });
+                p.cbi.Add(TJ.Define.Event.Close, () => {
+                    if (!getReward) {
+                        PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
+                        console.log('观看完整广告才能获取奖励哦！');
+                        Admin._openScene(_SceneName.Ads, null, () => {
+                            console.log(Admin._sceneControl['UIAds']);
+                            Admin._sceneControl['UIAds']['UIAds'].setCallBack(rewardAction);
+                        });
+                    }
+                });
+                p.cbi.Add(TJ.Define.Event.NoAds, () => {
+                    PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
+                    lwg$1.Dialogue.createHint_Middle(lwg$1.Dialogue.HintContent["暂时没有广告，过会儿再试试吧！"]);
+                });
+                TJ.ADS.Api.ShowReward(p);
+                ADManager.CanShowCD = false;
+                setTimeout(() => {
+                    ADManager.CanShowCD = true;
+                }, CDTime);
+            }
+            else {
+            }
+        }
+        static Event(param, value) {
+            console.log("Param:>" + param + "Value:>" + value);
+            let p = new TJ.GSA.Param();
+            if (value == null) {
+                p.id = param;
+            }
+            else {
+                p.id = param + value;
+            }
+            console.log(p.id);
+            TJ.GSA.Api.Event(p);
+        }
+        static initShare() {
+            if (TJ.API.AppInfo.Channel() == TJ.Define.Channel.AppRt.WX_AppRt) {
+                this.wx.onShareAppMessage(() => {
+                    return {
+                        title: this.shareContent,
+                        imageUrl: this.shareImgUrl,
+                        query: ""
+                    };
+                });
+                this.wx.showShareMenu({
+                    withShareTicket: true,
+                    success: null,
+                    fail: null,
+                    complete: null
+                });
+            }
+        }
+        static lureShare() {
+            if (TJ.API.AppInfo.Channel() == TJ.Define.Channel.AppRt.WX_AppRt) {
+                this.wx.shareAppMessage({
+                    title: this.shareContent,
+                    imageUrl: this.shareImgUrl,
+                    query: ""
+                });
+            }
+        }
+        static VibrateShort() {
+            if (!Setting._shake.switch) {
+                return;
+            }
+            TJ.API.Vibrate.Short();
+        }
+        static Vibratelong() {
+            if (!Setting._shake.switch) {
+                return;
+            }
+            TJ.API.Vibrate.Long();
+        }
+        static TAPoint(type, name) {
+            let p = new TJ.API.TA.Param();
+            p.id = name;
+            switch (type) {
+                case TaT.BtnShow:
+                    TJ.API.TA.Event_Button_Show(p);
+                    break;
+                case TaT.BtnClick:
+                    TJ.API.TA.Event_Button_Click(p);
+                    break;
+                case TaT.PageShow:
+                    TJ.API.TA.Event_Page_Show(p);
+                    break;
+                case TaT.PageEnter:
+                    TJ.API.TA.Event_Page_Enter(p);
+                    break;
+                case TaT.PageLeave:
+                    TJ.API.TA.Event_Page_Leave(p);
+                    break;
+                case TaT.LevelStart:
+                    TJ.API.TA.Event_Level_Start(p);
+                    console.log('本关开始打点');
+                    break;
+                case TaT.LevelFail:
+                    TJ.API.TA.Event_Level_Fail(p);
+                    console.log('本关失败打点');
+                    break;
+                case TaT.LevelFinish:
+                    TJ.API.TA.Event_Level_Finish(p);
+                    console.log('本关胜利打点');
+                    break;
+            }
+        }
+    }
+    ADManager.CanShowCD = true;
+    ADManager.wx = Laya.Browser.window.wx;
+    ADManager.shareImgUrl = "http://image.tomatojoy.cn/6847506204006681a5d5fa0cd91ce408";
+    ADManager.shareContent = "比谁猜的快";
+    var TaT;
+    (function (TaT) {
+        TaT[TaT["BtnShow"] = 0] = "BtnShow";
+        TaT[TaT["BtnClick"] = 1] = "BtnClick";
+        TaT[TaT["PageShow"] = 2] = "PageShow";
+        TaT[TaT["PageEnter"] = 3] = "PageEnter";
+        TaT[TaT["PageLeave"] = 4] = "PageLeave";
+        TaT[TaT["LevelStart"] = 5] = "LevelStart";
+        TaT[TaT["LevelFinish"] = 6] = "LevelFinish";
+        TaT[TaT["LevelFail"] = 7] = "LevelFail";
+    })(TaT || (TaT = {}));
+
+    var _SelectLevel;
+    (function (_SelectLevel) {
+        class _data {
+            static _getClassifyArr(classify) {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == classify) {
+                            _arr.push(element);
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static get _arr() {
+                if (!this['_SelectLevel_Data']) {
+                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
+                }
+                return this['_SelectLevel_Data'];
+            }
+            ;
+            static set _arr(array) {
+                this['_SelectLevel_Data'] = array;
+            }
+            ;
+            static get _getLimitArr() {
+                let _arr = [];
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.classify] == this._classify.limit) {
+                            _arr.push(element);
+                            break;
+                        }
+                    }
+                }
+                return _arr;
+            }
+            ;
+            static getUnlockByName(name) {
+                let bool;
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            bool = element[this._property.unlock];
+                            break;
+                        }
+                    }
+                    return bool;
+                }
+            }
+            ;
+            static getProperty(name, pro) {
+                let value;
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            value = element[pro];
+                            break;
+                        }
+                    }
+                }
+                return value;
+            }
+            ;
+            static setProperty(name, pro, value) {
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        if (element[this._property.name] == name) {
+                            element[pro] = value;
+                            _SelectLevel._MyList.refresh();
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                            break;
+                        }
+                    }
+                }
+                return value;
+            }
+            ;
+        }
+        _data._property = {
+            name: 'name',
+            chName: 'chName',
+            classify: 'classify',
+            unlockWay: 'unlockWay',
+            condition: 'condition',
+            resCondition: 'resCondition',
+            unlock: 'unlock',
+        };
+        _data._classify = {
+            limit: 'limit',
+            animal: 'animal',
+            botany: 'botany',
+            other: 'other',
+        };
+        _data._pich = {
+            get classify() {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
+            },
+            set classify(str) {
+                _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                _SelectLevel._MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
+            },
+            get customs() {
+                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
+            },
+            set customs(str) {
+                _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                _SelectLevel._MyList.refresh();
+                Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
+            }
+        };
+        _data._unlockWay = {
+            free: 'free',
+            gold: 'gold',
+            ads: 'ads',
+        };
+        _SelectLevel._data = _data;
+        let _Event;
+        (function (_Event) {
+            _Event["event1"] = "_Example_Event1";
+            _Event["event2"] = "_Example_Event2";
+        })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
+        function _init() {
+        }
+        _SelectLevel._init = _init;
+        class _SelectLevelItem extends Admin._Object {
+            lwgBtnClick() {
+                let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
+                Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
+                    if (!this.owner['_dataSource'][_data._property.unlock]) {
+                        switch (this.owner['_dataSource'][_data._property.unlockWay]) {
+                            case _data._unlockWay.ads:
+                                ADManager.ShowReward(() => {
+                                    _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                });
+                                break;
+                            case _data._unlockWay.gold:
+                                let num = this.owner['_dataSource'][_data._property.resCondition];
+                                if (_Gold._num >= num) {
+                                    _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                    _Gold._num.value -= num;
+                                }
+                                else {
+                                    Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        _data._pich.customs = this.owner['_dataSource'][_data._property.name];
+                        let levelName = _SceneName.Game + '_' + _data._pich.customs;
+                        this.lwgOpenScene(levelName, this.OwnerScene.name, () => {
+                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                            }
+                        });
+                    }
+                    _SelectLevel._MyList.refresh();
+                });
+            }
+        }
+        _SelectLevel._SelectLevelItem = _SelectLevelItem;
+        class SelectLevelBase extends Admin._SceneBase {
+            moduleOnAwake() {
+                _SelectLevel._MyList = this.ListVar('MyList');
+                _SelectLevel._MyList.array = _data._getClassifyArr(_data._pich.classify);
+                _SelectLevel._MyList.selectEnable = true;
+                _SelectLevel._MyList.vScrollBarSkin = "";
+                _SelectLevel._MyList.selectHandler = new Laya.Handler(this, (index) => { });
+                _SelectLevel._MyList.renderHandler = new Laya.Handler(this, (cell, index) => {
+                    let _dataSource = cell.dataSource;
+                    let Content = cell.getChildByName('Content');
+                    let BtnContent = Content.getChildByName('BtnContent');
+                    let Name = BtnContent.getChildByName('Name');
+                    Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
+                    let Xianlu = Content.getChildByName('Xianlu');
+                    let IconPen = Content.getChildByName('IconPen');
+                    if (index % 2 !== 0) {
+                        Content.pos(27, 8);
+                        Xianlu.pos(104, 189);
+                        Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
+                        IconPen.scaleX = 1;
+                        IconPen.pos(350, 219);
+                    }
+                    else {
+                        Content.pos(363, 10);
+                        Xianlu.pos(-175, 195);
+                        Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
+                        IconPen.scaleX = -1;
+                        IconPen.pos(-31, 195);
+                    }
+                    let IconAds = BtnContent.getChildByName('IconAds');
+                    let IconLock = BtnContent.getChildByName('IconLock');
+                    let GoldNum = BtnContent.getChildByName('GoldNum');
+                    let GoldBoard = BtnContent.getChildByName('GoldBoard');
+                    if (!_dataSource[_data._property.unlock]) {
+                        switch (_dataSource[_data._property.unlockWay]) {
+                            case _data._unlockWay.ads:
+                                GoldBoard.visible = GoldNum.visible = false;
+                                IconLock.visible = IconAds.visible = true;
+                                break;
+                            case _data._unlockWay.free:
+                                GoldBoard.visible = GoldNum.visible = false;
+                                IconLock.visible = IconAds.visible = false;
+                                break;
+                            case _data._unlockWay.gold:
+                                GoldNum.text = _dataSource[_data._property.condition];
+                                IconLock.visible = GoldBoard.visible = GoldNum.visible = true;
+                                IconAds.visible = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        IconAds.visible = false;
+                        IconLock.visible = false;
+                        GoldNum.visible = false;
+                        GoldBoard.visible = false;
+                    }
+                    cell.zOrder = index;
+                });
+            }
+        }
+        _SelectLevel.SelectLevelBase = SelectLevelBase;
+        class SelectLevel extends _SelectLevel.SelectLevelBase {
+            lwgOnAwake() {
+                for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                    const element = this.ImgVar('CutBtn').getChildAt(index);
+                    if (element.name == _data._pich.classify) {
+                        element.y = 11;
+                    }
+                    else {
+                        element.y = 69;
+                    }
+                }
+            }
+            lwgAdaptive() {
+                this.ImgVar('UiLand').y = Laya.stage.height - 74;
+            }
+            lwgBtnClick() {
+                if (_SelectLevel._MyList.cells.length !== 0) {
+                    for (let index = 0; index < _SelectLevel._MyList.cells.length; index++) {
+                        const element = _SelectLevel._MyList.cells[index];
+                        if (!element.getComponent(_SelectLevelItem)) {
+                            element.addComponent(_SelectLevelItem);
+                        }
+                    }
+                }
+                for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                    const element = this.ImgVar('CutBtn').getChildAt(index);
+                    if (element.name == _data._pich.classify) {
+                        element.y = 11;
+                    }
+                    else {
+                        element.y = 69;
+                    }
+                    Click._on(Click._Type.largen, element, this, null, null, (e) => {
+                        for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                            const Btn = this.ImgVar('CutBtn').getChildAt(index);
+                            if (Btn == e.currentTarget) {
+                                Btn.y = 11;
+                                _data._pich.classify = Btn.name;
+                            }
+                            else {
+                                Btn.y = 69;
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        _SelectLevel.SelectLevel = SelectLevel;
+    })(_SelectLevel || (_SelectLevel = {}));
+    var _SelectLevel$1 = _SelectLevel.SelectLevel;
+
+    var _Start;
+    (function (_Start) {
+        function _init() {
+            let name = {
+                dsfa: status,
+            };
+        }
+        _Start._init = _init;
+        class _StartScene extends Admin._SceneBase {
+            moduleOnAwake() {
+                _Gold.createGoldNode(38, 68);
+            }
+        }
+        _Start._StartScene = _StartScene;
+        class Start extends _StartScene {
+            lwgOnAwake() {
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
+                    this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
+                });
+            }
+        }
+        _Start.Start = Start;
+        class StartItem extends Admin._Object {
+        }
+        _Start.StartItem = StartItem;
+    })(_Start || (_Start = {}));
+    var _Start$1 = _Start.Start;
+
     var SceneName;
     (function (SceneName) {
     })(SceneName || (SceneName = {}));
@@ -6663,7 +6851,7 @@
                 _Game: _Game,
                 _Task: _Task,
                 _PreLoadStep: _PreLoadStep,
-                _SelectLevel: _SelectLevel
+                _SelectLevel: _SelectLevel,
             };
         }
     }

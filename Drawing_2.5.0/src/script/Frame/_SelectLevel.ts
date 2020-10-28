@@ -1,4 +1,6 @@
-import { Admin, Click, Tools } from "./Lwg";
+import ADManager from "../TJ/Admanager";
+import { Admin, Click, _Gold, Tools, Dialogue, _SceneName } from "./Lwg";
+import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 export module _SelectLevel {
     export class _data {
@@ -75,45 +77,6 @@ export module _SelectLevel {
             }
             return _arr;
         };
-        static get _botanyArr(): Array<any> {
-            let _arr = [];
-            for (const key in this._arr) {
-                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                    const element = this._arr[key];
-                    if (element[this._property.classify] == this._classify.botany) {
-                        _arr.push(element);
-                        break;
-                    }
-                }
-            }
-            return _arr;
-        };
-        static get _getAnimalArr(): Array<any> {
-            let _arr = [];
-            for (const key in this._arr) {
-                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                    const element = this._arr[key];
-                    if (element[this._property.classify] == this._classify.animal) {
-                        _arr.push(element);
-                        break;
-                    }
-                }
-            }
-            return _arr;
-        };
-        static get _getOtherArr(): Array<any> {
-            let _arr = [];
-            for (const key in this._arr) {
-                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                    const element = this._arr[key];
-                    if (element[this._property.classify] == this._classify.other) {
-                        _arr.push(element);
-                        break;
-                    }
-                }
-            }
-            return _arr;
-        };
         // 查看当前名称的关卡是否解锁
         static getUnlockByName(name: string): any {
             let bool: boolean;
@@ -166,13 +129,39 @@ export module _SelectLevel {
 
     }
     export let _MyList: Laya.List;
-    export let _MyTap: Laya.Tab;
     export class _SelectLevelItem extends Admin._Object {
         lwgBtnClick(): void {
             let BtnContent = (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('BtnContent');
             Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
-                // _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
-                // _PencilsList.refresh();
+                if (!this.owner['_dataSource'][_data._property.unlock]) {
+                    switch (this.owner['_dataSource'][_data._property.unlockWay]) {
+                        case _data._unlockWay.ads:
+                            ADManager.ShowReward(() => {
+                                _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                            });
+                            break;
+                        case _data._unlockWay.gold:
+                            let num = this.owner['_dataSource'][_data._property.resCondition]
+                            if (_Gold._num >= num) {
+                                _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                _Gold._num.value -= num;
+                            } else {
+                                Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    _data._pich.customs = this.owner['_dataSource'][_data._property.name];
+                    let levelName = _SceneName.Game + '_' + _data._pich.customs;
+                    this.lwgOpenScene(levelName, this.OwnerScene.name, () => {
+                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                            Admin._sceneControl[levelName].addComponent(_Game.Game);
+                        }
+                    });
+                }
+                _MyList.refresh();
             });
         }
     }
@@ -207,8 +196,6 @@ export module _SelectLevel {
                     IconPen.scaleX = -1;
                     IconPen.pos(-31, 195);
                 }
-
-
                 let IconAds = BtnContent.getChildByName('IconAds') as Laya.Image;
                 let IconLock = BtnContent.getChildByName('IconLock') as Laya.Image;
                 let GoldNum = BtnContent.getChildByName('GoldNum') as Laya.Label;
@@ -226,8 +213,8 @@ export module _SelectLevel {
                             break;
                         case _data._unlockWay.gold:
                             GoldNum.text = _dataSource[_data._property.condition];
-                            GoldBoard.visible = GoldNum.visible = true;
-                            IconLock.visible = IconAds.visible = false;
+                            IconLock.visible = GoldBoard.visible = GoldNum.visible = true;
+                            IconAds.visible = false;
                             break;
                         default:
                             break;
@@ -238,11 +225,27 @@ export module _SelectLevel {
                     GoldNum.visible = false;
                     GoldBoard.visible = false;
                 }
-
-
                 cell.zOrder = index;
-
             });
+        }
+    }
+    /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
+    export class SelectLevel extends _SelectLevel.SelectLevelBase {
+        lwgOnAwake(): void {
+            for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
+                const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
+                if (element.name == _data._pich.classify) {
+                    element.y = 11;
+                } else {
+                    element.y = 69;
+                }
+            }
+        }
+        lwgAdaptive(): void {
+            this.ImgVar('UiLand').y = Laya.stage.height - 74;
+        }
+        lwgBtnClick(): void {
+
             if (_MyList.cells.length !== 0) {
                 for (let index = 0; index < _MyList.cells.length; index++) {
                     const element = _MyList.cells[index];
@@ -251,25 +254,7 @@ export module _SelectLevel {
                     }
                 }
             }
-        }
-        moduleOnEnable(): void {
-        }
-        moduleEventRegister(): void {
-        }
-        moduleOnStart(): void {
-        }
-    }
-    /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
-    export class SelectLevel extends _SelectLevel.SelectLevelBase {
-        lwgOnAwake(): void {
 
-        }
-        lwgOnEnable(): void { }
-        lwgEventRegister(): void { }
-        lwgOnStart(): void { }
-        lwgAdaptive(): void { }
-        lwgOpenAni(): number { return 100; }
-        lwgBtnClick(): void {
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                 const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
                 if (element.name == _data._pich.classify) {
@@ -290,12 +275,6 @@ export module _SelectLevel {
                 });
             }
         }
-        lwgVanishAni(): number { return 100; }
-        lwgOnUpdate(): void { }
-        lwgOnDisable(): void { }
-    }
-    export class UIExampleItem extends Admin._Object {
-
     }
 }
 export default _SelectLevel.SelectLevel;

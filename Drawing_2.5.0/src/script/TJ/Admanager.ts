@@ -60,7 +60,7 @@ export default class ADManager {
                     //UIMgr.show("UISubSkinTry", 2);
                     // Dialog.createHint_Middle(Dialog.HintContent["观看完整广告才能获取奖励哦！"]);
                     console.log('观看完整广告才能获取奖励哦！');
-                    Admin._openScene(_SceneName.UIAds, null, () => {
+                    Admin._openScene(_SceneName.Ads, null, () => {
                         console.log(Admin._sceneControl['UIAds']);
                         // EventAdmin._notify('setCallBack', [rewardAction])
                         Admin._sceneControl['UIAds']['UIAds'].setCallBack(rewardAction);
