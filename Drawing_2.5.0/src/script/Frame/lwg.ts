@@ -1095,6 +1095,7 @@ export module lwg {
                 Bytedance: 'Bytedance',
                 WeChat: 'WeChat',
                 OPPO: 'OPPO',
+                OPPOTest: 'OPPOTest',
                 VIVO: 'VIVO',
                 /**通用*/
                 General: 'General',
@@ -1110,12 +1111,10 @@ export module lwg {
                 this['_platform_name'] = val;
                 if (val == _platform.tpye.WebTest) {
                     Laya.LocalStorage.clear();
+                    _Gold._num.value = 5000;
                 }
             }
         };
-
-        /**是否为评测版本，评测版本广告默认关闭，默认为非评测包，直接获得广告奖励*/
-        export let _evaluating: boolean = false;
 
         /**等级*/
         export let _game = {
@@ -1287,6 +1286,7 @@ export module lwg {
             Eastereggister = 'Eastereggister',
             SelectLevel = 'SelectLevel',
             Settle = 'Settle',
+            Special='Special',
         }
 
         /**
@@ -1486,7 +1486,7 @@ export module lwg {
                             let originalY = element.y;
                             element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                             element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
-                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);;
+                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
                             Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
                                 Tools.Node.changePovit(element, originalPovitX, originalPovitY);
                             });

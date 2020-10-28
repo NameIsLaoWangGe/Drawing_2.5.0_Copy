@@ -16,13 +16,17 @@ export module _Share {
     /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
     export class Share extends _Share.ShareBase {
         lwgBtnClick(): void {
-            Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
-            });
+            var func = () => {
+                EventAdmin._notify(_Game._Event.victory);
+                this.lwgOpenScene(_SceneName.Victory);
+            }
             Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
-              
+                func();
             });
             Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-              
+                RecordManager._share('award', () => {
+                    func();
+                });
             });
         }
     }

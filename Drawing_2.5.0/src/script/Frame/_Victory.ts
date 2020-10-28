@@ -1,7 +1,9 @@
 import ADManager from "../TJ/Admanager";
-import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
+import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
+import { _Share } from "./_Share";
+import { _Special } from "./_Special";
 export module _Victory {
     export class _data {
     }
@@ -13,6 +15,12 @@ export module _Victory {
     export class VictoryBase extends Admin._SceneBase {
     }
     export class Victory extends _Victory.VictoryBase {
+        lwgOpenAniAfter(): void {
+            if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._openNum.count == 0) {
+                _Special._data._openNum.count++;
+                this.lwgOpenScene(_SceneName.Special);
+            }
+        }
         lwgBtnClick(): void {
             let num = 25;
             Click._on(Click._Type.largen, this.btnVar('BtnNext'), this, null, null, () => {

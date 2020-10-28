@@ -17,7 +17,7 @@
         }],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":211,
+    "maxID":212,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -154,16 +154,17 @@
                             "props":{"zOrder":97,"y":120,"x":403,"width":155,"var":"Draw5","skin":"Game/UI/GameScene/Level4/yuqimask.png","pivotY":122,"pivotX":78,"height":141},
                             "nodeParent":178,
                             "label":"Draw5",
-                            "isOpen":false,
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
                             "compId":198,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/yuqimask.png"},
+                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/yuqimask.png","renderType":"mask"},
                                     "nodeParent":198,
                                     "label":"Image",
                                     "isDirectory":false,
@@ -174,6 +175,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"skin":"Game/UI/GameScene/Level4/yuqi.png","name":"Pic"},

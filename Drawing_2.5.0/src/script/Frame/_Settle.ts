@@ -20,8 +20,7 @@ export module _Settle {
                 EventAdmin._notify(_Game._Event.playAni1);
             });
             Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
-                EventAdmin._notify(_Game._Event.victory);
-                this.lwgOpenScene(_SceneName.Victory);
+                this.lwgOpenScene(_SceneName.Share);
             });
             Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
                 RecordManager._share('award', () => {

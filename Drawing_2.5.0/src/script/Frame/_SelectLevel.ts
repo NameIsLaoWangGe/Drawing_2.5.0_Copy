@@ -21,7 +21,7 @@ export module _SelectLevel {
         };
         static _pich = {
             get classify(): string {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
+                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
             },
             set classify(str: string) {
                 _MyList.array = _data._getClassifyArr(str);
@@ -29,7 +29,7 @@ export module _SelectLevel {
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
             },
             get customs(): string {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
+                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
             },
             set customs(str: string) {
                 _MyList.array = _data._getClassifyArr(str);
@@ -128,7 +128,7 @@ export module _SelectLevel {
                             break;
                         case _data._unlockWay.gold:
                             let num = this.owner['_dataSource'][_data._property.resCondition]
-                            if (_Gold._num >= num) {
+                            if (_Gold._num.value >= num) {
                                 _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                                 _Gold._num.value -= num;
                             } else {

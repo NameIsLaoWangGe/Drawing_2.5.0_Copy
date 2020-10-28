@@ -786,6 +786,7 @@
                     Bytedance: 'Bytedance',
                     WeChat: 'WeChat',
                     OPPO: 'OPPO',
+                    OPPOTest: 'OPPOTest',
                     VIVO: 'VIVO',
                     General: 'General',
                     Web: 'Web',
@@ -798,10 +799,10 @@
                     this['_platform_name'] = val;
                     if (val == Admin._platform.tpye.WebTest) {
                         Laya.LocalStorage.clear();
+                        _Gold._num.value = 5000;
                     }
                 }
             };
-            Admin._evaluating = false;
             Admin._game = {
                 switch: true,
                 get level() {
@@ -956,6 +957,7 @@
                 _SceneName["Eastereggister"] = "Eastereggister";
                 _SceneName["SelectLevel"] = "SelectLevel";
                 _SceneName["Settle"] = "Settle";
+                _SceneName["Special"] = "Special";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
             function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOrder) {
                 _openScene(_SceneName.PreLoadStep);
@@ -1127,7 +1129,6 @@
                                 element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                                 element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
                                 Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
-                                ;
                                 Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
                                     Tools.Node.changePovit(element, originalPovitX, originalPovitY);
                                 });
@@ -6408,7 +6409,7 @@
             TJ.API.AdService.ShowNormal(new TJ.API.AdService.Param());
         }
         static ShowReward(rewardAction, CDTime = 500) {
-            if (Admin._evaluating) {
+            if (Admin._platform.name == Admin._platform.tpye.WebTest || Admin._platform.name == Admin._platform.tpye.OPPOTest) {
                 rewardAction();
                 return;
             }
@@ -6637,7 +6638,7 @@
         };
         _data._pich = {
             get classify() {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'other';
+                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
             },
             set classify(str) {
                 _SelectLevel._MyList.array = _data._getClassifyArr(str);
@@ -6645,7 +6646,7 @@
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
             },
             get customs() {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : 'other';
+                return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
             },
             set customs(str) {
                 _SelectLevel._MyList.array = _data._getClassifyArr(str);
@@ -6680,7 +6681,7 @@
                                 break;
                             case _data._unlockWay.gold:
                                 let num = this.owner['_dataSource'][_data._property.resCondition];
-                                if (_Gold._num >= num) {
+                                if (_Gold._num.value >= num) {
                                     _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                                     _Gold._num.value -= num;
                                 }
@@ -6960,8 +6961,7 @@
                     EventAdmin._notify(_Game._Event.playAni1);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
-                    EventAdmin._notify(_Game._Event.victory);
-                    this.lwgOpenScene(_SceneName.Victory);
+                    this.lwgOpenScene(_SceneName.Share);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
                     RecordManager._share('award', () => {
@@ -6972,6 +6972,66 @@
         _Settle.Settle = Settle;
     })(_Settle || (_Settle = {}));
     var _Settle$1 = _Settle.Settle;
+
+    var _Share;
+    (function (_Share) {
+        class _data {
+        }
+        _Share._data = _data;
+        let _Event;
+        (function (_Event) {
+        })(_Event = _Share._Event || (_Share._Event = {}));
+        function _init() {
+        }
+        _Share._init = _init;
+        class ShareBase extends Admin._SceneBase {
+        }
+        _Share.ShareBase = ShareBase;
+        class Share extends _Share.ShareBase {
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                    EventAdmin._notify(_Game._Event.victory);
+                    this.lwgOpenScene(_SceneName.Victory);
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
+                    RecordManager._share('award', () => {
+                        EventAdmin._notify(_Game._Event.victory);
+                        this.lwgOpenScene(_SceneName.Victory);
+                    });
+                });
+            }
+        }
+        _Share.Share = Share;
+    })(_Share || (_Share = {}));
+    var _Share$1 = _Share.Share;
+
+    var _Special;
+    (function (_Special) {
+        class _data {
+        }
+        _Special._data = _data;
+        let _Event;
+        (function (_Event) {
+        })(_Event = _Special._Event || (_Special._Event = {}));
+        function _init() {
+        }
+        _Special._init = _init;
+        class SpecialBase extends Admin._SceneBase {
+        }
+        _Special.SpecialBase = SpecialBase;
+        class Special extends _Special.SpecialBase {
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
+                    this.lwgCloseScene();
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
+                    this.lwgCloseScene();
+                });
+            }
+        }
+        _Special.Special = Special;
+    })(_Special || (_Special = {}));
+    var _Special$1 = _Special.Special;
 
     var _Start;
     (function (_Start) {
@@ -7019,6 +7079,11 @@
         }
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
+            lwgOpenAniAfter() {
+                if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours) {
+                    this.lwgOpenScene(_SceneName.Special);
+                }
+            }
             lwgBtnClick() {
                 let num = 25;
                 Click._on(Click._Type.largen, this.btnVar('BtnNext'), this, null, null, () => {
@@ -7049,9 +7114,8 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.General;
+            Admin._platform.name = Admin._platform.tpye.WebTest;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn;
-            Admin._evaluating = false;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
                 _Guide: _Guide,
@@ -7062,6 +7126,8 @@
                 _SelectLevel: _SelectLevel,
                 _Settle: _Settle,
                 _Victory: _Victory,
+                _Share: _Share,
+                _Special: _Special,
             };
         }
     }

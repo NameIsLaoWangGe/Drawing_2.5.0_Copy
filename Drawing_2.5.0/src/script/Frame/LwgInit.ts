@@ -5,6 +5,8 @@ import { _PreLoad } from "./_PreLoad";
 import { _PreLoadStep } from "./_PreLoadStep";
 import { _SelectLevel } from "./_SelectLevel";
 import { _Settle } from "./_Settle";
+import { _Share } from "./_Share";
+import { _Special } from "./_Special";
 import { _Start } from "./_Start";
 import { _Task } from "./_Task";
 import { _Victory } from "./_Victory";
@@ -18,9 +20,8 @@ export default class LwgInit extends _LwgInitScene {
             // { name: "sp2", root: "3DScene" },
             // { name: "sp3", root: "3DPrefab" },
         ];
-        Admin._platform.name = Admin._platform.tpye.General;
+        Admin._platform.name = Admin._platform.tpye.WebTest;
         Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn;
-        Admin._evaluating = false;
         Admin._moudel = {
             _PreLoad: _PreLoad,
             _Guide: _Guide,
@@ -31,6 +32,8 @@ export default class LwgInit extends _LwgInitScene {
             _SelectLevel: _SelectLevel,
             _Settle: _Settle,
             _Victory: _Victory,
+            _Share: _Share,
+            _Special: _Special,
         };
     }
 }

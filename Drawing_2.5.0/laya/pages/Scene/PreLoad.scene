@@ -1,11 +1,12 @@
 {
+    "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":22,
+    "selecteID":29,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":29,
+    "maxID":30,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -14,19 +15,21 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
-            "props":{"y":0,"x":0,"var":"Background","skin":"Game/UI/Common/bj.png","name":"Background"},
+            "props":{"y":0,"x":0,"var":"Background","skin":"Game/UI/Common/bj.png","sizeGrid":"841,0,374,0","name":"Background"},
             "nodeParent":2,
             "label":"Background",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "compId":12,
+            "compId":29,
             "child":[
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,ProgressBoard,ProgressBoard",
             "props":{"y":1055,"width":481,"var":"ProgressBoard","skin":"Game/UI/PreLoad/jdk.png","pivotY":17,"pivotX":241,"name":"ProgressBoard","height":33,"centerX":0},
@@ -39,6 +42,7 @@
             "compId":14,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Progress,Progress",
                     "props":{"y":7,"x":12,"width":455,"var":"Progress","skin":"Game/UI/PreLoad/jindutiao.png","sizeGrid":"0,68,0,95","name":"Progress","height":19},
@@ -51,6 +55,7 @@
                     "compId":15,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Bar,Bar",
                             "props":{"y":0,"x":-455,"width":455,"var":"Bar","skin":"Game/UI/PreLoad/jindutiao.png","sizeGrid":"0,14,0,27","renderType":"mask","name":"Bar"},
@@ -66,6 +71,7 @@
                 }]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Tag,Tag",
             "props":{"width":612,"var":"Tag","name":"Tag","height":100,"centerX":0,"bottom":30},
@@ -78,6 +84,7 @@
             "compId":19,
             "child":[
                 {
+                    "x":30,
                     "type":"Label",
                     "searchKey":"Label",
                     "props":{"y":71,"x":0,"width":609,"text":"软著登记号：2020SR0726637       Powered by LayaAir Engine","height":27,"fontSize":22,"color":"#eab499"},
@@ -92,6 +99,7 @@
                 }]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image",
             "props":{"y":595,"x":375,"width":312,"skin":"Game/UI/PreLoad/ty.png","pivotY":160,"pivotX":156,"height":319},
@@ -104,6 +112,7 @@
             "compId":22,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Mask",
                     "props":{"y":-80,"x":43,"width":43,"skin":"Frame/UI/ui_orthogon_yellow.png","skewX":-30,"sizeGrid":"12,12,8,16","scaleX":1,"renderType":"mask","name":"Mask","height":500},
@@ -118,6 +127,7 @@
                 }]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image",
             "props":{"y":183,"width":518,"skin":"Game/UI/PreLoad/tyxhs.png","height":146,"centerX":0},
@@ -130,6 +140,7 @@
             "compId":23,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Mask",
                     "props":{"y":-75,"x":0,"width":30,"skin":"Frame/UI/ui_orthogon_yellow.png","skewX":-30,"sizeGrid":"12,12,8,16","scaleX":1,"renderType":"mask","name":"Mask","height":319},
@@ -144,6 +155,7 @@
                 }]
         },
         {
+            "x":15,
             "type":"Label",
             "searchKey":"Label,Percent,Percent",
             "props":{"y":1088,"x":147,"width":90,"var":"Percent","valign":"middle","text":"0%","strokeColor":"#79382b","stroke":4,"pivotY":19,"pivotX":45,"name":"Percent","height":38,"fontSize":20,"color":"#ffffff","align":"center"},
@@ -157,6 +169,7 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Brush,Brush",
             "props":{"y":564,"x":-66,"width":120,"var":"Brush","skin":"Game/UI/PreLoad/bi.png","rotation":0,"pivotY":59,"pivotX":60,"name":"Brush","height":117},
