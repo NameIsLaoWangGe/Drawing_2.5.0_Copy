@@ -32,7 +32,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":879},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,

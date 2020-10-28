@@ -4,8 +4,10 @@ import { _Guide } from "./_Guide";
 import { _PreLoad } from "./_PreLoad";
 import { _PreLoadStep } from "./_PreLoadStep";
 import { _SelectLevel } from "./_SelectLevel";
+import { _Settle } from "./_Settle";
 import { _Start } from "./_Start";
 import { _Task } from "./_Task";
+import { _Victory } from "./_Victory";
 
 export enum SceneName {
 }
@@ -27,6 +29,8 @@ export default class LwgInit extends _LwgInitScene {
             _Task: _Task,
             _PreLoadStep: _PreLoadStep,
             _SelectLevel: _SelectLevel,
+            _Settle: _Settle,
+            _Victory: _Victory,
         };
     }
 }

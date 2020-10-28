@@ -63,20 +63,6 @@ export module _SelectLevel {
         static set _arr(array: Array<string>) {
             this['_SelectLevel_Data'] = array;
         };
-
-        static get _getLimitArr(): Array<any> {
-            let _arr = [];
-            for (const key in this._arr) {
-                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                    const element = this._arr[key];
-                    if (element[this._property.classify] == this._classify.limit) {
-                        _arr.push(element);
-                        break;
-                    }
-                }
-            }
-            return _arr;
-        };
         // 查看当前名称的关卡是否解锁
         static getUnlockByName(name: string): any {
             let bool: boolean;
@@ -137,13 +123,13 @@ export module _SelectLevel {
                     switch (this.owner['_dataSource'][_data._property.unlockWay]) {
                         case _data._unlockWay.ads:
                             ADManager.ShowReward(() => {
-                                _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                             });
                             break;
                         case _data._unlockWay.gold:
                             let num = this.owner['_dataSource'][_data._property.resCondition]
                             if (_Gold._num >= num) {
-                                _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                                 _Gold._num.value -= num;
                             } else {
                                 Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
@@ -155,7 +141,7 @@ export module _SelectLevel {
                 } else {
                     _data._pich.customs = this.owner['_dataSource'][_data._property.name];
                     let levelName = _SceneName.Game + '_' + _data._pich.customs;
-                    this.lwgOpenScene(levelName, this.OwnerScene.name, () => {
+                    this.lwgOpenScene(levelName, true, () => {
                         if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
                             Admin._sceneControl[levelName].addComponent(_Game.Game);
                         }
@@ -183,15 +169,22 @@ export module _SelectLevel {
                 Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
                 let Xianlu = Content.getChildByName('Xianlu') as Laya.Image;
                 let IconPen = Content.getChildByName('IconPen') as Laya.Image;
+                if (index % 3 == 0) {
+                    IconPen.skin = `Game/UI/SelectLevel/IconDress/bi.png`
+                } else if (index % 2 == 0) {
+                    IconPen.skin = `Game/UI/SelectLevel/IconDress/bz.png`
+                } else {
+                    IconPen.skin = `Game/UI/SelectLevel/IconDress/shu.png`
+                }
                 if (index % 2 !== 0) {
                     Content.pos(27, 8);
                     Xianlu.pos(104, 189);
                     Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
                     IconPen.scaleX = 1;
-                    IconPen.pos(350, 219);
+                    IconPen.pos(350, 180);
                 } else {
                     Content.pos(363, 10);
-                    Xianlu.pos(-175, 195);
+                    Xianlu.pos(-140, 170);
                     Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
                     IconPen.scaleX = -1;
                     IconPen.pos(-31, 195);
@@ -224,6 +217,11 @@ export module _SelectLevel {
                     IconLock.visible = false;
                     GoldNum.visible = false;
                     GoldBoard.visible = false;
+                }
+                if (index == _MyList.array.length - 1) {
+                    IconPen.visible = Xianlu.visible = false;
+                } else {
+                    IconPen.visible = Xianlu.visible = true;
                 }
                 cell.zOrder = index;
             });

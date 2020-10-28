@@ -1,7 +1,8 @@
 {
+    "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":414,
+    "selecteID":13,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -25,6 +26,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -38,9 +40,10 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":660},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,
@@ -50,6 +53,7 @@
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Caterpillar,Caterpillar",
                     "props":{"y":609,"x":363,"width":643,"var":"Caterpillar","pivotY":453,"pivotX":322,"name":"Caterpillar","height":453},
@@ -62,6 +66,7 @@
                     "compId":440,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw6,Draw6",
                             "props":{"zOrder":96,"y":354,"x":110,"width":198,"var":"Draw6","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw6","height":198},
@@ -74,6 +79,7 @@
                             "compId":436,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,MaskBoard",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
@@ -87,6 +93,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Mask",
                                     "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
@@ -100,6 +107,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
@@ -114,6 +122,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw5,Draw5",
                             "props":{"zOrder":97,"y":354,"x":209,"width":198,"var":"Draw5","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw5","height":198},
@@ -126,6 +135,7 @@
                             "compId":432,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,MaskBoard",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
@@ -139,6 +149,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Mask",
                                     "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
@@ -152,6 +163,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
@@ -166,6 +178,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw4,Draw4",
                             "props":{"zOrder":98,"y":363,"x":324,"width":198,"var":"Draw4","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":107,"pivotX":99,"name":"Draw4","height":198},
@@ -178,6 +191,7 @@
                             "compId":424,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,MaskBoard",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
@@ -191,6 +205,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Mask",
                                     "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
@@ -204,6 +219,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
@@ -218,6 +234,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw3,Draw3",
                             "props":{"zOrder":99,"y":363,"x":432,"width":198,"var":"Draw3","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":108,"pivotX":99,"name":"Draw3","height":198},
@@ -230,6 +247,7 @@
                             "compId":407,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,MaskBoard",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
@@ -243,6 +261,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Mask",
                                     "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
@@ -256,6 +275,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
@@ -270,6 +290,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head,Head",
                             "props":{"zOrder":100,"y":239,"x":455,"width":351,"var":"Head","pivotY":222,"pivotX":176,"name":"Head","height":349},
@@ -282,6 +303,7 @@
                             "compId":416,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw1,Draw1",
                                     "props":{"zOrder":98,"y":176,"x":175,"width":340,"var":"Draw1","skin":"Game/UI/GameScene/Level9/lianmask.png","pivotY":169,"pivotX":170,"name":"Draw1","height":338},
@@ -294,6 +316,7 @@
                                     "compId":401,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Mask",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lianmask.png","renderType":"mask","name":"Mask"},
@@ -307,6 +330,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,MaskBoard",
                                             "props":{"y":30,"x":19,"width":302,"skin":"Game/UI/GameScene/Level9/lianmask.png","name":"MaskBoard","height":277},
@@ -320,6 +344,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lian.png","name":"Pic"},
@@ -334,6 +359,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw2,Draw2",
                                     "props":{"zOrder":99,"y":246,"x":194,"width":149,"var":"Draw2","skin":"Game/UI/GameScene/Level9/zuimask.png","pivotY":55,"pivotX":75,"name":"Draw2","height":109},
@@ -346,6 +372,7 @@
                                     "compId":417,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Mask",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/zuimask.png","renderType":"mask","name":"Mask"},
@@ -359,6 +386,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,MaskBoard",
                                             "props":{"y":22,"x":16,"width":120,"skin":"Game/UI/GameScene/Level9/zuimask.png","name":"MaskBoard","height":75},
@@ -372,6 +400,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level9/zui.png","name":"Pic"},
@@ -386,6 +415,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye2,Eye2",
                                     "props":{"zOrder":100,"y":175,"x":223,"width":30,"var":"Eye2","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye2","height":30},
@@ -399,6 +429,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye1,Eye1",
                                     "props":{"zOrder":100,"y":176,"x":157,"width":30,"var":"Eye1","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye1","height":30},

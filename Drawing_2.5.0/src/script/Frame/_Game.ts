@@ -1,4 +1,4 @@
-import { Admin, Animation2D, Click, EventAdmin, Tools, _SceneName } from "./Lwg";
+import { Admin, Animation2D, Click, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 
 /**游戏场景模块*/
@@ -12,6 +12,8 @@ export module _Game {
         playAni1 = '_Game_playAni1',
         playAni2 = '_Game_playAni2',
         restoreZOder = '_Game_restoreZoder',
+        colseScene = '_Game_colseScene',
+        victory = '_Game_victory',
     }
     /**动画名称*/
     export enum _Animation {
@@ -174,6 +176,7 @@ export module _Game {
         }
 
         lwgOnAwake(): void {
+            _Gold.goldVinish(100);
             _Game._passLenght = 50;
             _Game._stepIndex.present = 0;
             _Game._stepIndex.present = 0;
@@ -223,36 +226,14 @@ export module _Game {
         lwgOpenAni(): number {
             return 100;
         }
-        /**按钮管理*/
-        // PrefabAdmin = {
-        //     StepSwitch: null,
-        //     BtnNextStep: null,
-        //     BtnLastStep: null,
-        //     BtnPlayAni: null,
-        //     BtnBack: null,
-        //     btnSwitch: true,
-        //     setUnique(btn: Laya.Image): void {
-        //         switch (btn) {
-        //             case this.BtnNextStep:
-        //                 break;
-        //             case this.BtnLastStep:
-        //                 break;
-        //             case this.BtnNextStep:
-        //                 break;
-        //             default:
-        //                 break;
-        //         }
-        //     }
-        // }
-
         /**阶段切换按钮*/
         StepSwitch: Laya.Image;
         BtnNextStep: Laya.Image;
         BtnLastStep: Laya.Image;
         /**播放动画按钮*/
-        BtnPlayAni: Laya.Image;
+        // BtnPlayAni: Laya.Image;
         /**返回按钮*/
-        BtnBack: Laya.Image;
+        BtnCompelet: Laya.Image;
         lwgOnEnable(): void {
             this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
             this.Owner.addChild(this.StepSwitch);
@@ -262,23 +243,37 @@ export module _Game {
             this.BtnNextStep.visible = false;
             this.BtnLastStep.visible = false;
 
-            this.BtnPlayAni = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab) as Laya.Image;
-            this.Owner.addChild(this.BtnPlayAni);
-            this.BtnPlayAni.visible = false;
-            this.BtnPlayAni.pos(361, 920);
-
-            this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnContinue.prefab) as Laya.Image;
-            this.Owner.addChild(this.BtnBack);
-            this.BtnBack.visible = false;
-            this.BtnBack.pos(96, 97);
-
-            // this.ImgVar('DrawRoot').pivotX = this.ImgVar('DrawRoot').width / 2;
-            // this.ImgVar('DrawRoot').pivotY = this.ImgVar('DrawRoot').height / 2;
+            this.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab) as Laya.Image;
+            this.Owner.addChild(this.BtnCompelet);
+            this.BtnCompelet.visible = false;
+            this.BtnCompelet.pos(360, 930);
         }
         lwgOnStart(): void {
             EventAdmin._notify(_Game._Event.start);
         }
         lwgEventRegister(): void {
+
+            EventAdmin._register(_Game._Event.colseScene, this, () => {
+                this.lwgCloseScene();
+            })
+            EventAdmin._register(_Game._Event.victory, this, () => {
+                this.AniVar(_Game._Animation.action1).stop();
+                Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
+                Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
+                let Img = new Laya.Image();
+                Img.skin = `Game/UI/Common/bj.png`;
+                Img.alpha = 0;
+                Img.width = Laya.stage.width;
+                Img.height = Laya.stage.height;
+                this.ImgVar('Background').addChild(Img);
+                Animation2D.fadeOut(Img, 0, 1, 500);
+                _Gold.goldAppear(100);
+            })
+
+            EventAdmin._register(_Game._Event.playAni1, this, () => {
+                this.AniVar(_Game._Animation.action1).play(null, true);
+            })
+
             EventAdmin._register(_Game._Event.start, this, () => {
                 this.drawState.switch = true;
                 for (let index = 0; index < _Game._stepOrderImg.length; index++) {
@@ -386,13 +381,10 @@ export module _Game {
             EventAdmin._register(_Game._Event.compelet, this, () => {
                 EventAdmin._notify(_Game._Event.restoreZOder);
                 this.drawState.switch = false;
-                // Animation2D.move_Scale(this.ImgVar('DrawRoot'), 1, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y - 200, 0.7, 500, null, null, () => {
                 this.BtnNextStep.visible = false;
                 this.BtnLastStep.visible = false;
-                this.BtnPlayAni.visible = true;
-                this.BtnPlayAni.zOrder = 10;
-                this.BtnBack.visible = true;
-                // });
+                this.BtnCompelet.visible = true;
+                Animation2D.fadeOut(_PencilsList, 1, 0, 200);
             })
         }
 
@@ -505,12 +497,12 @@ export module _Game {
                 }
                 EventAdmin._notify(_Game._Event.nextStep);
             });
-            Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
-                this.AniVar(_Game._Animation.action1).play(null, true);
-            });
-            Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
+            Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
                 Admin._game.level++;
-                this.lwgOpenScene(_SceneName.Start, this.calssName);
+                this.lwgOpenScene(_SceneName.Settle, false, () => {
+                    this.BtnCompelet.visible = false;
+                });
+
             });
         }
     }

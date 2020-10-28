@@ -365,12 +365,12 @@
                 }));
             }
             Gold_1.createGoldNode = createGoldNode;
-            function addGold(number) {
+            function _addGold(number) {
                 Gold_1._num.value += Number(number);
                 let Num = Gold_1.GoldNode.getChildByName('Num');
                 Num.text = Gold_1._num.value.toString();
             }
-            Gold_1.addGold = addGold;
+            Gold_1._addGold = _addGold;
             function addGoldDisPlay(number) {
                 let Num = Gold_1.GoldNode.getChildByName('Num');
                 Num.value = (Number(Num.value) + Number(number)).toString();
@@ -462,16 +462,13 @@
                 }
             }
             Gold_1.getGoldAni_Single = getGoldAni_Single;
-            function getGoldAni_Heap(parent, number, width, height, url, firstPoint, targetPoint, func1, func2) {
+            function _getGoldAni_Heap(parent, number, width, height, url, firstPoint, targetPoint, func1, func2) {
                 for (let index = 0; index < number; index++) {
-                    let Gold = createOneGold(width, height, url);
+                    let Gold = createOneGold(width ? width : 100, height ? height : 100, url ? url : SkinUrl[0]);
+                    parent = parent ? parent : Laya.stage;
                     parent.addChild(Gold);
-                    if (!url) {
-                        Gold.skin = SkinUrl[0];
-                    }
-                    else {
-                        Gold.skin = url;
-                    }
+                    firstPoint = firstPoint ? firstPoint : new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2);
+                    targetPoint = targetPoint ? targetPoint : new Laya.Point(Gold_1.GoldNode.x, Gold_1.GoldNode.y);
                     let x = Math.floor(Math.random() * 2) == 1 ? firstPoint.x + Math.random() * 100 : firstPoint.x - Math.random() * 100;
                     let y = Math.floor(Math.random() * 2) == 1 ? firstPoint.y + Math.random() * 100 : firstPoint.y - Math.random() * 100;
                     Animation2D.move_Scale(Gold, 0.5, firstPoint.x, firstPoint.y, x, y, 1, 300, Math.random() * 100 + 100, Laya.Ease.expoIn, () => {
@@ -494,7 +491,7 @@
                     });
                 }
             }
-            Gold_1.getGoldAni_Heap = getGoldAni_Heap;
+            Gold_1._getGoldAni_Heap = _getGoldAni_Heap;
             class GoldAniBase extends Laya.Script {
                 onAwake() {
                     this.initProperty();
@@ -958,22 +955,23 @@
                 _SceneName["SkinQualified"] = "SkinQualified";
                 _SceneName["Eastereggister"] = "Eastereggister";
                 _SceneName["SelectLevel"] = "SelectLevel";
+                _SceneName["Settle"] = "Settle";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
-            function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOder) {
+            function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOrder) {
                 _openScene(_SceneName.PreLoadStep);
                 Admin._preLoadOpenSceneLater.openSceneName = openSceneName;
                 Admin._preLoadOpenSceneLater.cloesSceneName = cloesSceneName;
                 Admin._preLoadOpenSceneLater.func = func;
-                Admin._preLoadOpenSceneLater.zOder = zOder;
+                Admin._preLoadOpenSceneLater.zOrder = zOrder;
             }
             Admin._preLoadOpenScene = _preLoadOpenScene;
             Admin._preLoadOpenSceneLater = {
                 openSceneName: null,
                 cloesSceneName: null,
                 func: null,
-                zOder: null,
+                zOrder: null,
             };
-            function _openScene(openSceneName, cloesSceneName, func, zOder) {
+            function _openScene(openSceneName, cloesSceneName, func, zOrder) {
                 Admin._clickLock.switch = true;
                 Laya.Scene.load('Scene/' + openSceneName + '.json', Laya.Handler.create(this, function (scene) {
                     if (Admin._moudel['_' + openSceneName]) {
@@ -993,8 +991,8 @@
                             console.log(openSceneName, '场景重复出现！请检查代码');
                             return;
                         }
-                        if (zOder) {
-                            Laya.stage.addChildAt(scene, zOder);
+                        if (zOrder) {
+                            Laya.stage.addChildAt(scene, zOrder);
                         }
                         else {
                             Laya.stage.addChild(scene);
@@ -1111,8 +1109,8 @@
                         sumDelay = 400;
                         break;
                     case Admin._sceneAnimation.type.stickIn:
-                        time = 500;
-                        delay = 150;
+                        time = 700;
+                        delay = 100;
                         if (Scene.getChildByName('Background')) {
                             Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
                         }
@@ -1120,10 +1118,10 @@
                         for (let index = 0; index < arr.length; index++) {
                             const element = arr[index];
                             if (element.name !== 'Background') {
-                                element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                                element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
                                 let originalPovitX = element.pivotX;
                                 let originalPovitY = element.pivotY;
-                                Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, 0);
+                                Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
                                 let originalX = element.x;
                                 let originalY = element.y;
                                 element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
@@ -1269,11 +1267,18 @@
                     this.moduleOnStart();
                     this.lwgOnStart();
                 }
-                lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
-                    Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+                btnRig(effect, target, caller, down, move, up, out) {
+                    Click._on(effect, target, caller, down, move, up, out);
                 }
-                lwgCloseScene(func) {
-                    Admin._closeScene(this.Owner.name, func);
+                lwgOpenScene(openSceneName, closeSelf, func, zOrder) {
+                    let closeName;
+                    if (closeSelf == undefined || closeSelf == true) {
+                        closeName = this.Owner.name;
+                    }
+                    Admin._openScene(openSceneName, closeName, func, zOrder);
+                }
+                lwgCloseScene(sceneName, func) {
+                    Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
                 }
                 lwgOnStart() { }
                 moduleOnStart() { }
@@ -1345,11 +1350,15 @@
                 lwgOnEnable() {
                     console.log('父类的初始化！');
                 }
-                lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
-                    Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+                lwgOpenScene(openSceneName, closeSelf, func, zOrder) {
+                    let closeName;
+                    if (closeSelf == undefined || closeSelf == true) {
+                        closeName = this.Owner.name;
+                    }
+                    Admin._openScene(openSceneName, closeName, func, zOrder);
                 }
-                lwgCloseScene(func) {
-                    Admin._closeScene(this.Owner.name, func);
+                lwgCloseScene(sceneName, func) {
+                    Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
                 }
             }
             Admin._Person = _Person;
@@ -1374,11 +1383,15 @@
                     this.Owner[calssName] = this;
                     this.lwgOnAwake();
                 }
-                lwgOpenScene(openSceneName, cloesSceneName, func, zOder) {
-                    Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+                lwgOpenScene(openSceneName, closeSelf, func, zOrder) {
+                    let closeName;
+                    if (closeSelf == undefined || closeSelf == true) {
+                        closeName = this.OwnerScene.name;
+                    }
+                    Admin._openScene(openSceneName, closeName, func, zOrder);
                 }
-                lwgCloseScene(func) {
-                    Admin._closeScene(this.Owner.name, func);
+                lwgCloseScene(sceneName, func) {
+                    Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
                 }
                 lwgOnAwake() { }
                 onEnable() {
@@ -1552,7 +1565,7 @@
             let _Aperture;
             (function (_Aperture) {
                 class _ApertureImage extends Laya.Image {
-                    constructor(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOder) {
+                    constructor(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOrder) {
                         super();
                         if (!parent.parent) {
                             return;
@@ -1565,7 +1578,7 @@
                         this.pivotY = this.height / 2;
                         this.rotation = rotation ? Tools.randomOneNumber(rotation[0], rotation[1]) : Tools.randomOneNumber(360);
                         this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.花3;
-                        this.zOrder = zOder ? zOder : 0;
+                        this.zOrder = zOrder ? zOrder : 0;
                         this.alpha = 0;
                         let RGBA = [];
                         RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
@@ -1576,8 +1589,8 @@
                     }
                 }
                 _Aperture._ApertureImage = _ApertureImage;
-                function _continuous(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOder, scale, speed, accelerated) {
-                    let Img = new _ApertureImage(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOder);
+                function _continuous(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOrder, scale, speed, accelerated) {
+                    let Img = new _ApertureImage(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOrder);
                     let _speed = speed ? Tools.randomOneNumber(speed[0], speed[1]) : 0.025;
                     let _accelerated = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : 0.0005;
                     let _scale = scale ? Tools.randomOneNumber(scale[0], scale[1]) : 2;
@@ -1622,7 +1635,7 @@
             let _Particle;
             (function (_Particle) {
                 class _ParticleImgBase extends Laya.Image {
-                    constructor(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder) {
+                    constructor(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder) {
                         super();
                         parent.addChild(this);
                         let sectionWidth = sectionWH ? Tools.randomOneNumber(sectionWH[0]) : Tools.randomOneNumber(200);
@@ -1638,7 +1651,7 @@
                         this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.圆形1;
                         this.rotation = rotation ? Tools.randomOneNumber(rotation[0], rotation[1]) : 0;
                         this.alpha = 0;
-                        this.zOrder = zOder ? zOder : 0;
+                        this.zOrder = zOrder ? zOrder : 0;
                         let RGBA = [];
                         RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
                         RGBA[1] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][1], colorRGBA[1][1]) : Tools.randomOneNumber(0, 255);
@@ -1648,8 +1661,8 @@
                     }
                 }
                 _Particle._ParticleImgBase = _ParticleImgBase;
-                function _snow(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder, distance, rotationSpeed, speed, windX) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+                function _snow(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder, distance, rotationSpeed, speed, windX) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                     let _rotationSpeed = rotationSpeed ? Tools.randomOneNumber(rotationSpeed[0], rotationSpeed[1]) : Tools.randomOneNumber(0, 1);
                     _rotationSpeed = Tools.randomOneHalf() == 0 ? _rotationSpeed : -_rotationSpeed;
                     let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(1, 2.5);
@@ -1692,8 +1705,8 @@
                     return Img;
                 }
                 _Particle._snow = _snow;
-                function _fallingVertical(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder, distance, speed, accelerated) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+                function _fallingVertical(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder, distance, speed, accelerated) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                     let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(4, 8);
                     let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
                     let acc = 0;
@@ -1735,8 +1748,8 @@
                     return Img;
                 }
                 _Particle._fallingVertical = _fallingVertical;
-                function _slowlyUp(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder, distance, speed, accelerated) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+                function _slowlyUp(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder, distance, speed, accelerated) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                     let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(1.5, 2);
                     let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.001, 0.005);
                     let acc = 0;
@@ -1779,8 +1792,8 @@
                     return Img;
                 }
                 _Particle._slowlyUp = _slowlyUp;
-                function _spray(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder, moveAngle, distance, rotationSpeed, speed, accelerated) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+                function _spray(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder, moveAngle, distance, rotationSpeed, speed, accelerated) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                     let centerPoint0 = centerPoint ? centerPoint : new Laya.Point(0, 0);
                     let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(3, 10);
                     let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
@@ -1827,8 +1840,8 @@
                     return Img;
                 }
                 _Particle._spray = _spray;
-                function _outsideBox(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder, curtailAngle, distance, rotateSpeed, speed, accelerated) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+                function _outsideBox(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder, curtailAngle, distance, rotateSpeed, speed, accelerated) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                     let _angle = 0;
                     sectionWH = sectionWH ? sectionWH : [100, 100];
                     let fixedXY = Tools.randomOneHalf() == 0 ? 'x' : 'y';
@@ -1899,8 +1912,8 @@
                     return Img;
                 }
                 _Particle._outsideBox = _outsideBox;
-                function _moveToTargetToMove(parent, centerPoint, width, height, rotation, angle, urlArr, colorRGBA, zOder, distance1, distance2, rotationSpeed, speed, accelerated) {
-                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+                function _moveToTargetToMove(parent, centerPoint, width, height, rotation, angle, urlArr, colorRGBA, zOrder, distance1, distance2, rotationSpeed, speed, accelerated) {
+                    let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                     let centerPoint0 = centerPoint ? centerPoint : new Laya.Point(0, 0);
                     let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(5, 6);
                     let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
@@ -1967,7 +1980,7 @@
                     return Img;
                 }
                 _Particle._moveToTargetToMove = _moveToTargetToMove;
-                function _AnnularInhalation(parent, centerPoint, radius, rotation, width, height, urlArr, speed, accelerated, zOder) {
+                function _AnnularInhalation(parent, centerPoint, radius, rotation, width, height, urlArr, speed, accelerated, zOrder) {
                     let Img = new Laya.Image();
                     parent.addChild(Img);
                     width = width ? width : [25, 50];
@@ -2077,7 +2090,7 @@
                     return Img;
                 }
                 _Glitter._blinkStar = _blinkStar;
-                function _simpleInfinite(parent, x, y, width, height, zOder, url, speed) {
+                function _simpleInfinite(parent, x, y, width, height, zOrder, url, speed) {
                     let Img = new Laya.Image();
                     parent.addChild(Img);
                     Img.width = width;
@@ -2085,7 +2098,7 @@
                     Img.pos(x, y);
                     Img.skin = url ? url : _SkinUrl.光圈1;
                     Img.alpha = 0;
-                    Img.zOrder = zOder ? zOder : 0;
+                    Img.zOrder = zOrder ? zOrder : 0;
                     let add = true;
                     let caller = {};
                     let func = () => {
@@ -2117,7 +2130,7 @@
             let _circulation;
             (function (_circulation) {
                 class _circulationImage extends Laya.Image {
-                    constructor(parent, urlArr, colorRGBA, width, height, zOder) {
+                    constructor(parent, urlArr, colorRGBA, width, height, zOrder) {
                         super();
                         parent.addChild(this);
                         this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.圆形发光1;
@@ -2131,19 +2144,19 @@
                         RGBA[2] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][2], colorRGBA[1][2]) : Tools.randomOneNumber(0, 255);
                         RGBA[3] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][3], colorRGBA[1][3]) : Tools.randomOneNumber(0, 255);
                         Color._colour(this, RGBA);
-                        this.zOrder = zOder ? zOder : 0;
+                        this.zOrder = zOrder ? zOrder : 0;
                         this.alpha = 0;
                         this.scaleX = 0;
                         this.scaleY = 0;
                     }
                 }
                 _circulation._circulationImage = _circulationImage;
-                function _corner(parent, posArray, urlArr, colorRGBA, width, height, zOder, parallel, speed) {
+                function _corner(parent, posArray, urlArr, colorRGBA, width, height, zOrder, parallel, speed) {
                     if (posArray.length <= 1) {
                         return;
                     }
-                    let Img = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
-                    let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
+                    let Img = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
+                    let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
                     Imgfootprint.filters = Img.filters;
                     Img.pos(posArray[0][0], posArray[0][1]);
                     Img.alpha = 1;
@@ -2157,7 +2170,7 @@
                     let index = 0;
                     Img.scale(1, 1);
                     TimerAdmin._frameLoop(1, moveCaller, () => {
-                        let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
+                        let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
                         Imgfootprint.filters = Img.filters;
                         Imgfootprint.x = Img.x;
                         Imgfootprint.y = Img.y;
@@ -3222,13 +3235,13 @@
                             element['zOrder'] = index;
                         }
                     }
-                    if (!along) {
+                    if (along) {
                         let arr0 = [];
-                        for (let index = arr.length; index < 0; index--) {
+                        for (let index = arr.length - 1; index >= 0; index--) {
                             const element = arr[index];
-                            element['zOrder'] = index;
-                            arr.splice(index, 1);
                             console.log(element);
+                            element['zOrder'] = arr.length - index;
+                            arr0.push(element);
                         }
                         return arr0;
                     }
@@ -5118,7 +5131,7 @@
                                     Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
                                         Admin._preLoadOpenSceneLater.func;
                                         Admin._closeScene(LwgPreLoad._whereToLoad);
-                                    }, Admin._preLoadOpenSceneLater.zOder);
+                                    }, Admin._preLoadOpenSceneLater.zOrder);
                                 }
                             }
                             else {
@@ -5447,8 +5460,8 @@
                     url: 'Prefab/BtnPlayAni.json',
                     prefab: new Laya.Prefab,
                 },
-                BtnContinue: {
-                    url: 'Prefab/BtnContinue.json',
+                BtnCompelet: {
+                    url: 'Prefab/BtnCompelet.json',
                     prefab: new Laya.Prefab,
                 },
                 BtnShare: {
@@ -5520,6 +5533,8 @@
             _Event["playAni1"] = "_Game_playAni1";
             _Event["playAni2"] = "_Game_playAni2";
             _Event["restoreZOder"] = "_Game_restoreZoder";
+            _Event["colseScene"] = "_Game_colseScene";
+            _Event["victory"] = "_Game_victory";
         })(_Event = _Game._Event || (_Game._Event = {}));
         let _Animation;
         (function (_Animation) {
@@ -5695,6 +5710,7 @@
                 };
             }
             lwgOnAwake() {
+                _Gold.goldVinish(100);
                 _Game._passLenght = 50;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.present = 0;
@@ -5750,19 +5766,34 @@
                 this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
                 this.BtnNextStep.visible = false;
                 this.BtnLastStep.visible = false;
-                this.BtnPlayAni = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnPlayAni.prefab);
-                this.Owner.addChild(this.BtnPlayAni);
-                this.BtnPlayAni.visible = false;
-                this.BtnPlayAni.pos(361, 920);
-                this.BtnBack = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnContinue.prefab);
-                this.Owner.addChild(this.BtnBack);
-                this.BtnBack.visible = false;
-                this.BtnBack.pos(96, 97);
+                this.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
+                this.Owner.addChild(this.BtnCompelet);
+                this.BtnCompelet.visible = false;
+                this.BtnCompelet.pos(360, 930);
             }
             lwgOnStart() {
                 EventAdmin._notify(_Game._Event.start);
             }
             lwgEventRegister() {
+                EventAdmin._register(_Game._Event.colseScene, this, () => {
+                    this.lwgCloseScene();
+                });
+                EventAdmin._register(_Game._Event.victory, this, () => {
+                    this.AniVar(_Game._Animation.action1).stop();
+                    Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
+                    Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
+                    let Img = new Laya.Image();
+                    Img.skin = `Game/UI/Common/bj.png`;
+                    Img.alpha = 0;
+                    Img.width = Laya.stage.width;
+                    Img.height = Laya.stage.height;
+                    this.ImgVar('Background').addChild(Img);
+                    Animation2D.fadeOut(Img, 0, 1, 500);
+                    _Gold.goldAppear(100);
+                });
+                EventAdmin._register(_Game._Event.playAni1, this, () => {
+                    this.AniVar(_Game._Animation.action1).play(null, true);
+                });
                 EventAdmin._register(_Game._Event.start, this, () => {
                     this.drawState.switch = true;
                     for (let index = 0; index < _Game._stepOrderImg.length; index++) {
@@ -5868,9 +5899,8 @@
                     this.drawState.switch = false;
                     this.BtnNextStep.visible = false;
                     this.BtnLastStep.visible = false;
-                    this.BtnPlayAni.visible = true;
-                    this.BtnPlayAni.zOrder = 10;
-                    this.BtnBack.visible = true;
+                    this.BtnCompelet.visible = true;
+                    Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
                 });
             }
             lwgBtnClick() {
@@ -5953,12 +5983,11 @@
                     }
                     EventAdmin._notify(_Game._Event.nextStep);
                 });
-                Click._on(Click._Type.largen, this.BtnPlayAni, this, null, null, () => {
-                    this.AniVar(_Game._Animation.action1).play(null, true);
-                });
-                Click._on(Click._Type.largen, this.BtnBack, this, null, null, () => {
+                Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
                     Admin._game.level++;
-                    this.lwgOpenScene(_SceneName.Start, this.calssName);
+                    this.lwgOpenScene(_SceneName.Settle, false, () => {
+                        this.BtnCompelet.visible = false;
+                    });
                 });
             }
         }
@@ -6547,20 +6576,6 @@
                 this['_SelectLevel_Data'] = array;
             }
             ;
-            static get _getLimitArr() {
-                let _arr = [];
-                for (const key in this._arr) {
-                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
-                        const element = this._arr[key];
-                        if (element[this._property.classify] == this._classify.limit) {
-                            _arr.push(element);
-                            break;
-                        }
-                    }
-                }
-                return _arr;
-            }
-            ;
             static getUnlockByName(name) {
                 let bool;
                 for (const key in this._arr) {
@@ -6660,13 +6675,13 @@
                         switch (this.owner['_dataSource'][_data._property.unlockWay]) {
                             case _data._unlockWay.ads:
                                 ADManager.ShowReward(() => {
-                                    _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                    _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                                 });
                                 break;
                             case _data._unlockWay.gold:
                                 let num = this.owner['_dataSource'][_data._property.resCondition];
                                 if (_Gold._num >= num) {
-                                    _data.setProperty(this.owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                    _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
                                     _Gold._num.value -= num;
                                 }
                                 else {
@@ -6680,7 +6695,7 @@
                     else {
                         _data._pich.customs = this.owner['_dataSource'][_data._property.name];
                         let levelName = _SceneName.Game + '_' + _data._pich.customs;
-                        this.lwgOpenScene(levelName, this.OwnerScene.name, () => {
+                        this.lwgOpenScene(levelName, true, () => {
                             if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
                                 Admin._sceneControl[levelName].addComponent(_Game.Game);
                             }
@@ -6706,16 +6721,25 @@
                     Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
                     let Xianlu = Content.getChildByName('Xianlu');
                     let IconPen = Content.getChildByName('IconPen');
+                    if (index % 3 == 0) {
+                        IconPen.skin = `Game/UI/SelectLevel/IconDress/bi.png`;
+                    }
+                    else if (index % 2 == 0) {
+                        IconPen.skin = `Game/UI/SelectLevel/IconDress/bz.png`;
+                    }
+                    else {
+                        IconPen.skin = `Game/UI/SelectLevel/IconDress/shu.png`;
+                    }
                     if (index % 2 !== 0) {
                         Content.pos(27, 8);
                         Xianlu.pos(104, 189);
                         Xianlu.skin = `Game/UI/SelectLevel/xianlu2.png`;
                         IconPen.scaleX = 1;
-                        IconPen.pos(350, 219);
+                        IconPen.pos(350, 180);
                     }
                     else {
                         Content.pos(363, 10);
-                        Xianlu.pos(-175, 195);
+                        Xianlu.pos(-140, 170);
                         Xianlu.skin = `Game/UI/SelectLevel/xianlu1.png`;
                         IconPen.scaleX = -1;
                         IconPen.pos(-31, 195);
@@ -6748,6 +6772,12 @@
                         IconLock.visible = false;
                         GoldNum.visible = false;
                         GoldBoard.visible = false;
+                    }
+                    if (index == _SelectLevel._MyList.array.length - 1) {
+                        IconPen.visible = Xianlu.visible = false;
+                    }
+                    else {
+                        IconPen.visible = Xianlu.visible = true;
                     }
                     cell.zOrder = index;
                 });
@@ -6805,6 +6835,144 @@
     })(_SelectLevel || (_SelectLevel = {}));
     var _SelectLevel$1 = _SelectLevel.SelectLevel;
 
+    class RecordManager {
+        constructor() {
+            this.GRV = null;
+            this.isRecordVideoing = false;
+            this.isVideoRecord = false;
+            this.videoRecordTimer = 0;
+            this.isHasVideoRecord = false;
+        }
+        static Init() {
+            RecordManager.grv = new TJ.Platform.AppRt.DevKit.TT.GameRecorderVideo();
+        }
+        static startAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.grv == null)
+                RecordManager.Init();
+            if (RecordManager.recording)
+                return;
+            RecordManager.autoRecording = true;
+            console.log("******************开始录屏");
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (!RecordManager.autoRecording) {
+                console.log("RecordManager.autoRecording", RecordManager.autoRecording);
+                return false;
+            }
+            RecordManager.autoRecording = false;
+            RecordManager._end(false);
+            if (Date.now() - RecordManager.lastRecordTime > 6000) {
+                return true;
+            }
+            if (Date.now() - RecordManager.lastRecordTime < 3000) {
+                console.log("小于3秒");
+                return false;
+            }
+            return true;
+        }
+        static startRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.autoRecording) {
+                this.stopAutoRecord();
+            }
+            RecordManager.recording = true;
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("time:" + (Date.now() - RecordManager.lastRecordTime));
+            if (Date.now() - RecordManager.lastRecordTime <= 3000) {
+                return false;
+            }
+            RecordManager.recording = false;
+            RecordManager._end(true);
+            return true;
+        }
+        static _start() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180s  ？？？？？");
+            RecordManager.grv.Start(180);
+        }
+        static _end(share) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180结束 ？？？？？");
+            RecordManager.grv.Stop(share);
+        }
+        static _share(type, successedAc, completedAc = null, failAc = null) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
+            if (RecordManager.grv.videoPath) {
+                let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
+                p.extra.videoTopics = ["比谁猜的快", "番茄小游戏", "抖音小游戏"];
+                p.channel = "video";
+                p.success = () => {
+                    Dialogue.createHint_Middle(Dialogue.HintContent["分享成功!"]);
+                    successedAc();
+                };
+                p.fail = () => {
+                    if (type === 'noAward') {
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
+                    }
+                    else {
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
+                    }
+                    failAc();
+                };
+                RecordManager.grv.Share(p);
+            }
+            else {
+                Dialogue.createHint_Middle(Dialogue.HintContent["暂无视频，玩一局游戏之后分享！"]);
+            }
+        }
+    }
+    RecordManager.recording = false;
+    RecordManager.autoRecording = false;
+
+    var _Settle;
+    (function (_Settle) {
+        class _data {
+        }
+        _Settle._data = _data;
+        let _Event;
+        (function (_Event) {
+        })(_Event = _Settle._Event || (_Settle._Event = {}));
+        function _init() {
+        }
+        _Settle._init = _init;
+        class SettleBase extends Admin._SceneBase {
+        }
+        _Settle.SettleBase = SettleBase;
+        class Settle extends _Settle.SettleBase {
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
+                    EventAdmin._notify(_Game._Event.playAni1);
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                    EventAdmin._notify(_Game._Event.victory);
+                    this.lwgOpenScene(_SceneName.Victory);
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
+                    RecordManager._share('award', () => {
+                    });
+                });
+            }
+        }
+        _Settle.Settle = Settle;
+    })(_Settle || (_Settle = {}));
+    var _Settle$1 = _Settle.Settle;
+
     var _Start;
     (function (_Start) {
         function _init() {
@@ -6824,7 +6992,7 @@
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-                    this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
+                    this.lwgOpenScene(_SceneName.SelectLevel);
                 });
             }
         }
@@ -6834,6 +7002,46 @@
         _Start.StartItem = StartItem;
     })(_Start || (_Start = {}));
     var _Start$1 = _Start.Start;
+
+    var _Victory;
+    (function (_Victory) {
+        class _data {
+        }
+        _Victory._data = _data;
+        let _Event;
+        (function (_Event) {
+            _Event["_Settle_CloseScene"] = "_Settle_CloseScene";
+        })(_Event = _Victory._Event || (_Victory._Event = {}));
+        function _init() {
+        }
+        _Victory._init = _init;
+        class VictoryBase extends Admin._SceneBase {
+        }
+        _Victory.VictoryBase = VictoryBase;
+        class Victory extends _Victory.VictoryBase {
+            lwgBtnClick() {
+                let num = 25;
+                Click._on(Click._Type.largen, this.btnVar('BtnNext'), this, null, null, () => {
+                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
+                        _Gold._addGold(num);
+                        EventAdmin._notify(_Game._Event.colseScene);
+                        this.lwgOpenScene(_SceneName.Start);
+                    });
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnThreeGet'), this, null, null, () => {
+                    ADManager.ShowReward(() => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
+                            _Gold._addGold(num * 3);
+                            EventAdmin._notify(_Game._Event.colseScene);
+                            this.lwgOpenScene(_SceneName.Start);
+                        });
+                    });
+                });
+            }
+        }
+        _Victory.Victory = Victory;
+    })(_Victory || (_Victory = {}));
+    var _Victory$1 = _Victory.Victory;
 
     var SceneName;
     (function (SceneName) {
@@ -6852,6 +7060,8 @@
                 _Task: _Task,
                 _PreLoadStep: _PreLoadStep,
                 _SelectLevel: _SelectLevel,
+                _Settle: _Settle,
+                _Victory: _Victory,
             };
         }
     }

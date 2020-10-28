@@ -20,7 +20,7 @@ export module _Start {
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
-                this.lwgOpenScene(_SceneName.SelectLevel, this.calssName);
+                this.lwgOpenScene(_SceneName.SelectLevel);
             })
         }
     }

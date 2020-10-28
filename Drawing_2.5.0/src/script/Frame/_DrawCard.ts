@@ -173,7 +173,7 @@ export default class UIDrawCard extends DrawCard.DrawCardScene {
                     Laya.timer.once((j + 1) * 150, this, () => {
                         // Effects.createExplosion_Rotate(this.Owner['CardParent'], 25, globalPos.x, globalPos.y, Effects.SkinStyle.dot, 10, 10);
                         Card.visible = false;
-                       _Gold.getGoldAni_Heap(Laya.stage, 8, 88, 69, 'Game/UI/Common/jinbi.png', new Laya.Point(globalPos.x, globalPos.y), new Laya.Point(_Gold.GoldNode.x - 80, _Gold.GoldNode.y), null, () => {
+                       _Gold._getGoldAni_Heap(Laya.stage, 8, 88, 69, 'Game/UI/Common/jinbi.png', new Laya.Point(globalPos.x, globalPos.y), new Laya.Point(_Gold.GoldNode.x - 80, _Gold.GoldNode.y), null, () => {
                             // Gold.addGold(Card['objData'][Game3D.CardProperty.repetition]);
                             if (j == arrRepetitionCard.length - 1) {
                                 if (j == 9) {

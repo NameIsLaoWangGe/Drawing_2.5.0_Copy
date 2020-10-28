@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":15,
+    "selecteID":492,
     "searchKey":"View",
     "referenceLines":[
         ],
@@ -117,36 +117,8 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "searchKey":"Image,BtnCustoms,BtnCustoms",
-                    "props":{"y":68,"x":253,"width":98,"var":"BtnCustoms","skin":"Game/UI/Start/an1.png","pivotY":57,"pivotX":49,"name":"BtnCustoms","height":113},
-                    "nodeParent":492,
-                    "label":"BtnCustoms",
-                    "isOpen":true,
-                    "isDirectory":true,
-                    "isAniNode":true,
-                    "hasChild":true,
-                    "compId":20,
-                    "child":[
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image",
-                            "props":{"y":30,"skin":"Game/UI/Start/gqan.png","centerX":0},
-                            "nodeParent":20,
-                            "label":"Image",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":21,
-                            "child":[
-                                ]
-                        }]
-                },
-                {
-                    "x":30,
-                    "type":"Image",
                     "searchKey":"Image,BtnConversion,BtnConversion",
-                    "props":{"y":68,"x":108,"width":98,"var":"BtnConversion","skin":"Game/UI/Start/an1.png","pivotY":57,"pivotX":49,"name":"BtnConversion","height":113},
+                    "props":{"y":68,"x":185,"width":98,"var":"BtnConversion","skin":"Game/UI/Start/an1.png","pivotY":57,"pivotX":49,"name":"BtnConversion","height":113},
                     "nodeParent":492,
                     "label":"BtnConversion",
                     "isOpen":true,
@@ -174,7 +146,7 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,BtnEaster,BtnEaster",
-                    "props":{"y":68,"x":397,"width":98,"var":"BtnEaster","skin":"Game/UI/Start/an1.png","pivotY":57,"pivotX":49,"name":"BtnEaster","height":113},
+                    "props":{"y":68,"x":327,"width":98,"var":"BtnEaster","skin":"Game/UI/Start/an1.png","pivotY":57,"pivotX":49,"name":"BtnEaster","height":113},
                     "nodeParent":492,
                     "label":"BtnEaster",
                     "isOpen":true,

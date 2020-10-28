@@ -1,4 +1,5 @@
 {
+    "x":0,
     "type":"View",
     "selectedBox":2,
     "selecteID":13,
@@ -14,6 +15,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -27,9 +29,10 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":800},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,
@@ -39,6 +42,7 @@
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Maomi",
                     "props":{"y":94,"x":17,"width":685,"name":"Maomi","height":699},
@@ -51,6 +55,7 @@
                     "compId":178,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Body",
                             "props":{"zOrder":97,"y":394,"x":274,"width":437,"rotation":0,"pivotY":120,"pivotX":132,"name":"Body","height":425},
@@ -63,6 +68,7 @@
                             "compId":177,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw11,Draw11",
                                     "props":{"zOrder":95,"y":331,"x":217,"width":191,"var":"Draw11","skin":"Game/UI/GameScene/Level3/youjiaomask.png","rotation":0,"pivotY":37,"pivotX":133,"name":"Draw11","height":110},
@@ -102,6 +108,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw9,Draw9",
                                     "props":{"zOrder":95,"y":138,"x":92,"width":191,"var":"Draw9","skin":"Game/UI/GameScene/Level3/youshoumask.png","rotation":0,"pivotY":31,"pivotX":125,"name":"Draw9","height":202},
@@ -141,6 +148,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw10,Draw10",
                                     "props":{"zOrder":96,"y":262,"x":339,"width":249,"var":"Draw10","skin":"Game/UI/GameScene/Level3/weibamask.png","rotation":0,"pivotY":121,"pivotX":36,"name":"Draw10","height":181},
@@ -180,6 +188,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw7,Draw7",
                                     "props":{"zOrder":98,"y":213,"x":207,"width":323,"var":"Draw7","skin":"Game/UI/GameScene/Level3/shenzimask.png","rotation":0,"pivotY":156,"pivotX":162,"name":"Draw7","height":311},
@@ -233,6 +242,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw8,Draw8",
                                     "props":{"zOrder":99,"y":184,"x":160,"width":191,"var":"Draw8","skin":"Game/UI/GameScene/Level3/youshoumask.png","rotation":0,"pivotY":37,"pivotX":129,"name":"Draw8","height":202},
@@ -285,6 +295,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw12,Draw12",
                                     "props":{"zOrder":98,"y":336,"x":271,"width":191,"var":"Draw12","skin":"Game/UI/GameScene/Level3/youjiaomask.png","rotation":0,"pivotY":29,"pivotX":136,"name":"Draw12","height":110},
@@ -297,6 +308,7 @@
                                     "compId":174,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/youjiaomask.png","renderType":"mask"},
@@ -310,6 +322,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,MaskBoard",
                                             "props":{"y":17,"x":20,"width":150,"skin":"Game/UI/GameScene/Level3/youjiaomask.png","name":"MaskBoard","height":77},
@@ -323,6 +336,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level3/youjiao.png","name":"Pic"},
@@ -338,6 +352,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head",
                             "props":{"zOrder":100,"y":420,"x":287,"width":505,"rotation":0,"pivotY":401,"pivotX":253,"name":"Head","height":401},
@@ -350,6 +365,7 @@
                             "compId":176,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw5,Draw5",
                                     "props":{"zOrder":94,"y":152,"x":380,"width":176,"var":"Draw5","skin":"Game/UI/GameScene/Level3/youermask.png","rotation":0,"pivotY":115,"pivotX":43,"name":"Draw5","height":164},
@@ -389,6 +405,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
                                     "props":{"zOrder":95,"y":144,"x":120,"width":177,"var":"Draw4","skin":"Game/UI/GameScene/Level3/zuoermask.png","scaleY":1,"rotation":0,"pivotY":108,"pivotX":119,"name":"Draw4","height":165},
@@ -428,6 +445,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw3,Draw3",
                                     "props":{"zOrder":96,"y":232,"x":250,"width":488,"var":"Draw3","skin":"Game/UI/GameScene/Level3/lianmask.png","pivotY":180,"pivotX":233,"name":"Draw3","height":359},
@@ -482,6 +500,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw6,Draw6",
                                     "props":{"zOrder":97,"y":73,"x":251,"width":206,"var":"Draw6","skin":"Game/UI/GameScene/Level3/hudiejiemask.png","pivotY":67,"pivotX":103,"name":"Draw6","height":133},
@@ -521,6 +540,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye1",
                                     "props":{"zOrder":98,"y":228,"x":173,"width":75,"skin":"Game/UI/GameScene/Level3/yan.png","scaleY":1,"scaleX":1,"pivotY":45,"pivotX":38,"name":"Eye1","height":89},
@@ -534,6 +554,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye2",
                                     "props":{"zOrder":98,"y":228,"x":337,"width":75,"skin":"Game/UI/GameScene/Level3/yan.png","scaleY":1,"pivotY":45,"pivotX":38,"name":"Eye2","height":89},
@@ -547,6 +568,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw2,Draw2",
                                     "props":{"zOrder":99,"y":285,"x":255,"width":105,"var":"Draw2","skin":"Game/UI/GameScene/Level3/bizimask.png","pivotY":43,"pivotX":53,"name":"Draw2","height":85},
@@ -586,6 +608,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw1,Draw1",
                                     "props":{"zOrder":100,"y":355,"x":255,"width":137,"var":"Draw1","skin":"Game/UI/GameScene/Level3/zuimask.png","scaleY":1,"scaleX":1,"pivotY":39,"pivotX":69,"name":"Draw1","height":78},

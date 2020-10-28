@@ -38,8 +38,8 @@ export module _PreloadUrl {
                 url: 'Prefab/BtnPlayAni.json',
                 prefab: new Laya.Prefab,
             },
-            BtnContinue: {
-                url: 'Prefab/BtnContinue.json',
+            BtnCompelet: {
+                url: 'Prefab/BtnCompelet.json',
                 prefab: new Laya.Prefab,
             },
             BtnShare: {

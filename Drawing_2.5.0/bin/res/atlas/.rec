@@ -151,7 +151,7 @@ P 50A4ECB6 a.png
 R 5F25687D bg1.png
 R 4414DBFC bj.png
 P 3F3A6FD8 jb.png
-P 325C7ADA lan.png
+P 954962E8 lan.png
 P 2F4BEF3D zan.png
 D Game/UI/Defeated
 D Game/UI/DesignPic
@@ -160,12 +160,12 @@ R 22791D75 loding.png
 R 361B735A SelectLevel.png
 R 8DAFDA6B settle.png
 R 6762E2C4 start.png
+R 7EA3E409 Victory.png
 D Game/UI/DrawCard
 D Game/UI/GameScene
 P 4F02661D 9999.png
 R AD876E59 d.png
 P E1951C3C face.png
-P 954962E8 lan.png
 P 22966FDB Petal.png
 P CDE12E69 PetalMask.png
 P CE863BBF wc.png
@@ -184,8 +184,6 @@ D Game/UI/Resurgence
 D Game/UI/SelectLevel
 P 50A4ECB6 an1.png
 P E6449A72 anb.png
-P 79172350 bi.png
-P 6679A4C9 bz.png
 P C22B6FB7 dw.png
 P 4BB3B516 dwdi.png
 P 63F6C9BD dyxd.png
@@ -198,7 +196,6 @@ P 4F02661D jiu.png
 P 215D1BF0 ks.png
 P 0941D66B qt.png
 R 2786EDAB sc.png
-P D4D8F8E8 shu.png
 P 36732A27 sp.png
 P F0ABED94 suo.png
 R 96D1BAF1 xianlu.png
@@ -248,6 +245,19 @@ P 4F02661D sz.png
 P 7C3E1466 xd.png
 D Game/UI/Task
 D Game/UI/Victory
+P 173D889B an.png
+P CC68C899 g.png
+P 941E2685 gxwc.png
+P EE2AB425 ht.png
+P 3F3A6FD8 jb.png
+P EF1DA0F4 jmjl.png
+P B0E3502B lt.png
+P CA46521C pptt.png
+P F50BADF5 sblq.png
+P 6D43035A sbml.png
+P A116030B sz.png
+P 3492B417 tie.png
+P CC8BE738 xyg.png
 D Game/UI/VictoryBox
 D Game/UI/CheckIn/SelectLevel
 D Game/UI/GameScene/design
@@ -481,6 +491,10 @@ P 1473B122 b9.png
 P B82B99D6 blue.png
 P 5A162B05 eraser.png
 P BE308544 green.png
+D Game/UI/SelectLevel/IconDress
+P 79172350 bi.png
+P 6679A4C9 bz.png
+P D4D8F8E8 shu.png
 D Game/UI/SelectLevel/Name
 P E6875BCE dinglaotai.png
 P 43B7BC6A dinglaotou.png

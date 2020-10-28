@@ -1,6 +1,8 @@
 {
+    "x":0,
     "type":"View",
     "selectedBox":2,
+    "selecteID":13,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -24,6 +26,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
             "props":{"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"bottom":0},
@@ -37,9 +40,10 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":612},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,
@@ -49,6 +53,7 @@
             "compId":13,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,Wugui",
                     "props":{"y":323,"x":303,"width":680,"rotation":0,"pivotY":180,"pivotX":283,"name":"Wugui","height":443},
@@ -61,6 +66,7 @@
                     "compId":145,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw12,Draw12",
                             "props":{"zOrder":91,"y":214,"x":150,"width":135,"var":"Draw12","skin":"Game/UI/GameScene/Level2/weimask.png","rotation":0,"pivotY":50,"pivotX":135,"name":"Draw12","height":99},
@@ -100,6 +106,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw11,Draw11",
                             "props":{"zOrder":92,"y":250,"x":183,"width":111,"var":"Draw11","skin":"Game/UI/GameScene/Level2/houtuimask.png","rotation":13,"pivotX":56,"name":"Draw11","height":142},
@@ -139,6 +146,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw9,Draw9",
                             "props":{"zOrder":96,"y":262,"x":221,"width":111,"var":"Draw9","skin":"Game/UI/GameScene/Level2/houtui2mask.png","rotation":-5,"pivotX":56,"name":"Draw9","height":142},
@@ -178,6 +186,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw10,Draw10",
                             "props":{"zOrder":93,"y":266,"x":357,"width":113,"var":"Draw10","skin":"Game/UI/GameScene/Level2/qiantuimask.png","rotation":15,"pivotX":57,"name":"Draw10","height":142},
@@ -217,6 +226,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw8,Draw8",
                             "props":{"zOrder":95,"y":265,"x":399,"width":113,"var":"Draw8","skin":"Game/UI/GameScene/Level2/qiantui2mask.png","rotation":-7,"pivotX":57,"name":"Draw8","height":142},
@@ -256,6 +266,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Body",
                             "props":{"zOrder":100,"y":189,"x":290,"width":397,"pivotY":147,"pivotX":199,"name":"Body","height":273},
@@ -268,6 +279,7 @@
                             "compId":168,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw3,Draw3",
                                     "props":{"zOrder":96,"y":122,"x":199,"width":397,"var":"Draw3","skin":"Game/UI/GameScene/Level2/guikemask.png","pivotY":139,"pivotX":199,"name":"Draw3","height":294},
@@ -320,6 +332,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw7,Draw7",
                                     "props":{"zOrder":100,"y":120,"x":13,"var":"Draw7","skin":"Game/UI/GameScene/Level2/guixian4mask.png","name":"Draw7"},
@@ -359,6 +372,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw6,Draw6",
                                     "props":{"zOrder":99,"y":44,"x":50,"var":"Draw6","skin":"Game/UI/GameScene/Level2/guixian3mask.png","name":"Draw6"},
@@ -398,6 +412,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw5,Draw5",
                                     "props":{"zOrder":98,"y":-20,"x":196,"var":"Draw5","skin":"Game/UI/GameScene/Level2/guixian2mask.png","name":"Draw5"},
@@ -437,6 +452,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
                                     "props":{"zOrder":97,"y":-20,"x":79,"var":"Draw4","skin":"Game/UI/GameScene/Level2/guixianmask.png","name":"Draw4"},
@@ -477,6 +493,7 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Head,Head",
                             "props":{"zOrder":99,"y":179,"x":410,"width":264,"var":"Head","scaleY":1,"scaleX":1,"rotation":9,"pivotY":109,"name":"Head","height":218},
@@ -489,6 +506,7 @@
                             "compId":136,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw1,Draw1",
                                     "props":{"zOrder":98,"y":156,"x":33,"width":254,"var":"Draw1","skin":"Game/UI/GameScene/Level2/guitoumask.png","pivotY":156,"pivotX":22,"name":"Draw1","height":217},
@@ -501,6 +519,7 @@
                                     "compId":104,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guitou.png","name":"Pic"},
@@ -514,6 +533,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guitoumask.png","renderType":"mask"},
@@ -528,6 +548,7 @@
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye1",
                                     "props":{"zOrder":99,"y":69,"x":178,"width":27,"skin":"Game/UI/GameScene/Level2/yan2.png","scaleY":1,"scaleX":1,"pivotY":14,"pivotX":14,"name":"Eye1","height":27},
@@ -542,6 +563,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Eye2",
                                     "props":{"zOrder":99,"y":71,"x":120,"width":27,"skin":"Game/UI/GameScene/Level2/yan.png","scaleY":1,"pivotY":14,"pivotX":14,"name":"Eye2","height":27},
@@ -555,6 +577,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw2,Draw2",
                                     "props":{"zOrder":100,"y":151,"x":152,"width":134,"var":"Draw2","skin":"Game/UI/GameScene/Level2/zuimask.png","pivotY":67,"pivotX":67,"name":"Draw2","height":97},

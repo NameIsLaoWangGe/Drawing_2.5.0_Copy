@@ -436,6 +436,14 @@
                                 "index":275
                             },
                             {
+                                "value":1056,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"y",
+                                "index":294
+                            },
+                            {
                                 "value":1064,
                                 "tweenMethod":"linearNone",
                                 "tween":true,
@@ -727,6 +735,14 @@
                                 "target":17,
                                 "key":"x",
                                 "index":275
+                            },
+                            {
+                                "value":177,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"x",
+                                "index":294
                             },
                             {
                                 "value":132,
@@ -1351,6 +1367,14 @@
                                 "target":17,
                                 "key":"pivotY",
                                 "index":275
+                            },
+                            {
+                                "value":58,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"pivotY",
+                                "index":294
                             },
                             {
                                 "value":16,

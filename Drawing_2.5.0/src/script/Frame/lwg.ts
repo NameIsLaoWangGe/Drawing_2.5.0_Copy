@@ -458,7 +458,7 @@ export module lwg {
         }
 
         /**增加金币以并且在节点上也表现出来*/
-        export function addGold(number: number) {
+        export function _addGold(number: number) {
             _num.value += Number(number);
             let Num = GoldNode.getChildByName('Num') as Laya.Text;
             Num.text = _num.value.toString();
@@ -594,15 +594,13 @@ export module lwg {
          * @param func1 每一个金币移动完成后执行的回调
          * @param func2 金币全部创建完成后的回调
          */
-        export function getGoldAni_Heap(parent: Laya.Sprite, number: number, width: number, height: number, url: string, firstPoint: Laya.Point, targetPoint: Laya.Point, func1?: Function, func2?: Function): void {
+        export function _getGoldAni_Heap(parent?: Laya.Sprite, number?: number, width?: number, height?: number, url?: string, firstPoint?: Laya.Point, targetPoint?: Laya.Point, func1?: Function, func2?: Function): void {
             for (let index = 0; index < number; index++) {
-                let Gold = createOneGold(width, height, url);
+                let Gold = createOneGold(width ? width : 100, height ? height : 100, url ? url : SkinUrl[0]);
+                parent = parent ? parent : Laya.stage;
                 parent.addChild(Gold);
-                if (!url) {
-                    Gold.skin = SkinUrl[0];
-                } else {
-                    Gold.skin = url;
-                }
+                firstPoint = firstPoint ? firstPoint : new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2);
+                targetPoint = targetPoint ? targetPoint : new Laya.Point(GoldNode.x, GoldNode.y);
                 let x = Math.floor(Math.random() * 2) == 1 ? firstPoint.x + Math.random() * 100 : firstPoint.x - Math.random() * 100;
                 let y = Math.floor(Math.random() * 2) == 1 ? firstPoint.y + Math.random() * 100 : firstPoint.y - Math.random() * 100;
                 // Gold.rotation = Math.random() * 360;
@@ -1288,6 +1286,7 @@ export module lwg {
             SkinQualified = 'SkinQualified',
             Eastereggister = 'Eastereggister',
             SelectLevel = 'SelectLevel',
+            Settle = 'Settle',
         }
 
         /**
@@ -1295,30 +1294,30 @@ export module lwg {
          * @param {string} openSceneName 需要打开的场景名称
          * @param {string} [cloesSceneName] 需要关闭的场景，默认为null
          * @param {Function} [func] 完成回调，默认为null
-         * @param {number} [zOder] 指定层级，默认为最上层
+         * @param {number} [zOrder] 指定层级，默认为最上层
          */
-        export function _preLoadOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number) {
+        export function _preLoadOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOrder?: number) {
             _openScene(_SceneName.PreLoadStep);
             _preLoadOpenSceneLater.openSceneName = openSceneName;
             _preLoadOpenSceneLater.cloesSceneName = cloesSceneName;
             _preLoadOpenSceneLater.func = func;
-            _preLoadOpenSceneLater.zOder = zOder;
+            _preLoadOpenSceneLater.zOrder = zOrder;
         }
         /**预加载完毕后，需要打开的场景信息*/
         export let _preLoadOpenSceneLater = {
             openSceneName: null,
             cloesSceneName: null,
             func: null,
-            zOder: null,
+            zOrder: null,
         }
         /**
           * 打开场景
           * @param openSceneName 需要打开的场景名称
           * @param cloesSceneName 需要关闭的场景，默认为null
           * @param func 完成回调，默认为null
-          * @param zOder 指定层级
+          * @param zOrder 指定层级
          */
-        export function _openScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
+        export function _openScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOrder?: number): void {
             Admin._clickLock.switch = true;
             Laya.Scene.load('Scene/' + openSceneName + '.json', Laya.Handler.create(this, function (scene: Laya.Scene) {
                 if (_moudel['_' + openSceneName]) {
@@ -1337,8 +1336,8 @@ export module lwg {
                         console.log(openSceneName, '场景重复出现！请检查代码');
                         return;
                     }
-                    if (zOder) {
-                        Laya.stage.addChildAt(scene, zOder);
+                    if (zOrder) {
+                        Laya.stage.addChildAt(scene, zOrder);
                     } else {
                         Laya.stage.addChild(scene);
                     }
@@ -1469,8 +1468,8 @@ export module lwg {
                     sumDelay = 400;
                     break;
                 case _sceneAnimation.type.stickIn:
-                    time = 500;
-                    delay = 150;
+                    time = 700;
+                    delay = 100;
                     if (Scene.getChildByName('Background')) {
                         Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
                     }
@@ -1479,10 +1478,10 @@ export module lwg {
                     for (let index = 0; index < arr.length; index++) {
                         const element = arr[index] as Laya.Image;
                         if (element.name !== 'Background') {
-                            element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                            element.rotation = element.y > Laya.stage.height / 2 ? - 180 : 180;
                             let originalPovitX = element.pivotX;
                             let originalPovitY = element.pivotY;
-                            Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, 0);
+                            Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
                             let originalX = element.x;
                             let originalY = element.y;
                             element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
@@ -1638,22 +1637,41 @@ export module lwg {
                 this.moduleOnStart();
                 this.lwgOnStart();
             }
+            /**b
+             * 点击事件注册,可以用(e)=>{}简写传递的函数参数
+             * @param effect 效果类型 1.'largen'
+             * @param target 节点
+             * @param caller 执行域
+             * @param down 按下函数
+             * @param move 移动函数
+             * @param up 抬起函数
+             * @param out 出屏幕函数
+           * 以上4个只是函数名，不可传递函数，如果没有特殊执行，那么就用此模块定义的4个函数，包括通用效果。
+           */
+            btnRig(effect: string, target: Laya.Node, caller, down?: Function, move?: Function, up?: Function, out?: Function): void {
+                Click._on(effect, target, caller, down, move, up, out);
+            }
             /**
               * 打开场景
               * @param openSceneName 需要打开的场景名称
-              * @param cloesSceneName 需要关闭的场景，默认为null
+              * @param closeSelf 是否关闭当前场景,默认为关闭当前场景
               * @param func 完成回调，默认为null
-              * @param zOder 指定层级
+              * @param zOrder 指定层级
              */
-            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
-                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+            lwgOpenScene(openSceneName: string, closeSelf?: boolean, func?: Function, zOrder?: number): void {
+                let closeName;
+                if (closeSelf == undefined || closeSelf == true) {
+                    closeName = this.Owner.name;
+                }
+                Admin._openScene(openSceneName, closeName, func, zOrder);
             }
             /**
-             * 关闭自己
+             * 关闭场景，
+             * @param sceneName 默认为当前场景
              * @param func 关闭后的回调函数
              * */
-            lwgCloseScene(func?: Function): void {
-                Admin._closeScene(this.Owner.name, func);
+            lwgCloseScene(sceneName?: string, func?: Function): void {
+                Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
             }
             /**初始化完毕后，onUpdate前执行一次，重写覆盖*/
             lwgOnStart(): void { }
@@ -1739,21 +1757,26 @@ export module lwg {
                 console.log('父类的初始化！');
             }
             /**
-                * 打开场景
-                * @param openSceneName 需要打开的场景名称
-                * @param cloesSceneName 需要关闭的场景，默认为null
-                * @param func 完成回调，默认为null
-                * @param zOder 指定层级
-               */
-            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
-                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+              * 打开场景
+              * @param openSceneName 需要打开的场景名称
+              * @param closeSelf 是否关闭当前场景,默认为关闭当前场景
+              * @param func 完成回调，默认为null
+              * @param zOrder 指定层级
+             */
+            lwgOpenScene(openSceneName: string, closeSelf?: boolean, func?: Function, zOrder?: number): void {
+                let closeName;
+                if (closeSelf == undefined || closeSelf == true) {
+                    closeName = this.Owner.name;
+                }
+                Admin._openScene(openSceneName, closeName, func, zOrder);
             }
             /**
-             * 关闭自己
-             * @param func 关闭后的回调函数
-             * */
-            lwgCloseScene(func?: Function): void {
-                Admin._closeScene(this.Owner.name, func);
+            * 关闭场景，
+            * @param sceneName 默认为当前场景
+            * @param func 关闭后的回调函数
+            * */
+            lwgCloseScene(sceneName?: string, func?: Function): void {
+                Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
             }
         }
 
@@ -1784,21 +1807,26 @@ export module lwg {
                 this.lwgOnAwake();
             }
             /**
-            * 打开场景
-            * @param openSceneName 需要打开的场景名称
-            * @param cloesSceneName 需要关闭的场景，默认为null
-            * @param func 完成回调，默认为null
-            * @param zOder 指定层级
-           */
-            lwgOpenScene(openSceneName: string, cloesSceneName?: string, func?: Function, zOder?: number): void {
-                Admin._openScene(openSceneName, cloesSceneName, func, zOder);
+              * 打开场景
+              * @param openSceneName 需要打开的场景名称
+              * @param closeSelf 是否关闭当前场景,默认为关闭当前场景
+              * @param func 完成回调，默认为null
+              * @param zOrder 指定层级
+             */
+            lwgOpenScene(openSceneName: string, closeSelf?: boolean, func?: Function, zOrder?: number): void {
+                let closeName;
+                if (closeSelf == undefined || closeSelf == true) {
+                    closeName = this.OwnerScene.name;
+                }
+                Admin._openScene(openSceneName, closeName, func, zOrder);
             }
             /**
-             * 关闭自己
-             * @param func 关闭后的回调函数
-             * */
-            lwgCloseScene(func?: Function): void {
-                Admin._closeScene(this.Owner.name, func);
+            * 关闭场景，
+            * @param sceneName 默认为当前场景
+            * @param func 关闭后的回调函数
+            * */
+            lwgCloseScene(sceneName?: string, func?: Function): void {
+                Admin._closeScene(sceneName ? sceneName : this.Owner.name, func);
             }
             /**声明一些节点*/
             lwgOnAwake(): void { }
@@ -2002,7 +2030,7 @@ export module lwg {
 
             /**光圈模块的图片基类*/
             export class _ApertureImage extends Laya.Image {
-                constructor(parent: Laya.Sprite, centerPoint: Laya.Point, width: number, height: number, rotation: Array<number>, urlArr: Array<string>, colorRGBA: Array<Array<number>>, zOder: number) {
+                constructor(parent: Laya.Sprite, centerPoint: Laya.Point, width: number, height: number, rotation: Array<number>, urlArr: Array<string>, colorRGBA: Array<Array<number>>, zOrder: number) {
                     super();
                     if (!parent.parent) {
                         return;
@@ -2015,7 +2043,7 @@ export module lwg {
                     this.pivotY = this.height / 2;
                     this.rotation = rotation ? Tools.randomOneNumber(rotation[0], rotation[1]) : Tools.randomOneNumber(360);
                     this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.花3;
-                    this.zOrder = zOder ? zOder : 0;
+                    this.zOrder = zOrder ? zOrder : 0;
                     this.alpha = 0;
                     let RGBA = [];
                     RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
@@ -2036,12 +2064,12 @@ export module lwg {
              * @param urlArr 图片数组，默认为框架中的图片
              * @param colorRGBA 颜色区间[[][]]
              * @param scale 最大放大区间[a,b]
-             * @param zOder 层级，默认为0
+             * @param zOrder 层级，默认为0
              * @param speed 速度区间[a,b]，默认0.025，也表示了消失位置，和波浪的大小
              * @param accelerated 加速度,默认为0.0005
              */
-            export function _continuous(parent: Laya.Sprite, centerPoint?: Laya.Point, width?: number, height?: number, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOder?: number, scale?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): void {
-                let Img = new _ApertureImage(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _continuous(parent: Laya.Sprite, centerPoint?: Laya.Point, width?: number, height?: number, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOrder?: number, scale?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): void {
+                let Img = new _ApertureImage(parent, centerPoint, width, height, rotation, urlArr, colorRGBA, zOrder);
                 let _speed = speed ? Tools.randomOneNumber(speed[0], speed[1]) : 0.025;
                 let _accelerated = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : 0.0005;
                 let _scale = scale ? Tools.randomOneNumber(scale[0], scale[1]) : 2;
@@ -2096,9 +2124,9 @@ export module lwg {
                  * @param rotation 角度区间[a,b]
                  * @param urlArr 图片地址集合，默认为框架中随机的样式
                  * @param colorRGBA 上色色值区间[[R,G,B,A],[R,G,B,A]]
-                 * @param zOder 层级，默认为0
+                 * @param zOrder 层级，默认为0
                  */
-                constructor(parent: Laya.Sprite, centerPoint: Laya.Point, sectionWH: Array<number>, width: Array<number>, height: Array<number>, rotation: Array<number>, urlArr: Array<string>, colorRGBA: Array<Array<number>>, zOder: number) {
+                constructor(parent: Laya.Sprite, centerPoint: Laya.Point, sectionWH: Array<number>, width: Array<number>, height: Array<number>, rotation: Array<number>, urlArr: Array<string>, colorRGBA: Array<Array<number>>, zOrder: number) {
                     super();
                     parent.addChild(this);
                     let sectionWidth = sectionWH ? Tools.randomOneNumber(sectionWH[0]) : Tools.randomOneNumber(200);
@@ -2114,7 +2142,7 @@ export module lwg {
                     this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.圆形1;
                     this.rotation = rotation ? Tools.randomOneNumber(rotation[0], rotation[1]) : 0;
                     this.alpha = 0;
-                    this.zOrder = zOder ? zOder : 0;
+                    this.zOrder = zOrder ? zOrder : 0;
                     let RGBA = [];
                     RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
                     RGBA[1] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][1], colorRGBA[1][1]) : Tools.randomOneNumber(0, 255);
@@ -2134,14 +2162,14 @@ export module lwg {
              * @param {Array<number>} [rotation] 角度区间[a,b]
              * @param {Array<string>} [urlArr] 角度区间[a,b]
              * @param {Array<Array<number>>} [colorRGBA] 角度区间[a,b]
-             * @param {number} [zOder] 层级
+             * @param {number} [zOrder] 层级
              * @param {Array<number>} [distance] 下落距离区间[a,b]
              * @param {[number, number]} [rotationSpeed] 旋转区间[a,b]
              * @param {Array<number>} [speed] 速度区间[a,b]
              * @param {[number, number]} [windX] 风力（X轴偏移速度）区间[a,b]
              */
-            export function _snow(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOder?: number, distance?: Array<number>, rotationSpeed?: [number, number], speed?: Array<number>, windX?: [number, number]): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _snow(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOrder?: number, distance?: Array<number>, rotationSpeed?: [number, number], speed?: Array<number>, windX?: [number, number]): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                 let _rotationSpeed = rotationSpeed ? Tools.randomOneNumber(rotationSpeed[0], rotationSpeed[1]) : Tools.randomOneNumber(0, 1);
                 _rotationSpeed = Tools.randomOneHalf() == 0 ? _rotationSpeed : -_rotationSpeed;
                 let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(1, 2.5);
@@ -2195,13 +2223,13 @@ export module lwg {
               * @param rotation 角度旋转[a,b]
               * @param urlArr 图片地址集合，默认为框架中随机的样式
               * @param colorRGBA 上色色值区间[[R,G,B,A],[R,G,B,A]]
-              * @param zOder 层级，默认为0
+              * @param zOrder 层级，默认为0
               * @param distance 移动距离，区间[a,b]，在其中随机移动一定的距离后消失;
               * @param speed 吸入速度区间[a,b]
               * @param accelerated 加速度区间[a,b]
               */
-            export function _fallingVertical(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOder?: number, distance?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _fallingVertical(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOrder?: number, distance?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                 let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(4, 8);
                 let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
                 let acc = 0;
@@ -2256,10 +2284,10 @@ export module lwg {
              * @param colorRGBA 上色色值区间[[R,G,B,A],[R,G,B,A]]
              * @param speed  速度区间[a,b]
              * @param accelerated 加速度区间[a,b]
-             * @param zOder 层级，默认为0
+             * @param zOrder 层级，默认为0
              */
-            export function _slowlyUp(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOder?: number, distance?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _slowlyUp(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: Array<number>, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOrder?: number, distance?: Array<number>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, sectionWH, width, height, rotation, urlArr, colorRGBA, zOrder);
                 let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(1.5, 2);
                 let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.001, 0.005);
                 let acc = 0;
@@ -2317,10 +2345,10 @@ export module lwg {
                * @param rotationSpeed 旋转速度
                * @param speed  速度区间[a,b]
                * @param accelerated 加速度区间[a,b] 
-               * @param zOder 层级，默认为0
+               * @param zOrder 层级，默认为0
                */
-            export function _spray(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: [number, number], width?: [number, number], height?: [number, number], rotation?: [number, number], urlArr?: [], colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOder?: number, moveAngle?: [number, number], distance?: [number, number], rotationSpeed?: [number, number], speed?: [number, number], accelerated?: [number, number]): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _spray(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: [number, number], width?: [number, number], height?: [number, number], rotation?: [number, number], urlArr?: [], colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOrder?: number, moveAngle?: [number, number], distance?: [number, number], rotationSpeed?: [number, number], speed?: [number, number], accelerated?: [number, number]): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                 let centerPoint0 = centerPoint ? centerPoint : new Laya.Point(0, 0);
                 let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(3, 10);
                 let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
@@ -2376,15 +2404,15 @@ export module lwg {
                * @param rotation 角度区间[a,b]，默认为360
                * @param urlArr 图片地址集合，默认为框架中的样式
                * @param colorRGBA 上色色值区间[[R,G,B,A],[R,G,B,A]]
-               * @param zOder 层级，默认为0
+               * @param zOrder 层级，默认为0
                * @param curtailAngle 角度缩减0~90，填写90则是垂直于每个边
                * @param distance 移动距离区间[a,b]
                * @param rotateSpeed 旋转速度
                * @param speed  速度区间[a,b]
                * @param accelerated 加速度区间[a,b]
                */
-            export function _outsideBox(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: [number, number], width?: [number, number], height?: [number, number], rotation?: [number, number], urlArr?: Array<string>, colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOder?: number, curtailAngle?: number, distance?: [number, number], rotateSpeed?: [number, number], speed?: [number, number], accelerated?: [number, number]): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _outsideBox(parent: Laya.Sprite, centerPoint?: Laya.Point, sectionWH?: [number, number], width?: [number, number], height?: [number, number], rotation?: [number, number], urlArr?: Array<string>, colorRGBA?: [[number, number, number, number], [number, number, number, number]], zOrder?: number, curtailAngle?: number, distance?: [number, number], rotateSpeed?: [number, number], speed?: [number, number], accelerated?: [number, number]): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                 let _angle: number = 0;
                 sectionWH = sectionWH ? sectionWH : [100, 100];
                 let fixedXY = Tools.randomOneHalf() == 0 ? 'x' : 'y';
@@ -2466,10 +2494,10 @@ export module lwg {
              * @param rotationSpeed 旋转速度
              * @param speed  速度区间[a,b]
              * @param accelerated 加速度区间[a,b]
-             * @param zOder 层级，默认为0
+             * @param zOrder 层级，默认为0
              */
-            export function _moveToTargetToMove(parent: Laya.Sprite, centerPoint?: Laya.Point, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, angle?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOder?: number, distance1?: Array<number>, distance2?: Array<number>, rotationSpeed?: Array<null>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
-                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOder);
+            export function _moveToTargetToMove(parent: Laya.Sprite, centerPoint?: Laya.Point, width?: Array<number>, height?: Array<number>, rotation?: Array<number>, angle?: Array<number>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, zOrder?: number, distance1?: Array<number>, distance2?: Array<number>, rotationSpeed?: Array<null>, speed?: Array<number>, accelerated?: Array<number>): Laya.Image {
+                let Img = new _ParticleImgBase(parent, centerPoint, [0, 0], width, height, rotation, urlArr, colorRGBA, zOrder);
                 let centerPoint0 = centerPoint ? centerPoint : new Laya.Point(0, 0);
                 let speed0 = speed ? Tools.randomOneNumber(speed[0], speed[1]) : Tools.randomOneNumber(5, 6);
                 let accelerated0 = accelerated ? Tools.randomOneNumber(accelerated[0], accelerated[1]) : Tools.randomOneNumber(0.25, 0.45);
@@ -2545,9 +2573,9 @@ export module lwg {
              * @param urlArr 图片地址集合，默认为框架中随机的样式
              * @param speed 吸入速度区间[a,b]
              * @param accelerated 加速度区间[a,b]
-             * @param zOder 层级，默认为0
+             * @param zOrder 层级，默认为0
              */
-            export function _AnnularInhalation(parent, centerPoint: Laya.Point, radius: Array<number>, rotation?: Array<number>, width?: Array<number>, height?: Array<number>, urlArr?: Array<string>, speed?: Array<number>, accelerated?: number, zOder?: number): Laya.Image {
+            export function _AnnularInhalation(parent, centerPoint: Laya.Point, radius: Array<number>, rotation?: Array<number>, width?: Array<number>, height?: Array<number>, urlArr?: Array<string>, speed?: Array<number>, accelerated?: number, zOrder?: number): Laya.Image {
                 let Img = new Laya.Image();
                 parent.addChild(Img);
                 width = width ? width : [25, 50];
@@ -2676,11 +2704,11 @@ export module lwg {
            * @param y y位置
            * @param width 宽
            * @param height 高
-           * @param zOder 层级
+           * @param zOrder 层级
            * @param url 图片地址
            * @param speed 闪烁速度默认 0.01
            */
-            export function _simpleInfinite(parent: Laya.Sprite, x: number, y: number, width: number, height: number, zOder: number, url?: string, speed?: number): Laya.Image {
+            export function _simpleInfinite(parent: Laya.Sprite, x: number, y: number, width: number, height: number, zOrder: number, url?: string, speed?: number): Laya.Image {
                 let Img = new Laya.Image();
                 parent.addChild(Img);
                 Img.width = width;
@@ -2690,7 +2718,7 @@ export module lwg {
                 Img.pos(x, y);
                 Img.skin = url ? url : _SkinUrl.光圈1;
                 Img.alpha = 0;
-                Img.zOrder = zOder ? zOder : 0;
+                Img.zOrder = zOrder ? zOrder : 0;
                 let add = true;
                 let caller = {};
                 let func = () => {
@@ -2722,7 +2750,7 @@ export module lwg {
         export module _circulation {
             /**循环模块图片基类*/
             export class _circulationImage extends Laya.Image {
-                constructor(parent: Laya.Sprite, urlArr: Array<string>, colorRGBA: Array<Array<number>>, width: Array<number>, height: Array<number>, zOder: number) {
+                constructor(parent: Laya.Sprite, urlArr: Array<string>, colorRGBA: Array<Array<number>>, width: Array<number>, height: Array<number>, zOrder: number) {
                     super();
                     parent.addChild(this);
                     this.skin = urlArr ? Tools.arrayRandomGetOne(urlArr) : _SkinUrl.圆形发光1;
@@ -2736,7 +2764,7 @@ export module lwg {
                     RGBA[2] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][2], colorRGBA[1][2]) : Tools.randomOneNumber(0, 255);
                     RGBA[3] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][3], colorRGBA[1][3]) : Tools.randomOneNumber(0, 255);
                     Color._colour(this, RGBA);
-                    this.zOrder = zOder ? zOder : 0;
+                    this.zOrder = zOrder ? zOrder : 0;
                     this.alpha = 0;
                     this.scaleX = 0;
                     this.scaleY = 0;
@@ -2752,15 +2780,15 @@ export module lwg {
              * @param {Array<Array<number>>} [colorRGBA] 颜色区间[[ ][ ]]               
              * @param {Array<number>} [width] 宽度区间[a,b]
              * @param {Array<number>} [height] 高度区间[a,b]
-             * @param {number} [zOder] 层级
+             * @param {number} [zOrder] 层级
              * @param {number} [speed] 速度
              */
-            export function _corner(parent: Laya.Sprite, posArray: Array<Array<number>>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, width?: Array<number>, height?: Array<number>, zOder?: number, parallel?: boolean, speed?: number): Laya.Image {
+            export function _corner(parent: Laya.Sprite, posArray: Array<Array<number>>, urlArr?: Array<string>, colorRGBA?: Array<Array<number>>, width?: Array<number>, height?: Array<number>, zOrder?: number, parallel?: boolean, speed?: number): Laya.Image {
                 if (posArray.length <= 1) {
                     return;
                 }
-                let Img = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
-                let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
+                let Img = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
+                let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
                 Imgfootprint.filters = Img.filters;
                 Img.pos(posArray[0][0], posArray[0][1]);
                 Img.alpha = 1;
@@ -2775,7 +2803,7 @@ export module lwg {
                 Img.scale(1, 1);
 
                 TimerAdmin._frameLoop(1, moveCaller, () => {
-                    let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOder);
+                    let Imgfootprint = new _circulationImage(parent, urlArr, colorRGBA, width, height, zOrder);
                     Imgfootprint.filters = Img.filters;
                     Imgfootprint.x = Img.x;
                     Imgfootprint.y = Img.y;
@@ -4450,23 +4478,23 @@ export module lwg {
                 }
                 if (along) {
                     let arr0 = [];
-                    // for (let index = arr.length; index < 0; index--) {
-                    //     const element = arr[index];
-                    //     element['zOrder'] = index;
-                    //     arr.splice(index, 1);
-                    //     console.log(element);
-                    // }
-                    // for (let index = arr.length - 1; index <= 0; index--) {
-                    //     const element = arr[index];
-                    //     console.log(element);
-                    //     element['zOrder'] = arr.length - index;
-                    //     arr0.push(element);
-                    // }
+                    for (let index = arr.length - 1; index >= 0; index--) {
+                        const element = arr[index];
+                        console.log(element);
+                        element['zOrder'] = arr.length - index;
+                        arr0.push(element);
+                    }
                     return arr0;
                 } else {
                     return arr;
                 }
             }
+            /**
+             * @export 改变pivot不改变位置，图片没有设置宽高可能改不掉
+             * @param {Laya.Sprite} sp 节点
+             * @param {number} _pivotX 
+             * @param {number} _pivotY 
+             */
             export function changePovit(sp: Laya.Sprite, _pivotX: number, _pivotY: number): void {
                 let originalPovitX = sp.pivotX;
                 let originalPovitY = sp.pivotY;
@@ -6989,7 +7017,7 @@ export module lwg {
                                 Admin._openScene(Admin._preLoadOpenSceneLater.openSceneName, Admin._preLoadOpenSceneLater.cloesSceneName, () => {
                                     Admin._preLoadOpenSceneLater.func;
                                     Admin._closeScene(_whereToLoad);
-                                }, Admin._preLoadOpenSceneLater.zOder);
+                                }, Admin._preLoadOpenSceneLater.zOrder);
                             }
                         } else {
                             //初始化所有添加过的模块
