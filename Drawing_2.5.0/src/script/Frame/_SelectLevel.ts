@@ -24,8 +24,10 @@ export module _SelectLevel {
                 return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
             },
             set classify(str: string) {
-                _MyList.array = _data._getClassifyArr(str);
-                _MyList.refresh();
+                if (_MyList) {
+                    _MyList.array = _data._getClassifyArr(str);
+                    _MyList.refresh();
+                }
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
             },
             get customs(): string {
@@ -112,7 +114,7 @@ export module _SelectLevel {
         event2 = '_Example_Event2',
     }
     export function _init(): void {
-
+        _data._pich.classify = _data._classify.animal;
     }
     export let _MyList: Laya.List;
     export class _SelectLevelItem extends Admin._Object {

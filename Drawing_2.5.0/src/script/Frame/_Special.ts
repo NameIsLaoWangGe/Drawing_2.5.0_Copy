@@ -5,25 +5,23 @@ import { _Game } from "./_Game";
 export module _Special {
     export class _data {
         /**本地存储变量格式*/
-        static _openNum = {
-            get count(): number {
-                return Laya.LocalStorage.getItem('_Special_OpenNum') ? Number(Laya.LocalStorage.getItem('_Special_OpenNum')) : 0;
-            },
-            set count(count: number) {
-                Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
-            },
-            get lastDate(): number {
-                return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date;
-            },
-            // set lastDate(date: number) {
-            //     if (_openNum.lastDate) {
-
-            //     }
-            // },
+        static get _openNum(): number {
+            return Laya.LocalStorage.getItem('_Special_OpenNum') ? Number(Laya.LocalStorage.getItem('_Special_OpenNum')) : 0;
+        }
+        static set _openNum(count: number) {
+            Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
+        }
+        static get _lastDate(): number {
+            return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date;
+        }
+        static set _lastDate(date: number) {
+            Laya.LocalStorage.setItem('_Special_lastDate', date.toString());
         }
     }
     export enum _Event {
     }
+    export function _init(): void {
+    };
     export class SpecialBase extends Admin._SceneBase {
     }
     export class Special extends _Special.SpecialBase {

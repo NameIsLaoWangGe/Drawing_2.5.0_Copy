@@ -1,5 +1,5 @@
 import ADManager from "../TJ/Admanager";
-import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
+import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, DateAdmin } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 import { _Share } from "./_Share";
@@ -16,8 +16,9 @@ export module _Victory {
     }
     export class Victory extends _Victory.VictoryBase {
         lwgOpenAniAfter(): void {
-            if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._openNum.count == 0) {
-                _Special._data._openNum.count++;
+            if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._lastDate
+                !== DateAdmin._date.date) {
+                _Special._data._lastDate = DateAdmin._date.date
                 this.lwgOpenScene(_SceneName.Special);
             }
         }

@@ -5692,6 +5692,8 @@
                 };
                 this.drawState = {
                     switch: false,
+                    DrawRoot: null,
+                    DrawBoard: null,
                     EraserSp: null,
                     DrawSp: null,
                     frontPos: null,
@@ -5904,6 +5906,48 @@
                     Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
                 });
             }
+            onStageMouseDown(e) {
+                this.drawState.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
+                this.drawState.DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard');
+                this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+            }
+            onStageMouseMove(e) {
+                if (!this.drawState.frontPos) {
+                    this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                }
+                let endPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                    if (!this.drawState.EraserSp) {
+                        this.drawState.DrawBoard.addChild(this.drawState.EraserSp = new Laya.Sprite());
+                        this.drawState.EraserSp.blendMode = "destination-out";
+                    }
+                    this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
+                    this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
+                }
+                else {
+                    if (!this.drawState.DrawSp) {
+                        this.drawState.DrawBoard.addChild(this.drawState.DrawSp = new Laya.Sprite());
+                        this.drawState.DrawSp.blendMode = "none";
+                    }
+                    this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
+                    this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
+                    this._drawingLenth.value += this.drawState.frontPos.distance(endPos.x, endPos.y);
+                }
+                this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
+            }
+            onStageMouseUp() {
+                this.drawState.frontPos = null;
+                if (this.drawState.DrawBoard && this.drawState.DrawBoard.numChildren > 3) {
+                    console.log('合并！');
+                    let NewBoard = this.drawState.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                    NewBoard.cacheAs = "bitmap";
+                    NewBoard.name = 'DrawBoard';
+                    NewBoard.width = this.drawState.DrawRoot.width;
+                    NewBoard.height = this.drawState.DrawRoot.height;
+                    NewBoard.texture = this.drawState.DrawBoard.drawToTexture(this.drawState.DrawBoard.width, this.drawState.DrawBoard.height, this.drawState.DrawBoard.x, this.drawState.DrawBoard.y);
+                    this.drawState.DrawBoard.destroy();
+                }
+            }
             lwgBtnClick() {
                 for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                     let DrawRoot = _Game._stepOrderImg[index];
@@ -5912,54 +5956,6 @@
                     DrawBoard.name = 'DrawBoard';
                     DrawBoard.width = DrawRoot.width;
                     DrawBoard.height = DrawRoot.height;
-                    Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, (e) => {
-                        let Sp;
-                        if (index == _Game._stepIndex.present && this.drawState.switch) {
-                            let DrawBoard = DrawRoot.getChildByName('DrawBoard');
-                            this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                            if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                                Sp = this.drawState.EraserSp = new Laya.Sprite();
-                                this.drawState.EraserSp.blendMode = "destination-out";
-                            }
-                            else {
-                                Sp = this.drawState.DrawSp = new Laya.Sprite();
-                                this.drawState.DrawSp.blendMode = "none";
-                            }
-                            DrawBoard.addChild(Sp)['pos'](0, 0);
-                            Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
-                        }
-                    }, (e) => {
-                        if (this.drawState.frontPos && index == _Game._stepIndex.present && this.drawState.switch) {
-                            let DrawBoard = DrawRoot.getChildByName('DrawBoard');
-                            let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                            if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                                if (this.drawState.EraserSp) {
-                                    this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
-                                    this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
-                                }
-                            }
-                            else {
-                                if (this.drawState.DrawSp) {
-                                    this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
-                                    this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
-                                    this._drawingLenth.value += this.drawState.frontPos.distance(endPos.x, endPos.y);
-                                }
-                            }
-                            this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
-                        }
-                    }, (e) => {
-                        this.drawState.frontPos = null;
-                        let DrawBoard = DrawRoot.getChildByName('DrawBoard');
-                        if (DrawBoard && DrawBoard.numChildren > 3) {
-                            let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
-                            NewBoard.cacheAs = "bitmap";
-                            NewBoard.name = 'DrawBoard';
-                            NewBoard.width = DrawRoot.width;
-                            NewBoard.height = DrawRoot.height;
-                            NewBoard.texture = DrawBoard.drawToTexture(DrawBoard.width, DrawBoard.height, DrawBoard.x, DrawBoard.y);
-                            DrawBoard.destroy();
-                        }
-                    });
                 }
                 Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
                     if (this['BtnStepClose']) {
@@ -6641,8 +6637,10 @@
                 return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
             },
             set classify(str) {
-                _SelectLevel._MyList.array = _data._getClassifyArr(str);
-                _SelectLevel._MyList.refresh();
+                if (_SelectLevel._MyList) {
+                    _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                    _SelectLevel._MyList.refresh();
+                }
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
             },
             get customs() {
@@ -6666,6 +6664,7 @@
             _Event["event2"] = "_Example_Event2";
         })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
         function _init() {
+            _data._pich.classify = _data._classify.animal;
         }
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
@@ -6989,14 +6988,16 @@
         _Share.ShareBase = ShareBase;
         class Share extends _Share.ShareBase {
             lwgBtnClick() {
-                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                var func = () => {
                     EventAdmin._notify(_Game._Event.victory);
                     this.lwgOpenScene(_SceneName.Victory);
+                };
+                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                    func();
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
                     RecordManager._share('award', () => {
-                        EventAdmin._notify(_Game._Event.victory);
-                        this.lwgOpenScene(_SceneName.Victory);
+                        func();
                     });
                 });
             }
@@ -7008,6 +7009,18 @@
     var _Special;
     (function (_Special) {
         class _data {
+            static get _openNum() {
+                return Laya.LocalStorage.getItem('_Special_OpenNum') ? Number(Laya.LocalStorage.getItem('_Special_OpenNum')) : 0;
+            }
+            static set _openNum(count) {
+                Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
+            }
+            static get _lastDate() {
+                return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date;
+            }
+            static set _lastDate(date) {
+                Laya.LocalStorage.setItem('_Special_lastDate', date.toString());
+            }
         }
         _Special._data = _data;
         let _Event;
@@ -7016,13 +7029,29 @@
         function _init() {
         }
         _Special._init = _init;
+        ;
         class SpecialBase extends Admin._SceneBase {
         }
         _Special.SpecialBase = SpecialBase;
         class Special extends _Special.SpecialBase {
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
-                    this.lwgCloseScene();
+                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
+                    TimerAdmin._frameOnce(5, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
+                    });
+                    TimerAdmin._frameOnce(10, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
+                    });
+                    TimerAdmin._frameOnce(15, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
+                    });
+                    TimerAdmin._frameOnce(20, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
+                            _Gold._addGold(100000000000);
+                            this.lwgCloseScene();
+                        });
+                    });
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
                     this.lwgCloseScene();
@@ -7080,7 +7109,9 @@
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
             lwgOpenAniAfter() {
-                if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours) {
+                if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._lastDate
+                    !== DateAdmin._date.date) {
+                    _Special._data._lastDate = DateAdmin._date.date;
                     this.lwgOpenScene(_SceneName.Special);
                 }
             }
@@ -7114,7 +7145,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.WebTest;
+            Admin._platform.name = Admin._platform.tpye.General;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
@@ -7149,7 +7180,7 @@
     GameConfig.startScene = "Scene/Lwginit.scene";
     GameConfig.sceneRoot = "";
     GameConfig.debug = false;
-    GameConfig.stat = false;
+    GameConfig.stat = true;
     GameConfig.physicsDebug = false;
     GameConfig.exportSceneToJson = true;
     GameConfig.init();

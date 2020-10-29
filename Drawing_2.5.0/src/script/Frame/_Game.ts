@@ -391,6 +391,8 @@ export module _Game {
         /**绘画状态控制*/
         drawState = {
             switch: false,
+            DrawRoot: null,
+            DrawBoard: null,
             EraserSp: null,
             DrawSp: null,
             frontPos: null,
@@ -408,8 +410,55 @@ export module _Game {
                 this.drawState.EraserSp = null;
             },
         }
-        lwgBtnClick(): void {
 
+        onStageMouseDown(e: Laya.Event): void {
+            this.drawState.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
+            this.drawState.DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard') as Laya.Image;
+            this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+            if (!this.drawState.EraserSp) {
+                this.drawState.DrawBoard.addChild(this.drawState.EraserSp = new Laya.Sprite());
+                this.drawState.EraserSp.blendMode = "destination-out";
+            }
+        }
+        onStageMouseMove(e: Laya.Event): void {
+            if (!this.drawState.frontPos) {
+                this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+            }
+            let endPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+            if (_Game._SingleColorPencils._pitchName == 'eraser') {
+               
+                this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
+                this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
+                // this._drawingLenth.value -= (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+            } else {
+                if (!this.drawState.DrawSp) {
+                    this.drawState.DrawBoard.addChild(this.drawState.DrawSp = new Laya.Sprite());
+                    this.drawState.DrawSp.blendMode = "none";
+                }
+                // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
+                // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
+                this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
+                this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
+                this._drawingLenth.value += (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+            }
+            this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
+        }
+        onStageMouseUp(): void {
+            this.drawState.frontPos = null;
+            // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
+            if (this.drawState.DrawBoard && this.drawState.DrawBoard.numChildren > 3) {
+                console.log('合并！')
+                let NewBoard = this.drawState.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+                NewBoard.cacheAs = "bitmap";
+                NewBoard.name = 'DrawBoard';
+                NewBoard.width = this.drawState.DrawRoot.width;
+                NewBoard.height = this.drawState.DrawRoot.height;
+                NewBoard.texture = this.drawState.DrawBoard.drawToTexture(this.drawState.DrawBoard.width, this.drawState.DrawBoard.height, this.drawState.DrawBoard.x, this.drawState.DrawBoard.y) as Laya.Texture;
+                this.drawState.DrawBoard.destroy();
+            }
+        }
+
+        lwgBtnClick(): void {
             for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                 let DrawRoot = _Game._stepOrderImg[index];
                 let DrawBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
@@ -417,64 +466,55 @@ export module _Game {
                 DrawBoard.name = 'DrawBoard';
                 DrawBoard.width = DrawRoot.width;
                 DrawBoard.height = DrawRoot.height;
-
-                Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this,
-                    // 按下
-                    (e: Laya.Event) => {
-                        // 初始化一个绘制节点
-                        let Sp: Laya.Sprite;
-                        if (index == _Game._stepIndex.present && this.drawState.switch) {
-                            let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
-                            this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                            if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                                Sp = this.drawState.EraserSp = new Laya.Sprite();
-                                this.drawState.EraserSp.blendMode = "destination-out";
-                            } else {
-                                Sp = this.drawState.DrawSp = new Laya.Sprite();
-                                this.drawState.DrawSp.blendMode = "none";
-                            }
-                            DrawBoard.addChild(Sp)['pos'](0, 0);
-                            Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
-                        }
-                    },
-                    // 移动
-                    (e: Laya.Event) => {
-                        if (this.drawState.frontPos && index == _Game._stepIndex.present && this.drawState.switch) {
-                            let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
-                            let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                            if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                                if (this.drawState.EraserSp) {
-                                    this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
-                                    this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
-                                    // this._drawingLenth.value -= (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-                                }
-                            } else {
-                                if (this.drawState.DrawSp) {
-                                    // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
-                                    // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                                    this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
-                                    this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
-                                    this._drawingLenth.value += (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-                                }
-                            }
-                            this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
-                        }
-                    },
-                    (e: Laya.Event) => {
-                        this.drawState.frontPos = null;
-                        // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
-                        let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
-                        if (DrawBoard && DrawBoard.numChildren > 3) {
-                            let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
-                            NewBoard.cacheAs = "bitmap";
-                            NewBoard.name = 'DrawBoard';
-                            NewBoard.width = DrawRoot.width;
-                            NewBoard.height = DrawRoot.height;
-                            NewBoard.texture = DrawBoard.drawToTexture(DrawBoard.width, DrawBoard.height, DrawBoard.x, DrawBoard.y) as Laya.Texture;
-                            DrawBoard.destroy();
-                        }
-                    }
-                );
+                // Click._on(Click._Type.noEffect, DrawRoot.getChildByName('Pic'), this, null,
+                //     // 移动
+                //     (e: Laya.Event) => {
+                //         if (!this.drawState.frontPos) {
+                //             this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                //         }
+                //         if (index == _Game._stepIndex.present && this.drawState.switch) {
+                //             let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
+                //             let endPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                //             if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                //                 if (!this.drawState.EraserSp) {
+                //                     DrawBoard.addChild(this.drawState.EraserSp = new Laya.Sprite());
+                //                     this.drawState.EraserSp.blendMode = "destination-out";
+                //                 }
+                //                 this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
+                //                 this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
+                //                 // this._drawingLenth.value -= (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                //             } else {
+                //                 if (!this.drawState.DrawSp) {
+                //                     DrawBoard.addChild(this.drawState.DrawSp = new Laya.Sprite());
+                //                     this.drawState.DrawSp.blendMode = "none";
+                //                 }
+                //                 // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
+                //                 // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
+                //                 this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
+                //                 this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
+                //                 this._drawingLenth.value += (this.drawState.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                //             }
+                //             this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
+                //         }
+                //     },
+                //     (e: Laya.Event) => {
+                //         this.drawState.frontPos = null;
+                //         // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
+                //         let DrawBoard = DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
+                //         if (DrawBoard && DrawBoard.numChildren > 3) {
+                //             let NewBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+                //             NewBoard.cacheAs = "bitmap";
+                //             NewBoard.name = 'DrawBoard';
+                //             NewBoard.width = DrawRoot.width;
+                //             NewBoard.height = DrawRoot.height;
+                //             NewBoard.texture = DrawBoard.drawToTexture(DrawBoard.width, DrawBoard.height, DrawBoard.x, DrawBoard.y) as Laya.Texture;
+                //             DrawBoard.destroy();
+                //         }
+                //     },
+                //     (e: Laya.Event) => {
+                //         this.drawState.frontPos = null;
+                //     }
+                // );
             }
             Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
                 if (this['BtnStepClose']) {
