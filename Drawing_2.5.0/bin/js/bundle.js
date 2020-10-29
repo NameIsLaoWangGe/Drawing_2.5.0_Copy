@@ -5910,6 +5910,21 @@
                 this.drawState.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
                 this.drawState.DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard');
                 this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                let Sp;
+                if (this.drawState.switch) {
+                    let DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard');
+                    this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                    if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                        Sp = this.drawState.EraserSp = new Laya.Sprite();
+                        this.drawState.EraserSp.blendMode = "destination-out";
+                    }
+                    else {
+                        Sp = this.drawState.DrawSp = new Laya.Sprite();
+                        this.drawState.DrawSp.blendMode = "none";
+                    }
+                    DrawBoard.addChild(Sp)['pos'](0, 0);
+                    Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
+                }
             }
             onStageMouseMove(e) {
                 if (!this.drawState.frontPos) {
@@ -5917,10 +5932,6 @@
                 }
                 let endPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                    if (!this.drawState.EraserSp) {
-                        this.drawState.DrawBoard.addChild(this.drawState.EraserSp = new Laya.Sprite());
-                        this.drawState.EraserSp.blendMode = "destination-out";
-                    }
                     this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
                     this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
                 }
