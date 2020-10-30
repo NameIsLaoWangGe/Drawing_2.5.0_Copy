@@ -105,6 +105,7 @@ P E57AAFC8 ui_l_orthogon_red.png
 P 65CD420A ui_l_orthogon_white.png
 P 86BE810F ui_l_orthogon_yellow.png
 P 1F7E5653 ui_orthogon_black.png
+P 5847F2F1 ui_orthogon_black_0.7.png
 P 1E503E23 ui_orthogon_cycn.png
 P 0CA59940 ui_orthogon_green.png
 P 1518D67A ui_orthogon_magenta.png
@@ -158,6 +159,7 @@ D Game/UI/Defeated
 D Game/UI/DesignPic
 R 3D70B944 game.png
 R 22791D75 loding.png
+R 81F38B33 Proptry.png
 R 361B735A SelectLevel.png
 R 8DAFDA6B settle.png
 R 442BC8D2 Share.png
@@ -183,6 +185,17 @@ P 35503251 jindutiao.png
 P 9A32446C ty.png
 R 18763D65 tyxhs.png
 D Game/UI/PropTry
+P 906B2891 an.png
+P 1FF4D7C9 c.png
+P FE2F7986 djkb.png
+P 7A9FD0DE kgg.png
+P 74712E39 kxy.png
+P 9CB2EDC2 pfsy.png
+P 8192E214 qd.png
+P D6035327 sp.png
+P C93A3527 sxy.png
+R 66F7A46E tmd.png
+R 7B9CFE0D xd.png
 D Game/UI/Resurgence
 D Game/UI/SelectLevel
 P 50A4ECB6 an1.png

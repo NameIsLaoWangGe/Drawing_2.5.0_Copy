@@ -1408,7 +1408,13 @@ export module lwg {
                 /**渐隐渐出*/
                 fadeOut: 'fadeOut',
                 /**类似于用手拿着一角放入，对节点摆放有需求，需要整理节点，通过大块父节点将琐碎的scene中的直接子节点减少，并且锚点要在最左或者最右，否则达不到最佳效果*/
-                stickIn: 'stickIn',
+                stickIn: {
+                    left: 'left',
+                    right: 'right',
+                    upLeftDownLeft: 'upLeftDownRight',
+                    upLeftDownRight: 'upLeftDownRight',
+                    upRightDownLeft: 'upRightDownLeft',
+                },
                 leftMove: 'leftMove',
                 rightMove: 'rightMove',
                 centerRotate: 'centerRotate',
@@ -1435,7 +1441,7 @@ export module lwg {
                         closeFunc();
                     })
                     break;
-                case _sceneAnimation.type.stickIn:
+                case _sceneAnimation.type.stickIn.left:
                     closeFunc();
                     break;
 
@@ -1466,33 +1472,11 @@ export module lwg {
                     Animation2D.fadeOut(Scene, 0, 1, time, 0);
                     sumDelay = 400;
                     break;
-                case _sceneAnimation.type.stickIn:
-                    time = 700;
-                    delay = 100;
-                    if (Scene.getChildByName('Background')) {
-                        Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
-                    }
-                    let arr = Tools.Node.zOrderByY(Scene, false);
-
-                    for (let index = 0; index < arr.length; index++) {
-                        const element = arr[index] as Laya.Image;
-                        if (element.name !== 'Background') {
-                            element.rotation = element.y > Laya.stage.height / 2 ? - 180 : 180;
-                            let originalPovitX = element.pivotX;
-                            let originalPovitY = element.pivotY;
-                            Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
-                            let originalX = element.x;
-                            let originalY = element.y;
-                            element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
-                            element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
-                            Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
-                            Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
-                                Tools.Node.changePovit(element, originalPovitX, originalPovitY);
-                            });
-                        }
-                    }
-                    sumDelay = Scene.numChildren * delay + time + 200;
+                case _sceneAnimation.type.stickIn.upLeftDownLeft:
+                    _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.upLeftDownLeft)
                     break;
+                case _sceneAnimation.type.stickIn.upRightDownLeft:
+                    _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.upRightDownLeft)
                 default:
                     break;
             }
@@ -1501,6 +1485,48 @@ export module lwg {
             })
             return sumDelay;
         }
+
+        function _sceneAnimationTypeStickIn(Scene: Laya.Scene, type: string): number {
+            let sumDelay: number = 0;
+            let time: number = 700;
+            let delay: number = 100;
+            if (Scene.getChildByName('Background')) {
+                Animation2D.fadeOut(Scene.getChildByName('Background'), 0, 1, time);
+            }
+            let stickInLeftArr = Tools.Node.zOrderByY(Scene, false);
+            for (let index = 0; index < stickInLeftArr.length; index++) {
+                const element = stickInLeftArr[index] as Laya.Image;
+                if (element.name !== 'Background') {
+                    let originalPovitX = element.pivotX;
+                    let originalPovitY = element.pivotY;
+                    switch (type) {
+                        case _sceneAnimation.type.stickIn.upLeftDownLeft:
+                            element.rotation = element.y > Laya.stage.height / 2 ? 180 : - 180;
+                            Tools.Node.changePovit(element, 0, 0);
+                            break;
+                        case _sceneAnimation.type.stickIn.upRightDownLeft:
+                            element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
+                            Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
+                            break;
+                        default:
+                            break;
+                    }
+                    let originalX = element.x;
+                    let originalY = element.y;
+                    element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
+                    Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
+                    element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
+                    element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
+                    Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
+                    Animation2D.move_Simple(element, element.x, element.y, originalX, originalY, time, delay * index, () => {
+                        Tools.Node.changePovit(element, originalPovitX, originalPovitY);
+                    });
+                }
+            }
+            sumDelay = Scene.numChildren * delay + time + 200;
+            return sumDelay;
+        }
+
 
         /**游戏当前处于什么状态中，并非是当前打开的场景*/
         export let _gameState = {
@@ -1765,7 +1791,7 @@ export module lwg {
             lwgOpenScene(openSceneName: string, closeSelf?: boolean, func?: Function, zOrder?: number): void {
                 let closeName;
                 if (closeSelf == undefined || closeSelf == true) {
-                    closeName = this.Owner.name;
+                    closeName = this.OwnerScene.name;
                 }
                 Admin._openScene(openSceneName, closeName, func, zOrder);
             }
@@ -4460,7 +4486,6 @@ export module lwg {
             return Number(str) + num;
         }
         export module Node {
-
 
             /**
              * @export 返回子节点随着Y轴进行排序数组

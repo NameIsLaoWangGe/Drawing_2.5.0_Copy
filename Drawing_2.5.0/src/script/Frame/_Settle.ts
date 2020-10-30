@@ -23,9 +23,7 @@ export module _Settle {
                 this.lwgOpenScene(_SceneName.Share);
             });
             Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                RecordManager._share('award', () => {
-
-                });
+                RecordManager._share('award', () => { });
             });
         }
     }

@@ -1,5 +1,5 @@
 import ADManager from "../TJ/Admanager";
-import { Admin, Click, _Gold, Tools, Dialogue, _SceneName } from "./Lwg";
+import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 export module _SelectLevel {
@@ -110,8 +110,7 @@ export module _SelectLevel {
         };
     }
     export enum _Event {
-        event1 = '_Example_Event1',
-        event2 = '_Example_Event2',
+        _SelectLevel_Close = '_SelectLevel_Close',
     }
     export function _init(): void {
         _data._pich.classify = _data._classify.animal;
@@ -141,13 +140,8 @@ export module _SelectLevel {
                             break;
                     }
                 } else {
-                    _data._pich.customs = this.owner['_dataSource'][_data._property.name];
-                    let levelName = _SceneName.Game + '_' + _data._pich.customs;
-                    this.lwgOpenScene(levelName, true, () => {
-                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
-                            Admin._sceneControl[levelName].addComponent(_Game.Game);
-                        }
-                    });
+                    _SelectLevel._data._pich.customs = this.Owner['_dataSource'][_SelectLevel._data._property.name];
+                    this.lwgOpenScene(_SceneName.PropTry, false);
                 }
                 _MyList.refresh();
             });
@@ -229,7 +223,6 @@ export module _SelectLevel {
             });
         }
     }
-    /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
     export class SelectLevel extends _SelectLevel.SelectLevelBase {
         lwgOnAwake(): void {
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
@@ -243,6 +236,11 @@ export module _SelectLevel {
         }
         lwgAdaptive(): void {
             this.ImgVar('UiLand').y = Laya.stage.height - 74;
+        }
+        lwgEventRegister(): void {
+            EventAdmin._register(_Event._SelectLevel_Close, this, () => {
+                this.lwgCloseScene();
+            })
         }
         lwgBtnClick(): void {
 
