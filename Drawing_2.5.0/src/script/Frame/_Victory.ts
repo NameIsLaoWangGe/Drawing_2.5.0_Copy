@@ -16,10 +16,11 @@ export module _Victory {
     }
     export class Victory extends _Victory.VictoryBase {
         lwgOpenAniAfter(): void {
-            if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._lastDate
+            console.log(_Game._Pencils.presentUse, _Special._data._lastDate);
+            if (_Game._Pencils.presentUse == _Game._Pencils.type.SingleColor && _Special._data._lastDate
                 !== DateAdmin._date.date) {
-                _Special._data._lastDate = DateAdmin._date.date
-                this.lwgOpenScene(_SceneName.Special);
+                _Special._data._lastDate = DateAdmin._date.date;
+                this.lwgOpenScene(_SceneName.Special, false);
             }
         }
         lwgBtnClick(): void {

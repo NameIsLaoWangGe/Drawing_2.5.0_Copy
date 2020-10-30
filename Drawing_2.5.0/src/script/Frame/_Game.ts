@@ -58,7 +58,7 @@ export module _Game {
         },
         /**当前使用*/
         get presentUse(): string {
-            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : null;
+            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'SingleColor';
         },
         set presentUse(name: string) {
             Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
@@ -435,27 +435,25 @@ export module _Game {
             }
         }
         onStageMouseMove(e: Laya.Event): void {
-            if (!this.DrawControl.frontPos) {
-                this.DrawControl.frontPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-            }
-            let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-            if (_Game._SingleColorPencils._pitchName == 'eraser') {
-
-                this.DrawControl.EraserSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, '#000000', this.DrawControl.radius.value * 2);
-                this.DrawControl.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, '#000000');
-                // this._drawingLenth.value -= (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-            } else {
-                if (!this.DrawControl.DrawSp) {
-                    this.DrawControl.DrawBoard.addChild(this.DrawControl.DrawSp = new Laya.Sprite());
-                    this.DrawControl.DrawSp.blendMode = "none";
+            if (this.DrawControl.frontPos) {
+                let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                    this.DrawControl.EraserSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, '#000000', this.DrawControl.radius.value * 2);
+                    this.DrawControl.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, '#000000');
+                    // this._drawingLenth.value -= (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                } else {
+                    if (!this.DrawControl.DrawSp) {
+                        this.DrawControl.DrawBoard.addChild(this.DrawControl.DrawSp = new Laya.Sprite());
+                        this.DrawControl.DrawSp.blendMode = "none";
+                    }
+                    // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
+                    // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
+                    this.DrawControl.DrawSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.DrawControl.radius.value * 2);
+                    this.DrawControl.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
+                    this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                 }
-                // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
-                // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                this.DrawControl.DrawSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.DrawControl.radius.value * 2);
-                this.DrawControl.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
-                this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
             }
-            this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
         }
         onStageMouseUp(): void {
             this.DrawControl.frontPos = null;
@@ -463,17 +461,17 @@ export module _Game {
             if (this.DrawControl.DrawBoard && this.DrawControl.DrawBoard.numChildren > 3) {
                 console.log('合并！')
                 let NewBoard = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
-                NewBoard.cacheAs = "bitmap";
-                NewBoard.name = 'DrawBoard';
                 NewBoard.width = this.DrawControl.DrawRoot.width;
                 NewBoard.height = this.DrawControl.DrawRoot.height;
+                NewBoard.cacheAs = "bitmap";
+                NewBoard.name = 'DrawBoard';
                 NewBoard.texture = this.DrawControl.DrawBoard.drawToTexture(this.DrawControl.DrawBoard.width, this.DrawControl.DrawBoard.height, this.DrawControl.DrawBoard.x, this.DrawControl.DrawBoard.y) as Laya.Texture;
+
                 this.DrawControl.DrawBoard.destroy();
             }
         }
 
         lwgBtnClick(): void {
-
             Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
                 if (this['BtnStepClose']) {
                     return;

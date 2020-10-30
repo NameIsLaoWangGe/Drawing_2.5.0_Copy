@@ -357,7 +357,7 @@
                     _prefab.json = prefab;
                     sp = Laya.Pool.getItemByCreateFun('gold', _prefab.create, _prefab);
                     let Num = sp.getChildByName('Num');
-                    Num.text = Gold_1._num.value.toString();
+                    Num.text = Tools.format_FormatNumber(Gold_1._num.value);
                     parent.addChild(sp);
                     sp.pos(x, y);
                     sp.zOrder = 100;
@@ -368,7 +368,7 @@
             function _addGold(number) {
                 Gold_1._num.value += Number(number);
                 let Num = Gold_1.GoldNode.getChildByName('Num');
-                Num.text = Gold_1._num.value.toString();
+                Num.text = Tools.format_FormatNumber(Gold_1._num.value);
             }
             Gold_1._addGold = _addGold;
             function addGoldDisPlay(number) {
@@ -1142,7 +1142,7 @@
                 Laya.timer.once(sumDelay, this, () => {
                     afterAni();
                 });
-                return time;
+                return sumDelay;
             }
             Admin._gameState = {
                 type: {
@@ -3188,25 +3188,39 @@
                 return '#' + ("00000" + (r << 16 | g << 8 | b).toString(16)).slice(-6);
             }
             Tools.color_RGBtoHexString = color_RGBtoHexString;
-            function format_FormatNumber(number) {
-                if (typeof (number) !== "number") {
-                    console.warn("要转化的数字并不为number");
-                    return number;
+            function format_FormatNumber(crc, fixNum = 0) {
+                let textTemp;
+                if (crc >= 1e27) {
+                    textTemp = (crc / 1e27).toFixed(fixNum) + "ae";
                 }
-                let backNum;
-                if (number < 1000) {
-                    backNum = "" + number;
+                else if (crc >= 1e24) {
+                    textTemp = (crc / 1e24).toFixed(fixNum) + "ad";
                 }
-                else if (number < 1000000) {
-                    backNum = "" + (number / 1000).toFixed(1) + "k";
+                else if (crc >= 1e21) {
+                    textTemp = (crc / 1e21).toFixed(fixNum) + "ac";
                 }
-                else if (number < 10e8) {
-                    backNum = "" + (number / 1000000).toFixed(1) + "m";
+                else if (crc >= 1e18) {
+                    textTemp = (crc / 1e18).toFixed(fixNum) + "ab";
+                }
+                else if (crc >= 1e15) {
+                    textTemp = (crc / 1e15).toFixed(fixNum) + "aa";
+                }
+                else if (crc >= 1e12) {
+                    textTemp = (crc / 1e12).toFixed(fixNum) + "t";
+                }
+                else if (crc >= 1e9) {
+                    textTemp = (crc / 1e9).toFixed(fixNum) + "b";
+                }
+                else if (crc >= 1e6) {
+                    textTemp = (crc / 1e6).toFixed(fixNum) + "m";
+                }
+                else if (crc >= 1e3) {
+                    textTemp = (crc / 1e3).toFixed(fixNum) + "k";
                 }
                 else {
-                    backNum = "" + number;
+                    textTemp = Math.round(crc).toString();
                 }
-                return backNum;
+                return textTemp;
             }
             Tools.format_FormatNumber = format_FormatNumber;
             function format_StrAddNum(str, num) {
@@ -5574,7 +5588,7 @@
                 Stars: 'Stars',
             },
             get presentUse() {
-                return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : null;
+                return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'SingleColor';
             },
             set presentUse(name) {
                 Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
@@ -5690,7 +5704,7 @@
                         }
                     },
                 };
-                this.drawState = {
+                this.DrawControl = {
                     switch: false,
                     DrawRoot: null,
                     DrawBoard: null,
@@ -5704,11 +5718,11 @@
                         }
                     },
                     restoration: () => {
-                        this.drawState.switch = false;
-                        this.drawState.frontPos = null;
-                        this.drawState.endPos = null;
-                        this.drawState.DrawSp = null;
-                        this.drawState.EraserSp = null;
+                        this.DrawControl.switch = false;
+                        this.DrawControl.frontPos = null;
+                        this.DrawControl.endPos = null;
+                        this.DrawControl.DrawSp = null;
+                        this.DrawControl.EraserSp = null;
                     },
                 };
             }
@@ -5754,6 +5768,11 @@
                         parent[_Game._drawBoardProperty.originalZOder] = parent.zOrder;
                         parent[_Game._drawBoardProperty.whetherPass] = false;
                     }
+                    let DrawBoard = Img.addChild((new Laya.Sprite()).pos(0, 0));
+                    DrawBoard.cacheAs = "bitmap";
+                    DrawBoard.name = 'DrawBoard';
+                    DrawBoard.width = Img.width;
+                    DrawBoard.height = Img.height;
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
@@ -5798,7 +5817,7 @@
                     this.AniVar(_Game._Animation.action1).play(null, true);
                 });
                 EventAdmin._register(_Game._Event.start, this, () => {
-                    this.drawState.switch = true;
+                    this.DrawControl.switch = true;
                     for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                         if (_Game._stepIndex.present >= index) {
                             _Game._stepOrderImg[index].visible = true;
@@ -5831,7 +5850,7 @@
                     }
                 });
                 EventAdmin._register(_Game._Event.lastStep, this, () => {
-                    this.drawState.restoration();
+                    this.DrawControl.restoration();
                     if (_Game._stepIndex.present - 1 >= 0) {
                         let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                         let Img0Parent = Img0.parent;
@@ -5851,14 +5870,14 @@
                                 }
                                 Img0.zOrder = 200;
                                 this['BtnStepClose'] = false;
-                                this.drawState.switch = true;
+                                this.DrawControl.switch = true;
                             });
                         });
                     }
                 });
                 EventAdmin._register(_Game._Event.nextStep, this, () => {
                     EventAdmin._notify(_Game._Event.restoreZOder);
-                    this.drawState.restoration();
+                    this.DrawControl.restoration();
                     if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                         EventAdmin._notify(_Game._Event.compelet);
                         Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
@@ -5880,7 +5899,7 @@
                                 }
                                 Img0.zOrder = 200;
                                 this['BtnStepClose'] = false;
-                                this.drawState.switch = true;
+                                this.DrawControl.switch = true;
                             });
                         });
                     }
@@ -5899,7 +5918,7 @@
                 });
                 EventAdmin._register(_Game._Event.compelet, this, () => {
                     EventAdmin._notify(_Game._Event.restoreZOder);
-                    this.drawState.switch = false;
+                    this.DrawControl.switch = false;
                     this.BtnNextStep.visible = false;
                     this.BtnLastStep.visible = false;
                     this.BtnCompelet.visible = true;
@@ -5907,67 +5926,58 @@
                 });
             }
             onStageMouseDown(e) {
-                this.drawState.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
-                this.drawState.DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard');
-                this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                this.DrawControl.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
+                this.DrawControl.DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard');
+                this.DrawControl.frontPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp;
-                if (this.drawState.switch) {
-                    let DrawBoard = this.drawState.DrawRoot.getChildByName('DrawBoard');
-                    this.drawState.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                if (this.DrawControl.switch) {
+                    let DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard');
+                    this.DrawControl.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                        Sp = this.drawState.EraserSp = new Laya.Sprite();
-                        this.drawState.EraserSp.blendMode = "destination-out";
+                        Sp = this.DrawControl.EraserSp = new Laya.Sprite();
+                        this.DrawControl.EraserSp.blendMode = "destination-out";
                     }
                     else {
-                        Sp = this.drawState.DrawSp = new Laya.Sprite();
-                        this.drawState.DrawSp.blendMode = "none";
+                        Sp = this.DrawControl.DrawSp = new Laya.Sprite();
+                        this.DrawControl.DrawSp.blendMode = "none";
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawCircle(this.drawState.frontPos.x, this.drawState.frontPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
+                    Sp.graphics.drawCircle(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
                 }
             }
             onStageMouseMove(e) {
-                if (!this.drawState.frontPos) {
-                    this.drawState.frontPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                }
-                let endPos = this.drawState.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                    this.drawState.EraserSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, '#000000', this.drawState.radius.value * 2);
-                    this.drawState.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, '#000000');
-                }
-                else {
-                    if (!this.drawState.DrawSp) {
-                        this.drawState.DrawBoard.addChild(this.drawState.DrawSp = new Laya.Sprite());
-                        this.drawState.DrawSp.blendMode = "none";
+                if (this.DrawControl.frontPos) {
+                    let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                    if (_Game._SingleColorPencils._pitchName == 'eraser') {
+                        this.DrawControl.EraserSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, '#000000', this.DrawControl.radius.value * 2);
+                        this.DrawControl.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, '#000000');
                     }
-                    this.drawState.DrawSp.graphics.drawLine(this.drawState.frontPos.x, this.drawState.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.drawState.radius.value * 2);
-                    this.drawState.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.drawState.radius.value, _Game._SingleColorPencils._pitchColor);
-                    this._drawingLenth.value += this.drawState.frontPos.distance(endPos.x, endPos.y);
+                    else {
+                        if (!this.DrawControl.DrawSp) {
+                            this.DrawControl.DrawBoard.addChild(this.DrawControl.DrawSp = new Laya.Sprite());
+                            this.DrawControl.DrawSp.blendMode = "none";
+                        }
+                        this.DrawControl.DrawSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.DrawControl.radius.value * 2);
+                        this.DrawControl.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
+                        this._drawingLenth.value += this.DrawControl.frontPos.distance(endPos.x, endPos.y);
+                    }
+                    this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
                 }
-                this.drawState.frontPos = new Laya.Point(endPos.x, endPos.y);
             }
             onStageMouseUp() {
-                this.drawState.frontPos = null;
-                if (this.drawState.DrawBoard && this.drawState.DrawBoard.numChildren > 3) {
+                this.DrawControl.frontPos = null;
+                if (this.DrawControl.DrawBoard && this.DrawControl.DrawBoard.numChildren > 3) {
                     console.log('合并！');
-                    let NewBoard = this.drawState.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                    let NewBoard = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                    NewBoard.width = this.DrawControl.DrawRoot.width;
+                    NewBoard.height = this.DrawControl.DrawRoot.height;
                     NewBoard.cacheAs = "bitmap";
                     NewBoard.name = 'DrawBoard';
-                    NewBoard.width = this.drawState.DrawRoot.width;
-                    NewBoard.height = this.drawState.DrawRoot.height;
-                    NewBoard.texture = this.drawState.DrawBoard.drawToTexture(this.drawState.DrawBoard.width, this.drawState.DrawBoard.height, this.drawState.DrawBoard.x, this.drawState.DrawBoard.y);
-                    this.drawState.DrawBoard.destroy();
+                    NewBoard.texture = this.DrawControl.DrawBoard.drawToTexture(this.DrawControl.DrawBoard.width, this.DrawControl.DrawBoard.height, this.DrawControl.DrawBoard.x, this.DrawControl.DrawBoard.y);
+                    this.DrawControl.DrawBoard.destroy();
                 }
             }
             lwgBtnClick() {
-                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
-                    let DrawRoot = _Game._stepOrderImg[index];
-                    let DrawBoard = DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
-                    DrawBoard.cacheAs = "bitmap";
-                    DrawBoard.name = 'DrawBoard';
-                    DrawBoard.width = DrawRoot.width;
-                    DrawBoard.height = DrawRoot.height;
-                }
                 Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
                     if (this['BtnStepClose']) {
                         return;
@@ -7027,7 +7037,7 @@
                 Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
             }
             static get _lastDate() {
-                return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date;
+                return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date - 1;
             }
             static set _lastDate(date) {
                 Laya.LocalStorage.setItem('_Special_lastDate', date.toString());
@@ -7060,7 +7070,9 @@
                     TimerAdmin._frameOnce(20, this, () => {
                         _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
                             _Gold._addGold(100000000000);
-                            this.lwgCloseScene();
+                            this.lwgCloseScene(this.Owner.name, () => {
+                                console.log(Laya.stage);
+                            });
                         });
                     });
                 });
@@ -7120,10 +7132,11 @@
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
             lwgOpenAniAfter() {
-                if (_Game._Pencils.presentUse == _Game._Pencils.type.Colours && _Special._data._lastDate
+                console.log(_Game._Pencils.presentUse, _Special._data._lastDate);
+                if (_Game._Pencils.presentUse == _Game._Pencils.type.SingleColor && _Special._data._lastDate
                     !== DateAdmin._date.date) {
                     _Special._data._lastDate = DateAdmin._date.date;
-                    this.lwgOpenScene(_SceneName.Special);
+                    this.lwgOpenScene(_SceneName.Special, false);
                 }
             }
             lwgBtnClick() {

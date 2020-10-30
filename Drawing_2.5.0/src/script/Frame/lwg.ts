@@ -449,7 +449,7 @@ export module lwg {
                 _prefab.json = prefab;
                 sp = Laya.Pool.getItemByCreateFun('gold', _prefab.create, _prefab);
                 let Num = sp.getChildByName('Num') as Laya.Label;
-                Num.text = _num.value.toString();
+                Num.text = Tools.format_FormatNumber(_num.value);
                 parent.addChild(sp);
                 sp.pos(x, y);
                 sp.zOrder = 100;
@@ -461,18 +461,17 @@ export module lwg {
         export function _addGold(number: number) {
             _num.value += Number(number);
             let Num = GoldNode.getChildByName('Num') as Laya.Text;
-            Num.text = _num.value.toString();
+            Num.text = Tools.format_FormatNumber(_num.value);
         }
         /**增加金币节点上的表现动画，并不会增加金币*/
-        export function addGoldDisPlay(number) {
+        export function addGoldDisPlay(number: number) {
             let Num = GoldNode.getChildByName('Num') as Laya.FontClip;
             Num.value = (Number(Num.value) + Number(number)).toString();
         }
         /**增加金币，但是不表现出来*/
-        export function addGoldNoDisPlay(number) {
+        export function addGoldNoDisPlay(number: number) {
             _num.value += Number(number);
         }
-
         /**
          * GoldNode出现动画
          * @param delayed 延时时间
@@ -1286,7 +1285,7 @@ export module lwg {
             Eastereggister = 'Eastereggister',
             SelectLevel = 'SelectLevel',
             Settle = 'Settle',
-            Special='Special',
+            Special = 'Special',
         }
 
         /**
@@ -1500,7 +1499,7 @@ export module lwg {
             Laya.timer.once(sumDelay, this, () => {
                 afterAni();
             })
-            return time;
+            return sumDelay;
         }
 
         /**游戏当前处于什么状态中，并非是当前打开的场景*/
@@ -4417,26 +4416,35 @@ export module lwg {
         export function color_RGBtoHexString(r, g, b) {
             return '#' + ("00000" + (r << 16 | g << 8 | b).toString(16)).slice(-6);
         }
+
         /**
-       * 将数字格式化，例如1000 = 1k；
-       * @param number 数字
-       */
-        export function format_FormatNumber(number: number): string {
-            if (typeof (number) !== "number") {
-                console.warn("要转化的数字并不为number");
-                return number;
-            }
-            let backNum: string;
-            if (number < 1000) {
-                backNum = "" + number;
-            } else if (number < 1000000) {
-                backNum = "" + (number / 1000).toFixed(1) + "k";
-            } else if (number < 10e8) {
-                backNum = "" + (number / 1000000).toFixed(1) + "m";
+          * 将数字格式化，例如1000 = 1k；
+          * @param number 数字
+          */
+        export function format_FormatNumber(crc: number, fixNum = 0) {
+            let textTemp;
+            if (crc >= 1e27) {
+                textTemp = (crc / 1e27).toFixed(fixNum) + "ae";
+            } else if (crc >= 1e24) {
+                textTemp = (crc / 1e24).toFixed(fixNum) + "ad";
+            } else if (crc >= 1e21) {
+                textTemp = (crc / 1e21).toFixed(fixNum) + "ac";
+            } else if (crc >= 1e18) {
+                textTemp = (crc / 1e18).toFixed(fixNum) + "ab";
+            } else if (crc >= 1e15) {
+                textTemp = (crc / 1e15).toFixed(fixNum) + "aa";
+            } else if (crc >= 1e12) {
+                textTemp = (crc / 1e12).toFixed(fixNum) + "t";
+            } else if (crc >= 1e9) {
+                textTemp = (crc / 1e9).toFixed(fixNum) + "b";
+            } else if (crc >= 1e6) {
+                textTemp = (crc / 1e6).toFixed(fixNum) + "m";
+            } else if (crc >= 1e3) {
+                textTemp = (crc / 1e3).toFixed(fixNum) + "k";
             } else {
-                backNum = "" + number;
+                textTemp = Math.round(crc).toString();
             }
-            return backNum;
+            return textTemp;
         }
 
         /**

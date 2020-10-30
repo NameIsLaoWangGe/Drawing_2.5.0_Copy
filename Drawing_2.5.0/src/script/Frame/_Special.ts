@@ -12,7 +12,7 @@ export module _Special {
             Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
         }
         static get _lastDate(): number {
-            return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date;
+            return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date - 1;
         }
         static set _lastDate(date: number) {
             Laya.LocalStorage.setItem('_Special_lastDate', date.toString());
@@ -44,7 +44,9 @@ export module _Special {
                 TimerAdmin._frameOnce(20, this, () => {
                     _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
                         _Gold._addGold(100000000000);
-                        this.lwgCloseScene();
+                        this.lwgCloseScene(this.Owner.name, () => {
+                            console.log(Laya.stage);
+                        });
                     });
                 });
 
