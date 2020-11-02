@@ -700,8 +700,8 @@ export module lwg {
               * @param basedSpeed 基础速度
               */
             commonSpeedXYByAngle(angle, speed) {
-                this.Owner.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
-                this.Owner.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
+                this.Owner.x += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).x;
+                this.Owner.y += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).y;
             }
             /**移动规则*/
             moveRules(): void {
@@ -2439,7 +2439,7 @@ export module lwg {
                         }
                         acc += accelerated0;
                         radius += speed0 + acc;
-                        let point = Tools.point_GetRoundPos(angle0, radius, centerPoint0);
+                        let point = Tools.Point.getRoundPos(angle0, radius, centerPoint0);
                         Img.pos(point.x, point.y);
                     }
                 })
@@ -2607,7 +2607,7 @@ export module lwg {
                             Laya.timer.clearAll(moveCaller);
                         }
                     }
-                    let point = Tools.point_GetRoundPos(angle0, radius, centerPoint0);
+                    let point = Tools.Point.getRoundPos(angle0, radius, centerPoint0);
                     Img.pos(point.x, point.y);
                 })
                 return Img;
@@ -2652,7 +2652,7 @@ export module lwg {
                         acc += accelerated;
                         radius0 -= (speed0 + acc);
                     }
-                    let point = Tools.point_GetRoundPos(angle, radius0, centerPoint);
+                    let point = Tools.Point.getRoundPos(angle, radius0, centerPoint);
                     Img.pos(point.x, point.y);
                     if (point.distance(centerPoint.x, centerPoint.y) <= 20 || point.distance(centerPoint.x, centerPoint.y) >= 1000) {
                         Img.removeSelf();
@@ -2677,7 +2677,7 @@ export module lwg {
                     this.height = height ? Tools.randomOneNumber(height[0], height[1]) : this.width;
                     this.pivotX = this.width / 2;
                     this.pivotY = this.height / 2;
-                    let p = radiusXY ? Tools.point_RandomPointByCenter(centerPos, radiusXY[0], radiusXY[1], 1) : Tools.point_RandomPointByCenter(centerPos, 100, 100, 1);
+                    let p = radiusXY ? Tools.Point.randomPointByCenter(centerPos, radiusXY[0], radiusXY[1], 1) : Tools.Point.randomPointByCenter(centerPos, 100, 100, 1);
                     this.pos(p[0].x, p[0].y);
                     let RGBA = [];
                     RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
@@ -5490,71 +5490,100 @@ export module lwg {
             }
         }
 
-        /**
-         * 二维坐标中一个点按照另一个点旋转一定的角度后，得到的点
-         * @param x0 原点X
-         * @param y0 原点Y
-         * @param x1 旋转点X
-         * @param y1 旋转点Y
-         * @param angle 角度
-         */
-        export function point_DotRotatePoint(x0, y0, x1, y1, angle): Laya.Point {
-            let x2 = x0 + (x1 - x0) * Math.cos(angle * Math.PI / 180) - (y1 - y0) * Math.sin(angle * Math.PI / 180);
-            let y2 = y0 + (x1 - x0) * Math.sin(angle * Math.PI / 180) + (y1 - y0) * Math.cos(angle * Math.PI / 180);
-            return new Laya.Point(x2, y2);
-        }
 
-        /**
-         * 根据不同的角度和速度计算坐标,从而产生位移
-         * @param angle 角度
-         * @param speed 移动速度
-         * */
-        export function point_SpeedXYByAngle(angle: number, speed: number): Laya.Point {
-            if (angle % 90 === 0 || !angle) {
-                //debugger
+        export module Point {
+            /**
+              * 二维坐标中一个点按照另一个点旋转一定的角度后，得到的点
+              * @param x0 原点X
+              * @param y0 原点Y
+              * @param x1 旋转点X
+              * @param y1 旋转点Y
+              * @param angle 角度
+              */
+            export function dotRotatePoint(x0, y0, x1, y1, angle): Laya.Point {
+                let x2 = x0 + (x1 - x0) * Math.cos(angle * Math.PI / 180) - (y1 - y0) * Math.sin(angle * Math.PI / 180);
+                let y2 = y0 + (x1 - x0) * Math.sin(angle * Math.PI / 180) + (y1 - y0) * Math.cos(angle * Math.PI / 180);
+                return new Laya.Point(x2, y2);
             }
-            const speedXY = { x: 0, y: 0 };
-            speedXY.x = speed * Math.cos(angle * Math.PI / 180);
-            speedXY.y = speed * Math.sin(angle * Math.PI / 180);
-            return new Laya.Point(speedXY.x, speedXY.y);
-        }
-        /**
-        * 求圆上的点的坐标，可以根据角度和半径作出圆形位移
-        * @param angle 角度
-        * @param radius 半径
-        * @param centerPos 原点
-        */
-        export function point_GetRoundPos(angle: number, radius: number, centerPos: Laya.Point): Laya.Point {
-            var center = centerPos; //圆心坐标
-            var radius = radius; //半径
-            var hudu = (2 * Math.PI / 360) * angle; //90度角的弧度
 
-            var X = center.x + Math.sin(hudu) * radius; //求出90度角的x坐标
-            var Y = center.y - Math.cos(hudu) * radius; //求出90度角的y坐标
-            return new Laya.Point(X, Y);
-        }
+            /**
+             * 根据不同的角度和速度计算坐标,从而产生位移
+             * @param angle 角度
+             * @param speed 移动速度
+             * */
+            export function SpeedXYByAngle(angle: number, speed: number): Laya.Point {
+                if (angle % 90 === 0 || !angle) {
+                    //debugger
+                }
+                const speedXY = { x: 0, y: 0 };
+                speedXY.x = speed * Math.cos(angle * Math.PI / 180);
+                speedXY.y = speed * Math.sin(angle * Math.PI / 180);
+                return new Laya.Point(speedXY.x, speedXY.y);
+            }
 
-        /**
-         * 返回在一个中心点周围的随机产生数个点的数组
-         * @param centerPos 中心点坐标
-         * @param radiusX X轴半径
-         * @param radiusY Y轴半径
-         * @param count 产生多少个随机点
-         */
-        export function point_RandomPointByCenter(centerPos: Laya.Point, radiusX: number, radiusY: number, count?: number): Array<Laya.Point> {
-            if (!count) {
-                count = 1;
+            /**
+            * 求圆上的点的坐标，可以根据角度和半径作出圆形位移
+            * @param angle 角度
+            * @param radius 半径
+            * @param centerPos 原点
+            */
+            export function getRoundPos(angle: number, radius: number, centerPos: Laya.Point): Laya.Point {
+                var center = centerPos; //圆心坐标
+                var radius = radius; //半径
+                var hudu = (2 * Math.PI / 360) * angle; //90度角的弧度
+
+                var X = center.x + Math.sin(hudu) * radius; //求出90度角的x坐标
+                var Y = center.y - Math.cos(hudu) * radius; //求出90度角的y坐标
+                return new Laya.Point(X, Y);
             }
-            let arr: Array<Laya.Point> = [];
-            for (let index = 0; index < count; index++) {
-                let x0 = Tools.randomCountNumer(0, radiusX, 1, false);
-                let y0 = Tools.randomCountNumer(0, radiusY, 1, false);
-                let diffX = Tools.randomOneHalf() == 0 ? x0[0] : -x0[0];
-                let diffY = Tools.randomOneHalf() == 0 ? y0[0] : -y0[0];
-                let p = new Laya.Point(centerPos.x + diffX, centerPos.y + diffY);
-                arr.push(p);
+
+            /**
+             * 返回在一个中心点周围的随机产生数个点的数组
+             * @param centerPos 中心点坐标
+             * @param radiusX X轴半径
+             * @param radiusY Y轴半径
+             * @param count 产生多少个随机点
+             */
+            export function randomPointByCenter(centerPos: Laya.Point, radiusX: number, radiusY: number, count?: number): Array<Laya.Point> {
+                if (!count) {
+                    count = 1;
+                }
+                let arr: Array<Laya.Point> = [];
+                for (let index = 0; index < count; index++) {
+                    let x0 = Tools.randomCountNumer(0, radiusX, 1, false);
+                    let y0 = Tools.randomCountNumer(0, radiusY, 1, false);
+                    let diffX = Tools.randomOneHalf() == 0 ? x0[0] : -x0[0];
+                    let diffY = Tools.randomOneHalf() == 0 ? y0[0] : -y0[0];
+                    let p = new Laya.Point(centerPos.x + diffX, centerPos.y + diffY);
+                    arr.push(p);
+                }
+                return arr;
             }
-            return arr;
+
+            /**
+             * @export 返回两个点之间连线上均匀排布的点
+             * @param {Laya.Point} p1 点1
+             * @param {Laya.Point} p2 点2
+             * @param {number} num 个数
+             * @return {*}  {Array<Laya.Point>}
+             */
+            export function getPArrBetweenTwoP(p1: Laya.Point, p2: Laya.Point, num: number): Array<Laya.Point> {
+                let arr: Array<Laya.Point> = [];
+                let x0 = p2.x - p1.x;
+                let y0 = p2.y - p1.y;
+                for (let index = 0; index < num; index++) {
+                    arr.push(new Laya.Point(p1.x + (x0 / num) * index, p1.y + (y0 / num) * index));
+                }
+                if (arr.length >= 1) {
+                    arr.unshift();
+                }
+                if (arr.length >= 1) {
+                    arr.pop();
+                }
+                return arr;
+            }
+
+
         }
 
         /**
@@ -7045,7 +7074,7 @@ export module lwg {
                             }
                         }
                     }
-                    _loadOrder = [_pic2D, _scene2D, _prefab2D, _scene3D, _prefab3D, _json,_texture, _texture2D, _mesh3D, _material, _skeleton];
+                    _loadOrder = [_pic2D, _scene2D, _prefab2D, _scene3D, _prefab3D, _json, _texture, _texture2D, _mesh3D, _material, _skeleton];
                     for (let index = 0; index < _loadOrder.length; index++) {
                         _sumProgress += _loadOrder[index].length;
                         if (_loadOrder[index].length <= 0) {

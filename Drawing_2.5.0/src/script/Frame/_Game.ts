@@ -128,7 +128,7 @@ export module _Game {
         /**次数*/
         static _drawTime = 0;
         /**画多少次后，进入另外两个颜色区间*/
-        static _drawInterval = 50;
+        static _drawInterval = 30;
         /**当前输出颜色*/
         static get _outputColor(): string {
             let str: string;
@@ -502,7 +502,7 @@ export module _Game {
             endPos: null as Laya.Point,
             radius: {
                 get value(): number {
-                    return Admin._game.level >= 10 ? 8 : 12;
+                    return 50;
                 }
             },
             restoration: () => {
@@ -541,11 +541,11 @@ export module _Game {
                         break;
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
-                Sp.graphics.drawCircle(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, this.DrawControl.radius.value, color);
+                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
             }
         }
         onStageMouseMove(e: Laya.Event): void {
-            if (this.DrawControl.frontPos) {
+            if (this.DrawControl.frontPos && this.DrawControl.switch) {
                 let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
                 let color: string;
@@ -565,10 +565,21 @@ export module _Game {
                         this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                         break;
                 }
-                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x, endPos.y, 50, 50, null, 1, color, null);
-                // Sp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, Color, this.DrawControl.radius.value * 2);
+                if (!Sp) {
+                    return;
+                }
+                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                let destance = this.DrawControl.frontPos.distance(endPos.x, endPos.y);
+                if (destance > 15) {
+                    let num = destance / 15;
+                    let pointArr = Tools.Point.getPArrBetweenTwoP(this.DrawControl.frontPos, endPos, num);
+                    for (let index = 0; index < pointArr.length; index++) {
+                        Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                    }
+                }
+                // Sp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, color, this.DrawControl.radius.value * 2);
                 // Sp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, Color);
-                this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
+                this.DrawControl.frontPos = endPos;
             }
         }
         onStageMouseUp(): void {
@@ -610,6 +621,7 @@ export module _Game {
             });
             Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
                 Admin._game.level++;
+                this.DrawControl.switch = false;
                 this.lwgOpenScene(_SceneName.Settle, false, () => {
                     this.BtnCompelet.visible = false;
                 });
@@ -617,6 +629,7 @@ export module _Game {
         }
         lwgOnDisable(): void {
             _Pencils.presentUse = _PropTry._beforeTry;
+            // Laya.loader.clearRes(_PreloadUrl._list.texture.brushworkCommon.url);
         }
     }
 }

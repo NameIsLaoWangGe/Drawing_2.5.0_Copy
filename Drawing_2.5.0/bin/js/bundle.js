@@ -738,8 +738,8 @@
                     }
                 }
                 commonSpeedXYByAngle(angle, speed) {
-                    this.Owner.x += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).x;
-                    this.Owner.y += Tools.point_SpeedXYByAngle(angle, speed + this.accelerated).y;
+                    this.Owner.x += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).x;
+                    this.Owner.y += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).y;
                 }
                 moveRules() {
                 }
@@ -2090,7 +2090,7 @@
                             }
                             acc += accelerated0;
                             radius += speed0 + acc;
-                            let point = Tools.point_GetRoundPos(angle0, radius, centerPoint0);
+                            let point = Tools.Point.getRoundPos(angle0, radius, centerPoint0);
                             Img.pos(point.x, point.y);
                         }
                     });
@@ -2231,7 +2231,7 @@
                                 Laya.timer.clearAll(moveCaller);
                             }
                         }
-                        let point = Tools.point_GetRoundPos(angle0, radius, centerPoint0);
+                        let point = Tools.Point.getRoundPos(angle0, radius, centerPoint0);
                         Img.pos(point.x, point.y);
                     });
                     return Img;
@@ -2263,7 +2263,7 @@
                             acc += accelerated;
                             radius0 -= (speed0 + acc);
                         }
-                        let point = Tools.point_GetRoundPos(angle, radius0, centerPoint);
+                        let point = Tools.Point.getRoundPos(angle, radius0, centerPoint);
                         Img.pos(point.x, point.y);
                         if (point.distance(centerPoint.x, centerPoint.y) <= 20 || point.distance(centerPoint.x, centerPoint.y) >= 1000) {
                             Img.removeSelf();
@@ -2288,7 +2288,7 @@
                         this.height = height ? Tools.randomOneNumber(height[0], height[1]) : this.width;
                         this.pivotX = this.width / 2;
                         this.pivotY = this.height / 2;
-                        let p = radiusXY ? Tools.point_RandomPointByCenter(centerPos, radiusXY[0], radiusXY[1], 1) : Tools.point_RandomPointByCenter(centerPos, 100, 100, 1);
+                        let p = radiusXY ? Tools.Point.randomPointByCenter(centerPos, radiusXY[0], radiusXY[1], 1) : Tools.Point.randomPointByCenter(centerPos, 100, 100, 1);
                         this.pos(p[0].x, p[0].y);
                         let RGBA = [];
                         RGBA[0] = colorRGBA ? Tools.randomOneNumber(colorRGBA[0][0], colorRGBA[1][0]) : Tools.randomOneNumber(0, 255);
@@ -4196,46 +4196,65 @@
                 }
             }
             Tools.array_ExcludeArrays = array_ExcludeArrays;
-            function point_DotRotatePoint(x0, y0, x1, y1, angle) {
-                let x2 = x0 + (x1 - x0) * Math.cos(angle * Math.PI / 180) - (y1 - y0) * Math.sin(angle * Math.PI / 180);
-                let y2 = y0 + (x1 - x0) * Math.sin(angle * Math.PI / 180) + (y1 - y0) * Math.cos(angle * Math.PI / 180);
-                return new Laya.Point(x2, y2);
-            }
-            Tools.point_DotRotatePoint = point_DotRotatePoint;
-            function point_SpeedXYByAngle(angle, speed) {
-                if (angle % 90 === 0 || !angle) {
+            let Point;
+            (function (Point) {
+                function dotRotatePoint(x0, y0, x1, y1, angle) {
+                    let x2 = x0 + (x1 - x0) * Math.cos(angle * Math.PI / 180) - (y1 - y0) * Math.sin(angle * Math.PI / 180);
+                    let y2 = y0 + (x1 - x0) * Math.sin(angle * Math.PI / 180) + (y1 - y0) * Math.cos(angle * Math.PI / 180);
+                    return new Laya.Point(x2, y2);
                 }
-                const speedXY = { x: 0, y: 0 };
-                speedXY.x = speed * Math.cos(angle * Math.PI / 180);
-                speedXY.y = speed * Math.sin(angle * Math.PI / 180);
-                return new Laya.Point(speedXY.x, speedXY.y);
-            }
-            Tools.point_SpeedXYByAngle = point_SpeedXYByAngle;
-            function point_GetRoundPos(angle, radius, centerPos) {
-                var center = centerPos;
-                var radius = radius;
-                var hudu = (2 * Math.PI / 360) * angle;
-                var X = center.x + Math.sin(hudu) * radius;
-                var Y = center.y - Math.cos(hudu) * radius;
-                return new Laya.Point(X, Y);
-            }
-            Tools.point_GetRoundPos = point_GetRoundPos;
-            function point_RandomPointByCenter(centerPos, radiusX, radiusY, count) {
-                if (!count) {
-                    count = 1;
+                Point.dotRotatePoint = dotRotatePoint;
+                function SpeedXYByAngle(angle, speed) {
+                    if (angle % 90 === 0 || !angle) {
+                    }
+                    const speedXY = { x: 0, y: 0 };
+                    speedXY.x = speed * Math.cos(angle * Math.PI / 180);
+                    speedXY.y = speed * Math.sin(angle * Math.PI / 180);
+                    return new Laya.Point(speedXY.x, speedXY.y);
                 }
-                let arr = [];
-                for (let index = 0; index < count; index++) {
-                    let x0 = Tools.randomCountNumer(0, radiusX, 1, false);
-                    let y0 = Tools.randomCountNumer(0, radiusY, 1, false);
-                    let diffX = Tools.randomOneHalf() == 0 ? x0[0] : -x0[0];
-                    let diffY = Tools.randomOneHalf() == 0 ? y0[0] : -y0[0];
-                    let p = new Laya.Point(centerPos.x + diffX, centerPos.y + diffY);
-                    arr.push(p);
+                Point.SpeedXYByAngle = SpeedXYByAngle;
+                function getRoundPos(angle, radius, centerPos) {
+                    var center = centerPos;
+                    var radius = radius;
+                    var hudu = (2 * Math.PI / 360) * angle;
+                    var X = center.x + Math.sin(hudu) * radius;
+                    var Y = center.y - Math.cos(hudu) * radius;
+                    return new Laya.Point(X, Y);
                 }
-                return arr;
-            }
-            Tools.point_RandomPointByCenter = point_RandomPointByCenter;
+                Point.getRoundPos = getRoundPos;
+                function randomPointByCenter(centerPos, radiusX, radiusY, count) {
+                    if (!count) {
+                        count = 1;
+                    }
+                    let arr = [];
+                    for (let index = 0; index < count; index++) {
+                        let x0 = Tools.randomCountNumer(0, radiusX, 1, false);
+                        let y0 = Tools.randomCountNumer(0, radiusY, 1, false);
+                        let diffX = Tools.randomOneHalf() == 0 ? x0[0] : -x0[0];
+                        let diffY = Tools.randomOneHalf() == 0 ? y0[0] : -y0[0];
+                        let p = new Laya.Point(centerPos.x + diffX, centerPos.y + diffY);
+                        arr.push(p);
+                    }
+                    return arr;
+                }
+                Point.randomPointByCenter = randomPointByCenter;
+                function getPArrBetweenTwoP(p1, p2, num) {
+                    let arr = [];
+                    let x0 = p2.x - p1.x;
+                    let y0 = p2.y - p1.y;
+                    for (let index = 0; index < num; index++) {
+                        arr.push(new Laya.Point(p1.x + (x0 / num) * index, p1.y + (y0 / num) * index));
+                    }
+                    if (arr.length >= 1) {
+                        arr.unshift();
+                    }
+                    if (arr.length >= 1) {
+                        arr.pop();
+                    }
+                    return arr;
+                }
+                Point.getPArrBetweenTwoP = getPArrBetweenTwoP;
+            })(Point = Tools.Point || (Tools.Point = {}));
             function angle_GetRad(angle) {
                 return angle / 180 * Math.PI;
             }
@@ -6703,7 +6722,7 @@
             }
         }
         _ColoursPencils._drawTime = 0;
-        _ColoursPencils._drawInterval = 50;
+        _ColoursPencils._drawInterval = 30;
         _Game._ColoursPencils = _ColoursPencils;
         ;
         class _StarsPencils extends _SingleColorPencils {
@@ -6795,7 +6814,7 @@
                     endPos: null,
                     radius: {
                         get value() {
-                            return Admin._game.level >= 10 ? 8 : 12;
+                            return 50;
                         }
                     },
                     restoration: () => {
@@ -7039,11 +7058,11 @@
                             break;
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawCircle(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, this.DrawControl.radius.value, color);
+                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                 }
             }
             onStageMouseMove(e) {
-                if (this.DrawControl.frontPos) {
+                if (this.DrawControl.frontPos && this.DrawControl.switch) {
                     let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let Sp;
                     let color;
@@ -7063,8 +7082,19 @@
                             this._drawingLenth.value += this.DrawControl.frontPos.distance(endPos.x, endPos.y);
                             break;
                     }
-                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x, endPos.y, 50, 50, null, 1, color, null);
-                    this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
+                    if (!Sp) {
+                        return;
+                    }
+                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                    let destance = this.DrawControl.frontPos.distance(endPos.x, endPos.y);
+                    if (destance > 15) {
+                        let num = destance / 15;
+                        let pointArr = Tools.Point.getPArrBetweenTwoP(this.DrawControl.frontPos, endPos, num);
+                        for (let index = 0; index < pointArr.length; index++) {
+                            Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                        }
+                    }
+                    this.DrawControl.frontPos = endPos;
                 }
             }
             onStageMouseUp() {
@@ -7106,6 +7136,7 @@
                 });
                 Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
                     Admin._game.level++;
+                    this.DrawControl.switch = false;
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
                         this.BtnCompelet.visible = false;
                     });
