@@ -1,4 +1,4 @@
-import { Admin, Animation2D, Click, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
+import { Admin, Animation2D, Click, Color, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 import { _PropTry } from "./_PropTry";
 
@@ -53,28 +53,29 @@ export module _Game {
     /**铅笔种类*/
     export let _Pencils = {
         type: {
-            SingleColor: 'SingleColor',
-            Colours: 'Colours',
-            Stars: 'Stars',
+            singleColor: 'singleColor',
+            colours: 'colours',
+            stars: 'stars',
+            eraser: 'eraser',
         },
         /**当前使用*/
         get presentUse(): string {
-            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'SingleColor';
+            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'singleColor';
         },
         set presentUse(name: string) {
             Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
         },
-        allPencils: ['Colours', 'SingleColor', 'Stars'],
+        allPencils: ['colours', 'singleColor', 'stars'],
         get have(): Array<string> {
             try {
                 let data = Laya.LocalStorage.getJSON('_Pencils_have')
                 if (data) {
                     return JSON.parse(data);;
                 } else {
-                    return ['SingleColor'];
+                    return ['singleColor'];
                 }
             } catch (error) {
-                return ['SingleColor'];
+                return ['singleColor'];
             }
         },
         set have(array: Array<string>) {
@@ -124,6 +125,57 @@ export module _Game {
     }
     /**彩色画笔套装*/
     export class _ColoursPencils extends _SingleColorPencils {
+        /**次数*/
+        static _drawTime = 0;
+        /**画多少次后，进入另外两个颜色区间*/
+        static _drawInterval = 50;
+        /**当前输出颜色*/
+        static get _outputColor(): string {
+            let str: string;
+            this._drawTime++;
+            let R: number;
+            let G: number;
+            let B: number;
+            if (1 <= this._drawTime && this._drawTime <= this._drawInterval) {
+                R = this._presentColorArr[0][0] + (this._presentColorArr[1][0] - this._presentColorArr[0][0]) * this._drawTime / this._drawInterval;
+                G = this._presentColorArr[0][1] + (this._presentColorArr[1][1] - this._presentColorArr[0][1]) * this._drawTime / this._drawInterval;
+                B = this._presentColorArr[0][2] + (this._presentColorArr[1][2] - this._presentColorArr[0][2]) * this._drawTime / this._drawInterval;
+
+            } else if (this._drawInterval < this._drawTime && this._drawTime <= this._drawInterval * 2) {
+                R = this._presentColorArr[1][0] + (this._presentColorArr[2][0] - this._presentColorArr[1][0]) * (this._drawTime - this._drawInterval) / this._drawInterval;
+                G = this._presentColorArr[1][1] + (this._presentColorArr[2][1] - this._presentColorArr[1][1]) * (this._drawTime - this._drawInterval) / this._drawInterval;
+                B = this._presentColorArr[1][2] + (this._presentColorArr[2][2] - this._presentColorArr[1][2]) * (this._drawTime - this._drawInterval) / this._drawInterval;
+
+            } else if (this._drawInterval * 2 < this._drawTime && this._drawTime < this._drawInterval * 3) {
+                R = this._presentColorArr[2][0] + (this._presentColorArr[0][0] - this._presentColorArr[2][0]) * (this._drawTime - this._drawInterval * 2) / this._drawInterval;;
+                G = this._presentColorArr[2][1] + (this._presentColorArr[0][1] - this._presentColorArr[2][1]) * (this._drawTime - this._drawInterval * 2) / this._drawInterval;
+                B = this._presentColorArr[2][2] + (this._presentColorArr[0][2] - this._presentColorArr[2][2]) * (this._drawTime - this._drawInterval * 2) / this._drawInterval;
+            } else if (this._drawInterval * 3 - 1 < this._drawTime) {
+                this._drawTime = 0;
+                R = this._presentColorArr[0][0];
+                G = this._presentColorArr[0][1];
+                B = this._presentColorArr[0][2];
+            }
+            R = Math.round(R), G = Math.round(G), B = Math.round(B);
+            str = Color.RGBToHexString(R, G, B);
+            return str;
+        };
+
+        static get _presentColorArr(): Array<number> {
+            return this['_presentColorArr0'] ? this['_presentColorArr0'] : [this._data[0][this._property.color + 1], this._data[0][this._property.color + 2], this._data[0][this._property.color + 3]];
+        }
+        static _setPresentColorArr() {
+            for (let index = 0; index < this._data.length; index++) {
+                const element = this._data[index];
+                if (element[this._property.name] == this._pitchName) {
+                    this['_presentColorArr0'] = [];
+                    this['_presentColorArr0'].push(element[this._property.color + 1]);
+                    this['_presentColorArr0'].push(element[this._property.color + 2]);
+                    this['_presentColorArr0'].push(element[this._property.color + 3]);
+                    return;
+                }
+            }
+        }
         static _init(): void {
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.Colours.data);
             this._setPitchByName(this._data[0][this._property.name]);
@@ -153,28 +205,47 @@ export module _Game {
     /**画笔脚本*/
     export class _PencilsListItem extends Admin._Object {
         lwgBtnClick(): void {
-            Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
-                _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
-                // console.log(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
-                if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
-                    for (let index = 0; index < _ColoursPencils._data.length; index++) {
-                        const element = _ColoursPencils._data[index];
-                        if (_ColoursPencils._pitchName == element[_SingleColorPencils._property.name]) {
-                            let name: string = this.Owner['_dataSource'][_SingleColorPencils._property.name];
-                            let nameIndex = Number(name.substr(4));
-                            if (!nameIndex) {
-                                nameIndex = 1;
-                            }
-                            nameIndex++;
-                            if (nameIndex > 7) {
-                                nameIndex = 1;
-                            }
-                            _ColoursPencils._pitchName = `caise${nameIndex}`;
+            var func = (e: Laya.Event) => {
+                e.stopPropagation();
+            }
+            Click._on(Click._Type.largen, this.Owner, this,
+                func,
+                func,
+                (e: Laya.Event) => {
+                    e.stopPropagation();
+                    _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
+                    if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
+                        if (_Pencils.presentUse == _Pencils.type.singleColor) {
+                            _Pencils.presentUse = _Pencils.type.colours;
+                            _PencilsList.refresh();
+                            return;
                         }
+                        for (let index = 0; index < _ColoursPencils._data.length; index++) {
+                            const element = _ColoursPencils._data[index];
+                            if (_ColoursPencils._pitchName == element[_SingleColorPencils._property.name]) {
+                                let nameIndex = Number(_ColoursPencils._pitchName.substr(5));
+                                // console.log(nameIndex);
+
+                                if (_Pencils.presentUse == _Pencils.type.colours) {
+                                    if (!nameIndex) {
+                                        nameIndex = 1;
+                                    }
+                                    nameIndex++;
+                                    if (nameIndex > 7) {
+                                        nameIndex = 1;
+                                    }
+                                    _ColoursPencils._pitchName = `caise${nameIndex}`;
+                                    _ColoursPencils._setPresentColorArr();
+                                }
+                                _PencilsList.refresh();
+                                return;
+                            }
+                        }
+                    } else {
+                        _Pencils.presentUse = _Pencils.type.singleColor;
                     }
-                }
-                _PencilsList.refresh();
-            });
+                },
+                func);
         }
     }
 
@@ -185,11 +256,11 @@ export module _Game {
                 return this['len'] ? this['len'] : 0;
             },
             set value(val: number) {
-                if (_Game._stepIndex.present == _Game._stepIndex.max) {
+                if (_stepIndex.present == _stepIndex.max) {
                     this['len'] = val;
-                    if (this['len'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
-                        EventAdmin._notify(_Game._Event.showStepBtn);
-                        _Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass] = true;
+                    if (this['len'] >= _passLenght && !_stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass]) {
+                        EventAdmin._notify(_Event.showStepBtn);
+                        _stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass] = true;
                         this['len'] = 0;
                     }
                 }
@@ -198,19 +269,19 @@ export module _Game {
 
         lwgOnAwake(): void {
             _Gold.goldVinish(100);
-            _Game._passLenght = 50;
-            _Game._stepIndex.present = 0;
-            _Game._stepIndex.present = 0;
-            _Game._stepIndex.max = 0;
-            _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-            this.Owner.addChild(_Game._PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
-            _Game._PencilsList.array = _Game._SingleColorPencils._data;
-            _Game._PencilsList.selectEnable = true;
-            // _Game._PencilsList.vScrollBarSkin = "";
+            _passLenght = 50;
+            _stepIndex.present = 0;
+            _stepIndex.present = 0;
+            _stepIndex.max = 0;
+            _PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
+            this.Owner.addChild(_PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
+            _PencilsList.array = _SingleColorPencils._data;
+            _PencilsList.selectEnable = true;
+            //  _PencilsList.vScrollBarSkin = "";
             // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
             // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
-            _Game._PencilsList.selectHandler = new Laya.Handler(this, (index: number) => { });
-            _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
+            _PencilsList.selectHandler = new Laya.Handler(this, (index: number) => { });
+            _PencilsList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
                 let _dataSource = cell.dataSource;
                 let Pic = cell.getChildByName('Pic') as Laya.Image;
                 switch (_dataSource['name']) {
@@ -221,30 +292,30 @@ export module _Game {
                         Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
                         break;
                 }
-                if (_dataSource[_Game._SingleColorPencils._property.pitch]) {
-                    Pic.scale(1.1, 1.1);
+                if (_dataSource[_SingleColorPencils._property.pitch]) {
+                    Pic.scale(1.2, 1.2);
                 } else {
                     Pic.scale(1, 1);
                 }
             });
-            if (_Game._PencilsList.cells.length !== 0) {
-                for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
-                    const element = _Game._PencilsList.cells[index];
-                    if (!element.getComponent(_Game._PencilsListItem)) {
-                        element.addComponent(_Game._PencilsListItem);
+            if (_PencilsList.cells.length !== 0) {
+                for (let index = 0; index < _PencilsList.cells.length; index++) {
+                    const element = _PencilsList.cells[index];
+                    if (!element.getComponent(_PencilsListItem)) {
+                        element.addComponent(_PencilsListItem);
                     }
                 }
             }
-            _Game._stepOrderImg = [];
+            _stepOrderImg = [];
             let index = 1;
             while (this.Owner['Draw' + index]) {
                 let Img = this.Owner['Draw' + index] as Laya.Image;
-                _Game._stepOrderImg.push(Img);
-                Img[_Game._drawBoardProperty.originalZOder] = Img.zOrder;
+                _stepOrderImg.push(Img);
+                Img[_drawBoardProperty.originalZOder] = Img.zOrder;
                 let parent = Img.parent as Laya.Image;
                 if (parent != this.ImgVar('DrawRoot')) {
-                    parent[_Game._drawBoardProperty.originalZOder] = parent.zOrder;
-                    parent[_Game._drawBoardProperty.whetherPass] = false;
+                    parent[_drawBoardProperty.originalZOder] = parent.zOrder;
+                    parent[_drawBoardProperty.whetherPass] = false;
                 }
                 // 创建画板
                 let DrawBoard = Img.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
@@ -255,7 +326,7 @@ export module _Game {
                 this.Owner['Draw' + index].skin = null;
                 index++;
             }
-            // console.log(_Game._stepOrderImg);
+            // console.log(_stepOrderImg);
         }
         lwgOpenAni(): number {
             return 100;
@@ -281,15 +352,15 @@ export module _Game {
             this.BtnCompelet.pos(563, Laya.stage.height * 0.641);
         }
         lwgOnStart(): void {
-            EventAdmin._notify(_Game._Event.start);
+            EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
 
-            EventAdmin._register(_Game._Event.colseScene, this, () => {
+            EventAdmin._register(_Event.colseScene, this, () => {
                 this.lwgCloseScene();
             })
-            EventAdmin._register(_Game._Event.victory, this, () => {
-                this.AniVar(_Game._Animation.action1).stop();
+            EventAdmin._register(_Event.victory, this, () => {
+                this.AniVar(_Animation.action1).stop();
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
                 Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
                 let Img = new Laya.Image();
@@ -302,20 +373,20 @@ export module _Game {
                 _Gold.goldAppear(100);
             })
 
-            EventAdmin._register(_Game._Event.playAni1, this, () => {
-                this.AniVar(_Game._Animation.action1).play(null, true);
+            EventAdmin._register(_Event.playAni1, this, () => {
+                this.AniVar(_Animation.action1).play(null, true);
             })
 
-            EventAdmin._register(_Game._Event.start, this, () => {
+            EventAdmin._register(_Event.start, this, () => {
                 this.DrawControl.switch = true;
-                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
-                    if (_Game._stepIndex.present >= index) {
-                        _Game._stepOrderImg[index].visible = true;
+                for (let index = 0; index < _stepOrderImg.length; index++) {
+                    if (_stepIndex.present >= index) {
+                        _stepOrderImg[index].visible = true;
                     } else {
-                        _Game._stepOrderImg[index].visible = false;
+                        _stepOrderImg[index].visible = false;
                     }
                 }
-                let Img = _Game._stepOrderImg[_Game._stepIndex.present];
+                let Img = _stepOrderImg[_stepIndex.present];
                 let ImgParent = Img.parent as Laya.Image;
                 if (ImgParent != this.ImgVar('DrawRoot')) {
                     ImgParent.zOrder = 200;
@@ -323,8 +394,8 @@ export module _Game {
                 Img.zOrder = 200;
             });
 
-            EventAdmin._register(_Game._Event.showStepBtn, this, () => {
-                if (_Game._stepIndex.present == 0) {
+            EventAdmin._register(_Event.showStepBtn, this, () => {
+                if (_stepIndex.present == 0) {
                     this.BtnNextStep.visible = true;
                     Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
                 } else {
@@ -339,23 +410,23 @@ export module _Game {
                 }
             });
 
-            EventAdmin._register(_Game._Event.lastStep, this, () => {
+            EventAdmin._register(_Event.lastStep, this, () => {
                 this.DrawControl.restoration();
-                if (_Game._stepIndex.present - 1 >= 0) {
-                    let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
+                if (_stepIndex.present - 1 >= 0) {
+                    let Img0 = _stepOrderImg[_stepIndex.present - 1];
                     let Img0Parent = Img0.parent as Laya.Image;
                     Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
-                        let Img = _Game._stepOrderImg[_Game._stepIndex.present];
+                        let Img = _stepOrderImg[_stepIndex.present];
                         Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                            _Game._stepIndex.present--;
-                            if (_Game._stepIndex.present < _Game._stepIndex.max) {
+                            _stepIndex.present--;
+                            if (_stepIndex.present < _stepIndex.max) {
                                 this.BtnNextStep.visible = true;
                             }
-                            if (_Game._stepIndex.present == 0) {
+                            if (_stepIndex.present == 0) {
                                 this.BtnLastStep.visible = false;
                             }
-                            // console.log(_Game._stepIndex, _Game._stepIndex.max);
-                            EventAdmin._notify(_Game._Event.restoreZOder);
+                            // console.log(_stepIndex,_stepIndex.max);
+                            EventAdmin._notify(_Event.restoreZOder);
                             if (Img0Parent != this.ImgVar('DrawRoot')) {
                                 Img0Parent.zOrder = 200;
                             }
@@ -367,28 +438,28 @@ export module _Game {
                 }
             })
 
-            EventAdmin._register(_Game._Event.nextStep, this, () => {
-                EventAdmin._notify(_Game._Event.restoreZOder);
+            EventAdmin._register(_Event.nextStep, this, () => {
+                EventAdmin._notify(_Event.restoreZOder);
                 this.DrawControl.restoration();
-                if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
-                    EventAdmin._notify(_Game._Event.compelet);
-                    Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
+                if (_stepIndex.present >= _stepOrderImg.length - 1) {
+                    EventAdmin._notify(_Event.compelet);
+                    Animation2D.fadeOut(_stepOrderImg[_stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
                 } else {
-                    let Img = _Game._stepOrderImg[_Game._stepIndex.present];
-                    Img.zOrder = Img[_Game._drawBoardProperty.originalZOder];
+                    let Img = _stepOrderImg[_stepIndex.present];
+                    Img.zOrder = Img[_drawBoardProperty.originalZOder];
                     Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
-                        let Img0 = _Game._stepOrderImg[_Game._stepIndex.present + 1];
+                        let Img0 = _stepOrderImg[_stepIndex.present + 1];
                         Img0.visible = true;
                         Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                             let Img0Parent = Img0.parent as Laya.Image;
-                            _Game._stepIndex.present++;
-                            if (!_Game._stepOrderImg[_Game._stepIndex.present][_Game._drawBoardProperty.whetherPass]) {
+                            _stepIndex.present++;
+                            if (!_stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass]) {
                                 this.BtnNextStep.visible = false;
                             }
                             if (Img0Parent != this.ImgVar('DrawRoot')) {
                                 Img0Parent.zOrder = 200;
                             }
-                            // console.log(_Game._stepIndex, _Game._stepIndex.max);
+                            // console.log(_stepIndex,_stepIndex.max);
                             Img0.zOrder = 200;
                             this['BtnStepClose'] = false;
                             this.DrawControl.switch = true;
@@ -397,21 +468,21 @@ export module _Game {
                 }
             })
 
-            EventAdmin._register(_Game._Event.restoreZOder, this, () => {
-                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
-                    const element = _Game._stepOrderImg[index] as Laya.Image;
+            EventAdmin._register(_Event.restoreZOder, this, () => {
+                for (let index = 0; index < _stepOrderImg.length; index++) {
+                    const element = _stepOrderImg[index] as Laya.Image;
                     if (element) {
-                        element.zOrder = _Game._stepOrderImg[index][_Game._drawBoardProperty.originalZOder];
+                        element.zOrder = _stepOrderImg[index][_drawBoardProperty.originalZOder];
                         let parent = element.parent as Laya.Image;
                         if (parent != this.ImgVar('DrawRoot')) {
-                            parent.zOrder = parent[_Game._drawBoardProperty.originalZOder];
+                            parent.zOrder = parent[_drawBoardProperty.originalZOder];
                         }
                     }
                 }
             });
 
-            EventAdmin._register(_Game._Event.compelet, this, () => {
-                EventAdmin._notify(_Game._Event.restoreZOder);
+            EventAdmin._register(_Event.compelet, this, () => {
+                EventAdmin._notify(_Event.restoreZOder);
                 this.DrawControl.switch = false;
                 this.BtnNextStep.visible = false;
                 this.BtnLastStep.visible = false;
@@ -444,42 +515,59 @@ export module _Game {
         }
 
         onStageMouseDown(e: Laya.Event): void {
-            this.DrawControl.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
+            this.DrawControl.DrawRoot = _stepOrderImg[_stepIndex.present];
             this.DrawControl.DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard') as Laya.Image;
             this.DrawControl.frontPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
             let Sp: Laya.Sprite;
             if (this.DrawControl.switch) {
                 let DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                 this.DrawControl.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                    Sp = this.DrawControl.EraserSp = new Laya.Sprite();
-                    this.DrawControl.EraserSp.blendMode = "destination-out";
-                } else {
-                    Sp = this.DrawControl.DrawSp = new Laya.Sprite();
-                    this.DrawControl.DrawSp.blendMode = "none";
+                let color: string;
+                switch (_SingleColorPencils._pitchName) {
+                    case _Pencils.type.eraser:
+                        Sp = this.DrawControl.EraserSp = new Laya.Sprite();
+                        this.DrawControl.EraserSp.blendMode = "destination-out";
+                        color = '#000000';
+                        break;
+                    case _Pencils.type.colours:
+                        Sp = this.DrawControl.DrawSp = new Laya.Sprite();
+                        this.DrawControl.DrawSp.blendMode = "none";
+                        color = _ColoursPencils._outputColor;
+                        break;
+                    default:
+                        Sp = this.DrawControl.DrawSp = new Laya.Sprite();
+                        this.DrawControl.DrawSp.blendMode = "none";
+                        color = _SingleColorPencils._pitchColor;
+                        break;
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
-                Sp.graphics.drawCircle(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
+                Sp.graphics.drawCircle(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, this.DrawControl.radius.value, color);
             }
         }
         onStageMouseMove(e: Laya.Event): void {
             if (this.DrawControl.frontPos) {
                 let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                if (_Game._SingleColorPencils._pitchName == 'eraser') {
-                    this.DrawControl.EraserSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, '#000000', this.DrawControl.radius.value * 2);
-                    this.DrawControl.EraserSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, '#000000');
-                    // this._drawingLenth.value -= (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-                } else {
-                    if (!this.DrawControl.DrawSp) {
-                        this.DrawControl.DrawBoard.addChild(this.DrawControl.DrawSp = new Laya.Sprite());
-                        this.DrawControl.DrawSp.blendMode = "none";
-                    }
-                    // let tex = Laya.Loader.getRes(_PreloadUrl._list.texture2D.star1);
-                    // DrawSp.graphics.drawTexture(tex, endPos.x, endPos.y, 50, 50);
-                    this.DrawControl.DrawSp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, _Game._SingleColorPencils._pitchColor, this.DrawControl.radius.value * 2);
-                    this.DrawControl.DrawSp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, _Game._SingleColorPencils._pitchColor);
-                    this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                let Sp: Laya.Sprite;
+                let color: string;
+                switch (_SingleColorPencils._pitchName) {
+                    case _Pencils.type.eraser:
+                        Sp = this.DrawControl.EraserSp;
+                        color = '#000000';
+                        break;
+                    case _Pencils.type.colours:
+                        Sp = this.DrawControl.DrawSp;
+                        color = _ColoursPencils._outputColor;
+                        this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                        break;
+                    default:
+                        Sp = this.DrawControl.DrawSp;
+                        color = _SingleColorPencils._pitchColor;
+                        this._drawingLenth.value += (this.DrawControl.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                        break;
                 }
+                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x, endPos.y, 50, 50, null, 1, color, null);
+                // Sp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, Color, this.DrawControl.radius.value * 2);
+                // Sp.graphics.drawCircle(endPos.x, endPos.y, this.DrawControl.radius.value, Color);
                 this.DrawControl.frontPos = new Laya.Point(endPos.x, endPos.y);
             }
         }
@@ -505,7 +593,7 @@ export module _Game {
                 } else {
                     this['BtnStepClose'] = true;
                 }
-                EventAdmin._notify(_Game._Event.lastStep);
+                EventAdmin._notify(_Event.lastStep);
             });
             Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
                 if (this['BtnStepClose']) {
@@ -518,7 +606,7 @@ export module _Game {
                         this.BtnLastStep.visible = true;
                     });
                 }
-                EventAdmin._notify(_Game._Event.nextStep);
+                EventAdmin._notify(_Event.nextStep);
             });
             Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
                 Admin._game.level++;
@@ -528,7 +616,7 @@ export module _Game {
             });
         }
         lwgOnDisable(): void {
-            _Game._Pencils.presentUse = _PropTry._beforeTry;
+            _Pencils.presentUse = _PropTry._beforeTry;
         }
     }
 }

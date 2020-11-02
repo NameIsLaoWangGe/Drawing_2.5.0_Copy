@@ -50,15 +50,19 @@ export module _PreloadUrl {
         texture: {
             star1: {
                 url: 'Frame/Effects/hua4.png',
-                texture: Laya.Texture,
+                texture: new Laya.Texture,
+            },
+            brushworkCommon: {
+                url: 'Game/UI/GameScene/brushworkCommon.png',
+                texture: new Laya.Texture,
             },
         },
-        texture2D: {
-            star1: {
-                url: 'Frame/Effects/hua4.png',
-                texture: Laya.Texture2D,
-            },
-        },
+        // texture2D: {
+        //     star1: {
+        //         url: 'Frame/Effects/hua4.png',
+        //         texture: Laya.Texture2D,
+        //     },
+        // },
         /**通过直接获取场景的显示和打开，和scene关联，实现，先加载，然后直接切换*/
         scene2D: {
             UIStart: "Scene/" + _SceneName.Start + '.json',

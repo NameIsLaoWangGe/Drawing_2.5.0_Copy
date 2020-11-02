@@ -5577,17 +5577,15 @@ export module lwg {
             // 第三步，如果本地缓存没有，那么直接从数据表获取
             let dataArr;
             try {
-                Laya.LocalStorage.getJSON(storageName)
+                Laya.LocalStorage.getJSON(storageName);
                 // console.log(Laya.LocalStorage.getJSON(storageName));
             } catch (error) {
                 dataArr = Laya.loader.getRes(url)['RECORDS'];
-                let data = {};
-                data[storageName] = dataArr;
-                Laya.LocalStorage.setJSON(storageName, JSON.stringify(data));
+                Laya.LocalStorage.setJSON(storageName, JSON.stringify(dataArr));
                 return dataArr;
             }
             if (Laya.LocalStorage.getJSON(storageName)) {
-                dataArr = JSON.parse(Laya.LocalStorage.getJSON(storageName))[storageName];
+                dataArr = JSON.parse(Laya.LocalStorage.getJSON(storageName));
                 console.log(storageName + '从本地缓存中获取到数据,将和文件夹的json文件进行对比');
                 try {
                     let dataArr_0: Array<any> = Laya.loader.getRes(url)['RECORDS'];
@@ -5609,9 +5607,7 @@ export module lwg {
                     console.log(storageName + '数据赋值失败！请检查数据表或者手动赋值！')
                 }
             }
-            let data = {};
-            data[storageName] = dataArr;
-            Laya.LocalStorage.setJSON(storageName, JSON.stringify(data));
+            Laya.LocalStorage.setJSON(storageName, JSON.stringify(dataArr));
             return dataArr;
         }
     }
@@ -7049,7 +7045,7 @@ export module lwg {
                             }
                         }
                     }
-                    _loadOrder = [_pic2D, _scene2D, _prefab2D, _scene3D, _prefab3D, _json, _texture2D, _mesh3D, _material, _skeleton];
+                    _loadOrder = [_pic2D, _scene2D, _prefab2D, _scene3D, _prefab3D, _json,_texture, _texture2D, _mesh3D, _material, _skeleton];
                     for (let index = 0; index < _loadOrder.length; index++) {
                         _sumProgress += _loadOrder[index].length;
                         if (_loadOrder[index].length <= 0) {
@@ -7188,12 +7184,12 @@ export module lwg {
                         break;
 
                     case _texture:
-                        Laya.Texture2D.load(_texture[index]['url'], Laya.Handler.create(this, (tex: Laya.Texture2D) => {
+                        Laya.loader.load(_texture[index]['url'], Laya.Handler.create(this, (tex: Laya.Texture) => {
                             if (tex == null) {
                                 console.log('XXXXXXXXXXX2D纹理' + _texture[index]['url'] + '加载失败！不会停止加载进程！', '数组下标为：', index, 'XXXXXXXXXXX');
                             } else {
-                                _texture[index]['texture2D'] = tex;
-                                console.log('2D纹理' + _texture[index]['url'] + '加载完成！', '数组下标为：', index);
+                                _texture[index]['texture'] = tex;
+                                console.log('纹理' + _texture[index]['url'] + '加载完成！', '数组下标为：', index);
                             }
                             EventAdmin._notify(_Event.progress);
                         }));

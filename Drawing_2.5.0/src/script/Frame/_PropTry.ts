@@ -123,8 +123,9 @@ export module _PropTry {
         advFunc(): void {
             ADManager.ShowReward(() => {
                 ADManager.TAPoint(TaT.BtnClick, 'UIPropTry_BtnGet');
-                _Game._Pencils.presentUse = _Game._Pencils.type.Colours;
+                _Game._Pencils.presentUse = _Game._Pencils.type.colours;
             })
         }
     }
 }
+export default _PropTry.PropTry;
