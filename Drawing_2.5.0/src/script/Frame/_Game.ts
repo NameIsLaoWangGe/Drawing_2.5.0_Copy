@@ -92,10 +92,12 @@ export module _Game {
     /**单色画笔套装*/
     export class _SingleColorPencils {
         static _property = {
+            _dataSource: '_dataSource',
             index: 'index',
             name: 'name',
             color: 'color',
             pitch: 'pitch',
+            serial: 'serial',
         };
         static _init(): void {
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.SingleColor.data);
@@ -153,6 +155,24 @@ export module _Game {
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
                 _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
+                // console.log(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
+                if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
+                    for (let index = 0; index < _ColoursPencils._data.length; index++) {
+                        const element = _ColoursPencils._data[index];
+                        if (_ColoursPencils._pitchName == element[_SingleColorPencils._property.name]) {
+                            let name: string = this.Owner['_dataSource'][_SingleColorPencils._property.name];
+                            let nameIndex = Number(name.substr(4));
+                            if (!nameIndex) {
+                                nameIndex = 1;
+                            }
+                            nameIndex++;
+                            if (nameIndex > 7) {
+                                nameIndex = 1;
+                            }
+                            _ColoursPencils._pitchName = `caise${nameIndex}`;
+                        }
+                    }
+                }
                 _PencilsList.refresh();
             });
         }
@@ -183,17 +203,24 @@ export module _Game {
             _Game._stepIndex.present = 0;
             _Game._stepIndex.max = 0;
             _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-            this.Owner.addChild(_Game._PencilsList)['pos'](108, 1085);
+            this.Owner.addChild(_Game._PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
             _Game._PencilsList.array = _Game._SingleColorPencils._data;
             _Game._PencilsList.selectEnable = true;
-            _Game._PencilsList.vScrollBarSkin = "";
+            // _Game._PencilsList.vScrollBarSkin = "";
             // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
             // this._ShopList.scrollBar.elasticDistance = 500;//设置橡皮筋极限距离。
             _Game._PencilsList.selectHandler = new Laya.Handler(this, (index: number) => { });
             _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
                 let _dataSource = cell.dataSource;
                 let Pic = cell.getChildByName('Pic') as Laya.Image;
-                Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
+                switch (_dataSource['name']) {
+                    case 'colours':
+                        Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
+                        break;
+                    default:
+                        Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
+                        break;
+                }
                 if (_dataSource[_Game._SingleColorPencils._property.pitch]) {
                     Pic.scale(1.1, 1.1);
                 } else {
@@ -242,7 +269,7 @@ export module _Game {
         lwgOnEnable(): void {
             this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
             this.Owner.addChild(this.StepSwitch);
-            this.StepSwitch.pos(194.5, 900);
+            this.StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
             this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
             this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
             this.BtnNextStep.visible = false;
@@ -251,7 +278,7 @@ export module _Game {
             this.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab) as Laya.Image;
             this.Owner.addChild(this.BtnCompelet);
             this.BtnCompelet.visible = false;
-            this.BtnCompelet.pos(360, 930);
+            this.BtnCompelet.pos(563, Laya.stage.height * 0.641);
         }
         lwgOnStart(): void {
             EventAdmin._notify(_Game._Event.start);
@@ -467,7 +494,6 @@ export module _Game {
                 NewBoard.cacheAs = "bitmap";
                 NewBoard.name = 'DrawBoard';
                 NewBoard.texture = this.DrawControl.DrawBoard.drawToTexture(this.DrawControl.DrawBoard.width, this.DrawControl.DrawBoard.height, this.DrawControl.DrawBoard.x, this.DrawControl.DrawBoard.y) as Laya.Texture;
-
                 this.DrawControl.DrawBoard.destroy();
             }
         }

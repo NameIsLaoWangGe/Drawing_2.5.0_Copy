@@ -1831,6 +1831,16 @@ export module lwg {
                 this.Owner[calssName] = this;
                 this.lwgOnAwake();
             }
+
+            ImgChild(str: string): Laya.Image {
+                if (this.Owner.getChildByName(str)) {
+                    return this.Owner.getChildByName(str) as Laya.Image;
+                } else {
+                    console.log('场景内不存在子节点：', str);
+                    return undefined;
+                }
+            }
+
             /**
               * 打开场景
               * @param openSceneName 需要打开的场景名称
@@ -1887,14 +1897,31 @@ export module lwg {
     /**滤镜模块,主要是为节点和场景等进行颜色变化设置*/
     export module Color {
         /**
-         * RGB三个颜色值转换成16进制的字符串‘#000000’；
+         * RGB三个颜色值转换成16进制的字符串‘#xxxxxx’；
          * @param r 
          * @param g
          * @param b
           */
-        export function RGBtoHexString(r, g, b) {
+        export function RGBToHexString(r, g, b) {
             return '#' + ("00000" + (r << 16 | g << 8 | b).toString(16)).slice(-6);
         }
+
+        /**
+        * RGB三个颜色值转换成16进制的字符串‘#xxxxxx’；
+        * @param r 
+        * @param g
+        * @param b
+         */
+        export function HexStringToRGB(str: string): Array<number> {
+            let arr = [];
+            // let r, g, b;
+            // r = (0xff << 16 & str) >> 16
+            // g = (0xff << 8 & str) >> 8
+            // b = 0xff & str
+            return arr
+        }
+
+
         /**
          * 给一张图片染色,包括其子节点,也可以设置一个消失时间
          * @param node 节点

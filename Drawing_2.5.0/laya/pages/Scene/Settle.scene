@@ -21,16 +21,17 @@
             "props":{"y":930,"x":360,"width":393,"var":"BtnPlayAni","pivotY":59,"pivotX":197,"name":"BtnPlayAni","height":135},
             "nodeParent":2,
             "label":"BtnPlayAni",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":8,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
-                    "props":{"width":296,"skin":"Game/UI/Settle/an3.png","sizeGrid":"0,37,0,41","pivotY":57,"pivotX":148,"height":113,"centerY":0,"centerX":0},
+                    "props":{"width":208,"skin":"Game/UI/Settle/an3.png","sizeGrid":"0,37,0,41","pivotY":48,"pivotX":104,"height":113,"centerY":0,"centerX":0},
                     "nodeParent":8,
                     "label":"Image",
                     "isOpen":true,
@@ -40,6 +41,7 @@
                     "compId":7,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"skin":"Game/UI/Settle/s.png","rotation":90,"centerY":-11,"centerX":63},

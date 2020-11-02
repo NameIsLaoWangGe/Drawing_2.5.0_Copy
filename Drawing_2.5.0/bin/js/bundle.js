@@ -1626,6 +1626,15 @@
                     this.Owner[calssName] = this;
                     this.lwgOnAwake();
                 }
+                ImgChild(str) {
+                    if (this.Owner.getChildByName(str)) {
+                        return this.Owner.getChildByName(str);
+                    }
+                    else {
+                        console.log('场景内不存在子节点：', str);
+                        return undefined;
+                    }
+                }
                 lwgOpenScene(openSceneName, closeSelf, func, zOrder) {
                     let closeName;
                     if (closeSelf == undefined || closeSelf == true) {
@@ -1664,10 +1673,15 @@
         })(Admin = lwg.Admin || (lwg.Admin = {}));
         let Color;
         (function (Color) {
-            function RGBtoHexString(r, g, b) {
+            function RGBToHexString(r, g, b) {
                 return '#' + ("00000" + (r << 16 | g << 8 | b).toString(16)).slice(-6);
             }
-            Color.RGBtoHexString = RGBtoHexString;
+            Color.RGBToHexString = RGBToHexString;
+            function HexStringToRGB(str) {
+                let arr = [];
+                return arr;
+            }
+            Color.HexStringToRGB = HexStringToRGB;
             function _colour(node, RGBA, vanishtime) {
                 let cf = new Laya.ColorFilter();
                 node.blendMode = 'null';
@@ -6627,10 +6641,12 @@
             }
         }
         _SingleColorPencils._property = {
+            _dataSource: '_dataSource',
             index: 'index',
             name: 'name',
             color: 'color',
             pitch: 'pitch',
+            serial: 'serial',
         };
         _SingleColorPencils._pitchName = '';
         _SingleColorPencils._pitchColor = '';
@@ -6668,6 +6684,23 @@
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.Owner, this, null, null, () => {
                     _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
+                    if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
+                        for (let index = 0; index < _ColoursPencils._data.length; index++) {
+                            const element = _ColoursPencils._data[index];
+                            if (_ColoursPencils._pitchName == element[_SingleColorPencils._property.name]) {
+                                let name = this.Owner['_dataSource'][_SingleColorPencils._property.name];
+                                let nameIndex = Number(name.substr(4));
+                                if (!nameIndex) {
+                                    nameIndex = 1;
+                                }
+                                nameIndex++;
+                                if (nameIndex > 7) {
+                                    nameIndex = 1;
+                                }
+                                _ColoursPencils._pitchName = `caise${nameIndex}`;
+                            }
+                        }
+                    }
                     _Game._PencilsList.refresh();
                 });
             }
@@ -6720,15 +6753,21 @@
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
                 _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-                this.Owner.addChild(_Game._PencilsList)['pos'](108, 1085);
+                this.Owner.addChild(_Game._PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
                 _Game._PencilsList.array = _Game._SingleColorPencils._data;
                 _Game._PencilsList.selectEnable = true;
-                _Game._PencilsList.vScrollBarSkin = "";
                 _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
                 _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell, index) => {
                     let _dataSource = cell.dataSource;
                     let Pic = cell.getChildByName('Pic');
-                    Pic.skin = 'Game/UI/GameScene/SinglePencils/' + _dataSource['name'] + '.png';
+                    switch (_dataSource['name']) {
+                        case 'colours':
+                            Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
+                            break;
+                        default:
+                            Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
+                            break;
+                    }
                     if (_dataSource[_Game._SingleColorPencils._property.pitch]) {
                         Pic.scale(1.1, 1.1);
                     }
@@ -6770,7 +6809,7 @@
             lwgOnEnable() {
                 this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
                 this.Owner.addChild(this.StepSwitch);
-                this.StepSwitch.pos(194.5, 900);
+                this.StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
                 this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
                 this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
                 this.BtnNextStep.visible = false;
@@ -6778,7 +6817,7 @@
                 this.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
                 this.Owner.addChild(this.BtnCompelet);
                 this.BtnCompelet.visible = false;
-                this.BtnCompelet.pos(360, 930);
+                this.BtnCompelet.pos(563, Laya.stage.height * 0.641);
             }
             lwgOnStart() {
                 EventAdmin._notify(_Game._Event.start);
@@ -7531,7 +7570,7 @@
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
             Admin._platform.name = Admin._platform.tpye.General;
-            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
+            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
                 _Guide: _Guide,
