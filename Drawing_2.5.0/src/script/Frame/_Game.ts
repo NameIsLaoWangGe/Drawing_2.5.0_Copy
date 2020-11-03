@@ -4,6 +4,7 @@ import { _PropTry } from "./_PropTry";
 
 /**游戏场景模块*/
 export module _Game {
+    export let _base64: string;
     export enum _Event {
         start = '_Game_start',
         showStepBtn = '_Game_showStepBtn',
@@ -90,6 +91,7 @@ export module _Game {
             Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(arr));
         }
     }
+
     /**单色画笔套装*/
     export class _SingleColorPencils {
         static _property = {
@@ -355,8 +357,41 @@ export module _Game {
             EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
-
             EventAdmin._register(_Event.colseScene, this, () => {
+                let NewDrawRoot = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
+                NewDrawRoot.width = this.DrawControl.DrawRoot.width;
+                NewDrawRoot.height = this.DrawControl.DrawRoot.height;
+                NewDrawRoot.texture = this.ImgVar('DrawRoot').drawToTexture(this.ImgVar('DrawRoot').width, this.ImgVar('DrawRoot').height, this.ImgVar('DrawRoot').x, this.DrawControl.DrawBoard.y) as Laya.Texture;
+                // NewDrawRoot.texture.b
+                //  <p>绘制 当前<code>Sprite</code> 到 <code>Canvas</code> 上，并返回一个HtmlCanvas。</p>
+                //   <p>绘制的结果可以当作图片源，再次绘制到其他Sprite里面，示例：</p>
+
+                // var htmlCanvas: Laya.HTMLCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);//把精灵绘制到canvas上面
+                // var texture: Laya.Texture = new Laya.Texture(htmlCanvas);//使用htmlCanvas创建Texture
+                // var sp: Laya.Sprite = new Laya.Sprite().pos(0, 200);//创建精灵并把它放倒200位置
+                // sp.graphics.drawTexture(texture);//把截图绘制到精灵上
+                // Laya.stage.addChild(sp);//把精灵显示到舞台
+
+                // <p>也可以获取原始图片数据，分享到网上，从而实现截图效果，示例：</p>
+                var htmlCanvas: Laya.HTMLCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);//把精灵绘制到canvas上面
+                _base64 = htmlCanvas.toBase64("image/png", 0.5);//获取原生的canvas对象
+                // console.log(base64);
+                // trace(canvas.toDataURL("image/png"));//打印图片base64信息，可以发给服务器或者保存为图片
+
+
+                // let base64 = "你的base64字符串";
+                // let image: HTMLImageElement = document.createElement("img");
+                // let onImageLoaded: EventListenerOrEventListenerObject = () => {
+                //     image.removeEventListener("load", onImageLoaded);
+                //     let texture: Laya.Texture = new Laya.Texture();
+                //     texture.load(image.src);
+                //     //接下来就可以把贴图对象赋值给材质了
+                // };
+                // image.addEventListener("load", onImageLoaded);
+                // image.src = base64;
+
+
+                // let Sp: Laya.Sprite = new Laya.Sprite;
                 this.lwgCloseScene();
             })
             EventAdmin._register(_Event.victory, this, () => {

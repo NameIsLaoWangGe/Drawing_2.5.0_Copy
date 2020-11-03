@@ -1008,15 +1008,23 @@
                     General: 'General',
                     Web: 'Web',
                     WebTest: 'WebTest',
+                    Research: 'Research',
                 },
                 get name() {
                     return this['_platform_name'] ? this['_platform_name'] : null;
                 },
                 set name(val) {
                     this['_platform_name'] = val;
-                    if (val == Admin._platform.tpye.WebTest) {
-                        Laya.LocalStorage.clear();
-                        _Gold._num.value = 5000;
+                    switch (val) {
+                        case Admin._platform.tpye.WebTest:
+                            Laya.LocalStorage.clear();
+                            _Gold._num.value = 5000;
+                            break;
+                        case Admin._platform.tpye.Research:
+                            Laya.Stat.show();
+                            break;
+                        default:
+                            break;
                     }
                 }
             };
@@ -6434,6 +6442,8 @@
 
     var _PropTry;
     (function (_PropTry) {
+        function _init() { }
+        _PropTry._init = _init;
         class PropTryBase extends Admin._SceneBase {
             moduleOnAwake() {
                 _PropTry._beforeTry = _Game._Pencils.presentUse;
@@ -6443,8 +6453,16 @@
         class PropTry extends PropTryBase {
             lwgOnAwake() {
                 ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-                Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
-                Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
+                if (Admin._platform.name == Admin._platform.tpye.Research) {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
+                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
+                }
+                else {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
+                    if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
+                        Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
+                    }
+                }
             }
             lwgOnEnable() {
                 this.ImgVar('BtnClose').visible = false;
@@ -6904,6 +6922,12 @@
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event.colseScene, this, () => {
+                    let NewDrawRoot = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                    NewDrawRoot.width = this.DrawControl.DrawRoot.width;
+                    NewDrawRoot.height = this.DrawControl.DrawRoot.height;
+                    NewDrawRoot.texture = this.ImgVar('DrawRoot').drawToTexture(this.ImgVar('DrawRoot').width, this.ImgVar('DrawRoot').height, this.ImgVar('DrawRoot').x, this.DrawControl.DrawBoard.y);
+                    var htmlCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);
+                    _Game._base64 = htmlCanvas.toBase64("image/png", 0.5);
                     this.lwgCloseScene();
                 });
                 EventAdmin._register(_Event.victory, this, () => {
@@ -7610,6 +7634,18 @@
         class Start extends _StartScene {
             lwgOnAwake() {
             }
+            lwgOnStart() {
+                if (_Game._base64) {
+                    let Img = new Laya.Image();
+                    this.Owner.addChild(Img);
+                    Img.pos(0, 0);
+                    Img.zOrder = 1000;
+                    Img.width = Laya.stage.width;
+                    Img.height = Laya.stage.height;
+                    Img.skin = _Game._base64;
+                    console.log(Img);
+                }
+            }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                     this.lwgOpenScene(_SceneName.SelectLevel);
@@ -7641,7 +7677,7 @@
         class Victory extends _Victory.VictoryBase {
             lwgOpenAniAfter() {
                 console.log(_Game._Pencils.presentUse, _Special._data._lastDate);
-                if (_Game._Pencils.presentUse == _Game._Pencils.type.SingleColor && _Special._data._lastDate
+                if (_Game._Pencils.presentUse == _Game._Pencils.type.singleColor && _Special._data._lastDate
                     !== DateAdmin._date.date) {
                     _Special._data._lastDate = DateAdmin._date.date;
                     this.lwgOpenScene(_SceneName.Special, false);
@@ -7677,7 +7713,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.General;
+            Admin._platform.name = Admin._platform.tpye.Research;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
@@ -7714,9 +7750,9 @@
     GameConfig.startScene = "Scene/Lwginit.scene";
     GameConfig.sceneRoot = "";
     GameConfig.debug = false;
-    GameConfig.stat = true;
+    GameConfig.stat = false;
     GameConfig.physicsDebug = false;
-    GameConfig.exportSceneToJson = true;
+    GameConfig.exportSceneToJson = false;
     GameConfig.init();
 
     class Main {

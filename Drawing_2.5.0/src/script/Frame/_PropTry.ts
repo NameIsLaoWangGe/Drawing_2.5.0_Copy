@@ -6,6 +6,7 @@ import { _SelectLevel } from "./_SelectLevel";
 
 export module _PropTry {
     export let _beforeTry: any;
+    export function _init(): void { }
     export class PropTryBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             _beforeTry = _Game._Pencils.presentUse;
@@ -14,11 +15,15 @@ export module _PropTry {
     export class PropTry extends PropTryBase {
         lwgOnAwake(): void {
             ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-            Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
-            Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
-            // if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
-            //     Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
-            // }
+            if (Admin._platform.name == Admin._platform.tpye.Research) {
+                Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
+                Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
+            } else {
+                Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
+                if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
+                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
+                }
+            }
         }
 
         lwgOnEnable(): void {

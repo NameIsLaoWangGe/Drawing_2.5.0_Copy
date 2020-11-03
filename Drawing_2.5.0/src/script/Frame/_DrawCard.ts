@@ -4,9 +4,6 @@ import RecordManager from "../TJ/RecordManager";
 import { _Guide } from "./_Guide";
 
 
-
-
-
 export default class UIDrawCard extends DrawCard.DrawCardScene {
     /** @prop {name:Card, tips:"选项卡预制体", type:Prefab}*/
     public Card: Laya.Prefab;

@@ -1102,15 +1102,25 @@ export module lwg {
                 Web: 'Web',
                 /**web测试包,会清除本地数据*/
                 WebTest: 'WebTest',
+                /**研发中*/
+                Research: 'Research',
             },
             get name(): string {
                 return this['_platform_name'] ? this['_platform_name'] : null;
             },
             set name(val: string) {
                 this['_platform_name'] = val;
-                if (val == _platform.tpye.WebTest) {
-                    Laya.LocalStorage.clear();
-                    _Gold._num.value = 5000;
+                switch (val) {
+                    case _platform.tpye.WebTest:
+                        Laya.LocalStorage.clear();
+                        _Gold._num.value = 5000;
+                        break;
+                    case _platform.tpye.Research:
+                        Laya.Stat.show();
+                        break;
+
+                    default:
+                        break;
                 }
             }
         };
