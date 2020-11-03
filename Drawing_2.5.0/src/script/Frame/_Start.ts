@@ -5,9 +5,6 @@ import { _Game } from "./_Game";
  * 那么在这个默认类中进行添加，或者在其他地方动态添加*/
 export module _Start {
     export function _init(): void {
-        let name = {
-            dsfa: status,
-        }
     }
     /**通用类，进行通用初始化，可在每个游戏中重复使用重复*/
     export class _StartScene extends Admin._SceneBase {
@@ -20,16 +17,16 @@ export module _Start {
 
         }
         lwgOnStart(): void {
-            if (_Game._base64) {
-                let Img = new Laya.Image();
-                this.Owner.addChild(Img);
-                Img.pos(0, 0);
-                Img.zOrder = 1000;
-                Img.width = Laya.stage.width;
-                Img.height = Laya.stage.height;
-                Img.skin = _Game._base64;
-                console.log(Img);
-            }
+            // if (_Game._base64) {
+            //     let Img = new Laya.Image();
+            //     this.Owner.addChild(Img);
+            //     Img.pos(0, 0);
+            //     Img.zOrder = 1000;
+            //     Img.width = Laya.stage.width;
+            //     Img.height = Laya.stage.height;
+            //     Img.skin = _Game._base64.value;
+            //     console.log(Img);
+            // }
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {

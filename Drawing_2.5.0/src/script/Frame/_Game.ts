@@ -1,10 +1,18 @@
 import { Admin, Animation2D, Click, Color, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 import { _PropTry } from "./_PropTry";
+import { _SelectLevel } from "./_SelectLevel";
 
 /**游戏场景模块*/
 export module _Game {
-    export let _base64: string;
+    // export let _base64 = {
+    //     get value(): string {
+    //         return Laya.LocalStorage.getItem('_Game_base64') ? Laya.LocalStorage.getItem('_Game_base64') : null;
+    //     },
+    //     set value(date: string) {
+    //         Laya.LocalStorage.setItem('_Game_base64', date.toString());
+    //     }
+    // };
     export enum _Event {
         start = '_Game_start',
         showStepBtn = '_Game_showStepBtn',
@@ -358,53 +366,29 @@ export module _Game {
         }
         lwgEventRegister(): void {
             EventAdmin._register(_Event.colseScene, this, () => {
-                let NewDrawRoot = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
-                NewDrawRoot.width = this.DrawControl.DrawRoot.width;
-                NewDrawRoot.height = this.DrawControl.DrawRoot.height;
-                NewDrawRoot.texture = this.ImgVar('DrawRoot').drawToTexture(this.ImgVar('DrawRoot').width, this.ImgVar('DrawRoot').height, this.ImgVar('DrawRoot').x, this.DrawControl.DrawBoard.y) as Laya.Texture;
-                // NewDrawRoot.texture.b
-                //  <p>绘制 当前<code>Sprite</code> 到 <code>Canvas</code> 上，并返回一个HtmlCanvas。</p>
-                //   <p>绘制的结果可以当作图片源，再次绘制到其他Sprite里面，示例：</p>
-
-                // var htmlCanvas: Laya.HTMLCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);//把精灵绘制到canvas上面
-                // var texture: Laya.Texture = new Laya.Texture(htmlCanvas);//使用htmlCanvas创建Texture
-                // var sp: Laya.Sprite = new Laya.Sprite().pos(0, 200);//创建精灵并把它放倒200位置
-                // sp.graphics.drawTexture(texture);//把截图绘制到精灵上
-                // Laya.stage.addChild(sp);//把精灵显示到舞台
-
-                // <p>也可以获取原始图片数据，分享到网上，从而实现截图效果，示例：</p>
-                var htmlCanvas: Laya.HTMLCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);//把精灵绘制到canvas上面
-                _base64 = htmlCanvas.toBase64("image/png", 0.5);//获取原生的canvas对象
-                // console.log(base64);
-                // trace(canvas.toDataURL("image/png"));//打印图片base64信息，可以发给服务器或者保存为图片
-
-
-                // let base64 = "你的base64字符串";
-                // let image: HTMLImageElement = document.createElement("img");
-                // let onImageLoaded: EventListenerOrEventListenerObject = () => {
-                //     image.removeEventListener("load", onImageLoaded);
-                //     let texture: Laya.Texture = new Laya.Texture();
-                //     texture.load(image.src);
-                //     //接下来就可以把贴图对象赋值给材质了
-                // };
-                // image.addEventListener("load", onImageLoaded);
-                // image.src = base64;
-
-
-                // let Sp: Laya.Sprite = new Laya.Sprite;
+                Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
+                this.ImgVar('DrawRoot').x = 0;
+                this.ImgVar('DrawRoot').y = 0;
+                let Image = this.ImgVar('DrawRoot').getChildAt(0) as Laya.Image;
+                Tools.Node.changePovit(Image, 0, 0);
+                Image.scale(Image.scaleX - 0.2, Image.scaleY - 0.2);
+                Image.x = 100;
+                Image.y = 100;
+                var htmlCanvas: Laya.HTMLCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
+                _SelectLevel._Data._setHaveBeenDrawn(htmlCanvas.toBase64("image/png", 1));
                 this.lwgCloseScene();
             })
             EventAdmin._register(_Event.victory, this, () => {
-                this.AniVar(_Animation.action1).stop();
+                this.AniVar(_Animation.action1).stop;
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
                 Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
-                let Img = new Laya.Image();
-                Img.skin = `Game/UI/Common/bj.png`;
-                Img.alpha = 0;
-                Img.width = Laya.stage.width;
-                Img.height = Laya.stage.height;
-                this.ImgVar('Background').addChild(Img);
-                Animation2D.fadeOut(Img, 0, 1, 500);
+                // let Img = new Laya.Image();
+                // Img.skin = `Game/UI/Common/bj.png`;
+                // Img.alpha = 0;
+                // Img.width = Laya.stage.width;
+                // Img.height = Laya.stage.height;
+                // this.ImgVar('Background').addChild(Img);
+                // Animation2D.fadeOut(Img, 0, 1, 500);
                 _Gold.goldAppear(100);
             })
 
@@ -664,7 +648,6 @@ export module _Game {
         }
         lwgOnDisable(): void {
             _Pencils.presentUse = _PropTry._beforeTry;
-            // Laya.loader.clearRes(_PreloadUrl._list.texture.brushworkCommon.url);
         }
     }
 }

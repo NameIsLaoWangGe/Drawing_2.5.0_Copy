@@ -2760,6 +2760,18 @@
         })(Animation3D = lwg.Animation3D || (lwg.Animation3D = {}));
         let Animation2D;
         (function (Animation2D) {
+            function circulation_scale(node, range, time, delayed, func) {
+                Laya.Tween.to(node, { scaleX: 1 + range, scaleY: 1 + range }, time, null, Laya.Handler.create(this, function () {
+                    Laya.Tween.to(node, { scaleX: 1 - range, scaleY: 1 - range }, time / 2, null, Laya.Handler.create(this, function () {
+                        Laya.Tween.to(node, { scaleX: 1, scaleY: 1 }, time / 2, null, Laya.Handler.create(this, function () {
+                            if (func) {
+                                func();
+                            }
+                        }), 0);
+                    }), 0);
+                }), delayed ? delayed : 0);
+            }
+            Animation2D.circulation_scale = circulation_scale;
             function leftRight_Shake(node, range, time, delayed, func, click) {
                 if (!delayed) {
                     delayed = 0;
@@ -5750,16 +5762,8 @@
                     url: 'Prefab/StepSwitch.json',
                     prefab: new Laya.Prefab,
                 },
-                BtnPlayAni: {
-                    url: 'Prefab/BtnPlayAni.json',
-                    prefab: new Laya.Prefab,
-                },
                 BtnCompelet: {
                     url: 'Prefab/BtnCompelet.json',
-                    prefab: new Laya.Prefab,
-                },
-                BtnShare: {
-                    url: 'Prefab/BtnShare.json',
                     prefab: new Laya.Prefab,
                 },
             },
@@ -6011,7 +6015,7 @@
             TJ.API.AdService.ShowNormal(new TJ.API.AdService.Param());
         }
         static ShowReward(rewardAction, CDTime = 500) {
-            if (Admin._platform.name == Admin._platform.tpye.WebTest || Admin._platform.name == Admin._platform.tpye.OPPOTest) {
+            if (Admin._platform.name == Admin._platform.tpye.WebTest || Admin._platform.name == Admin._platform.tpye.OPPOTest || Admin._platform.name == Admin._platform.tpye.Research) {
                 rewardAction();
                 return;
             }
@@ -6154,7 +6158,7 @@
 
     var _SelectLevel;
     (function (_SelectLevel) {
-        class _data {
+        class _Data {
             static _getClassifyArr(classify) {
                 let _arr = [];
                 for (const key in this._arr) {
@@ -6170,7 +6174,7 @@
             ;
             static get _arr() {
                 if (!this['_SelectLevel_Data']) {
-                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
+                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _Data._property.name);
                 }
                 return this['_SelectLevel_Data'];
             }
@@ -6179,7 +6183,7 @@
                 this['_SelectLevel_Data'] = array;
             }
             ;
-            static getUnlockByName(name) {
+            static _getUnlockByName(name) {
                 let bool;
                 for (const key in this._arr) {
                     if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
@@ -6193,7 +6197,7 @@
                 }
             }
             ;
-            static getProperty(name, pro) {
+            static _getProperty(name, pro) {
                 let value;
                 for (const key in this._arr) {
                     if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
@@ -6207,7 +6211,7 @@
                 return value;
             }
             ;
-            static setProperty(name, pro, value) {
+            static _setProperty(name, pro, value) {
                 for (const key in this._arr) {
                     if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
                         const element = this._arr[key];
@@ -6222,8 +6226,20 @@
                 return value;
             }
             ;
+            static _setHaveBeenDrawn(imgSkin, name) {
+                for (const key in this._arr) {
+                    if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                        const element = this._arr[key];
+                        name = name ? name : this._pich.customs;
+                        if (element[this._property.name] == name) {
+                            element[this._property.haveBeenDrawn] = imgSkin;
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                        }
+                    }
+                }
+            }
         }
-        _data._property = {
+        _Data._property = {
             name: 'name',
             chName: 'chName',
             classify: 'classify',
@@ -6231,20 +6247,21 @@
             condition: 'condition',
             resCondition: 'resCondition',
             unlock: 'unlock',
+            haveBeenDrawn: 'haveBeenDrawn',
         };
-        _data._classify = {
+        _Data._classify = {
             limit: 'limit',
             animal: 'animal',
             botany: 'botany',
             other: 'other',
         };
-        _data._pich = {
+        _Data._pich = {
             get classify() {
                 return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
             },
             set classify(str) {
                 if (_SelectLevel._MyList) {
-                    _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                    _SelectLevel._MyList.array = _Data._getClassifyArr(str);
                     _SelectLevel._MyList.refresh();
                 }
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
@@ -6253,40 +6270,42 @@
                 return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
             },
             set customs(str) {
-                _SelectLevel._MyList.array = _data._getClassifyArr(str);
+                _SelectLevel._MyList.array = _Data._getClassifyArr(str);
                 _SelectLevel._MyList.refresh();
                 Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
             }
         };
-        _data._unlockWay = {
+        _Data._unlockWay = {
             free: 'free',
             gold: 'gold',
             ads: 'ads',
         };
-        _SelectLevel._data = _data;
+        _SelectLevel._Data = _Data;
         let _Event;
         (function (_Event) {
             _Event["_SelectLevel_Close"] = "_SelectLevel_Close";
         })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
         function _init() {
-            _data._pich.classify = _data._classify.animal;
+            _Data._pich.classify = _Data._classify.animal;
         }
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
+            lwgOnEnable() {
+            }
             lwgBtnClick() {
                 let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
                 Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
-                    if (!this.owner['_dataSource'][_data._property.unlock]) {
-                        switch (this.owner['_dataSource'][_data._property.unlockWay]) {
-                            case _data._unlockWay.ads:
+                    if (!this.owner['_dataSource'][_Data._property.unlock]) {
+                        switch (this.owner['_dataSource'][_Data._property.unlockWay]) {
+                            case _Data._unlockWay.ads:
                                 ADManager.ShowReward(() => {
-                                    _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                    _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                 });
                                 break;
-                            case _data._unlockWay.gold:
-                                let num = this.owner['_dataSource'][_data._property.resCondition];
+                            case _Data._unlockWay.gold:
+                                let num = this.owner['_dataSource'][_Data._property.resCondition];
                                 if (_Gold._num.value >= num) {
-                                    _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                    _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                     _Gold._num.value -= num;
                                 }
                                 else {
@@ -6298,7 +6317,7 @@
                         }
                     }
                     else {
-                        _SelectLevel._data._pich.customs = this.Owner['_dataSource'][_SelectLevel._data._property.name];
+                        _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
                         this.lwgOpenScene(_SceneName.PropTry, false);
                     }
                     _SelectLevel._MyList.refresh();
@@ -6309,7 +6328,7 @@
         class SelectLevelBase extends Admin._SceneBase {
             moduleOnAwake() {
                 _SelectLevel._MyList = this.ListVar('MyList');
-                _SelectLevel._MyList.array = _data._getClassifyArr(_data._pich.classify);
+                _SelectLevel._MyList.array = _Data._getClassifyArr(_Data._pich.classify);
                 _SelectLevel._MyList.selectEnable = true;
                 _SelectLevel._MyList.vScrollBarSkin = "";
                 _SelectLevel._MyList.selectHandler = new Laya.Handler(this, (index) => { });
@@ -6318,7 +6337,7 @@
                     let Content = cell.getChildByName('Content');
                     let BtnContent = Content.getChildByName('BtnContent');
                     let Name = BtnContent.getChildByName('Name');
-                    Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
+                    Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_Data._property.name]}.png`;
                     let Xianlu = Content.getChildByName('Xianlu');
                     let IconPen = Content.getChildByName('IconPen');
                     if (index % 3 == 0) {
@@ -6348,30 +6367,43 @@
                     let IconLock = BtnContent.getChildByName('IconLock');
                     let GoldNum = BtnContent.getChildByName('GoldNum');
                     let GoldBoard = BtnContent.getChildByName('GoldBoard');
-                    if (!_dataSource[_data._property.unlock]) {
-                        switch (_dataSource[_data._property.unlockWay]) {
-                            case _data._unlockWay.ads:
+                    if (!_dataSource[_Data._property.unlock]) {
+                        switch (_dataSource[_Data._property.unlockWay]) {
+                            case _Data._unlockWay.ads:
                                 GoldBoard.visible = GoldNum.visible = false;
-                                IconLock.visible = IconAds.visible = true;
+                                IconAds.visible = true;
                                 break;
-                            case _data._unlockWay.free:
+                            case _Data._unlockWay.free:
                                 GoldBoard.visible = GoldNum.visible = false;
-                                IconLock.visible = IconAds.visible = false;
+                                IconAds.visible = false;
                                 break;
-                            case _data._unlockWay.gold:
-                                GoldNum.text = _dataSource[_data._property.condition];
-                                IconLock.visible = GoldBoard.visible = GoldNum.visible = true;
+                            case _Data._unlockWay.gold:
+                                GoldNum.text = _dataSource[_Data._property.condition];
+                                GoldBoard.visible = GoldNum.visible = true;
                                 IconAds.visible = false;
                                 break;
                             default:
                                 break;
                         }
+                        IconLock.skin = `Game/UI/SelectLevel/suo.png`;
                     }
                     else {
                         IconAds.visible = false;
-                        IconLock.visible = false;
                         GoldNum.visible = false;
                         GoldBoard.visible = false;
+                        IconLock.skin = `Game/UI/SelectLevel/icon_can.png`;
+                    }
+                    let Board2 = BtnContent.getChildByName('Board2');
+                    let Pic = Board2.getChildByName('Pic');
+                    if (_dataSource[_Data._property.haveBeenDrawn]) {
+                        Pic.skin = _dataSource[_Data._property.haveBeenDrawn];
+                        IconLock.visible = false;
+                        Board2.skin = `Game/UI/SelectLevel/yuan1.png`;
+                    }
+                    else {
+                        Pic.skin = null;
+                        IconLock.visible = true;
+                        Board2.skin = `Game/UI/SelectLevel/yuan.png`;
                     }
                     if (index == _SelectLevel._MyList.array.length - 1) {
                         IconPen.visible = Xianlu.visible = false;
@@ -6388,7 +6420,7 @@
             lwgOnAwake() {
                 for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                     const element = this.ImgVar('CutBtn').getChildAt(index);
-                    if (element.name == _data._pich.classify) {
+                    if (element.name == _Data._pich.classify) {
                         element.y = 11;
                     }
                     else {
@@ -6415,7 +6447,7 @@
                 }
                 for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                     const element = this.ImgVar('CutBtn').getChildAt(index);
-                    if (element.name == _data._pich.classify) {
+                    if (element.name == _Data._pich.classify) {
                         element.y = 11;
                     }
                     else {
@@ -6426,7 +6458,7 @@
                             const Btn = this.ImgVar('CutBtn').getChildAt(index);
                             if (Btn == e.currentTarget) {
                                 Btn.y = 11;
-                                _data._pich.classify = Btn.name;
+                                _Data._pich.classify = Btn.name;
                             }
                             else {
                                 Btn.y = 69;
@@ -6478,7 +6510,7 @@
                 Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
                 Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
                 var close = () => {
-                    let levelName = _SceneName.Game + '_' + _SelectLevel._data._pich.customs;
+                    let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
                     this.lwgOpenScene(levelName, true, () => {
                         if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
                             Admin._sceneControl[levelName].addComponent(_Game.Game);
@@ -6922,25 +6954,22 @@
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event.colseScene, this, () => {
-                    let NewDrawRoot = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
-                    NewDrawRoot.width = this.DrawControl.DrawRoot.width;
-                    NewDrawRoot.height = this.DrawControl.DrawRoot.height;
-                    NewDrawRoot.texture = this.ImgVar('DrawRoot').drawToTexture(this.ImgVar('DrawRoot').width, this.ImgVar('DrawRoot').height, this.ImgVar('DrawRoot').x, this.DrawControl.DrawBoard.y);
-                    var htmlCanvas = NewDrawRoot.drawToCanvas(100, 100, 0, 0);
-                    _Game._base64 = htmlCanvas.toBase64("image/png", 0.5);
+                    Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
+                    this.ImgVar('DrawRoot').x = 0;
+                    this.ImgVar('DrawRoot').y = 0;
+                    let Image = this.ImgVar('DrawRoot').getChildAt(0);
+                    Tools.Node.changePovit(Image, 0, 0);
+                    Image.scale(Image.scaleX - 0.2, Image.scaleY - 0.2);
+                    Image.x = 100;
+                    Image.y = 100;
+                    var htmlCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
+                    _SelectLevel._Data._setHaveBeenDrawn(htmlCanvas.toBase64("image/png", 1));
                     this.lwgCloseScene();
                 });
                 EventAdmin._register(_Event.victory, this, () => {
                     this.AniVar(_Animation.action1).stop();
                     Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
                     Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
-                    let Img = new Laya.Image();
-                    Img.skin = `Game/UI/Common/bj.png`;
-                    Img.alpha = 0;
-                    Img.width = Laya.stage.width;
-                    Img.height = Laya.stage.height;
-                    this.ImgVar('Background').addChild(Img);
-                    Animation2D.fadeOut(Img, 0, 1, 500);
                     _Gold.goldAppear(100);
                 });
                 EventAdmin._register(_Event.playAni1, this, () => {
@@ -7620,9 +7649,6 @@
     var _Start;
     (function (_Start) {
         function _init() {
-            let name = {
-                dsfa: status,
-            };
         }
         _Start._init = _init;
         class _StartScene extends Admin._SceneBase {
@@ -7635,16 +7661,6 @@
             lwgOnAwake() {
             }
             lwgOnStart() {
-                if (_Game._base64) {
-                    let Img = new Laya.Image();
-                    this.Owner.addChild(Img);
-                    Img.pos(0, 0);
-                    Img.zOrder = 1000;
-                    Img.width = Laya.stage.width;
-                    Img.height = Laya.stage.height;
-                    Img.skin = _Game._base64;
-                    console.log(Img);
-                }
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
@@ -7713,7 +7729,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Research;
+            Admin._platform.name = Admin._platform.tpye.Bytedance;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
@@ -7752,7 +7768,7 @@
     GameConfig.debug = false;
     GameConfig.stat = false;
     GameConfig.physicsDebug = false;
-    GameConfig.exportSceneToJson = false;
+    GameConfig.exportSceneToJson = true;
     GameConfig.init();
 
     class Main {

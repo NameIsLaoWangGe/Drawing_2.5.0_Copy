@@ -34,16 +34,8 @@ export module _PreloadUrl {
                 url: 'Prefab/StepSwitch.json',
                 prefab: new Laya.Prefab,
             },
-            BtnPlayAni: {
-                url: 'Prefab/BtnPlayAni.json',
-                prefab: new Laya.Prefab,
-            },
             BtnCompelet: {
                 url: 'Prefab/BtnCompelet.json',
-                prefab: new Laya.Prefab,
-            },
-            BtnShare: {
-                url: 'Prefab/BtnShare.json',
                 prefab: new Laya.Prefab,
             },
         },

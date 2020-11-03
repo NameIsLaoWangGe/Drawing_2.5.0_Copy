@@ -17,7 +17,7 @@
         }],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":212,
+    "maxID":213,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -59,14 +59,13 @@
                     "props":{"y":580,"x":360,"width":685,"rotation":0,"pivotY":459,"pivotX":343,"name":"Yu","height":459},
                     "nodeParent":13,
                     "label":"Yu",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":178,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw2,Draw2",
                             "props":{"zOrder":95,"y":235,"x":389,"width":445,"var":"Draw2","skin":"Game/UI/GameScene/Level4/shenzimask.png","pivotY":158,"pivotX":223,"name":"Draw2","height":316},
@@ -106,7 +105,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw3,Draw3",
                             "props":{"zOrder":96,"y":208,"x":201,"width":188,"var":"Draw3","skin":"Game/UI/GameScene/Level4/yibamask.png","pivotY":147,"pivotX":168,"name":"Draw3","height":251},
@@ -119,7 +117,6 @@
                             "compId":195,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/yibamask.png","renderType":"mask"},
@@ -133,7 +130,6 @@
                                         ]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"skin":"Game/UI/GameScene/Level4/yiba.png","name":"Pic"},
@@ -148,7 +144,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw5",
                             "props":{"zOrder":97,"y":120,"x":403,"width":155,"var":"Draw5","skin":"Game/UI/GameScene/Level4/yuqimask.png","pivotY":122,"pivotX":78,"height":141},
@@ -161,7 +156,6 @@
                             "compId":198,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/yuqimask.png","renderType":"mask"},
@@ -175,7 +169,6 @@
                                         ]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"skin":"Game/UI/GameScene/Level4/yuqi.png","name":"Pic"},
@@ -190,7 +183,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Eye1",
                             "props":{"zOrder":100,"y":205,"x":434,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye1","height":50},
@@ -204,7 +196,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Eye2",
                             "props":{"zOrder":100,"y":205,"x":521,"width":49,"skin":"Game/UI/GameScene/Level4/yajnzhuzi.png","pivotY":25,"pivotX":25,"name":"Eye2","height":50},
@@ -218,7 +209,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw1,Draw1",
                             "props":{"zOrder":98,"y":296,"x":481,"width":159,"var":"Draw1","skin":"Game/UI/GameScene/Level4/zuimask.png","pivotY":61,"pivotX":80,"name":"Draw1","height":121},
@@ -258,7 +248,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Draw4,Draw4",
                             "props":{"zOrder":99,"y":280,"x":316,"width":145,"var":"Draw4","skin":"Game/UI/GameScene/Level4/fuqimask.png","pivotY":31,"pivotX":89,"name":"Draw4","height":160},
@@ -271,7 +260,6 @@
                             "compId":206,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":15,"x":18.5,"width":108,"skin":"Game/UI/GameScene/Level4/fuqimask.png","height":130},
@@ -285,7 +273,6 @@
                                         ]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Pic",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/fuqi.png","name":"Pic"},
@@ -299,7 +286,6 @@
                                         ]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level4/fuqimask.png","renderType":"mask"},

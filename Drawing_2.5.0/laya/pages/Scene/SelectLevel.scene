@@ -1,14 +1,14 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":19,
+    "selectedBox":15,
+    "selecteID":18,
     "searchKey":"View",
     "referenceLines":[
         ],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":38,
+    "maxID":42,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -113,16 +113,44 @@
                                         {
                                             "x":75,
                                             "type":"Image",
-                                            "searchKey":"Image",
-                                            "props":{"y":21,"x":14,"width":307,"skin":"Game/UI/SelectLevel/yuan.png","name":"","height":269},
+                                            "searchKey":"Image,Board2",
+                                            "props":{"y":21,"x":14,"width":307,"skin":"Game/UI/SelectLevel/yuan.png","name":"Board2","height":269},
                                             "nodeParent":18,
-                                            "label":"Image",
-                                            "isDirectory":false,
+                                            "label":"Board2",
+                                            "isOpen":true,
+                                            "isDirectory":true,
                                             "isAniNode":false,
-                                            "hasChild":false,
+                                            "hasChild":true,
                                             "compId":9,
                                             "child":[
-                                                ]
+                                                {
+                                                    "x":90,
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Pic",
+                                                    "props":{"y":0,"x":0,"name":"Pic"},
+                                                    "nodeParent":9,
+                                                    "label":"Pic",
+                                                    "isOpen":true,
+                                                    "isDirectory":true,
+                                                    "isAniNode":false,
+                                                    "hasChild":true,
+                                                    "compId":38,
+                                                    "child":[
+                                                        {
+                                                            "x":105,
+                                                            "type":"Image",
+                                                            "searchKey":"Image",
+                                                            "props":{"y":4,"x":3,"width":301,"skin":"Game/UI/SelectLevel/yuan.png","renderType":"mask","height":261},
+                                                            "nodeParent":38,
+                                                            "label":"Image",
+                                                            "isDirectory":false,
+                                                            "isAniNode":false,
+                                                            "hasChild":false,
+                                                            "compId":39,
+                                                            "child":[
+                                                                ]
+                                                        }]
+                                                }]
                                         },
                                         {
                                             "x":75,

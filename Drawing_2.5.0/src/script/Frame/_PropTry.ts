@@ -45,7 +45,7 @@ export module _PropTry {
             Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
 
             var close = () => {
-                let levelName = _SceneName.Game + '_' + _SelectLevel._data._pich.customs;
+                let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
                 this.lwgOpenScene(levelName, true, () => {
                     if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
                         Admin._sceneControl[levelName].addComponent(_Game.Game);

@@ -15,7 +15,7 @@ export default class GameConfig{
     static debug:boolean=false;
     static stat:boolean=false;
     static physicsDebug:boolean=false;
-    static exportSceneToJson:boolean=false;
+    static exportSceneToJson:boolean=true;
     constructor(){}
     static init(){
         var reg: Function = Laya.ClassUtils.regClass;

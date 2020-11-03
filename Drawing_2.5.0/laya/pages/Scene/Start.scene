@@ -2,13 +2,13 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":494,
+    "selecteID":24,
     "searchKey":"View",
     "referenceLines":[
         ],
     "props":{"width":720,"sceneColor":"#b4b4b4","height":1280},
     "nodeParent":-1,
-    "maxID":496,
+    "maxID":497,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -76,10 +76,10 @@
         {
             "x":15,
             "type":"Image",
-            "searchKey":"Image,Special,Special",
-            "props":{"y":363,"x":83.5,"var":"Special","skin":"Game/UI/Start/daping.png","name":"Special"},
+            "searchKey":"Image,BtnSpecial,BtnSpecial",
+            "props":{"y":602,"x":360,"width":553,"var":"BtnSpecial","skin":"Game/UI/Start/daping.png","pivotY":239,"pivotX":277,"name":"BtnSpecial","height":477},
             "nodeParent":2,
-            "label":"Special",
+            "label":"BtnSpecial",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
@@ -183,34 +183,6 @@
                             "child":[
                                 ]
                         }]
-                }]
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "searchKey":"Image,TestImg,TestImg",
-            "props":{"y":363,"x":83.5,"var":"TestImg","skin":"Game/UI/Start/daping.png","name":"TestImg"},
-            "nodeParent":2,
-            "label":"TestImg",
-            "isOpen":true,
-            "isDirectory":true,
-            "isAniNode":true,
-            "hasChild":true,
-            "compId":494,
-            "child":[
-                {
-                    "x":30,
-                    "type":"Image",
-                    "searchKey":"Image",
-                    "props":{"y":-19,"x":63.5,"skin":"Game/UI/Start/hf.png"},
-                    "nodeParent":494,
-                    "label":"Image",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":495,
-                    "child":[
-                        ]
                 }]
         }],
     "animations":[

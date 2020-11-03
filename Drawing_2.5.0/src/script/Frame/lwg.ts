@@ -3346,6 +3346,26 @@ export module lwg {
 
     /**动画模块*/
     export module Animation2D {
+       /**
+        * @export 类似于呼吸
+        * @param {(Laya.Sprite | Laya.Image)} node
+        * @param {number} range 幅度0.1~1 
+        * @param {number} time 时间
+        * @param {number} [delayed] 延时
+        * @param {Function} [func] 回调
+        */
+       export function circulation_scale(node: Laya.Sprite | Laya.Image, range: number, time: number, delayed?: number, func?: Function): void {
+            Laya.Tween.to(node, { scaleX: 1 + range, scaleY: 1 + range }, time, null, Laya.Handler.create(this, function () {
+                Laya.Tween.to(node, { scaleX: 1 - range, scaleY: 1 - range }, time / 2, null, Laya.Handler.create(this, function () {
+                    Laya.Tween.to(node, { scaleX: 1, scaleY: 1 }, time / 2, null, Laya.Handler.create(this, function () {
+                        if (func) {
+                            func();
+                        }
+                    }), 0);
+                }), 0);
+            }), delayed ? delayed : 0);
+        }
+
         /**
          * 左右抖动
          * @param node 节点

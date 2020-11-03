@@ -1,9 +1,9 @@
 import ADManager from "../TJ/Admanager";
-import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
+import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, Animation2D } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 export module _SelectLevel {
-    export class _data {
+    export class _Data {
         static _property = {
             name: 'name',
             chName: 'chName',
@@ -12,6 +12,7 @@ export module _SelectLevel {
             condition: 'condition',
             resCondition: 'resCondition',
             unlock: 'unlock',
+            haveBeenDrawn: 'haveBeenDrawn',
         };
         static _classify = {
             limit: 'limit',
@@ -25,7 +26,7 @@ export module _SelectLevel {
             },
             set classify(str: string) {
                 if (_MyList) {
-                    _MyList.array = _data._getClassifyArr(str);
+                    _MyList.array = _Data._getClassifyArr(str);
                     _MyList.refresh();
                 }
                 Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
@@ -34,11 +35,12 @@ export module _SelectLevel {
                 return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
             },
             set customs(str: string) {
-                _MyList.array = _data._getClassifyArr(str);
+                _MyList.array = _Data._getClassifyArr(str);
                 _MyList.refresh();
                 Laya.LocalStorage.setItem('_SelectLevel_pichcustoms', str.toString());
             }
         };
+
         static _getClassifyArr(classify: string): Array<any> {
             let _arr = [];
             for (const key in this._arr) {
@@ -58,7 +60,7 @@ export module _SelectLevel {
         };
         static get _arr(): Array<string> {
             if (!this['_SelectLevel_Data']) {
-                this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _data._property.name);
+                this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _Data._property.name);
             }
             return this['_SelectLevel_Data'];
         };
@@ -66,7 +68,7 @@ export module _SelectLevel {
             this['_SelectLevel_Data'] = array;
         };
         // 查看当前名称的关卡是否解锁
-        static getUnlockByName(name: string): any {
+        static _getUnlockByName(name: string): any {
             let bool: boolean;
             for (const key in this._arr) {
                 if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
@@ -80,7 +82,7 @@ export module _SelectLevel {
             }
         };
         // 获取一个属性值
-        static getProperty(name: string, pro: string): any {
+        static _getProperty(name: string, pro: string): any {
             let value: any;
             for (const key in this._arr) {
                 if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
@@ -94,7 +96,7 @@ export module _SelectLevel {
             return value;
         };
         // 获取一个属性值
-        static setProperty(name: string, pro: string, value: any): any {
+        static _setProperty(name: string, pro: string, value: any): any {
             for (const key in this._arr) {
                 if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
                     const element = this._arr[key];
@@ -108,29 +110,62 @@ export module _SelectLevel {
             }
             return value;
         };
+
+        /**
+         *已经绘制过的图片进行保存
+         * @param {string} imgSkin 图片
+         * @param {string} [name] 关卡名称，默认为当前关卡
+         * @memberof _data
+         */
+        static _setHaveBeenDrawn(imgSkin: string, name?: string): void {
+            for (const key in this._arr) {
+                if (Object.prototype.hasOwnProperty.call(this._arr, key)) {
+                    const element = this._arr[key];
+                    name = name ? name : this._pich.customs;
+                    if (element[this._property.name] == name) {
+                        element[this._property.haveBeenDrawn] = imgSkin;
+                        Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                    }
+                }
+            }
+        }
     }
     export enum _Event {
         _SelectLevel_Close = '_SelectLevel_Close',
     }
     export function _init(): void {
-        _data._pich.classify = _data._classify.animal;
+        _Data._pich.classify = _Data._classify.animal;
     }
     export let _MyList: Laya.List;
     export class _SelectLevelItem extends Admin._Object {
+        lwgOnEnable(): void {
+            // let Content = this.Owner.getChildByName('Content') as Laya.Image;
+            // let BtnContent = Content.getChildByName('BtnContent') as Laya.Image;
+            // let IconLock = BtnContent.getChildByName('IconLock') as Laya.Image;
+            // Tools.Node.changePovit(IconLock, IconLock.width / 2, IconLock.height / 2);
+            // let ani = () => {
+            //     if (this.Owner['_dataSource'][_Data._property.unlock] && !this.Owner['_dataSource'][_Data._property.haveBeenDrawn]) {
+            //         Animation2D.circulation_scale(IconLock, 0.2, 500, 0, () => {
+            //             ani();
+            //         });
+            //     }
+            // };
+            // ani();
+        }
         lwgBtnClick(): void {
             let BtnContent = (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('BtnContent');
             Click._on(Click._Type.largen, BtnContent, this, null, null, () => {
-                if (!this.owner['_dataSource'][_data._property.unlock]) {
-                    switch (this.owner['_dataSource'][_data._property.unlockWay]) {
-                        case _data._unlockWay.ads:
+                if (!this.owner['_dataSource'][_Data._property.unlock]) {
+                    switch (this.owner['_dataSource'][_Data._property.unlockWay]) {
+                        case _Data._unlockWay.ads:
                             ADManager.ShowReward(() => {
-                                _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                             });
                             break;
-                        case _data._unlockWay.gold:
-                            let num = this.owner['_dataSource'][_data._property.resCondition]
+                        case _Data._unlockWay.gold:
+                            let num = this.owner['_dataSource'][_Data._property.resCondition]
                             if (_Gold._num.value >= num) {
-                                _data.setProperty(this.Owner['_dataSource'][_data._property.name], _data._property.unlock, true);
+                                _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                 _Gold._num.value -= num;
                             } else {
                                 Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
@@ -140,7 +175,7 @@ export module _SelectLevel {
                             break;
                     }
                 } else {
-                    _SelectLevel._data._pich.customs = this.Owner['_dataSource'][_SelectLevel._data._property.name];
+                    _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
                     this.lwgOpenScene(_SceneName.PropTry, false);
                 }
                 _MyList.refresh();
@@ -151,7 +186,7 @@ export module _SelectLevel {
     export class SelectLevelBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             _MyList = this.ListVar('MyList');
-            _MyList.array = _data._getClassifyArr(_data._pich.classify);
+            _MyList.array = _Data._getClassifyArr(_Data._pich.classify);
             _MyList.selectEnable = true;
             _MyList.vScrollBarSkin = "";
             // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
@@ -162,7 +197,7 @@ export module _SelectLevel {
                 let Content = cell.getChildByName('Content') as Laya.Image;
                 let BtnContent = Content.getChildByName('BtnContent') as Laya.Image;
                 let Name = BtnContent.getChildByName('Name') as Laya.Image;
-                Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_data._property.name]}.png`;
+                Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_Data._property.name]}.png`;
                 let Xianlu = Content.getChildByName('Xianlu') as Laya.Image;
                 let IconPen = Content.getChildByName('IconPen') as Laya.Image;
                 if (index % 3 == 0) {
@@ -190,29 +225,41 @@ export module _SelectLevel {
                 let GoldNum = BtnContent.getChildByName('GoldNum') as Laya.Label;
                 let GoldBoard = BtnContent.getChildByName('GoldBoard') as Laya.Image;
 
-                if (!_dataSource[_data._property.unlock]) {
-                    switch (_dataSource[_data._property.unlockWay]) {
-                        case _data._unlockWay.ads:
+                if (!_dataSource[_Data._property.unlock]) {
+                    switch (_dataSource[_Data._property.unlockWay]) {
+                        case _Data._unlockWay.ads:
                             GoldBoard.visible = GoldNum.visible = false;
-                            IconLock.visible = IconAds.visible = true;
+                            IconAds.visible = true;
                             break;
-                        case _data._unlockWay.free:
+                        case _Data._unlockWay.free:
                             GoldBoard.visible = GoldNum.visible = false;
-                            IconLock.visible = IconAds.visible = false;
+                            IconAds.visible = false;
                             break;
-                        case _data._unlockWay.gold:
-                            GoldNum.text = _dataSource[_data._property.condition];
-                            IconLock.visible = GoldBoard.visible = GoldNum.visible = true;
+                        case _Data._unlockWay.gold:
+                            GoldNum.text = _dataSource[_Data._property.condition];
+                            GoldBoard.visible = GoldNum.visible = true;
                             IconAds.visible = false;
                             break;
                         default:
                             break;
                     }
+                    IconLock.skin = `Game/UI/SelectLevel/suo.png`;
                 } else {
                     IconAds.visible = false;
-                    IconLock.visible = false;
                     GoldNum.visible = false;
                     GoldBoard.visible = false;
+                    IconLock.skin = `Game/UI/SelectLevel/icon_can.png`;
+                }
+                let Board2 = BtnContent.getChildByName('Board2') as Laya.Image;
+                let Pic = Board2.getChildByName('Pic') as Laya.Image;
+                if (_dataSource[_Data._property.haveBeenDrawn]) {
+                    Pic.skin = _dataSource[_Data._property.haveBeenDrawn];
+                    IconLock.visible = false;
+                    Board2.skin = `Game/UI/SelectLevel/yuan1.png`;
+                } else {
+                    Pic.skin = null;
+                    IconLock.visible = true;
+                    Board2.skin = `Game/UI/SelectLevel/yuan.png`;
                 }
                 if (index == _MyList.array.length - 1) {
                     IconPen.visible = Xianlu.visible = false;
@@ -227,7 +274,7 @@ export module _SelectLevel {
         lwgOnAwake(): void {
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                 const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
-                if (element.name == _data._pich.classify) {
+                if (element.name == _Data._pich.classify) {
                     element.y = 11;
                 } else {
                     element.y = 69;
@@ -255,7 +302,7 @@ export module _SelectLevel {
 
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                 const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
-                if (element.name == _data._pich.classify) {
+                if (element.name == _Data._pich.classify) {
                     element.y = 11;
                 } else {
                     element.y = 69;
@@ -265,7 +312,7 @@ export module _SelectLevel {
                         const Btn = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
                         if (Btn == e.currentTarget) {
                             Btn.y = 11;
-                            _data._pich.classify = Btn.name;
+                            _Data._pich.classify = Btn.name;
                         } else {
                             Btn.y = 69;
                         }
