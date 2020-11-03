@@ -151,6 +151,7 @@ export module _SelectLevel {
             //     }
             // };
             // ani();
+            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
         }
         lwgBtnClick(): void {
             let BtnContent = (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('BtnContent');
@@ -176,6 +177,7 @@ export module _SelectLevel {
                     }
                 } else {
                     _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                    Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
                     this.lwgOpenScene(_SceneName.PropTry, false);
                 }
                 _MyList.refresh();

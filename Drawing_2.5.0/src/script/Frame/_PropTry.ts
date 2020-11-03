@@ -15,7 +15,7 @@ export module _PropTry {
     export class PropTry extends PropTryBase {
         lwgOnAwake(): void {
             ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-            if (Admin._platform.name == Admin._platform.tpye.Research) {
+            if (Admin._platform.name == Admin._platform.tpye.Research||Admin._platform.name == Admin._platform.tpye.WebTest) {
                 Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
                 Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
             } else {

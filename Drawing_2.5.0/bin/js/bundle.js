@@ -1283,10 +1283,8 @@
                 type: {
                     fadeOut: 'fadeOut',
                     stickIn: {
-                        left: 'left',
-                        right: 'right',
+                        random: 'random',
                         upLeftDownLeft: 'upLeftDownRight',
-                        upLeftDownRight: 'upLeftDownRight',
                         upRightDownLeft: 'upRightDownLeft',
                     },
                     leftMove: 'leftMove',
@@ -1313,7 +1311,7 @@
                             closeFunc();
                         });
                         break;
-                    case Admin._sceneAnimation.type.stickIn.left:
+                    case Admin._sceneAnimation.type.stickIn.random:
                         closeFunc();
                         break;
                     default:
@@ -1346,6 +1344,8 @@
                         break;
                     case Admin._sceneAnimation.type.stickIn.upRightDownLeft:
                         _sceneAnimationTypeStickIn(Scene, Admin._sceneAnimation.type.stickIn.upRightDownLeft);
+                    case Admin._sceneAnimation.type.stickIn.random:
+                        _sceneAnimationTypeStickIn(Scene, Admin._sceneAnimation.type.stickIn.random);
                     default:
                         break;
                 }
@@ -1364,25 +1364,28 @@
                 let stickInLeftArr = Tools.Node.zOrderByY(Scene, false);
                 for (let index = 0; index < stickInLeftArr.length; index++) {
                     const element = stickInLeftArr[index];
-                    if (element.name !== 'Background') {
+                    if (element.name !== 'Background' && element.name.substr(0, 5) !== 'NoAni') {
                         let originalPovitX = element.pivotX;
                         let originalPovitY = element.pivotY;
                         switch (type) {
                             case Admin._sceneAnimation.type.stickIn.upLeftDownLeft:
-                                element.rotation = element.y > Laya.stage.height / 2 ? 180 : -180;
+                                element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
                                 Tools.Node.changePovit(element, 0, 0);
                                 break;
                             case Admin._sceneAnimation.type.stickIn.upRightDownLeft:
                                 element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
                                 Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
                                 break;
+                            case Admin._sceneAnimation.type.stickIn.random:
+                                element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                                Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, Tools.randomOneHalf() == 1 ? 0 : element.height);
+                                console.log('随机！');
+                                break;
                             default:
                                 break;
                         }
                         let originalX = element.x;
                         let originalY = element.y;
-                        element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
-                        Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
                         element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                         element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
                         Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
@@ -6291,6 +6294,7 @@
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
             lwgOnEnable() {
+                Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
             }
             lwgBtnClick() {
                 let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
@@ -6318,6 +6322,7 @@
                     }
                     else {
                         _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                     }
                     _SelectLevel._MyList.refresh();
@@ -6485,7 +6490,7 @@
         class PropTry extends PropTryBase {
             lwgOnAwake() {
                 ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-                if (Admin._platform.name == Admin._platform.tpye.Research) {
+                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
                     Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
                     Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
                 }
@@ -6954,6 +6959,8 @@
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event.colseScene, this, () => {
+                    this.AniVar(_Animation.action1).play();
+                    this.AniVar(_Animation.action1).stop();
                     Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                     this.ImgVar('DrawRoot').x = 0;
                     this.ImgVar('DrawRoot').y = 0;
@@ -7076,6 +7083,10 @@
                     }
                 });
                 EventAdmin._register(_Event.compelet, this, () => {
+                    let Sp = new Laya.Sprite();
+                    this.Owner.addChild(Sp);
+                    Sp.pos(-100, -100);
+                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, 10, 10, 10, 10, null, null, null, null);
                     EventAdmin._notify(_Event.restoreZOder);
                     this.DrawControl.switch = false;
                     this.BtnNextStep.visible = false;
@@ -7111,7 +7122,8 @@
                             break;
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
+                    Sp.graphics.drawTexture(tex, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                 }
             }
             onStageMouseMove(e) {
@@ -7138,13 +7150,14 @@
                     if (!Sp) {
                         return;
                     }
-                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
+                    Sp.graphics.drawTexture(tex, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                     let destance = this.DrawControl.frontPos.distance(endPos.x, endPos.y);
                     if (destance > 15) {
                         let num = destance / 15;
                         let pointArr = Tools.Point.getPArrBetweenTwoP(this.DrawControl.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
-                            Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                            Sp.graphics.drawTexture(tex, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                         }
                     }
                     this.DrawControl.frontPos = endPos;
@@ -7661,6 +7674,7 @@
             lwgOnAwake() {
             }
             lwgOnStart() {
+                Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
@@ -7729,8 +7743,8 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Bytedance;
-            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
+            Admin._platform.name = Admin._platform.tpye.WebTest;
+            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
                 _Guide: _Guide,

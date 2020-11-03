@@ -22,8 +22,8 @@ export default class LwgInit extends _LwgInitScene {
             // { name: "sp2", root: "3DScene" },
             // { name: "sp3", root: "3DPrefab" },
         ];
-        Admin._platform.name = Admin._platform.tpye.Bytedance;
-        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
+        Admin._platform.name = Admin._platform.tpye.WebTest;
+        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
         Admin._moudel = {
             _PreLoad: _PreLoad,
             _Guide: _Guide,

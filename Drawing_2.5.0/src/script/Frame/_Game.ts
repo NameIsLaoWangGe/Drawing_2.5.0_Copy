@@ -5,14 +5,6 @@ import { _SelectLevel } from "./_SelectLevel";
 
 /**游戏场景模块*/
 export module _Game {
-    // export let _base64 = {
-    //     get value(): string {
-    //         return Laya.LocalStorage.getItem('_Game_base64') ? Laya.LocalStorage.getItem('_Game_base64') : null;
-    //     },
-    //     set value(date: string) {
-    //         Laya.LocalStorage.setItem('_Game_base64', date.toString());
-    //     }
-    // };
     export enum _Event {
         start = '_Game_start',
         showStepBtn = '_Game_showStepBtn',
@@ -133,6 +125,7 @@ export module _Game {
             }
         }
     }
+
     /**彩色画笔套装*/
     export class _ColoursPencils extends _SingleColorPencils {
         /**次数*/
@@ -366,6 +359,8 @@ export module _Game {
         }
         lwgEventRegister(): void {
             EventAdmin._register(_Event.colseScene, this, () => {
+                this.AniVar(_Animation.action1).play();
+                this.AniVar(_Animation.action1).stop();
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                 this.ImgVar('DrawRoot').x = 0;
                 this.ImgVar('DrawRoot').y = 0;
@@ -379,7 +374,7 @@ export module _Game {
                 this.lwgCloseScene();
             })
             EventAdmin._register(_Event.victory, this, () => {
-                this.AniVar(_Animation.action1).stop;
+                this.AniVar(_Animation.action1).stop();
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').width / 2, this.ImgVar('DrawRoot').height / 2);
                 Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
                 // let Img = new Laya.Image();
@@ -501,6 +496,11 @@ export module _Game {
             });
 
             EventAdmin._register(_Event.compelet, this, () => {
+                let Sp = new Laya.Sprite();
+                this.Owner.addChild(Sp);
+                Sp.pos(-100, -100);
+                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, 10, 10, 10, 10, null, null, null, null);
+
                 EventAdmin._notify(_Event.restoreZOder);
                 this.DrawControl.switch = false;
                 this.BtnNextStep.visible = false;
@@ -560,7 +560,8 @@ export module _Game {
                         break;
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
-                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
+                Sp.graphics.drawTexture(tex, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
             }
         }
         onStageMouseMove(e: Laya.Event): void {
@@ -587,13 +588,14 @@ export module _Game {
                 if (!Sp) {
                     return;
                 }
-                Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
+                Sp.graphics.drawTexture(tex, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                 let destance = this.DrawControl.frontPos.distance(endPos.x, endPos.y);
                 if (destance > 15) {
                     let num = destance / 15;
                     let pointArr = Tools.Point.getPArrBetweenTwoP(this.DrawControl.frontPos, endPos, num);
                     for (let index = 0; index < pointArr.length; index++) {
-                        Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                        Sp.graphics.drawTexture(tex, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
                     }
                 }
                 // Sp.graphics.drawLine(this.DrawControl.frontPos.x, this.DrawControl.frontPos.y, endPos.x, endPos.y, color, this.DrawControl.radius.value * 2);

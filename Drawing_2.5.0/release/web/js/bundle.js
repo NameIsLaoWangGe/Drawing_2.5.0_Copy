@@ -6485,7 +6485,7 @@
         class PropTry extends PropTryBase {
             lwgOnAwake() {
                 ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-                if (Admin._platform.name == Admin._platform.tpye.Research) {
+                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
                     Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
                     Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
                 }
@@ -6954,6 +6954,7 @@
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event.colseScene, this, () => {
+                    this.AniVar(_Animation.action1).play();
                     Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                     this.ImgVar('DrawRoot').x = 0;
                     this.ImgVar('DrawRoot').y = 0;
@@ -7729,7 +7730,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Bytedance;
+            Admin._platform.name = Admin._platform.tpye.WebTest;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upRightDownLeft;
             Admin._moudel = {
                 _PreLoad: _PreLoad,

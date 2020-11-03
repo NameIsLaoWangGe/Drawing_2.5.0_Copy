@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":15,
-    "selecteID":18,
+    "selectedBox":2,
+    "selecteID":19,
     "searchKey":"View",
     "referenceLines":[
         ],
@@ -441,7 +441,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,UiLand,UiLand",
-            "props":{"y":1204,"x":0,"width":720,"var":"UiLand","skin":"Game/UI/SelectLevel/sc.png","name":"UiLand","height":76},
+            "props":{"y":1204,"x":0,"width":720,"var":"UiLand","skin":"Game/UI/SelectLevel/sc.png","rotation":0,"name":"UiLand","height":76},
             "nodeParent":2,
             "label":"UiLand",
             "isDirectory":false,

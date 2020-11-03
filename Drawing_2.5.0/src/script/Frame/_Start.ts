@@ -17,16 +17,7 @@ export module _Start {
 
         }
         lwgOnStart(): void {
-            // if (_Game._base64) {
-            //     let Img = new Laya.Image();
-            //     this.Owner.addChild(Img);
-            //     Img.pos(0, 0);
-            //     Img.zOrder = 1000;
-            //     Img.width = Laya.stage.width;
-            //     Img.height = Laya.stage.height;
-            //     Img.skin = _Game._base64.value;
-            //     console.log(Img);
-            // }
+            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {

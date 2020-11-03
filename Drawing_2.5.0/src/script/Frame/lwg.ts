@@ -1419,10 +1419,11 @@ export module lwg {
                 fadeOut: 'fadeOut',
                 /**类似于用手拿着一角放入，对节点摆放有需求，需要整理节点，通过大块父节点将琐碎的scene中的直接子节点减少，并且锚点要在最左或者最右，否则达不到最佳效果*/
                 stickIn: {
-                    left: 'left',
-                    right: 'right',
+                    random: 'random',
+                    // left: 'left',
+                    // right: 'right',
                     upLeftDownLeft: 'upLeftDownRight',
-                    upLeftDownRight: 'upLeftDownRight',
+                    // upLeftDownRight: 'upLeftDownRight',
                     upRightDownLeft: 'upRightDownLeft',
                 },
                 leftMove: 'leftMove',
@@ -1451,7 +1452,7 @@ export module lwg {
                         closeFunc();
                     })
                     break;
-                case _sceneAnimation.type.stickIn.left:
+                case _sceneAnimation.type.stickIn.random:
                     closeFunc();
                     break;
 
@@ -1486,7 +1487,9 @@ export module lwg {
                     _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.upLeftDownLeft)
                     break;
                 case _sceneAnimation.type.stickIn.upRightDownLeft:
-                    _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.upRightDownLeft)
+                    _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.upRightDownLeft);
+                case _sceneAnimation.type.stickIn.random:
+                    _sceneAnimationTypeStickIn(Scene, _sceneAnimation.type.stickIn.random);
                 default:
                     break;
             }
@@ -1506,25 +1509,30 @@ export module lwg {
             let stickInLeftArr = Tools.Node.zOrderByY(Scene, false);
             for (let index = 0; index < stickInLeftArr.length; index++) {
                 const element = stickInLeftArr[index] as Laya.Image;
-                if (element.name !== 'Background') {
+                if (element.name !== 'Background' && element.name.substr(0, 5) !== 'NoAni') {
                     let originalPovitX = element.pivotX;
                     let originalPovitY = element.pivotY;
                     switch (type) {
                         case _sceneAnimation.type.stickIn.upLeftDownLeft:
-                            element.rotation = element.y > Laya.stage.height / 2 ? 180 : - 180;
+                            element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
                             Tools.Node.changePovit(element, 0, 0);
+
                             break;
                         case _sceneAnimation.type.stickIn.upRightDownLeft:
                             element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
                             Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
+
+                            break;
+                        case _sceneAnimation.type.stickIn.random:
+                            element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
+                            Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, Tools.randomOneHalf() == 1 ? 0 : element.height);
+                            console.log('随机！');
                             break;
                         default:
                             break;
                     }
                     let originalX = element.x;
                     let originalY = element.y;
-                    element.rotation = element.y > Laya.stage.height / 2 ? -180 : 180;
-                    Tools.Node.changePovit(element, element.rotation == 180 ? element.width : 0, 0);
                     element.x = element.pivotX > element.width / 2 ? 800 + element.width : -800 - element.width;
                     element.y = element.rotation > 0 ? element.y + 200 : element.y - 200;
                     Animation2D.simple_Rotate(element, element.rotation, 0, time, delay * index);
@@ -3346,15 +3354,15 @@ export module lwg {
 
     /**动画模块*/
     export module Animation2D {
-       /**
-        * @export 类似于呼吸
-        * @param {(Laya.Sprite | Laya.Image)} node
-        * @param {number} range 幅度0.1~1 
-        * @param {number} time 时间
-        * @param {number} [delayed] 延时
-        * @param {Function} [func] 回调
-        */
-       export function circulation_scale(node: Laya.Sprite | Laya.Image, range: number, time: number, delayed?: number, func?: Function): void {
+        /**
+         * @export 类似于呼吸
+         * @param {(Laya.Sprite | Laya.Image)} node
+         * @param {number} range 幅度0.1~1 
+         * @param {number} time 时间
+         * @param {number} [delayed] 延时
+         * @param {Function} [func] 回调
+         */
+        export function circulation_scale(node: Laya.Sprite | Laya.Image, range: number, time: number, delayed?: number, func?: Function): void {
             Laya.Tween.to(node, { scaleX: 1 + range, scaleY: 1 + range }, time, null, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: 1 - range, scaleY: 1 - range }, time / 2, null, Laya.Handler.create(this, function () {
                     Laya.Tween.to(node, { scaleX: 1, scaleY: 1 }, time / 2, null, Laya.Handler.create(this, function () {
