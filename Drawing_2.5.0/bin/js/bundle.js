@@ -1379,7 +1379,6 @@
                             case Admin._sceneAnimation.type.stickIn.random:
                                 element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
                                 Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, Tools.randomOneHalf() == 1 ? 0 : element.height);
-                                console.log('随机！');
                                 break;
                             default:
                                 break;
@@ -3544,9 +3543,13 @@
                     }
                 }
                 Node.zOrderByY = zOrderByY;
-                function changePovit(sp, _pivotX, _pivotY) {
+                function changePovit(sp, _pivotX, _pivotY, int) {
                     let originalPovitX = sp.pivotX;
                     let originalPovitY = sp.pivotY;
+                    if (int) {
+                        _pivotX = Math.round(_pivotX);
+                        _pivotY = Math.round(_pivotY);
+                    }
                     if (sp.width) {
                         sp.pivot(_pivotX, _pivotY);
                         sp.x += (sp.pivotX - originalPovitX);
@@ -5775,8 +5778,28 @@
                     url: 'Frame/Effects/hua4.png',
                     texture: new Laya.Texture,
                 },
-                brushworkCommon: {
-                    url: 'Game/UI/GameScene/brushworkCommon.png',
+                bishua1: {
+                    url: 'Game/UI/GameScene/bishua1.png',
+                    texture: new Laya.Texture,
+                },
+                bishua2: {
+                    url: 'Game/UI/GameScene/bishua2.png',
+                    texture: new Laya.Texture,
+                },
+                bishua3: {
+                    url: 'Game/UI/GameScene/bishua3.png',
+                    texture: new Laya.Texture,
+                },
+                bishua4: {
+                    url: 'Game/UI/GameScene/bishua4.png',
+                    texture: new Laya.Texture,
+                },
+                bishua5: {
+                    url: 'Game/UI/GameScene/bishua5.png',
+                    texture: new Laya.Texture,
+                },
+                bishua6: {
+                    url: 'Game/UI/GameScene/bishua6.png',
                     texture: new Laya.Texture,
                 },
             },
@@ -6859,7 +6882,38 @@
                         }
                     },
                 };
-                this.DrawControl = {
+                this.Step = {
+                    firstRootP: null,
+                    firstRootScaleX: null,
+                    firstRootScaleY: null,
+                    currentFocus: null,
+                    BtnNext: null,
+                    BtnLast: null,
+                    BtnCompelet: null,
+                    btnSwitch: true,
+                    cutFocus: (func) => {
+                        let Img = _Game._stepOrderImg[_Game._stepIndex.present];
+                        let Parent = Img.parent;
+                        if (Parent.name == 'Head' || Parent.name == 'Body') {
+                            let oriPovitX = Parent.pivotX;
+                            let oriPovitY = Parent.pivotY;
+                            Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
+                            let point = Parent.parent.localToGlobal(new Laya.Point(Parent.x, Parent.y));
+                            let diffPoint = new Laya.Point(Laya.stage.width / 2 - point.x, Laya.stage.width * 3 / 5 - point.y);
+                            Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 300, 0, () => {
+                                Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
+                                if (func) {
+                                    func();
+                                }
+                            });
+                        }
+                    },
+                    compeletCutFocus: () => {
+                        Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.Step.firstRootP.x, this.Step.firstRootP.y, 300, 0, () => {
+                        });
+                    }
+                };
+                this.Draw = {
                     switch: false,
                     DrawRoot: null,
                     DrawBoard: null,
@@ -6867,17 +6921,18 @@
                     DrawSp: null,
                     frontPos: null,
                     endPos: null,
+                    space: 15,
                     radius: {
                         get value() {
                             return 50;
                         }
                     },
                     restoration: () => {
-                        this.DrawControl.switch = false;
-                        this.DrawControl.frontPos = null;
-                        this.DrawControl.endPos = null;
-                        this.DrawControl.DrawSp = null;
-                        this.DrawControl.EraserSp = null;
+                        this.Draw.switch = false;
+                        this.Draw.frontPos = null;
+                        this.Draw.endPos = null;
+                        this.Draw.DrawSp = null;
+                        this.Draw.EraserSp = null;
                     },
                 };
             }
@@ -6942,17 +6997,20 @@
                 return 100;
             }
             lwgOnEnable() {
-                this.StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
-                this.Owner.addChild(this.StepSwitch);
-                this.StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
-                this.BtnNextStep = this.StepSwitch.getChildByName('BtnNextStep');
-                this.BtnLastStep = this.StepSwitch.getChildByName('BtnLastStep');
-                this.BtnNextStep.visible = false;
-                this.BtnLastStep.visible = false;
-                this.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
-                this.Owner.addChild(this.BtnCompelet);
-                this.BtnCompelet.visible = false;
-                this.BtnCompelet.pos(563, Laya.stage.height * 0.641);
+                this.Step.firstRootP = new Laya.Point(this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y);
+                this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
+                this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
+                let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
+                this.Owner.addChild(StepSwitch);
+                StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
+                this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep');
+                this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep');
+                this.Step.BtnNext.visible = false;
+                this.Step.BtnLast.visible = false;
+                this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
+                this.Owner.addChild(this.Step.BtnCompelet);
+                this.Step.BtnCompelet.visible = false;
+                this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
             }
             lwgOnStart() {
                 EventAdmin._notify(_Event.start);
@@ -6983,7 +7041,7 @@
                     this.AniVar(_Animation.action1).play(null, true);
                 });
                 EventAdmin._register(_Event.start, this, () => {
-                    this.DrawControl.switch = true;
+                    this.Draw.switch = true;
                     for (let index = 0; index < _Game._stepOrderImg.length; index++) {
                         if (_Game._stepIndex.present >= index) {
                             _Game._stepOrderImg[index].visible = true;
@@ -6998,25 +7056,27 @@
                         ImgParent.zOrder = 200;
                     }
                     Img.zOrder = 200;
+                    this.Step.cutFocus();
                 });
                 EventAdmin._register(_Event.showStepBtn, this, () => {
                     if (_Game._stepIndex.present == 0) {
-                        this.BtnNextStep.visible = true;
-                        Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
+                        this.Step.BtnNext.visible = true;
+                        Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
                     }
                     else {
-                        if (!this.BtnNextStep.visible) {
-                            this.BtnNextStep.visible = true;
-                            Animation2D.fadeOut(this.BtnNextStep, 0, 1, 300);
+                        if (!this.Step.BtnNext.visible) {
+                            this.Step.BtnNext.visible = true;
+                            Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
                         }
-                        if (!this.BtnLastStep.visible) {
-                            this.BtnLastStep.visible = true;
-                            Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300);
+                        if (!this.Step.BtnLast.visible) {
+                            this.Step.BtnLast.visible = true;
+                            Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300);
                         }
                     }
                 });
                 EventAdmin._register(_Event.lastStep, this, () => {
-                    this.DrawControl.restoration();
+                    this.Step.cutFocus();
+                    this.Draw.restoration();
                     if (_Game._stepIndex.present - 1 >= 0) {
                         let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
                         let Img0Parent = Img0.parent;
@@ -7025,10 +7085,10 @@
                             Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                                 _Game._stepIndex.present--;
                                 if (_Game._stepIndex.present < _Game._stepIndex.max) {
-                                    this.BtnNextStep.visible = true;
+                                    this.Step.BtnNext.visible = true;
                                 }
                                 if (_Game._stepIndex.present == 0) {
-                                    this.BtnLastStep.visible = false;
+                                    this.Step.BtnLast.visible = false;
                                 }
                                 EventAdmin._notify(_Event.restoreZOder);
                                 if (Img0Parent != this.ImgVar('DrawRoot')) {
@@ -7036,14 +7096,15 @@
                                 }
                                 Img0.zOrder = 200;
                                 this['BtnStepClose'] = false;
-                                this.DrawControl.switch = true;
+                                this.Step.btnSwitch = true;
                             });
                         });
                     }
                 });
                 EventAdmin._register(_Event.nextStep, this, () => {
                     EventAdmin._notify(_Event.restoreZOder);
-                    this.DrawControl.restoration();
+                    this.Step.cutFocus();
+                    this.Draw.restoration();
                     if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                         EventAdmin._notify(_Event.compelet);
                         Animation2D.fadeOut(_Game._stepOrderImg[_Game._stepIndex.present].getChildByName('Pic'), 1, 0, 300, 0);
@@ -7058,14 +7119,14 @@
                                 let Img0Parent = Img0.parent;
                                 _Game._stepIndex.present++;
                                 if (!_Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass]) {
-                                    this.BtnNextStep.visible = false;
+                                    this.Step.BtnNext.visible = false;
                                 }
                                 if (Img0Parent != this.ImgVar('DrawRoot')) {
                                     Img0Parent.zOrder = 200;
                                 }
                                 Img0.zOrder = 200;
-                                this['BtnStepClose'] = false;
-                                this.DrawControl.switch = true;
+                                this.Step.btnSwitch = true;
+                                this.Draw.switch = true;
                             });
                         });
                     }
@@ -7083,128 +7144,125 @@
                     }
                 });
                 EventAdmin._register(_Event.compelet, this, () => {
-                    let Sp = new Laya.Sprite();
-                    this.Owner.addChild(Sp);
-                    Sp.pos(-100, -100);
-                    Sp.graphics.drawTexture(_PreloadUrl._list.texture.brushworkCommon.texture, 10, 10, 10, 10, null, null, null, null);
                     EventAdmin._notify(_Event.restoreZOder);
-                    this.DrawControl.switch = false;
-                    this.BtnNextStep.visible = false;
-                    this.BtnLastStep.visible = false;
-                    this.BtnCompelet.visible = true;
+                    this.Draw.switch = false;
+                    this.Step.BtnNext.visible = false;
+                    this.Step.BtnLast.visible = false;
+                    this.Step.BtnCompelet.visible = true;
                     Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
                 });
             }
             onStageMouseDown(e) {
-                this.DrawControl.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
-                this.DrawControl.DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard');
-                this.DrawControl.frontPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                this.Draw.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
+                this.Draw.DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
+                this.Draw.frontPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp;
-                if (this.DrawControl.switch) {
-                    let DrawBoard = this.DrawControl.DrawRoot.getChildByName('DrawBoard');
-                    this.DrawControl.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                if (this.Draw.switch) {
+                    let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
+                    this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let color;
                     switch (_SingleColorPencils._pitchName) {
                         case _Game._Pencils.type.eraser:
-                            Sp = this.DrawControl.EraserSp = new Laya.Sprite();
-                            this.DrawControl.EraserSp.blendMode = "destination-out";
+                            Sp = this.Draw.EraserSp = new Laya.Sprite();
+                            this.Draw.EraserSp.blendMode = "destination-out";
                             color = '#000000';
                             break;
                         case _Game._Pencils.type.colours:
-                            Sp = this.DrawControl.DrawSp = new Laya.Sprite();
-                            this.DrawControl.DrawSp.blendMode = "none";
+                            Sp = this.Draw.DrawSp = new Laya.Sprite();
+                            this.Draw.DrawSp.blendMode = "none";
                             color = _ColoursPencils._outputColor;
                             break;
                         default:
-                            Sp = this.DrawControl.DrawSp = new Laya.Sprite();
-                            this.DrawControl.DrawSp.blendMode = "none";
+                            Sp = this.Draw.DrawSp = new Laya.Sprite();
+                            this.Draw.DrawSp.blendMode = "none";
                             color = _SingleColorPencils._pitchColor;
                             break;
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
-                    Sp.graphics.drawTexture(tex, this.DrawControl.frontPos.x - this.DrawControl.radius.value / 2, this.DrawControl.frontPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.bishua3.url));
+                    Sp.graphics.drawTexture(tex, this.Draw.frontPos.x - this.Draw.radius.value / 2, this.Draw.frontPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                 }
             }
             onStageMouseMove(e) {
-                if (this.DrawControl.frontPos && this.DrawControl.switch) {
-                    let endPos = this.DrawControl.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                if (this.Draw.frontPos && this.Draw.switch) {
+                    let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let Sp;
                     let color;
                     switch (_SingleColorPencils._pitchName) {
                         case _Game._Pencils.type.eraser:
-                            Sp = this.DrawControl.EraserSp;
+                            Sp = this.Draw.EraserSp;
                             color = '#000000';
                             break;
                         case _Game._Pencils.type.colours:
-                            Sp = this.DrawControl.DrawSp;
+                            Sp = this.Draw.DrawSp;
                             color = _ColoursPencils._outputColor;
-                            this._drawingLenth.value += this.DrawControl.frontPos.distance(endPos.x, endPos.y);
+                            this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
                             break;
                         default:
-                            Sp = this.DrawControl.DrawSp;
+                            Sp = this.Draw.DrawSp;
                             color = _SingleColorPencils._pitchColor;
-                            this._drawingLenth.value += this.DrawControl.frontPos.distance(endPos.x, endPos.y);
+                            this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
                             break;
                     }
                     if (!Sp) {
                         return;
                     }
-                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.brushworkCommon.url));
-                    Sp.graphics.drawTexture(tex, endPos.x - this.DrawControl.radius.value / 2, endPos.y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
-                    let destance = this.DrawControl.frontPos.distance(endPos.x, endPos.y);
-                    if (destance > 15) {
-                        let num = destance / 15;
-                        let pointArr = Tools.Point.getPArrBetweenTwoP(this.DrawControl.frontPos, endPos, num);
+                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.bishua3.url));
+                    Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                    let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
+                    if (destance > this.Draw.space) {
+                        let num = destance / this.Draw.space;
+                        let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
-                            Sp.graphics.drawTexture(tex, pointArr[index].x - this.DrawControl.radius.value / 2, pointArr[index].y - this.DrawControl.radius.value / 2, this.DrawControl.radius.value, this.DrawControl.radius.value, null, 1, color, null);
+                            Sp.graphics.drawTexture(tex, pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                         }
                     }
-                    this.DrawControl.frontPos = endPos;
+                    Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
+                    this.Draw.frontPos = endPos;
                 }
             }
             onStageMouseUp() {
-                this.DrawControl.frontPos = null;
-                if (this.DrawControl.DrawBoard && this.DrawControl.DrawBoard.numChildren > 3) {
+                this.Draw.frontPos = null;
+                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
                     console.log('合并！');
-                    let NewBoard = this.DrawControl.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
-                    NewBoard.width = this.DrawControl.DrawRoot.width;
-                    NewBoard.height = this.DrawControl.DrawRoot.height;
+                    let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
+                    NewBoard.width = this.Draw.DrawRoot.width;
+                    NewBoard.height = this.Draw.DrawRoot.height;
                     NewBoard.cacheAs = "bitmap";
                     NewBoard.name = 'DrawBoard';
-                    NewBoard.texture = this.DrawControl.DrawBoard.drawToTexture(this.DrawControl.DrawBoard.width, this.DrawControl.DrawBoard.height, this.DrawControl.DrawBoard.x, this.DrawControl.DrawBoard.y);
-                    this.DrawControl.DrawBoard.destroy();
+                    NewBoard.texture = this.Draw.DrawBoard.drawToTexture(this.Draw.DrawBoard.width, this.Draw.DrawBoard.height, this.Draw.DrawBoard.x, this.Draw.DrawBoard.y);
+                    this.Draw.DrawBoard.destroy();
                 }
             }
             lwgBtnClick() {
-                Click._on(Click._Type.largen, this.BtnLastStep, this, null, null, () => {
-                    if (this['BtnStepClose']) {
+                Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
+                    if (!this.Step.btnSwitch) {
                         return;
                     }
                     else {
-                        this['BtnStepClose'] = true;
+                        this.Step.btnSwitch = false;
                     }
                     EventAdmin._notify(_Event.lastStep);
                 });
-                Click._on(Click._Type.largen, this.BtnNextStep, this, null, null, () => {
-                    if (this['BtnStepClose']) {
+                Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, () => {
+                    if (!this.Step.btnSwitch) {
                         return;
                     }
                     else {
-                        this['BtnStepClose'] = true;
+                        this.Step.btnSwitch = false;
                     }
-                    if (!this.BtnLastStep.visible) {
-                        Animation2D.fadeOut(this.BtnLastStep, 0, 1, 300, null, () => {
-                            this.BtnLastStep.visible = true;
+                    if (!this.Step.BtnLast.visible) {
+                        Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300, null, () => {
+                            this.Step.BtnLast.visible = true;
                         });
                     }
                     EventAdmin._notify(_Event.nextStep);
                 });
-                Click._on(Click._Type.largen, this.BtnCompelet, this, null, null, () => {
+                Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
                     Admin._game.level++;
-                    this.DrawControl.switch = false;
+                    this.Draw.switch = false;
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
-                        this.BtnCompelet.visible = false;
+                        this.Step.BtnCompelet.visible = false;
                     });
                 });
             }

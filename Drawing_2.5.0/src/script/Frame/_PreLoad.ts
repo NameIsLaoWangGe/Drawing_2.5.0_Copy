@@ -44,8 +44,28 @@ export module _PreloadUrl {
                 url: 'Frame/Effects/hua4.png',
                 texture: new Laya.Texture,
             },
-            brushworkCommon: {
-                url: 'Game/UI/GameScene/brushworkCommon.png',
+            bishua1: {
+                url: 'Game/UI/GameScene/bishua1.png',
+                texture: new Laya.Texture,
+            },
+            bishua2: {
+                url: 'Game/UI/GameScene/bishua2.png',
+                texture: new Laya.Texture,
+            },
+            bishua3: {
+                url: 'Game/UI/GameScene/bishua3.png',
+                texture: new Laya.Texture,
+            },
+            bishua4: {
+                url: 'Game/UI/GameScene/bishua4.png',
+                texture: new Laya.Texture,
+            },
+            bishua5: {
+                url: 'Game/UI/GameScene/bishua5.png',
+                texture: new Laya.Texture,
+            },
+            bishua6: {
+                url: 'Game/UI/GameScene/bishua6.png',
                 texture: new Laya.Texture,
             },
         },

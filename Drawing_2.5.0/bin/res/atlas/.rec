@@ -136,7 +136,7 @@ P D6262B24 ui_square_c_009.png
 P 7331617A ui_square_c_010.png
 P 87918B79 ui_square_c_011.png
 D Frame/Voice
-R 285FF3DD bgm.mp3
+R EB9067B0 bgm.mp3
 R 626CADAF btn.wav
 R 9B501DC8 chijinbi.wav
 R E23D09D2 guoguan.wav
@@ -169,7 +169,12 @@ R 6762E2C4 start.png
 R 7EA3E409 Victory.png
 D Game/UI/DrawCard
 D Game/UI/GameScene
-P 79EEA939 brushworkCommon.png
+P C126C72F bishua1.png
+P 2E876767 bishua2.png
+P DBB72208 bishua3.png
+P D7DB889B bishua4.png
+P 4FF59F0F bishua5.png
+P 1DB5E033 bishua6.png
 P 774A2C20 compelet.png
 P 752BA2A5 you.png
 P 3DB351A5 zuo.png

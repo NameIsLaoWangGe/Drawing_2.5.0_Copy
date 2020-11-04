@@ -1526,7 +1526,6 @@ export module lwg {
                         case _sceneAnimation.type.stickIn.random:
                             element.rotation = Tools.randomOneHalf() == 1 ? 180 : -180;
                             Tools.Node.changePovit(element, Tools.randomOneHalf() == 1 ? 0 : element.width, Tools.randomOneHalf() == 1 ? 0 : element.height);
-                            console.log('随机！');
                             break;
                         default:
                             break;
@@ -4592,10 +4591,15 @@ export module lwg {
              * @param {Laya.Sprite} sp 节点
              * @param {number} _pivotX 
              * @param {number} _pivotY 
+             * @param {number} int 是转换为整数，如果内部有遮罩必须要整数,默认为false
              */
-            export function changePovit(sp: Laya.Sprite, _pivotX: number, _pivotY: number): void {
+            export function changePovit(sp: Laya.Sprite, _pivotX: number, _pivotY: number, int?: boolean): void {
                 let originalPovitX = sp.pivotX;
                 let originalPovitY = sp.pivotY;
+                if (int) {
+                    _pivotX = Math.round(_pivotX);
+                    _pivotY = Math.round(_pivotY);
+                }
                 if (sp.width) {
                     sp.pivot(_pivotX, _pivotY);
                     sp.x += (sp.pivotX - originalPovitX);
