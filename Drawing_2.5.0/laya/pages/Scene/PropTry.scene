@@ -6,7 +6,7 @@
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#ffffff","height":1280},
     "nodeParent":-1,
-    "maxID":47,
+    "maxID":61,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -46,7 +46,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,Content,Content",
-            "props":{"y":284,"x":65.5,"var":"Content","skin":"Game/UI/PropTry/xd.png","rotation":0,"name":"Content"},
+            "props":{"y":284,"x":62.5,"var":"Content","skin":"Game/UI/PropTry/xd.png","rotation":0,"name":"Content"},
             "nodeParent":2,
             "label":"Content",
             "isOpen":true,
@@ -310,7 +310,7 @@
                             "x":45,
                             "type":"Image",
                             "searchKey":"Image,High,High",
-                            "props":{"y":-16,"x":2,"width":518,"var":"High","name":"High","height":17},
+                            "props":{"y":-16,"x":4,"width":538,"var":"High","name":"High","height":17},
                             "nodeParent":12,
                             "label":"High",
                             "isOpen":true,
@@ -323,7 +323,7 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Bytedance_High_BtnGet,Bytedance_High_BtnGet",
-                                    "props":{"y":80,"x":424,"var":"Bytedance_High_BtnGet","skin":"Game/UI/Common/zan.png","sizeGrid":"0,75,0,111","pivotY":70,"pivotX":142,"name":"Bytedance_High_BtnGet"},
+                                    "props":{"y":62,"x":405,"width":245,"var":"Bytedance_High_BtnGet","skin":"Game/UI/Common/zan.png","sizeGrid":"0,75,0,111","pivotY":52,"pivotX":123,"name":"Bytedance_High_BtnGet","height":112},
                                     "nodeParent":27,
                                     "label":"Bytedance_High_BtnGet",
                                     "isOpen":true,
@@ -336,7 +336,7 @@
                                             "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
-                                            "props":{"y":21.5,"x":47,"skin":"Game/UI/PropTry/qd.png","name":"Word"},
+                                            "props":{"y":24.5,"x":48,"skin":"Game/UI/PropTry/qd.png","name":"Word"},
                                             "nodeParent":28,
                                             "label":"Word",
                                             "isDirectory":false,
@@ -350,7 +350,7 @@
                                             "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,AdsPic",
-                                            "props":{"y":5.5,"x":140,"skin":"Game/UI/PropTry/sp.png","name":"AdsPic"},
+                                            "props":{"y":8.5,"x":141,"skin":"Game/UI/PropTry/sp.png","name":"AdsPic"},
                                             "nodeParent":28,
                                             "label":"AdsPic",
                                             "isDirectory":false,
@@ -365,7 +365,7 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Bytedance_High_BtnNo,Bytedance_High_BtnNo",
-                                    "props":{"y":63,"x":143,"width":230,"var":"Bytedance_High_BtnNo","skin":"Game/UI/Common/lan.png","sizeGrid":"0,74,0,83","pivotY":53,"pivotX":115,"name":"Bytedance_High_BtnNo","height":105},
+                                    "props":{"y":63,"x":130,"width":245,"var":"Bytedance_High_BtnNo","skin":"Game/UI/Common/lan.png","sizeGrid":"0,74,0,83","pivotY":53,"pivotX":115,"name":"Bytedance_High_BtnNo","height":112},
                                     "nodeParent":27,
                                     "label":"Bytedance_High_BtnNo",
                                     "isOpen":true,
@@ -378,7 +378,7 @@
                                             "x":75,
                                             "type":"Label",
                                             "searchKey":"Label,Word",
-                                            "props":{"y":27,"x":40.6328125,"text":"不，谢谢","styleSkin":"Game/UI/Common/buxiexie.png","strokeColor":"#3b529a","stroke":5,"name":"Word","fontSize":35,"color":"#ffffff","bold":true},
+                                            "props":{"y":27,"text":"不，谢谢","styleSkin":"Game/UI/Common/buxiexie.png","strokeColor":"#3b529a","stroke":5,"name":"Word","fontSize":35,"color":"#ffffff","centerX":0,"bold":true},
                                             "nodeParent":31,
                                             "label":"Word",
                                             "isDirectory":false,
@@ -543,6 +543,118 @@
                                         ]
                                 }]
                         }]
+                }]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "searchKey":"Image,Pencils",
+            "props":{"y":480.5,"x":115,"width":501,"name":"Pencils","height":205},
+            "nodeParent":2,
+            "label":"Pencils",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "compId":60,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":38,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise1.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":53,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":102,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise2.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":54,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":162,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise3.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":55,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":221,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise4.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":56,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":279,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise5.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":57,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":337,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise6.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":58,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image",
+                    "props":{"y":32,"x":394,"skin":"Game/UI/GameScene/Pencils/ColoursPencils/caise7.png"},
+                    "nodeParent":60,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":59,
+                    "child":[
+                        ]
                 }]
         }],
     "animations":[

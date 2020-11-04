@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":13,
+    "selectedBox":13,
+    "selecteID":514,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -237,7 +237,7 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw10,Draw10",
-                                    "props":{"y":-42,"x":20,"var":"Draw10","skin":"Game/UI/GameScene/Level11/yifumask.png","name":"Draw10"},
+                                    "props":{"y":-42,"x":20,"width":281,"var":"Draw10","skin":"Game/UI/GameScene/Level11/yifumask.png","name":"Draw10","height":287},
                                     "nodeParent":579,
                                     "label":"Draw10",
                                     "isOpen":true,

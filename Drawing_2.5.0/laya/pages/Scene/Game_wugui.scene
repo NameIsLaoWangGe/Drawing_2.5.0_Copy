@@ -56,7 +56,7 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,Wugui",
-                    "props":{"y":323,"x":303,"width":680,"rotation":0,"pivotY":180,"pivotX":283,"name":"Wugui","height":443},
+                    "props":{"y":382,"x":304,"width":680,"rotation":0,"pivotY":239,"pivotX":284,"name":"Wugui","height":443},
                     "nodeParent":13,
                     "label":"Wugui",
                     "isOpen":true,
@@ -335,16 +335,17 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw7,Draw7",
-                                    "props":{"zOrder":100,"y":120,"x":13,"var":"Draw7","skin":"Game/UI/GameScene/Level2/guixian4mask.png","name":"Draw7"},
+                                    "props":{"zOrder":100,"y":120,"x":13,"width":376,"var":"Draw7","skin":"Game/UI/GameScene/Level2/guixian4mask.png","name":"Draw7","height":95},
                                     "nodeParent":168,
                                     "label":"Draw7",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":163,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guixian4mask.png","renderType":"mask"},
@@ -358,6 +359,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guiixan4.png","name":"Pic"},
@@ -375,16 +377,17 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw6,Draw6",
-                                    "props":{"zOrder":99,"y":44,"x":50,"var":"Draw6","skin":"Game/UI/GameScene/Level2/guixian3mask.png","name":"Draw6"},
+                                    "props":{"zOrder":99,"y":44,"x":50,"width":297,"var":"Draw6","skin":"Game/UI/GameScene/Level2/guixian3mask.png","name":"Draw6","height":84},
                                     "nodeParent":168,
                                     "label":"Draw6",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":162,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian3mask.png","renderType":"mask"},
@@ -398,6 +401,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guixian3.png","name":"Pic"},
@@ -415,16 +419,17 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw5,Draw5",
-                                    "props":{"zOrder":98,"y":-20,"x":196,"var":"Draw5","skin":"Game/UI/GameScene/Level2/guixian2mask.png","name":"Draw5"},
+                                    "props":{"zOrder":98,"y":-20,"x":196,"width":116,"var":"Draw5","skin":"Game/UI/GameScene/Level2/guixian2mask.png","name":"Draw5","height":285},
                                     "nodeParent":168,
                                     "label":"Draw5",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":152,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixian2mask.png","renderType":"mask"},
@@ -438,6 +443,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guixian2.png","name":"Pic"},
@@ -455,16 +461,17 @@
                                     "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Draw4,Draw4",
-                                    "props":{"zOrder":97,"y":-20,"x":79,"var":"Draw4","skin":"Game/UI/GameScene/Level2/guixianmask.png","name":"Draw4"},
+                                    "props":{"zOrder":97,"y":-20,"x":79,"width":117,"var":"Draw4","skin":"Game/UI/GameScene/Level2/guixianmask.png","name":"Draw4","height":286},
                                     "nodeParent":168,
                                     "label":"Draw4",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
                                     "compId":148,
                                     "child":[
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image",
                                             "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level2/guixianmask.png","renderType":"mask"},
@@ -478,6 +485,7 @@
                                                 ]
                                         },
                                         {
+                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
                                             "props":{"skin":"Game/UI/GameScene/Level2/guixian.png","name":"Pic"},

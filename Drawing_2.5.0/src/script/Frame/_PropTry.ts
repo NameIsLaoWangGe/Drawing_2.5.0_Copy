@@ -6,7 +6,12 @@ import { _SelectLevel } from "./_SelectLevel";
 
 export module _PropTry {
     export let _beforeTry: any;
+    export let _presentTry: boolean = false;
+    export let _comeFrom: string = _SceneName.SelectLevel;
     export function _init(): void { }
+    export enum _Event {
+        '_PropTryClose',
+    }
     export class PropTryBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             _beforeTry = _Game._Pencils.presentUse;
@@ -15,7 +20,7 @@ export module _PropTry {
     export class PropTry extends PropTryBase {
         lwgOnAwake(): void {
             ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
-            if (Admin._platform.name == Admin._platform.tpye.Research||Admin._platform.name == Admin._platform.tpye.WebTest) {
+            if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
                 Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
                 Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
             } else {
@@ -32,6 +37,21 @@ export module _PropTry {
                 this.ImgVar('BtnClose').visible = true;
             })
         }
+        lwgEventRegister(): void {
+            EventAdmin._register(_Event._PropTryClose, this, () => {
+                if (_comeFrom == _SceneName.SelectLevel) {
+                    let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                    this.lwgOpenScene(levelName, true, () => {
+                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                            Admin._sceneControl[levelName].addComponent(_Game.Game);
+                        }
+                    });
+                    EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                } else {
+                    this.lwgCloseScene();
+                }
+            })
+        }
 
         lwgBtnClick(): void {
 
@@ -44,31 +64,25 @@ export module _PropTry {
             Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
             Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
 
-            var close = () => {
-                let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
-                this.lwgOpenScene(levelName, true, () => {
-                    if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
-                        Admin._sceneControl[levelName].addComponent(_Game.Game);
-                    }
-                });
-                EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
-            }
-            Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, () => {
-                close();
+            Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e: Laya.Event) => {
+                e.stopPropagation()
+                EventAdmin._notify(_Event._PropTryClose);
             });
-            Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, () => {
-                close();
-
+            Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e: Laya.Event) => {
+                e.stopPropagation()
+                EventAdmin._notify(_Event._PropTryClose);
             });
-            Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, () => {
+            Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e: Laya.Event) => {
+                e.stopPropagation()
                 this.advFunc();
             });
-
-            Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, () => {
-                close();
+            Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e: Laya.Event) => {
+                e.stopPropagation()
+                EventAdmin._notify(_Event._PropTryClose);
             });
         }
-        clickBgtUp(): void {
+        clickBgtUp(e: Laya.Event): void {
+            e.stopPropagation();
             if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
                 return;
             }
@@ -124,12 +138,17 @@ export module _PropTry {
                 }
             }
         }
-
         advFunc(): void {
             ADManager.ShowReward(() => {
                 ADManager.TAPoint(TaT.BtnClick, 'UIPropTry_BtnGet');
-                _Game._Pencils.presentUse = _Game._Pencils.type.colours;
+                _Game._SingleColorPencils._setPitchByName('colours');
+                _Game._ColoursPencils._Switch = true;
+                EventAdmin._notify(_Event._PropTryClose);
             })
+        }
+
+        onDisable(): void {
+            _Game._activate = true;
         }
     }
 }

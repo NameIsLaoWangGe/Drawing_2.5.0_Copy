@@ -151,7 +151,6 @@ export module _SelectLevel {
             //     }
             // };
             // ani();
-            Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
         }
         lwgBtnClick(): void {
             let BtnContent = (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('BtnContent');

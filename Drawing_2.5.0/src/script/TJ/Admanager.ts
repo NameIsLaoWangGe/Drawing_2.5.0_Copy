@@ -34,7 +34,6 @@ export default class ADManager {
             rewardAction();
             return;
         }
-
         if (ADManager.CanShowCD) {
             PalyAudio.stopMusic();
             console.log("?????");

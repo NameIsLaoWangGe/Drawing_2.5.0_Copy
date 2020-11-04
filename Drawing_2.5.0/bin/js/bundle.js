@@ -5752,6 +5752,111 @@
     let Backpack = lwg.Backpack;
     let BackpackScene = lwg.Backpack.BackpackScene;
 
+    class RecordManager {
+        constructor() {
+            this.GRV = null;
+            this.isRecordVideoing = false;
+            this.isVideoRecord = false;
+            this.videoRecordTimer = 0;
+            this.isHasVideoRecord = false;
+        }
+        static Init() {
+            RecordManager.grv = new TJ.Platform.AppRt.DevKit.TT.GameRecorderVideo();
+        }
+        static startAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.grv == null)
+                RecordManager.Init();
+            if (RecordManager.recording)
+                return;
+            RecordManager.autoRecording = true;
+            console.log("******************开始录屏");
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (!RecordManager.autoRecording) {
+                console.log("RecordManager.autoRecording", RecordManager.autoRecording);
+                return false;
+            }
+            RecordManager.autoRecording = false;
+            RecordManager._end(false);
+            if (Date.now() - RecordManager.lastRecordTime > 6000) {
+                return true;
+            }
+            if (Date.now() - RecordManager.lastRecordTime < 3000) {
+                console.log("小于3秒");
+                return false;
+            }
+            return true;
+        }
+        static startRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.autoRecording) {
+                this.stopAutoRecord();
+            }
+            RecordManager.recording = true;
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("time:" + (Date.now() - RecordManager.lastRecordTime));
+            if (Date.now() - RecordManager.lastRecordTime <= 3000) {
+                return false;
+            }
+            RecordManager.recording = false;
+            RecordManager._end(true);
+            return true;
+        }
+        static _start() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180s  ？？？？？");
+            RecordManager.grv.Start(180);
+        }
+        static _end(share) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180结束 ？？？？？");
+            RecordManager.grv.Stop(share);
+        }
+        static _share(type, successedAc, completedAc = null, failAc = null) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
+            if (RecordManager.grv.videoPath) {
+                let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
+                p.extra.videoTopics = ["比谁猜的快", "番茄小游戏", "抖音小游戏"];
+                p.channel = "video";
+                p.success = () => {
+                    Dialogue.createHint_Middle(Dialogue.HintContent["分享成功!"]);
+                    successedAc();
+                };
+                p.fail = () => {
+                    if (type === 'noAward') {
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
+                    }
+                    else {
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
+                    }
+                    failAc();
+                };
+                RecordManager.grv.Share(p);
+            }
+            else {
+                Dialogue.createHint_Middle(Dialogue.HintContent["暂无视频，玩一局游戏之后分享！"]);
+            }
+        }
+    }
+    RecordManager.recording = false;
+    RecordManager.autoRecording = false;
+
     var _PreloadUrl;
     (function (_PreloadUrl) {
         _PreloadUrl._list = {
@@ -6317,7 +6422,6 @@
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
             lwgOnEnable() {
-                Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
             }
             lwgBtnClick() {
                 let BtnContent = this.Owner.getChildByName('Content').getChildByName('BtnContent');
@@ -6502,8 +6606,14 @@
 
     var _PropTry;
     (function (_PropTry) {
+        _PropTry._presentTry = false;
+        _PropTry._comeFrom = _SceneName.SelectLevel;
         function _init() { }
         _PropTry._init = _init;
+        let _Event;
+        (function (_Event) {
+            _Event[_Event["_PropTryClose"] = 0] = "_PropTryClose";
+        })(_Event = _PropTry._Event || (_PropTry._Event = {}));
         class PropTryBase extends Admin._SceneBase {
             moduleOnAwake() {
                 _PropTry._beforeTry = _Game._Pencils.presentUse;
@@ -6530,6 +6640,22 @@
                     this.ImgVar('BtnClose').visible = true;
                 });
             }
+            lwgEventRegister() {
+                EventAdmin._register(_Event._PropTryClose, this, () => {
+                    if (_PropTry._comeFrom == _SceneName.SelectLevel) {
+                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                        this.lwgOpenScene(levelName, true, () => {
+                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                            }
+                        });
+                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                    }
+                    else {
+                        this.lwgCloseScene();
+                    }
+                });
+            }
             lwgBtnClick() {
                 Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Low_Select'), this, null, null, this.bytedanceSelectUp);
                 Click._on(Click._Type.largen, this.ImgVar('Bytedance_Low_BtnGet'), this, null, null, this.bytedanceGetUp);
@@ -6537,29 +6663,25 @@
                 Click._on(Click._Type.largen, this.ImgVar('Bytedance_Mid_BtnGet'), this, null, null, this.bytedanceGetUp);
                 Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
                 Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
-                var close = () => {
-                    let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
-                    this.lwgOpenScene(levelName, true, () => {
-                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
-                            Admin._sceneControl[levelName].addComponent(_Game.Game);
-                        }
-                    });
-                    EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
-                };
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, () => {
-                    close();
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
                 });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, () => {
-                    close();
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
                 });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, () => {
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e) => {
+                    e.stopPropagation();
                     this.advFunc();
                 });
-                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, () => {
-                    close();
+                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
                 });
             }
-            clickBgtUp() {
+            clickBgtUp(e) {
+                e.stopPropagation();
                 if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
                     return;
                 }
@@ -6621,13 +6743,66 @@
             advFunc() {
                 ADManager.ShowReward(() => {
                     ADManager.TAPoint(TaT.BtnClick, 'UIPropTry_BtnGet');
-                    _Game._Pencils.presentUse = _Game._Pencils.type.colours;
+                    _Game._SingleColorPencils._setPitchByName('colours');
+                    _Game._ColoursPencils._Switch = true;
+                    EventAdmin._notify(_Event._PropTryClose);
                 });
+            }
+            onDisable() {
+                _Game._activate = true;
             }
         }
         _PropTry.PropTry = PropTry;
     })(_PropTry || (_PropTry = {}));
     var _PropTry$1 = _PropTry.PropTry;
+
+    var _Share;
+    (function (_Share) {
+        class _Data {
+        }
+        _Data._photo = {
+            _texture: null,
+            _width: 400,
+            _height: 400,
+        };
+        _Share._Data = _Data;
+        let _Event;
+        (function (_Event) {
+        })(_Event = _Share._Event || (_Share._Event = {}));
+        function _init() {
+        }
+        _Share._init = _init;
+        class ShareBase extends Admin._SceneBase {
+        }
+        _Share.ShareBase = ShareBase;
+        class Share extends _Share.ShareBase {
+            lwgOnAwake() {
+                this.ImgVar('Photo').width = Laya.stage.width;
+                this.ImgVar('Photo').height = Laya.stage.height;
+                if (_Data._base64) {
+                    this.ImgVar('Photo').skin = _Data._base64;
+                }
+                if (_Data._photo._texture) {
+                }
+            }
+            lwgBtnClick() {
+                var func = () => {
+                    EventAdmin._notify(_Game._Event.victory);
+                    this.lwgOpenScene(_SceneName.Victory);
+                };
+                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                    func();
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
+                    RecordManager._share('award', () => {
+                        func();
+                    });
+                });
+            }
+        }
+        _Share.Share = Share;
+    })(_Share || (_Share = {}));
+    var _Share$1 = _Share.Share;
 
     var _Game;
     (function (_Game) {
@@ -6643,6 +6818,7 @@
             _Event["restoreZOder"] = "_Game_restoreZoder";
             _Event["colseScene"] = "_Game_colseScene";
             _Event["victory"] = "_Game_victory";
+            _Event["Photo"] = "_Game_Photo";
         })(_Event = _Game._Event || (_Game._Event = {}));
         let _Animation;
         (function (_Animation) {
@@ -6657,6 +6833,7 @@
         _Game._stepOrderImg = [];
         _Game._passLenght = 100;
         _Game._stepMaskIndex = 0;
+        _Game._activate = true;
         _Game._stepIndex = {
             get present() {
                 return this['presentIndex'] ? this['presentIndex'] : 0;
@@ -6730,6 +6907,9 @@
                     else {
                         this._data[index][this._property.pitch] = false;
                     }
+                    if (_Game._PencilsList) {
+                        _Game._PencilsList.refresh();
+                    }
                 }
             }
         }
@@ -6799,6 +6979,7 @@
                 this._setPitchByName(this._data[0][this._property.name]);
             }
         }
+        _ColoursPencils._Switch = false;
         _ColoursPencils._drawTime = 0;
         _ColoursPencils._drawInterval = 30;
         _Game._ColoursPencils = _ColoursPencils;
@@ -6830,8 +7011,16 @@
                 };
                 Click._on(Click._Type.largen, this.Owner, this, func, func, (e) => {
                     e.stopPropagation();
+                    let lasName = _SingleColorPencils._pitchName;
                     _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
                     if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
+                        if (!_ColoursPencils._Switch) {
+                            _SingleColorPencils._setPitchByName(lasName);
+                            this.lwgOpenScene(_SceneName.PropTry, false);
+                            _PropTry._comeFrom = _SceneName.Game;
+                            _Game._activate = false;
+                            return;
+                        }
                         if (_Game._Pencils.presentUse == _Game._Pencils.type.singleColor) {
                             _Game._Pencils.presentUse = _Game._Pencils.type.colours;
                             _Game._PencilsList.refresh();
@@ -6889,11 +7078,24 @@
                     currentFocus: null,
                     BtnNext: null,
                     BtnLast: null,
-                    BtnCompelet: null,
                     btnSwitch: true,
+                    automaticNext: false,
+                    setAutomaticNext: () => {
+                        Laya.timer.frameOnce(120, this.Step, () => {
+                            if (this.Step.automaticNext) {
+                                EventAdmin._notify(_Event.nextStep);
+                                this.Step.automaticNext = false;
+                            }
+                        });
+                    },
+                    BtnCompelet: null,
+                    needCut: false,
                     cutFocus: (func) => {
                         let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                         let Parent = Img.parent;
+                        if (!this.Step.needCut) {
+                            return;
+                        }
                         if (Parent.name == 'Head' || Parent.name == 'Body') {
                             let oriPovitX = Parent.pivotX;
                             let oriPovitY = Parent.pivotY;
@@ -6911,6 +7113,36 @@
                     compeletCutFocus: () => {
                         Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.Step.firstRootP.x, this.Step.firstRootP.y, 300, 0, () => {
                         });
+                    },
+                    init: () => {
+                        let Picture = this.ImgVar('DrawRoot').getChildAt(0);
+                        let num = 0;
+                        for (let index = 0; index < Picture.numChildren; index++) {
+                            const element = Picture.getChildAt(index);
+                            if (element.name == 'Head' || element.name == 'Body') {
+                                num++;
+                            }
+                        }
+                        if (num == 2) {
+                            this.Step.needCut = true;
+                        }
+                        else {
+                            this.Step.needCut = false;
+                        }
+                        this.Step.firstRootP = new Laya.Point(this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y);
+                        this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
+                        this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
+                        let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
+                        this.Owner.addChild(StepSwitch);
+                        StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
+                        this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep');
+                        this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep');
+                        this.Step.BtnNext.visible = false;
+                        this.Step.BtnLast.visible = false;
+                        this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
+                        this.Owner.addChild(this.Step.BtnCompelet);
+                        this.Step.BtnCompelet.visible = false;
+                        this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
                     }
                 };
                 this.Draw = {
@@ -6992,33 +7224,29 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
+                _Game._Pencils.presentUse = _Game._Pencils.type.singleColor;
+                _SingleColorPencils._pitchName = _SingleColorPencils._data[0][_SingleColorPencils._property.name];
             }
             lwgOpenAni() {
                 return 100;
             }
             lwgOnEnable() {
-                this.Step.firstRootP = new Laya.Point(this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y);
-                this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
-                this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
-                let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
-                this.Owner.addChild(StepSwitch);
-                StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
-                this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep');
-                this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep');
-                this.Step.BtnNext.visible = false;
-                this.Step.BtnLast.visible = false;
-                this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
-                this.Owner.addChild(this.Step.BtnCompelet);
-                this.Step.BtnCompelet.visible = false;
-                this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
+                this.Step.init();
             }
             lwgOnStart() {
+                RecordManager.startRecord();
                 EventAdmin._notify(_Event.start);
             }
             lwgEventRegister() {
-                EventAdmin._register(_Event.colseScene, this, () => {
+                EventAdmin._register(_Event.Photo, this, () => {
                     this.AniVar(_Animation.action1).play();
                     this.AniVar(_Animation.action1).stop();
+                    let Img = this.ImgVar('DrawRoot').getChildAt(0);
+                    var htmlCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
+                    _Share._Data._base64 = htmlCanvas.toBase64("image/png", 1);
+                });
+                1;
+                EventAdmin._register(_Event.colseScene, this, () => {
                     Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                     this.ImgVar('DrawRoot').x = 0;
                     this.ImgVar('DrawRoot').y = 0;
@@ -7075,7 +7303,12 @@
                     }
                 });
                 EventAdmin._register(_Event.lastStep, this, () => {
-                    this.Step.cutFocus();
+                    if (!this.Step.btnSwitch) {
+                        return;
+                    }
+                    else {
+                        this.Step.btnSwitch = false;
+                    }
                     this.Draw.restoration();
                     if (_Game._stepIndex.present - 1 >= 0) {
                         let Img0 = _Game._stepOrderImg[_Game._stepIndex.present - 1];
@@ -7084,6 +7317,7 @@
                             let Img = _Game._stepOrderImg[_Game._stepIndex.present];
                             Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                                 _Game._stepIndex.present--;
+                                this.Step.cutFocus();
                                 if (_Game._stepIndex.present < _Game._stepIndex.max) {
                                     this.Step.BtnNext.visible = true;
                                 }
@@ -7095,15 +7329,25 @@
                                     Img0Parent.zOrder = 200;
                                 }
                                 Img0.zOrder = 200;
-                                this['BtnStepClose'] = false;
                                 this.Step.btnSwitch = true;
+                                this.Draw.switch = true;
                             });
                         });
                     }
                 });
                 EventAdmin._register(_Event.nextStep, this, () => {
+                    if (!this.Step.btnSwitch) {
+                        return;
+                    }
+                    else {
+                        this.Step.btnSwitch = false;
+                    }
+                    if (!this.Step.BtnLast.visible) {
+                        Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300, null, () => {
+                            this.Step.BtnLast.visible = true;
+                        });
+                    }
                     EventAdmin._notify(_Event.restoreZOder);
-                    this.Step.cutFocus();
                     this.Draw.restoration();
                     if (_Game._stepIndex.present >= _Game._stepOrderImg.length - 1) {
                         EventAdmin._notify(_Event.compelet);
@@ -7118,6 +7362,7 @@
                             Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                                 let Img0Parent = Img0.parent;
                                 _Game._stepIndex.present++;
+                                this.Step.cutFocus();
                                 if (!_Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass]) {
                                     this.Step.BtnNext.visible = false;
                                 }
@@ -7153,11 +7398,12 @@
                 });
             }
             onStageMouseDown(e) {
+                Laya.timer.clearAll(this.Step);
                 this.Draw.DrawRoot = _Game._stepOrderImg[_Game._stepIndex.present];
                 this.Draw.DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
                 this.Draw.frontPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp;
-                if (this.Draw.switch) {
+                if (this.Draw.switch && _Game._activate) {
                     let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
                     this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let color;
@@ -7184,7 +7430,7 @@
                 }
             }
             onStageMouseMove(e) {
-                if (this.Draw.frontPos && this.Draw.switch) {
+                if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                     let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let Sp;
                     let color;
@@ -7223,6 +7469,7 @@
             }
             onStageMouseUp() {
                 this.Draw.frontPos = null;
+                this.Step.setAutomaticNext();
                 if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
                     console.log('合并！');
                     let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
@@ -7235,30 +7482,25 @@
                 }
             }
             lwgBtnClick() {
+                for (let index = 0; index < _Game._stepOrderImg.length; index++) {
+                    const element = _Game._stepOrderImg[index];
+                    var func = () => {
+                        if (index == _Game._stepIndex.present) {
+                            this.Step.automaticNext = true;
+                        }
+                    };
+                    Click._on(Click._Type.noEffect, _Game._stepOrderImg[index], this, func, func, func, func);
+                }
                 Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
-                    if (!this.Step.btnSwitch) {
-                        return;
-                    }
-                    else {
-                        this.Step.btnSwitch = false;
-                    }
+                    Laya.timer.clearAll(this.Step);
                     EventAdmin._notify(_Event.lastStep);
                 });
                 Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, () => {
-                    if (!this.Step.btnSwitch) {
-                        return;
-                    }
-                    else {
-                        this.Step.btnSwitch = false;
-                    }
-                    if (!this.Step.BtnLast.visible) {
-                        Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300, null, () => {
-                            this.Step.BtnLast.visible = true;
-                        });
-                    }
+                    Laya.timer.clearAll(this.Step);
                     EventAdmin._notify(_Event.nextStep);
                 });
                 Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
+                    this.Step.compeletCutFocus();
                     Admin._game.level++;
                     this.Draw.switch = false;
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
@@ -7267,7 +7509,7 @@
                 });
             }
             lwgOnDisable() {
-                _Game._Pencils.presentUse = _PropTry._beforeTry;
+                _ColoursPencils._Switch = false;
             }
         }
         _Game.Game = Game;
@@ -7489,111 +7731,6 @@
     ;
     var _PreLoadStep$1 = _PreLoadStep.PreLoadStep;
 
-    class RecordManager {
-        constructor() {
-            this.GRV = null;
-            this.isRecordVideoing = false;
-            this.isVideoRecord = false;
-            this.videoRecordTimer = 0;
-            this.isHasVideoRecord = false;
-        }
-        static Init() {
-            RecordManager.grv = new TJ.Platform.AppRt.DevKit.TT.GameRecorderVideo();
-        }
-        static startAutoRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (RecordManager.grv == null)
-                RecordManager.Init();
-            if (RecordManager.recording)
-                return;
-            RecordManager.autoRecording = true;
-            console.log("******************开始录屏");
-            RecordManager._start();
-            RecordManager.lastRecordTime = Date.now();
-        }
-        static stopAutoRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (!RecordManager.autoRecording) {
-                console.log("RecordManager.autoRecording", RecordManager.autoRecording);
-                return false;
-            }
-            RecordManager.autoRecording = false;
-            RecordManager._end(false);
-            if (Date.now() - RecordManager.lastRecordTime > 6000) {
-                return true;
-            }
-            if (Date.now() - RecordManager.lastRecordTime < 3000) {
-                console.log("小于3秒");
-                return false;
-            }
-            return true;
-        }
-        static startRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (RecordManager.autoRecording) {
-                this.stopAutoRecord();
-            }
-            RecordManager.recording = true;
-            RecordManager._start();
-            RecordManager.lastRecordTime = Date.now();
-        }
-        static stopRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("time:" + (Date.now() - RecordManager.lastRecordTime));
-            if (Date.now() - RecordManager.lastRecordTime <= 3000) {
-                return false;
-            }
-            RecordManager.recording = false;
-            RecordManager._end(true);
-            return true;
-        }
-        static _start() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************180s  ？？？？？");
-            RecordManager.grv.Start(180);
-        }
-        static _end(share) {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************180结束 ？？？？？");
-            RecordManager.grv.Stop(share);
-        }
-        static _share(type, successedAc, completedAc = null, failAc = null) {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
-            if (RecordManager.grv.videoPath) {
-                let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
-                p.extra.videoTopics = ["比谁猜的快", "番茄小游戏", "抖音小游戏"];
-                p.channel = "video";
-                p.success = () => {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["分享成功!"]);
-                    successedAc();
-                };
-                p.fail = () => {
-                    if (type === 'noAward') {
-                        Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
-                    }
-                    else {
-                        Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
-                    }
-                    failAc();
-                };
-                RecordManager.grv.Share(p);
-            }
-            else {
-                Dialogue.createHint_Middle(Dialogue.HintContent["暂无视频，玩一局游戏之后分享！"]);
-            }
-        }
-    }
-    RecordManager.recording = false;
-    RecordManager.autoRecording = false;
-
     var _Settle;
     (function (_Settle) {
         class _data {
@@ -7614,6 +7751,8 @@
                     EventAdmin._notify(_Game._Event.playAni1);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
+                    RecordManager.startRecord();
+                    EventAdmin._notify(_Game._Event.Photo);
                     this.lwgOpenScene(_SceneName.Share);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
@@ -7624,40 +7763,6 @@
         _Settle.Settle = Settle;
     })(_Settle || (_Settle = {}));
     var _Settle$1 = _Settle.Settle;
-
-    var _Share;
-    (function (_Share) {
-        class _data {
-        }
-        _Share._data = _data;
-        let _Event;
-        (function (_Event) {
-        })(_Event = _Share._Event || (_Share._Event = {}));
-        function _init() {
-        }
-        _Share._init = _init;
-        class ShareBase extends Admin._SceneBase {
-        }
-        _Share.ShareBase = ShareBase;
-        class Share extends _Share.ShareBase {
-            lwgBtnClick() {
-                var func = () => {
-                    EventAdmin._notify(_Game._Event.victory);
-                    this.lwgOpenScene(_SceneName.Victory);
-                };
-                Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
-                    func();
-                });
-                Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                    RecordManager._share('award', () => {
-                        func();
-                    });
-                });
-            }
-        }
-        _Share.Share = Share;
-    })(_Share || (_Share = {}));
-    var _Share$1 = _Share.Share;
 
     var _Special;
     (function (_Special) {

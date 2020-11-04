@@ -1,7 +1,10 @@
-import { Admin, Animation2D, Click, Color, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
+import ADManager from "../TJ/Admanager";
+import RecordManager from "../TJ/RecordManager";
+import { Admin, Animation2D, Click, Color, EventAdmin, Share, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 import { _PropTry } from "./_PropTry";
 import { _SelectLevel } from "./_SelectLevel";
+import { _Share } from "./_Share";
 
 /**游戏场景模块*/
 export module _Game {
@@ -16,6 +19,7 @@ export module _Game {
         restoreZOder = '_Game_restoreZoder',
         colseScene = '_Game_colseScene',
         victory = '_Game_victory',
+        Photo = '_Game_Photo',
     }
     /**动画名称*/
     export enum _Animation {
@@ -33,7 +37,7 @@ export module _Game {
     export let _passLenght: number = 100;
     /**当前最高绘制到哪一步*/
     export let _stepMaskIndex: number = 0;
-
+    export let _activate: boolean = true;
     export let _stepIndex = {
         get present(): number {
             return this['presentIndex'] ? this['presentIndex'] : 0;
@@ -122,16 +126,21 @@ export module _Game {
                 } else {
                     this._data[index][this._property.pitch] = false;
                 }
+                if (_PencilsList) {
+                    _PencilsList.refresh();
+                }
             }
         }
     }
 
     /**彩色画笔套装*/
     export class _ColoursPencils extends _SingleColorPencils {
+        /**是否打开了彩色画笔*/
+        static _Switch: boolean = false;
         /**次数*/
-        static _drawTime = 0;
+        static _drawTime: number = 0;
         /**画多少次后，进入另外两个颜色区间*/
-        static _drawInterval = 30;
+        static _drawInterval: number = 30;
         /**当前输出颜色*/
         static get _outputColor(): string {
             let str: string;
@@ -216,8 +225,16 @@ export module _Game {
                 func,
                 (e: Laya.Event) => {
                     e.stopPropagation();
+                    let lasName = _SingleColorPencils._pitchName;
                     _SingleColorPencils._setPitchByName(this.Owner['_dataSource'][_SingleColorPencils._property.name]);
                     if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
+                        if (!_ColoursPencils._Switch) {
+                            _SingleColorPencils._setPitchByName(lasName);
+                            this.lwgOpenScene(_SceneName.PropTry, false);
+                            _PropTry._comeFrom = _SceneName.Game;
+                            _activate = false;
+                            return;
+                        }
                         if (_Pencils.presentUse == _Pencils.type.singleColor) {
                             _Pencils.presentUse = _Pencils.type.colours;
                             _PencilsList.refresh();
@@ -228,7 +245,6 @@ export module _Game {
                             if (_ColoursPencils._pitchName == element[_SingleColorPencils._property.name]) {
                                 let nameIndex = Number(_ColoursPencils._pitchName.substr(5));
                                 // console.log(nameIndex);
-
                                 if (_Pencils.presentUse == _Pencils.type.colours) {
                                     if (!nameIndex) {
                                         nameIndex = 1;
@@ -330,6 +346,8 @@ export module _Game {
                 index++;
             }
             // console.log(_stepOrderImg);
+            _Pencils.presentUse = _Pencils.type.singleColor;
+            _SingleColorPencils._pitchName = _SingleColorPencils._data[0][_SingleColorPencils._property.name];
         }
         lwgOpenAni(): number {
             return 100;
@@ -344,13 +362,26 @@ export module _Game {
             currentFocus: null as Laya.Image,
             BtnNext: null as Laya.Image,
             BtnLast: null as Laya.Image,
+            btnSwitch: true,
+            automaticNext: false,
+            setAutomaticNext: () => {
+                Laya.timer.frameOnce(120, this.Step, () => {
+                    if (this.Step.automaticNext) {
+                        EventAdmin._notify(_Event.nextStep);
+                        this.Step.automaticNext = false;
+                    }
+                })
+            },
             BtnCompelet: null as Laya.Image,
             /**按钮点击控制*/
-            btnSwitch: true,
+            needCut: false as boolean,
             /**焦点切换*/
             cutFocus: (func?: Function) => {
                 let Img = _stepOrderImg[_stepIndex.present];
                 let Parent = Img.parent as Laya.Image;
+                if (!this.Step.needCut) {
+                    return;
+                }
                 if (Parent.name == 'Head' || Parent.name == 'Body') {
                     let oriPovitX = Parent.pivotX;
                     let oriPovitY = Parent.pivotY;
@@ -366,35 +397,61 @@ export module _Game {
                     });
                 }
             },
+            /**完成时候的焦点切换*/
             compeletCutFocus: () => {
                 Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.Step.firstRootP.x, this.Step.firstRootP.y, 300, 0, () => {
                 });
+            },
+            init: () => {
+                let Picture = this.ImgVar('DrawRoot').getChildAt(0) as Laya.Image;
+                let num = 0;
+                for (let index = 0; index < Picture.numChildren; index++) {
+                    const element = Picture.getChildAt(index);
+                    if (element.name == 'Head' || element.name == 'Body') {
+                        num++;
+                    }
+                }
+                if (num == 2) {
+                    this.Step.needCut = true;
+                } else {
+                    this.Step.needCut = false;
+                }
+                this.Step.firstRootP = new Laya.Point(this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y);
+                this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
+                this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
+                let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
+                this.Owner.addChild(StepSwitch);
+                StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
+                this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
+                this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
+                this.Step.BtnNext.visible = false;
+                this.Step.BtnLast.visible = false;
+                this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab) as Laya.Image;
+                this.Owner.addChild(this.Step.BtnCompelet);
+                this.Step.BtnCompelet.visible = false;
+                this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
             }
-
         }
         lwgOnEnable(): void {
-            this.Step.firstRootP = new Laya.Point(this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y);
-            this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
-            this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
-            let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab) as Laya.Image;
-            this.Owner.addChild(StepSwitch);
-            StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
-            this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep') as Laya.Image;
-            this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep') as Laya.Image;
-            this.Step.BtnNext.visible = false;
-            this.Step.BtnLast.visible = false;
-            this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab) as Laya.Image;
-            this.Owner.addChild(this.Step.BtnCompelet);
-            this.Step.BtnCompelet.visible = false;
-            this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
+            this.Step.init();
         }
         lwgOnStart(): void {
+            RecordManager.startRecord();
             EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
-            EventAdmin._register(_Event.colseScene, this, () => {
+            EventAdmin._register(_Event.Photo, this, () => {
                 this.AniVar(_Animation.action1).play();
                 this.AniVar(_Animation.action1).stop();
+                let Img = this.ImgVar('DrawRoot').getChildAt(0) as Laya.Image;
+                // _Share._Data._photo._texture = Img.drawToTexture(Img.width, Img.height, 0, 0) as Laya.Texture;
+                // _Share._Data._photo._width = Img.width;
+                // _Share._Data._photo._height = Img.height;
+                var htmlCanvas: Laya.HTMLCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
+                _Share._Data._base64 = htmlCanvas.toBase64("image/png", 1)
+            })
+1
+            EventAdmin._register(_Event.colseScene, this, () => {
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                 this.ImgVar('DrawRoot').x = 0;
                 this.ImgVar('DrawRoot').y = 0;
@@ -460,7 +517,11 @@ export module _Game {
             });
 
             EventAdmin._register(_Event.lastStep, this, () => {
-                this.Step.cutFocus();
+                if (!this.Step.btnSwitch) {
+                    return;
+                } else {
+                    this.Step.btnSwitch = false;
+                }
                 this.Draw.restoration();
                 if (_stepIndex.present - 1 >= 0) {
                     let Img0 = _stepOrderImg[_stepIndex.present - 1];
@@ -469,6 +530,7 @@ export module _Game {
                         let Img = _stepOrderImg[_stepIndex.present];
                         Animation2D.fadeOut(Img.getChildByName('Pic'), 1, 0, 300, 0, () => {
                             _stepIndex.present--;
+                            this.Step.cutFocus();
                             if (_stepIndex.present < _stepIndex.max) {
                                 this.Step.BtnNext.visible = true;
                             }
@@ -481,16 +543,25 @@ export module _Game {
                                 Img0Parent.zOrder = 200;
                             }
                             Img0.zOrder = 200;
-                            this['BtnStepClose'] = false;
                             this.Step.btnSwitch = true;
+                            this.Draw.switch = true;
                         })
                     });
                 }
             })
 
             EventAdmin._register(_Event.nextStep, this, () => {
+                if (!this.Step.btnSwitch) {
+                    return;
+                } else {
+                    this.Step.btnSwitch = false;
+                }
+                if (!this.Step.BtnLast.visible) {
+                    Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300, null, () => {
+                        this.Step.BtnLast.visible = true;
+                    });
+                }
                 EventAdmin._notify(_Event.restoreZOder);
-                this.Step.cutFocus();
                 this.Draw.restoration();
                 if (_stepIndex.present >= _stepOrderImg.length - 1) {
                     EventAdmin._notify(_Event.compelet);
@@ -504,6 +575,7 @@ export module _Game {
                         Animation2D.fadeOut(Img0.getChildByName('Pic'), 0, 1, 300, 0, () => {
                             let Img0Parent = Img0.parent as Laya.Image;
                             _stepIndex.present++;
+                            this.Step.cutFocus();
                             if (!_stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass]) {
                                 this.Step.BtnNext.visible = false;
                             }
@@ -567,11 +639,12 @@ export module _Game {
         }
 
         onStageMouseDown(e: Laya.Event): void {
+            Laya.timer.clearAll(this.Step);
             this.Draw.DrawRoot = _stepOrderImg[_stepIndex.present];
             this.Draw.DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard') as Laya.Image;
             this.Draw.frontPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
             let Sp: Laya.Sprite;
-            if (this.Draw.switch) {
+            if (this.Draw.switch && _Game._activate) {
                 let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                 this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let color: string;
@@ -598,7 +671,7 @@ export module _Game {
             }
         }
         onStageMouseMove(e: Laya.Event): void {
-            if (this.Draw.frontPos && this.Draw.switch) {
+            if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
                 let color: string;
@@ -631,7 +704,6 @@ export module _Game {
                         Sp.graphics.drawTexture(tex, pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                     }
                 }
-
                 // 消除颜色
                 Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
 
@@ -640,6 +712,7 @@ export module _Game {
         }
         onStageMouseUp(): void {
             this.Draw.frontPos = null;
+            this.Step.setAutomaticNext();
             // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
             if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
                 console.log('合并！')
@@ -654,28 +727,25 @@ export module _Game {
         }
 
         lwgBtnClick(): void {
-            Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
-                if (!this.Step.btnSwitch) {
-                    return;
-                } else {
-                    this.Step.btnSwitch = false;
+            for (let index = 0; index < _stepOrderImg.length; index++) {
+                const element = _stepOrderImg[index];
+                var func = () => {
+                    if (index == _stepIndex.present) {
+                        this.Step.automaticNext = true;
+                    }
                 }
+                Click._on(Click._Type.noEffect, _stepOrderImg[index], this, func, func, func, func)
+            }
+            Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
+                Laya.timer.clearAll(this.Step);
                 EventAdmin._notify(_Event.lastStep);
             });
             Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, () => {
-                if (!this.Step.btnSwitch) {
-                    return;
-                } else {
-                    this.Step.btnSwitch = false;
-                }
-                if (!this.Step.BtnLast.visible) {
-                    Animation2D.fadeOut(this.Step.BtnLast, 0, 1, 300, null, () => {
-                        this.Step.BtnLast.visible = true;
-                    });
-                }
+                Laya.timer.clearAll(this.Step);
                 EventAdmin._notify(_Event.nextStep);
             });
             Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
+                this.Step.compeletCutFocus();
                 Admin._game.level++;
                 this.Draw.switch = false;
                 this.lwgOpenScene(_SceneName.Settle, false, () => {
@@ -684,7 +754,7 @@ export module _Game {
             });
         }
         lwgOnDisable(): void {
-            _Pencils.presentUse = _PropTry._beforeTry;
+            _ColoursPencils._Switch = false;
         }
     }
 }
