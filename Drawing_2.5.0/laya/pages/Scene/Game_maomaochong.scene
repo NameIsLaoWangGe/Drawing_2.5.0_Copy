@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":11,
+    "selecteID":442,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -17,7 +17,7 @@
         }],
     "props":{"width":720,"sceneColor":"#000000","height":1280,"cacheAs":"normal"},
     "nodeParent":-1,
-    "maxID":442,
+    "maxID":443,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -29,7 +29,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
-            "props":{"y":0,"x":0,"width":720,"var":"Background","skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","name":"Background","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"Background","skin":"Game/UI/Common/d2.png","sizeGrid":"16,15,18,8","name":"Background","height":1280},
             "nodeParent":2,
             "label":"Background",
             "isDirectory":false,
@@ -42,387 +42,401 @@
         {
             "x":15,
             "type":"Image",
-            "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":660},
+            "searchKey":"Image,DrawingBoard,DrawingBoard",
+            "props":{"y":0,"x":0,"width":720,"var":"DrawingBoard","skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"13,14,16,16","rotation":0,"name":"DrawingBoard","height":1200},
             "nodeParent":2,
-            "label":"DrawRoot",
+            "label":"DrawingBoard",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "compId":13,
+            "compId":442,
             "child":[
                 {
                     "x":30,
                     "type":"Image",
-                    "searchKey":"Image,Caterpillar,Caterpillar",
-                    "props":{"y":609,"x":363,"width":643,"var":"Caterpillar","pivotY":453,"pivotX":322,"name":"Caterpillar","height":453},
-                    "nodeParent":13,
-                    "label":"Caterpillar",
+                    "searchKey":"Image,DrawRoot,DrawRoot",
+                    "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":660},
+                    "nodeParent":442,
+                    "label":"DrawRoot",
                     "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
-                    "compId":440,
+                    "compId":13,
                     "child":[
                         {
                             "x":45,
                             "type":"Image",
-                            "searchKey":"Image,Draw6,Draw6",
-                            "props":{"zOrder":96,"y":354,"x":110,"width":198,"var":"Draw6","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw6","height":198},
-                            "nodeParent":440,
-                            "label":"Draw6",
-                            "isOpen":false,
+                            "searchKey":"Image,Caterpillar,Caterpillar",
+                            "props":{"y":609,"x":363,"width":643,"var":"Caterpillar","pivotY":453,"pivotX":322,"name":"Caterpillar","height":453},
+                            "nodeParent":13,
+                            "label":"Caterpillar",
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":436,
+                            "compId":440,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
-                                    "searchKey":"Image,MaskBoard",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
-                                    "nodeParent":436,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":437,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":436,
-                                    "label":"Mask",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":438,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
-                                    "nodeParent":436,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":439,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw5,Draw5",
-                            "props":{"zOrder":97,"y":354,"x":209,"width":198,"var":"Draw5","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw5","height":198},
-                            "nodeParent":440,
-                            "label":"Draw5",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":432,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,MaskBoard",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
-                                    "nodeParent":432,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":433,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":432,
-                                    "label":"Mask",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":434,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
-                                    "nodeParent":432,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":435,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw4,Draw4",
-                            "props":{"zOrder":98,"y":363,"x":324,"width":198,"var":"Draw4","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":107,"pivotX":99,"name":"Draw4","height":198},
-                            "nodeParent":440,
-                            "label":"Draw4",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":424,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,MaskBoard",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
-                                    "nodeParent":424,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":425,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":424,
-                                    "label":"Mask",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":426,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
-                                    "nodeParent":424,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":427,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw3,Draw3",
-                            "props":{"zOrder":99,"y":363,"x":432,"width":198,"var":"Draw3","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":108,"pivotX":99,"name":"Draw3","height":198},
-                            "nodeParent":440,
-                            "label":"Draw3",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":407,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,MaskBoard",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
-                                    "nodeParent":407,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":423,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":407,
-                                    "label":"Mask",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":422,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
-                                    "nodeParent":407,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":408,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Head,Head",
-                            "props":{"zOrder":100,"y":239,"x":455,"width":351,"var":"Head","pivotY":222,"pivotX":176,"name":"Head","height":349},
-                            "nodeParent":440,
-                            "label":"Head",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":416,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Draw1,Draw1",
-                                    "props":{"zOrder":98,"y":176,"x":175,"width":340,"var":"Draw1","skin":"Game/UI/GameScene/Level9/lianmask.png","pivotY":169,"pivotX":170,"name":"Draw1","height":338},
-                                    "nodeParent":416,
-                                    "label":"Draw1",
-                                    "isOpen":true,
+                                    "searchKey":"Image,Draw6,Draw6",
+                                    "props":{"zOrder":96,"y":354,"x":110,"width":198,"var":"Draw6","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw6","height":198},
+                                    "nodeParent":440,
+                                    "label":"Draw6",
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
-                                    "compId":401,
+                                    "compId":436,
                                     "child":[
                                         {
                                             "type":"Image",
-                                            "searchKey":"Image,Mask",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lianmask.png","renderType":"mask","name":"Mask"},
-                                            "nodeParent":401,
-                                            "label":"Mask",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
+                                            "nodeParent":436,
+                                            "label":"MaskBoard",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":412,
+                                            "compId":437,
                                             "child":[
                                                 ]
                                         },
                                         {
                                             "type":"Image",
-                                            "searchKey":"Image,MaskBoard",
-                                            "props":{"y":30,"x":19,"width":302,"skin":"Game/UI/GameScene/Level9/lianmask.png","name":"MaskBoard","height":277},
-                                            "nodeParent":401,
-                                            "label":"MaskBoard",
+                                            "searchKey":"Image,Mask",
+                                            "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":436,
+                                            "label":"Mask",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":411,
+                                            "compId":438,
                                             "child":[
                                                 ]
                                         },
                                         {
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lian.png","name":"Pic"},
-                                            "nodeParent":401,
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
+                                            "nodeParent":436,
                                             "label":"Pic",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":402,
+                                            "compId":439,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
-                                    "searchKey":"Image,Draw2,Draw2",
-                                    "props":{"zOrder":99,"y":246,"x":194,"width":149,"var":"Draw2","skin":"Game/UI/GameScene/Level9/zuimask.png","pivotY":55,"pivotX":75,"name":"Draw2","height":109},
-                                    "nodeParent":416,
-                                    "label":"Draw2",
-                                    "isOpen":true,
+                                    "searchKey":"Image,Draw5,Draw5",
+                                    "props":{"zOrder":97,"y":354,"x":209,"width":198,"var":"Draw5","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":99,"pivotX":99,"name":"Draw5","height":198},
+                                    "nodeParent":440,
+                                    "label":"Draw5",
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
-                                    "compId":417,
+                                    "compId":432,
                                     "child":[
                                         {
                                             "type":"Image",
-                                            "searchKey":"Image,Mask",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/zuimask.png","renderType":"mask","name":"Mask"},
-                                            "nodeParent":417,
-                                            "label":"Mask",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
+                                            "nodeParent":432,
+                                            "label":"MaskBoard",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":420,
+                                            "compId":433,
                                             "child":[
                                                 ]
                                         },
                                         {
                                             "type":"Image",
-                                            "searchKey":"Image,MaskBoard",
-                                            "props":{"y":22,"x":16,"width":120,"skin":"Game/UI/GameScene/Level9/zuimask.png","name":"MaskBoard","height":75},
-                                            "nodeParent":417,
-                                            "label":"MaskBoard",
+                                            "searchKey":"Image,Mask",
+                                            "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":432,
+                                            "label":"Mask",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":419,
+                                            "compId":434,
                                             "child":[
                                                 ]
                                         },
                                         {
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
-                                            "props":{"skin":"Game/UI/GameScene/Level9/zui.png","name":"Pic"},
-                                            "nodeParent":417,
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
+                                            "nodeParent":432,
                                             "label":"Pic",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":418,
+                                            "compId":435,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
-                                    "searchKey":"Image,Eye2,Eye2",
-                                    "props":{"zOrder":100,"y":175,"x":223,"width":30,"var":"Eye2","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye2","height":30},
-                                    "nodeParent":416,
-                                    "label":"Eye2",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw4,Draw4",
+                                    "props":{"zOrder":98,"y":363,"x":324,"width":198,"var":"Draw4","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":107,"pivotX":99,"name":"Draw4","height":198},
+                                    "nodeParent":440,
+                                    "label":"Draw4",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":414,
+                                    "hasChild":true,
+                                    "compId":424,
                                     "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
+                                            "nodeParent":424,
+                                            "label":"MaskBoard",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":425,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Mask",
+                                            "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":424,
+                                            "label":"Mask",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":426,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
+                                            "nodeParent":424,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":427,
+                                            "child":[
+                                                ]
+                                        }]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
-                                    "searchKey":"Image,Eye1,Eye1",
-                                    "props":{"zOrder":100,"y":176,"x":157,"width":30,"var":"Eye1","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye1","height":30},
-                                    "nodeParent":416,
-                                    "label":"Eye1",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw3,Draw3",
+                                    "props":{"zOrder":99,"y":363,"x":432,"width":198,"var":"Draw3","skin":"Game/UI/GameScene/Level9/shenzimask.png","pivotY":108,"pivotX":99,"name":"Draw3","height":198},
+                                    "nodeParent":440,
+                                    "label":"Draw3",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":413,
+                                    "hasChild":true,
+                                    "compId":407,
                                     "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,MaskBoard",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzimask.png","name":"MaskBoard"},
+                                            "nodeParent":407,
+                                            "label":"MaskBoard",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":423,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Mask",
+                                            "props":{"skin":"Game/UI/GameScene/Level9/shenzimask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":407,
+                                            "label":"Mask",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":422,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/shenzi.png","name":"Pic"},
+                                            "nodeParent":407,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":408,
+                                            "child":[
+                                                ]
+                                        }]
+                                },
+                                {
+                                    "x":60,
+                                    "type":"Image",
+                                    "searchKey":"Image,Head,Head",
+                                    "props":{"zOrder":100,"y":239,"x":455,"width":351,"var":"Head","pivotY":222,"pivotX":176,"name":"Head","height":349},
+                                    "nodeParent":440,
+                                    "label":"Head",
+                                    "isOpen":false,
+                                    "isDirectory":true,
+                                    "isAniNode":true,
+                                    "hasChild":true,
+                                    "compId":416,
+                                    "child":[
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Draw1,Draw1",
+                                            "props":{"zOrder":98,"y":176,"x":175,"width":340,"var":"Draw1","skin":"Game/UI/GameScene/Level9/lianmask.png","pivotY":169,"pivotX":170,"name":"Draw1","height":338},
+                                            "nodeParent":416,
+                                            "label":"Draw1",
+                                            "isOpen":true,
+                                            "isDirectory":true,
+                                            "isAniNode":true,
+                                            "hasChild":true,
+                                            "compId":401,
+                                            "child":[
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Mask",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lianmask.png","renderType":"mask","name":"Mask"},
+                                                    "nodeParent":401,
+                                                    "label":"Mask",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":412,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,MaskBoard",
+                                                    "props":{"y":30,"x":19,"width":302,"skin":"Game/UI/GameScene/Level9/lianmask.png","name":"MaskBoard","height":277},
+                                                    "nodeParent":401,
+                                                    "label":"MaskBoard",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":411,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Pic",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/lian.png","name":"Pic"},
+                                                    "nodeParent":401,
+                                                    "label":"Pic",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":402,
+                                                    "child":[
+                                                        ]
+                                                }]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Draw2,Draw2",
+                                            "props":{"zOrder":99,"y":246,"x":194,"width":149,"var":"Draw2","skin":"Game/UI/GameScene/Level9/zuimask.png","pivotY":55,"pivotX":75,"name":"Draw2","height":109},
+                                            "nodeParent":416,
+                                            "label":"Draw2",
+                                            "isOpen":true,
+                                            "isDirectory":true,
+                                            "isAniNode":true,
+                                            "hasChild":true,
+                                            "compId":417,
+                                            "child":[
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Mask",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level9/zuimask.png","renderType":"mask","name":"Mask"},
+                                                    "nodeParent":417,
+                                                    "label":"Mask",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":420,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,MaskBoard",
+                                                    "props":{"y":22,"x":16,"width":120,"skin":"Game/UI/GameScene/Level9/zuimask.png","name":"MaskBoard","height":75},
+                                                    "nodeParent":417,
+                                                    "label":"MaskBoard",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":419,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Pic",
+                                                    "props":{"skin":"Game/UI/GameScene/Level9/zui.png","name":"Pic"},
+                                                    "nodeParent":417,
+                                                    "label":"Pic",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":418,
+                                                    "child":[
+                                                        ]
+                                                }]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Eye2,Eye2",
+                                            "props":{"zOrder":100,"y":175,"x":223,"width":30,"var":"Eye2","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye2","height":30},
+                                            "nodeParent":416,
+                                            "label":"Eye2",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":414,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Eye1,Eye1",
+                                            "props":{"zOrder":100,"y":176,"x":157,"width":30,"var":"Eye1","skin":"Game/UI/GameScene/Level9/yanzhuzi .png","pivotY":15,"pivotX":15,"name":"Eye1","height":30},
+                                            "nodeParent":416,
+                                            "label":"Eye1",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":413,
+                                            "child":[
+                                                ]
+                                        }]
                                 }]
-                        }]
-                }],
-            "$LOCKED":true
+                        }],
+                    "$LOCKED":true
+                }]
         }],
     "animations":[
         {

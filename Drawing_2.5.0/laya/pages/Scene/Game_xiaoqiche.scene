@@ -2,11 +2,11 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":11,
+    "selecteID":225,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":225,
+    "maxID":226,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -18,7 +18,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
-            "props":{"y":0,"x":0,"width":720,"var":"Background","skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","name":"Background","height":1280},
+            "props":{"y":0,"x":0,"width":720,"var":"Background","skin":"Game/UI/Common/d2.png","sizeGrid":"16,15,18,8","name":"Background","height":1280},
             "nodeParent":2,
             "label":"Background",
             "isDirectory":false,
@@ -31,259 +31,261 @@
         {
             "x":15,
             "type":"Image",
-            "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":-33,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":932},
+            "searchKey":"Image,DrawingBoard,DrawingBoard",
+            "props":{"y":0,"x":0,"width":720,"var":"DrawingBoard","skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"13,14,16,16","rotation":0,"name":"DrawingBoard","height":1200},
             "nodeParent":2,
-            "label":"DrawRoot",
+            "label":"DrawingBoard",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "compId":13,
+            "compId":225,
             "child":[
                 {
                     "x":30,
                     "type":"Image",
-                    "searchKey":"Image,Car,Car",
-                    "props":{"y":609,"x":448,"width":465,"var":"Car","pivotY":422,"pivotX":321,"name":"Car","height":422},
-                    "nodeParent":13,
-                    "label":"Car",
-                    "isOpen":true,
+                    "searchKey":"Image,DrawRoot,DrawRoot",
+                    "props":{"y":-33,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":932},
+                    "nodeParent":225,
+                    "label":"DrawRoot",
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
-                    "compId":202,
+                    "compId":13,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
-                            "searchKey":"Image,Body",
-                            "props":{"zOrder":98,"y":368,"x":233,"width":465,"pivotY":368,"pivotX":233,"name":"Body","height":368},
-                            "nodeParent":202,
-                            "label":"Body",
+                            "searchKey":"Image,Car,Car",
+                            "props":{"y":609,"x":448,"width":465,"var":"Car","pivotY":422,"pivotX":321,"name":"Car","height":422},
+                            "nodeParent":13,
+                            "label":"Car",
                             "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":220,
+                            "compId":202,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
-                                    "searchKey":"Image,Draw1,Draw1",
-                                    "props":{"y":199,"x":237,"width":425,"var":"Draw1","skin":"Game/UI/GameScene/Level5/cheshenmask.png","pivotY":182,"pivotX":213,"name":"Draw1","height":363},
-                                    "nodeParent":220,
-                                    "label":"Draw1",
+                                    "searchKey":"Image,Body",
+                                    "props":{"zOrder":98,"y":368,"x":233,"width":465,"pivotY":368,"pivotX":233,"name":"Body","height":368},
+                                    "nodeParent":202,
+                                    "label":"Body",
                                     "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
-                                    "compId":201,
+                                    "compId":220,
                                     "child":[
                                         {
-                                            "x":75,
+                                            "type":"Image",
+                                            "searchKey":"Image,Draw1,Draw1",
+                                            "props":{"y":199,"x":237,"width":425,"var":"Draw1","skin":"Game/UI/GameScene/Level5/cheshenmask.png","pivotY":182,"pivotX":213,"name":"Draw1","height":363},
+                                            "nodeParent":220,
+                                            "label":"Draw1",
+                                            "isOpen":true,
+                                            "isDirectory":true,
+                                            "isAniNode":true,
+                                            "hasChild":true,
+                                            "compId":201,
+                                            "child":[
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,MaskBoard",
+                                                    "props":{"y":35,"x":27,"width":369,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","name":"MaskBoard","height":300},
+                                                    "nodeParent":201,
+                                                    "label":"MaskBoard",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":221,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Pic",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshen.png","name":"Pic"},
+                                                    "nodeParent":201,
+                                                    "label":"Pic",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":203,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","renderType":"mask"},
+                                                    "nodeParent":201,
+                                                    "label":"Image",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":222,
+                                                    "child":[
+                                                        ]
+                                                }]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Draw2,Draw2",
+                                            "props":{"y":150,"x":177,"width":210,"var":"Draw2","skin":"Game/UI/GameScene/Level5/chechuangmask.png","pivotY":81,"pivotX":105,"name":"Draw2","height":161},
+                                            "nodeParent":220,
+                                            "label":"Draw2",
+                                            "isOpen":true,
+                                            "isDirectory":true,
+                                            "isAniNode":true,
+                                            "hasChild":true,
+                                            "compId":205,
+                                            "child":[
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Mask",
+                                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","renderType":"mask","name":"Mask"},
+                                                    "nodeParent":205,
+                                                    "label":"Mask",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":207,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,MaskBoard",
+                                                    "props":{"y":21,"x":25,"width":160,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","name":"MaskBoard","height":120},
+                                                    "nodeParent":205,
+                                                    "label":"MaskBoard",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":223,
+                                                    "child":[
+                                                        ]
+                                                },
+                                                {
+                                                    "type":"Image",
+                                                    "searchKey":"Image,Pic",
+                                                    "props":{"skin":"Game/UI/GameScene/Level5/chechuang.png","name":"Pic"},
+                                                    "nodeParent":205,
+                                                    "label":"Pic",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":208,
+                                                    "child":[
+                                                        ]
+                                                }]
+                                        }]
+                                },
+                                {
+                                    "type":"Image",
+                                    "searchKey":"Image,Draw4,Draw4",
+                                    "props":{"zOrder":99,"y":339,"x":142,"width":163,"var":"Draw4","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw4","height":163},
+                                    "nodeParent":202,
+                                    "label":"Draw4",
+                                    "isOpen":false,
+                                    "isDirectory":true,
+                                    "isAniNode":true,
+                                    "hasChild":true,
+                                    "compId":215,
+                                    "child":[
+                                        {
                                             "type":"Image",
                                             "searchKey":"Image,MaskBoard",
-                                            "props":{"y":35,"x":27,"width":369,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","name":"MaskBoard","height":300},
-                                            "nodeParent":201,
+                                            "props":{"y":18,"x":19,"width":127,"skin":"Game/UI/GameScene/Level5/chelunmask.png","name":"MaskBoard","height":126},
+                                            "nodeParent":215,
                                             "label":"MaskBoard",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":221,
+                                            "compId":219,
                                             "child":[
                                                 ]
                                         },
                                         {
-                                            "x":75,
-                                            "type":"Image",
-                                            "searchKey":"Image,Pic",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshen.png","name":"Pic"},
-                                            "nodeParent":201,
-                                            "label":"Pic",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":203,
-                                            "child":[
-                                                ]
-                                        },
-                                        {
-                                            "x":75,
-                                            "type":"Image",
-                                            "searchKey":"Image",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/cheshenmask.png","renderType":"mask"},
-                                            "nodeParent":201,
-                                            "label":"Image",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":222,
-                                            "child":[
-                                                ]
-                                        }]
-                                },
-                                {
-                                    "x":60,
-                                    "type":"Image",
-                                    "searchKey":"Image,Draw2,Draw2",
-                                    "props":{"y":150,"x":177,"width":210,"var":"Draw2","skin":"Game/UI/GameScene/Level5/chechuangmask.png","pivotY":81,"pivotX":105,"name":"Draw2","height":161},
-                                    "nodeParent":220,
-                                    "label":"Draw2",
-                                    "isOpen":true,
-                                    "isDirectory":true,
-                                    "isAniNode":true,
-                                    "hasChild":true,
-                                    "compId":205,
-                                    "child":[
-                                        {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Mask",
-                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","renderType":"mask","name":"Mask"},
-                                            "nodeParent":205,
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chelunmask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":215,
                                             "label":"Mask",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":207,
+                                            "compId":216,
                                             "child":[
                                                 ]
                                         },
                                         {
-                                            "x":75,
-                                            "type":"Image",
-                                            "searchKey":"Image,MaskBoard",
-                                            "props":{"y":21,"x":25,"width":160,"skin":"Game/UI/GameScene/Level5/chechuangmask.png","name":"MaskBoard","height":120},
-                                            "nodeParent":205,
-                                            "label":"MaskBoard",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":223,
-                                            "child":[
-                                                ]
-                                        },
-                                        {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Pic",
-                                            "props":{"skin":"Game/UI/GameScene/Level5/chechuang.png","name":"Pic"},
-                                            "nodeParent":205,
+                                            "props":{"skin":"Game/UI/GameScene/Level5/chelun.png","name":"Pic"},
+                                            "nodeParent":215,
                                             "label":"Pic",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":208,
+                                            "compId":217,
                                             "child":[
                                                 ]
                                         }]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw4,Draw4",
-                            "props":{"zOrder":99,"y":339,"x":142,"width":163,"var":"Draw4","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw4","height":163},
-                            "nodeParent":202,
-                            "label":"Draw4",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":215,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,MaskBoard",
-                                    "props":{"y":18,"x":19,"width":127,"skin":"Game/UI/GameScene/Level5/chelunmask.png","name":"MaskBoard","height":126},
-                                    "nodeParent":215,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":219,
-                                    "child":[
-                                        ]
                                 },
                                 {
                                     "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chelunmask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":215,
-                                    "label":"Mask",
-                                    "isDirectory":false,
+                                    "searchKey":"Image,Draw3,Draw3",
+                                    "props":{"zOrder":100,"y":339,"x":317,"width":163,"var":"Draw3","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw3","height":163},
+                                    "nodeParent":202,
+                                    "label":"Draw3",
+                                    "isOpen":false,
+                                    "isDirectory":true,
                                     "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":216,
+                                    "hasChild":true,
+                                    "compId":209,
                                     "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level5/chelun.png","name":"Pic"},
-                                    "nodeParent":215,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":217,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "searchKey":"Image,Draw3,Draw3",
-                            "props":{"zOrder":100,"y":339,"x":317,"width":163,"var":"Draw3","skin":"Game/UI/GameScene/Level5/chelunmask.png","rotation":0,"pivotY":82,"pivotX":82,"name":"Draw3","height":163},
-                            "nodeParent":202,
-                            "label":"Draw3",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":209,
-                            "child":[
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,MaskBoard,MaskBoard",
-                                    "props":{"y":18,"x":19,"width":127,"var":"MaskBoard","skin":"Game/UI/GameScene/Level5/chelunmask.png","name":"MaskBoard","height":126},
-                                    "nodeParent":209,
-                                    "label":"MaskBoard",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":218,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Mask",
-                                    "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chelunmask.png","renderType":"mask","name":"Mask"},
-                                    "nodeParent":209,
-                                    "label":"Mask",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":210,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Image",
-                                    "searchKey":"Image,Pic",
-                                    "props":{"skin":"Game/UI/GameScene/Level5/chelun.png","name":"Pic"},
-                                    "nodeParent":209,
-                                    "label":"Pic",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":211,
-                                    "child":[
-                                        ]
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,MaskBoard,MaskBoard",
+                                            "props":{"y":18,"x":19,"width":127,"var":"MaskBoard","skin":"Game/UI/GameScene/Level5/chelunmask.png","name":"MaskBoard","height":126},
+                                            "nodeParent":209,
+                                            "label":"MaskBoard",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":218,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Mask",
+                                            "props":{"y":0,"x":0,"skin":"Game/UI/GameScene/Level5/chelunmask.png","renderType":"mask","name":"Mask"},
+                                            "nodeParent":209,
+                                            "label":"Mask",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":210,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "type":"Image",
+                                            "searchKey":"Image,Pic",
+                                            "props":{"skin":"Game/UI/GameScene/Level5/chelun.png","name":"Pic"},
+                                            "nodeParent":209,
+                                            "label":"Pic",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":211,
+                                            "child":[
+                                                ]
+                                        }]
                                 }]
                         }]
                 }]

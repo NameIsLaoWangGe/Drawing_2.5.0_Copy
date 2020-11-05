@@ -102,7 +102,7 @@ export module _PropTry {
             if (Dot.visible) {
                 this.advFunc();
             } else {
-                this.lwgOpenScene(_SceneName.Game);
+                EventAdmin._notify(_Event._PropTryClose);
             }
         }
 

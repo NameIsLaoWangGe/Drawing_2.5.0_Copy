@@ -1,6 +1,6 @@
 import ADManager from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
-import { Admin, Animation2D, Click, Color, EventAdmin, Share, Tools, _Gold, _SceneName } from "./Lwg";
+import { Admin, Animation2D, Click, Color, EventAdmin, Share, TimerAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
 import { _PropTry } from "./_PropTry";
 import { _SelectLevel } from "./_SelectLevel";
@@ -356,6 +356,7 @@ export module _Game {
                 index++;
             }
             // console.log(_stepOrderImg);
+            RecordManager.startRecord();
         }
         lwgOpenAni(): number {
             this.ImgVar('DrawingBoard').width = Laya.stage.width;
@@ -366,7 +367,11 @@ export module _Game {
             let time = 400;
             let delay = 150;
             Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
-            Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay);
+            Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
+                TimerAdmin._frameOnce(30, this, () => {
+                    this.Step.cutFocus();
+                })
+            });
             return time + delay;
         }
 
@@ -406,7 +411,7 @@ export module _Game {
                     let point = (Parent.parent as Laya.Image).localToGlobal(new Laya.Point(Parent.x, Parent.y));
                     let diffPoint = new Laya.Point(Laya.stage.width / 2 - point.x, Laya.stage.width * 3 / 5 - point.y);
                     // console.log(point);
-                    Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 300, 0, () => {
+                    Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 400, 0, () => {
                         Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
                         if (func) {
                             func();
@@ -456,7 +461,6 @@ export module _Game {
             this.Step.init();
         }
         lwgOnStart(): void {
-            RecordManager.startRecord();
             EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
@@ -527,7 +531,6 @@ export module _Game {
                     ImgParent.zOrder = 200;
                 }
                 Img.zOrder = 200;
-                this.Step.cutFocus();
             });
 
             EventAdmin._register(_Event.showStepBtn, this, () => {

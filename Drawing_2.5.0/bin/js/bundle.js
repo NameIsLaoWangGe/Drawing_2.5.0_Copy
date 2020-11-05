@@ -6708,7 +6708,7 @@
                     this.advFunc();
                 }
                 else {
-                    this.lwgOpenScene(_SceneName.Game);
+                    EventAdmin._notify(_Event._PropTryClose);
                 }
             }
             bytedanceGetUp(e) {
@@ -7119,7 +7119,7 @@
                             Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
                             let point = Parent.parent.localToGlobal(new Laya.Point(Parent.x, Parent.y));
                             let diffPoint = new Laya.Point(Laya.stage.width / 2 - point.x, Laya.stage.width * 3 / 5 - point.y);
-                            Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 300, 0, () => {
+                            Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 400, 0, () => {
                                 Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
                                 if (func) {
                                     func();
@@ -7244,6 +7244,7 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
+                RecordManager.startRecord();
             }
             lwgOpenAni() {
                 this.ImgVar('DrawingBoard').width = Laya.stage.width;
@@ -7254,14 +7255,17 @@
                 let time = 400;
                 let delay = 150;
                 Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
-                Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay);
+                Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
+                    TimerAdmin._frameOnce(30, this, () => {
+                        this.Step.cutFocus();
+                    });
+                });
                 return time + delay;
             }
             lwgOnEnable() {
                 this.Step.init();
             }
             lwgOnStart() {
-                RecordManager.startRecord();
                 EventAdmin._notify(_Event.start);
             }
             lwgEventRegister() {
@@ -7328,7 +7332,6 @@
                         ImgParent.zOrder = 200;
                     }
                     Img.zOrder = 200;
-                    this.Step.cutFocus();
                 });
                 EventAdmin._register(_Event.showStepBtn, this, () => {
                     if (_Game._stepIndex.present == 0) {
@@ -8319,7 +8322,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Research;
+            Admin._platform.name = Admin._platform.tpye.Bytedance;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
