@@ -230,8 +230,8 @@ export module _Game {
                     if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
                         if (!_ColoursPencils._Switch) {
                             _SingleColorPencils._setPitchByName(lasName);
-                            this.lwgOpenScene(_SceneName.PropTry, false);
                             _PropTry._comeFrom = _SceneName.Game;
+                            this.lwgOpenScene(_SceneName.PropTry, false);
                             _activate = false;
                             return;
                         }
@@ -398,8 +398,11 @@ export module _Game {
                 }
             },
             /**完成时候的焦点切换*/
-            compeletCutFocus: () => {
+            compeletCutFocus: (func?: Function) => {
                 Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.Step.firstRootP.x, this.Step.firstRootP.y, 300, 0, () => {
+                    if (func) {
+                        func();
+                    }
                 });
             },
             init: () => {
@@ -450,7 +453,7 @@ export module _Game {
                 var htmlCanvas: Laya.HTMLCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
                 _Share._Data._base64 = htmlCanvas.toBase64("image/png", 1)
             })
-1
+
             EventAdmin._register(_Event.colseScene, this, () => {
                 Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                 this.ImgVar('DrawRoot').x = 0;
@@ -478,8 +481,8 @@ export module _Game {
                 _Gold.goldAppear(100);
             })
 
-            EventAdmin._register(_Event.playAni1, this, () => {
-                this.AniVar(_Animation.action1).play(null, true);
+            EventAdmin._register(_Event.playAni1, this, (loop?: boolean) => {
+                this.AniVar(_Animation.action1).play(null, loop == undefined ? false : loop);
             })
 
             EventAdmin._register(_Event.start, this, () => {
@@ -605,13 +608,15 @@ export module _Game {
             });
 
             EventAdmin._register(_Event.compelet, this, () => {
-                EventAdmin._notify(_Event.restoreZOder);
                 this.Draw.switch = false;
-                this.Step.BtnNext.visible = false;
-                this.Step.BtnLast.visible = false;
-                this.Step.BtnCompelet.visible = true;
-                Animation2D.fadeOut(_PencilsList, 1, 0, 200);
-            })
+                this.Step.compeletCutFocus(() => {
+                    this.Step.BtnNext.visible = false;
+                    this.Step.BtnLast.visible = false;
+                    this.Step.BtnCompelet.visible = true;
+                    Animation2D.fadeOut(_PencilsList, 1, 0, 200);
+                });
+                EventAdmin._notify(_Event.restoreZOder);
+          })
         }
 
         /**绘画控制*/
@@ -671,6 +676,7 @@ export module _Game {
             }
         }
         onStageMouseMove(e: Laya.Event): void {
+            // console.log('你好！')
             if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
@@ -683,12 +689,10 @@ export module _Game {
                     case _Pencils.type.colours:
                         Sp = this.Draw.DrawSp;
                         color = _ColoursPencils._outputColor;
-                        this._drawingLenth.value += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                         break;
                     default:
                         Sp = this.Draw.DrawSp;
                         color = _SingleColorPencils._pitchColor;
-                        this._drawingLenth.value += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
                         break;
                 }
                 if (!Sp) {
@@ -734,23 +738,39 @@ export module _Game {
                         this.Step.automaticNext = true;
                     }
                 }
-                Click._on(Click._Type.noEffect, _stepOrderImg[index], this, func, func, func, func)
+                Click._on(Click._Type.noEffect, _stepOrderImg[index], this, func, (e: Laya.Event) => {
+                    if (this.Draw.frontPos && this.Draw.switch && index == _stepIndex.present) {
+                        let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                        switch (_SingleColorPencils._pitchName) {
+                            case _Pencils.type.eraser:
+                                break;
+                            case _Pencils.type.colours:
+                                this._drawingLenth.value += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                                break;
+                            default:
+                                this._drawingLenth.value += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                                break;
+                        }
+                    }
+                }, func, func)
             }
-            Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
+            Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, (e: Laya.Event) => {
+                e.stopPropagation();
                 Laya.timer.clearAll(this.Step);
+                this.Draw.frontPos = null;
                 EventAdmin._notify(_Event.lastStep);
             });
-            Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, () => {
+            Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, (e: Laya.Event) => {
+                e.stopPropagation();
                 Laya.timer.clearAll(this.Step);
+                this.Draw.frontPos = null;
                 EventAdmin._notify(_Event.nextStep);
             });
             Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
-                this.Step.compeletCutFocus();
-                Admin._game.level++;
-                this.Draw.switch = false;
                 this.lwgOpenScene(_SceneName.Settle, false, () => {
                     this.Step.BtnCompelet.visible = false;
                 });
+
             });
         }
         lwgOnDisable(): void {

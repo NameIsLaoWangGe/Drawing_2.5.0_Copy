@@ -2,6 +2,7 @@ import ADManager from "../TJ/Admanager";
 import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, Animation2D } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
+import { _PropTry } from "./_PropTry";
 export module _SelectLevel {
     export class _Data {
         static _property = {
@@ -273,6 +274,7 @@ export module _SelectLevel {
     }
     export class SelectLevel extends _SelectLevel.SelectLevelBase {
         lwgOnAwake(): void {
+            _PropTry._comeFrom = _SceneName.SelectLevel;
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                 const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
                 if (element.name == _Data._pich.classify) {

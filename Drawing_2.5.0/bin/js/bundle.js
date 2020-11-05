@@ -6550,6 +6550,7 @@
         _SelectLevel.SelectLevelBase = SelectLevelBase;
         class SelectLevel extends _SelectLevel.SelectLevelBase {
             lwgOnAwake() {
+                _PropTry._comeFrom = _SceneName.SelectLevel;
                 for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                     const element = this.ImgVar('CutBtn').getChildAt(index);
                     if (element.name == _Data._pich.classify) {
@@ -6612,7 +6613,7 @@
         _PropTry._init = _init;
         let _Event;
         (function (_Event) {
-            _Event[_Event["_PropTryClose"] = 0] = "_PropTryClose";
+            _Event["_PropTryClose"] = "_PropTryClose";
         })(_Event = _PropTry._Event || (_PropTry._Event = {}));
         class PropTryBase extends Admin._SceneBase {
             moduleOnAwake() {
@@ -6641,7 +6642,7 @@
                 });
             }
             lwgEventRegister() {
-                EventAdmin._register(_Event._PropTryClose, this, () => {
+                EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
                     if (_PropTry._comeFrom == _SceneName.SelectLevel) {
                         let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
                         this.lwgOpenScene(levelName, true, () => {
@@ -7016,8 +7017,8 @@
                     if (this.Owner['_dataSource'][_SingleColorPencils._property.name] == 'colours') {
                         if (!_ColoursPencils._Switch) {
                             _SingleColorPencils._setPitchByName(lasName);
-                            this.lwgOpenScene(_SceneName.PropTry, false);
                             _PropTry._comeFrom = _SceneName.Game;
+                            this.lwgOpenScene(_SceneName.PropTry, false);
                             _Game._activate = false;
                             return;
                         }
@@ -7110,8 +7111,11 @@
                             });
                         }
                     },
-                    compeletCutFocus: () => {
+                    compeletCutFocus: (func) => {
                         Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.Step.firstRootP.x, this.Step.firstRootP.y, 300, 0, () => {
+                            if (func) {
+                                func();
+                            }
                         });
                     },
                     init: () => {
@@ -7245,7 +7249,6 @@
                     var htmlCanvas = this.Owner.drawToCanvas(this.Owner.width, this.Owner.height, 0, 0);
                     _Share._Data._base64 = htmlCanvas.toBase64("image/png", 1);
                 });
-                1;
                 EventAdmin._register(_Event.colseScene, this, () => {
                     Tools.Node.changePovit(this.ImgVar('DrawRoot'), 0, 0);
                     this.ImgVar('DrawRoot').x = 0;
@@ -7265,8 +7268,8 @@
                     Animation2D.move_Scale(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').scaleX, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').scaleX / 2, 500, 500);
                     _Gold.goldAppear(100);
                 });
-                EventAdmin._register(_Event.playAni1, this, () => {
-                    this.AniVar(_Animation.action1).play(null, true);
+                EventAdmin._register(_Event.playAni1, this, (loop) => {
+                    this.AniVar(_Animation.action1).play(null, loop == undefined ? false : loop);
                 });
                 EventAdmin._register(_Event.start, this, () => {
                     this.Draw.switch = true;
@@ -7389,12 +7392,14 @@
                     }
                 });
                 EventAdmin._register(_Event.compelet, this, () => {
-                    EventAdmin._notify(_Event.restoreZOder);
                     this.Draw.switch = false;
-                    this.Step.BtnNext.visible = false;
-                    this.Step.BtnLast.visible = false;
-                    this.Step.BtnCompelet.visible = true;
-                    Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
+                    this.Step.compeletCutFocus(() => {
+                        this.Step.BtnNext.visible = false;
+                        this.Step.BtnLast.visible = false;
+                        this.Step.BtnCompelet.visible = true;
+                        Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
+                    });
+                    EventAdmin._notify(_Event.restoreZOder);
                 });
             }
             onStageMouseDown(e) {
@@ -7442,12 +7447,10 @@
                         case _Game._Pencils.type.colours:
                             Sp = this.Draw.DrawSp;
                             color = _ColoursPencils._outputColor;
-                            this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
                             break;
                         default:
                             Sp = this.Draw.DrawSp;
                             color = _SingleColorPencils._pitchColor;
-                            this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
                             break;
                     }
                     if (!Sp) {
@@ -7489,20 +7492,35 @@
                             this.Step.automaticNext = true;
                         }
                     };
-                    Click._on(Click._Type.noEffect, _Game._stepOrderImg[index], this, func, func, func, func);
+                    Click._on(Click._Type.noEffect, _Game._stepOrderImg[index], this, func, (e) => {
+                        if (this.Draw.frontPos && this.Draw.switch && index == _Game._stepIndex.present) {
+                            let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                            switch (_SingleColorPencils._pitchName) {
+                                case _Game._Pencils.type.eraser:
+                                    break;
+                                case _Game._Pencils.type.colours:
+                                    this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
+                                    break;
+                                default:
+                                    this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
+                                    break;
+                            }
+                        }
+                    }, func, func);
                 }
-                Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, () => {
+                Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, (e) => {
+                    e.stopPropagation();
                     Laya.timer.clearAll(this.Step);
+                    this.Draw.frontPos = null;
                     EventAdmin._notify(_Event.lastStep);
                 });
-                Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, () => {
+                Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, (e) => {
+                    e.stopPropagation();
                     Laya.timer.clearAll(this.Step);
+                    this.Draw.frontPos = null;
                     EventAdmin._notify(_Event.nextStep);
                 });
                 Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
-                    this.Step.compeletCutFocus();
-                    Admin._game.level++;
-                    this.Draw.switch = false;
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
                         this.Step.BtnCompelet.visible = false;
                     });
@@ -7746,9 +7764,12 @@
         }
         _Settle.SettleBase = SettleBase;
         class Settle extends _Settle.SettleBase {
+            lwgOnAwake() {
+                EventAdmin._notify(_Game._Event.playAni1, [true]);
+            }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
-                    EventAdmin._notify(_Game._Event.playAni1);
+                    EventAdmin._notify(_Game._Event.playAni1, [false]);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
                     RecordManager.startRecord();
@@ -7852,6 +7873,317 @@
     })(_Start || (_Start = {}));
     var _Start$1 = _Start.Start;
 
+    var OldEffects;
+    (function (OldEffects) {
+        let SkinUrl;
+        (function (SkinUrl) {
+            SkinUrl[SkinUrl["Frame/Effects/cir_white.png"] = 0] = "Frame/Effects/cir_white.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_black.png"] = 1] = "Frame/Effects/cir_black.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_blue.png"] = 2] = "Frame/Effects/cir_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_bluish.png"] = 3] = "Frame/Effects/cir_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_cyan.png"] = 4] = "Frame/Effects/cir_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_grass.png"] = 5] = "Frame/Effects/cir_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_green.png"] = 6] = "Frame/Effects/cir_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_orange.png"] = 7] = "Frame/Effects/cir_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_pink.png"] = 8] = "Frame/Effects/cir_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_purple.png"] = 9] = "Frame/Effects/cir_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_red.png"] = 10] = "Frame/Effects/cir_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_yellow.png"] = 11] = "Frame/Effects/cir_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_black.png"] = 12] = "Frame/Effects/star_black.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_blue.png"] = 13] = "Frame/Effects/star_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_bluish.png"] = 14] = "Frame/Effects/star_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_cyan.png"] = 15] = "Frame/Effects/star_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_grass.png"] = 16] = "Frame/Effects/star_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_green.png"] = 17] = "Frame/Effects/star_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_orange.png"] = 18] = "Frame/Effects/star_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_pink.png"] = 19] = "Frame/Effects/star_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_purple.png"] = 20] = "Frame/Effects/star_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_red.png"] = 21] = "Frame/Effects/star_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_white.png"] = 22] = "Frame/Effects/star_white.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_yellow.png"] = 23] = "Frame/Effects/star_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/ui_Circular_l_yellow.png"] = 24] = "Frame/Effects/ui_Circular_l_yellow.png";
+            SkinUrl[SkinUrl["Frame/UI/ui_square_guang.png"] = 25] = "Frame/UI/ui_square_guang.png";
+        })(SkinUrl = OldEffects.SkinUrl || (OldEffects.SkinUrl = {}));
+        let SkinStyle;
+        (function (SkinStyle) {
+            SkinStyle["star"] = "star";
+            SkinStyle["dot"] = "dot";
+        })(SkinStyle = OldEffects.SkinStyle || (OldEffects.SkinStyle = {}));
+        class EffectsBase extends Laya.Script {
+            onAwake() {
+                this.initProperty();
+            }
+            onEnable() {
+                this.self = this.owner;
+                this.selfScene = this.self.scene;
+                let calssName = this['__proto__']['constructor'].name;
+                this.self[calssName] = this;
+                this.timer = 0;
+                this.lwgInit();
+                this.propertyAssign();
+            }
+            lwgInit() {
+            }
+            initProperty() {
+            }
+            propertyAssign() {
+                if (this.startAlpha) {
+                    this.self.alpha = this.startAlpha;
+                }
+                if (this.startScale) {
+                    this.self.scale(this.startScale, this.startScale);
+                }
+                if (this.startRotat) {
+                    this.self.rotation = this.startRotat;
+                }
+            }
+            commonSpeedXYByAngle(angle, speed) {
+                this.self.x += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).x;
+                this.self.y += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).y;
+            }
+            moveRules() {
+            }
+            onUpdate() {
+                this.moveRules();
+            }
+            onDisable() {
+                Laya.Pool.recover(this.self.name, this.self);
+                this.destroy();
+                Laya.Tween.clearAll(this);
+                Laya.timer.clearAll(this);
+            }
+        }
+        OldEffects.EffectsBase = EffectsBase;
+        function createCommonExplosion(parent, quantity, x, y, style, speed, continueTime) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
+                ele.name = 'ele';
+                let num;
+                if (style === SkinStyle.star) {
+                    num = 12 + Math.floor(Math.random() * 12);
+                }
+                else if (style === SkinStyle.dot) {
+                    num = Math.floor(Math.random() * 12);
+                }
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.addComponent(commonExplosion);
+                scirpt.startSpeed = Math.random() * speed;
+                scirpt.continueTime = 2 * Math.random() + continueTime;
+            }
+        }
+        OldEffects.createCommonExplosion = createCommonExplosion;
+        class commonExplosion extends EffectsBase {
+            lwgInit() {
+                this.self.width = 25;
+                this.self.height = 25;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 8;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 2;
+                this.continueTime = 8 + Math.random() * 10;
+                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
+                this.rotateRan = Math.random() * 10;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.rotateDir === 'left') {
+                    this.self.rotation += this.rotateRan;
+                }
+                else {
+                    this.self.rotation -= this.rotateRan;
+                }
+                if (this.timer >= this.continueTime / 2) {
+                    this.self.alpha -= 0.04;
+                    if (this.self.alpha <= 0.65) {
+                        this.self.removeSelf();
+                    }
+                }
+                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed + this.accelerated);
+                this.accelerated += 0.2;
+            }
+        }
+        OldEffects.commonExplosion = commonExplosion;
+        function createExplosion_Rotate(parent, quantity, x, y, style, speed, rotate) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
+                ele.name = 'ele';
+                let num;
+                if (style === SkinStyle.star) {
+                    num = 12 + Math.floor(Math.random() * 12);
+                }
+                else if (style === SkinStyle.dot) {
+                    num = Math.floor(Math.random() * 12);
+                }
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.addComponent(Explosion_Rotate);
+                scirpt.startSpeed = 2 + Math.random() * speed;
+                scirpt.rotateRan = Math.random() * rotate;
+            }
+        }
+        OldEffects.createExplosion_Rotate = createExplosion_Rotate;
+        class Explosion_Rotate extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 8;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0;
+                this.continueTime = 5 + Math.random() * 20;
+                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
+                this.rotateRan = Math.random() * 15;
+            }
+            moveRules() {
+                if (this.rotateDir === 'left') {
+                    this.self.rotation += this.rotateRan;
+                }
+                else {
+                    this.self.rotation -= this.rotateRan;
+                }
+                if (this.startSpeed - this.accelerated <= 0.1) {
+                    this.self.alpha -= 0.03;
+                    if (this.self.alpha <= 0) {
+                        this.self.removeSelf();
+                    }
+                }
+                else {
+                    this.accelerated += 0.2;
+                }
+                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed - this.accelerated);
+            }
+        }
+        OldEffects.Explosion_Rotate = Explosion_Rotate;
+        function createFireworks(parent, quantity, x, y) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('fireworks', Laya.Image);
+                ele.name = 'fireworks';
+                let num = 12 + Math.floor(Math.random() * 11);
+                ele.alpha = 1;
+                ele.skin = SkinUrl[num];
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.getComponent(Fireworks);
+                if (!scirpt) {
+                    ele.addComponent(Fireworks);
+                }
+            }
+        }
+        OldEffects.createFireworks = createFireworks;
+        class Fireworks extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 5;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0.1;
+                this.continueTime = 200 + Math.random() * 10;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.timer >= this.continueTime * 3 / 5) {
+                    this.self.alpha -= 0.1;
+                }
+                if (this.timer >= this.continueTime) {
+                    this.self.removeSelf();
+                }
+                else {
+                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
+                }
+                if (this.self.scaleX < 0) {
+                    this.self.scaleX += 0.01;
+                }
+                else if (this.self.scaleX >= this.startScale) {
+                    this.self.scaleX -= 0.01;
+                }
+            }
+        }
+        OldEffects.Fireworks = Fireworks;
+        function createLeftOrRightJet(parent, direction, quantity, x, y) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('Jet', Laya.Image);
+                ele.name = 'Jet';
+                let num = 12 + Math.floor(Math.random() * 11);
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.getComponent(leftOrRightJet);
+                if (!scirpt) {
+                    ele.addComponent(leftOrRightJet);
+                    let scirpt1 = ele.getComponent(leftOrRightJet);
+                    scirpt1.direction = direction;
+                    scirpt1.initProperty();
+                }
+                else {
+                    scirpt.direction = direction;
+                    scirpt.initProperty();
+                }
+            }
+        }
+        OldEffects.createLeftOrRightJet = createLeftOrRightJet;
+        class leftOrRightJet extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                if (this.direction === 'left') {
+                    this.startAngle = 100 * Math.random() - 90 + 45 - 10 - 20;
+                }
+                else if (this.direction === 'right') {
+                    this.startAngle = 100 * Math.random() + 90 + 45 + 20;
+                }
+                this.startSpeed = 10 * Math.random() + 3;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0.1;
+                this.continueTime = 300 + Math.random() * 50;
+                this.randomRotate = 1 + Math.random() * 20;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.timer >= this.continueTime * 3 / 5) {
+                    this.self.alpha -= 0.1;
+                }
+                if (this.timer >= this.continueTime) {
+                    this.self.removeSelf();
+                }
+                else {
+                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
+                }
+                this.self.rotation += this.randomRotate;
+                if (this.self.scaleX < 0) {
+                    this.self.scaleX += 0.01;
+                }
+                else if (this.self.scaleX >= this.startScale) {
+                    this.self.scaleX -= 0.01;
+                }
+            }
+        }
+        OldEffects.leftOrRightJet = leftOrRightJet;
+    })(OldEffects || (OldEffects = {}));
+    var OldEffects$1 = OldEffects;
+
     var _Victory;
     (function (_Victory) {
         class _data {
@@ -7868,13 +8200,31 @@
         }
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
+            lwgOnAwake() {
+            }
             lwgOpenAniAfter() {
-                console.log(_Game._Pencils.presentUse, _Special._data._lastDate);
-                if (_Game._Pencils.presentUse == _Game._Pencils.type.singleColor && _Special._data._lastDate
-                    !== DateAdmin._date.date) {
-                    _Special._data._lastDate = DateAdmin._date.date;
-                    this.lwgOpenScene(_SceneName.Special, false);
-                }
+                this.AniVar('NoAni_Remark').play(0, false);
+                this.AniVar('NoAni_Remark').on(Laya.Event.LABEL, this, (e) => {
+                    PalyAudio.playVictorySound();
+                    OldEffects$1.createFireworks(Laya.stage, 40, 430, 200);
+                    OldEffects$1.createFireworks(Laya.stage, 40, 109, 200);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
+                    console.log(_Game._Pencils.presentUse, _Special._data._lastDate);
+                    if (_Game._Pencils.presentUse == _Game._Pencils.type.singleColor && _Special._data._lastDate
+                        !== DateAdmin._date.date) {
+                        _Special._data._lastDate = DateAdmin._date.date;
+                        this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
+                    }
+                    else {
+                        if (_Game._SingleColorPencils._pitchName == 'colours') {
+                            this.ImgVar('Evaluate').skin = 'Game/UI/Victory/jmjl.png';
+                        }
+                        else {
+                            this.ImgVar('Evaluate').skin = 'Game/UI/Victory/pptt.png';
+                        }
+                    }
+                });
             }
             lwgBtnClick() {
                 let num = 25;
@@ -7906,7 +8256,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.WebTest;
+            Admin._platform.name = Admin._platform.tpye.Research;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,

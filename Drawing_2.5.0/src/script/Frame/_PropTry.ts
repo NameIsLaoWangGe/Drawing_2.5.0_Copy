@@ -10,7 +10,7 @@ export module _PropTry {
     export let _comeFrom: string = _SceneName.SelectLevel;
     export function _init(): void { }
     export enum _Event {
-        '_PropTryClose',
+        _PropTryClose = '_PropTryClose',
     }
     export class PropTryBase extends Admin._SceneBase {
         moduleOnAwake(): void {
@@ -38,7 +38,7 @@ export module _PropTry {
             })
         }
         lwgEventRegister(): void {
-            EventAdmin._register(_Event._PropTryClose, this, () => {
+            EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
                 if (_comeFrom == _SceneName.SelectLevel) {
                     let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
                     this.lwgOpenScene(levelName, true, () => {

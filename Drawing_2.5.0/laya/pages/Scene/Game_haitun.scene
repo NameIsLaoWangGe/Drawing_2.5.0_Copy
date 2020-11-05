@@ -43,7 +43,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,DrawRoot,DrawRoot",
-            "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":626},
+            "props":{"y":78,"x":0,"width":720,"var":"DrawRoot","name":"DrawRoot","height":626},
             "nodeParent":2,
             "label":"DrawRoot",
             "isOpen":true,

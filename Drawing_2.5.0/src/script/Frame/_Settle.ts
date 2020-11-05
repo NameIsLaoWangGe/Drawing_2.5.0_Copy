@@ -15,9 +15,12 @@ export module _Settle {
     }
     /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
     export class Settle extends _Settle.SettleBase {
+        lwgOnAwake(): void {
+            EventAdmin._notify(_Game._Event.playAni1, [true]);
+        }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
-                EventAdmin._notify(_Game._Event.playAni1);
+                EventAdmin._notify(_Game._Event.playAni1, [false]);
             });
             Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
                 RecordManager.startRecord();
