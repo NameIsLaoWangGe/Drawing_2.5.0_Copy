@@ -537,6 +537,9 @@ export module lwg {
             } else {
                 Gold.skin = url;
             }
+            if (GoldNode) {
+                Gold.zOrder = GoldNode.zOrder + 10;
+            }
             return Gold;
         }
 
@@ -558,6 +561,7 @@ export module lwg {
                 Laya.timer.once(index * 30, this, () => {
 
                     let Gold = createOneGold(width, height, url);
+
                     parent.addChild(Gold);
 
                     Animation2D.move_Scale(Gold, 1, firstPoint.x, firstPoint.y, targetPoint.x, targetPoint.y, 1, 350, 0, null, () => {
@@ -1731,10 +1735,6 @@ export module lwg {
                     time = _commonOpenAni(this.Owner);
                 }
             }
-            /**开场或者离场动画单位时间,默认为100*/
-            aniTime: number = 100;
-            /**开场或者离场动画单位延迟时间,默认为100*/
-            aniDelayde: number = 100;
             /**开场动画,返回的数字为时间倒计时，倒计时结束后开启点击事件,也可以用来屏蔽通用动画，只需返回一个数字即可,如果场景内节点是以prefab添加进去的，那么必须卸载lwgOpenAni之前*/
             lwgOpenAni(): number { return null };
             /**开场动画之后执行*/
@@ -3894,20 +3894,20 @@ export module lwg {
          * 类似气球弹出并且回弹，第一个阶段弹到空中，这个阶段可以给个角度，第二阶段落下变为原始状态，第三阶段再次放大一次，这次放大小一点，第四阶段回到原始状态，三、四个阶段是回弹一次，根据第一个阶段参数进行调整
          * @param node 节点
          * @param firstAlpha 初始透明度
-         * @param  firstScale 最终大小，因为有些节点可能初始Scale并不是1
-         * @param scale1 第一阶段放大比例
+         * @param firstScale 最终大小，因为有些节点可能初始Scale并不是1
+         * @param maxScale 最大放大比例
          * @param rotation 第一阶段角度 
          * @param time1 第一阶段花费时间
          * @param time2 第二阶段花费时间
          * @param delayed 延时时间
          * @param func 完成后的回调
          */
-        export function bombs_Appear(node, firstAlpha, endScale, scale1, rotation1, time1, time2, delayed?: number, func?: Function): void {
+        export function bombs_Appear(node, firstAlpha, endScale, maxScale, rotation1, time1, time2, delayed?: number, func?: Function): void {
             node.scale(0, 0);
             node.alpha = firstAlpha;
-            Laya.Tween.to(node, { scaleX: scale1, scaleY: scale1, alpha: 1, rotation: rotation1 }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+            Laya.Tween.to(node, { scaleX: maxScale, scaleY: maxScale, alpha: 1, rotation: rotation1 }, time1, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
                 Laya.Tween.to(node, { scaleX: endScale, scaleY: endScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
-                    Laya.Tween.to(node, { scaleX: endScale + (scale1 - endScale) * 0.2, scaleY: endScale + (scale1 - endScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
+                    Laya.Tween.to(node, { scaleX: endScale + (maxScale - endScale) * 0.2, scaleY: endScale + (maxScale - endScale) * 0.2, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
 
                         Laya.Tween.to(node, { scaleX: endScale, scaleY: endScale, rotation: 0 }, time2, null, Laya.Handler.create(this, function () {
                             if (func) {

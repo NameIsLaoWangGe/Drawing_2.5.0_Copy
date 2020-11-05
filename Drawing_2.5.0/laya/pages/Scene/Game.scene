@@ -443,7 +443,7 @@
                     "x":30,
                     "type":"Box",
                     "searchKey":"Box",
-                    "props":{"y":3,"x":9,"width":113,"renderType":"render","height":201},
+                    "props":{"y":112,"x":66,"width":113,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
                     "nodeParent":45,
                     "label":"Box",
                     "isOpen":true,

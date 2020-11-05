@@ -1,5 +1,6 @@
-import lwg, { Admin, Click, _Gold, _SceneName } from "./Lwg";
+import lwg, { Admin, Animation2D, Click, TimerAdmin, _Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
+import { _SelectLevel } from "./_SelectLevel";
 
 /**测试模块,每个模块分开，默认导出一个类，这个类是默认挂载的脚本类，如果有多个脚本，
  * 那么在这个默认类中进行添加，或者在其他地方动态添加*/
@@ -19,9 +20,18 @@ export module _Start {
         lwgOnStart(): void {
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
         }
+        lwgOpenAniAfter(): void {
+            TimerAdmin._loop(2000, this, () => {
+                Animation2D.bomb_LeftRight(this.ImgVar('BtnStart'), 1.22, 250);
+            }, true);
+        }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                 this.lwgOpenScene(_SceneName.SelectLevel);
+            })
+            Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
+                this.lwgOpenScene(_SceneName.SelectLevel);
+                _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
             })
         }
     }

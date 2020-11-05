@@ -14,7 +14,11 @@ export module _PropTry {
     }
     export class PropTryBase extends Admin._SceneBase {
         moduleOnAwake(): void {
-            _beforeTry = _Game._Pencils.presentUse;
+            if (_comeFrom == _SceneName.SelectLevel) {
+                _beforeTry = _Game._Pencils.pencilType;
+                _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                _Game._GeneralPencils._setPitchByName(_Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name]);
+            }
         }
     }
     export class PropTry extends PropTryBase {
@@ -141,8 +145,9 @@ export module _PropTry {
         advFunc(): void {
             ADManager.ShowReward(() => {
                 ADManager.TAPoint(TaT.BtnClick, 'UIPropTry_BtnGet');
-                _Game._SingleColorPencils._setPitchByName('colours');
+                _Game._GeneralPencils._setPitchByName('colours');
                 _Game._ColoursPencils._Switch = true;
+                _Game._Pencils.pencilType = _Game._Pencils.type.colours;
                 EventAdmin._notify(_Event._PropTryClose);
             })
         }

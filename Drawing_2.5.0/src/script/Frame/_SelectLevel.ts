@@ -183,6 +183,7 @@ export module _SelectLevel {
                 _MyList.refresh();
             });
         }
+
     }
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
     export class SelectLevelBase extends Admin._SceneBase {
@@ -293,7 +294,9 @@ export module _SelectLevel {
             })
         }
         lwgBtnClick(): void {
-
+            Click._on(Click._Type.largen, this.ImgVar('BtnBack'), this, null, null, () => {
+                this.lwgOpenScene(_SceneName.Start);
+            });
             if (_MyList.cells.length !== 0) {
                 for (let index = 0; index < _MyList.cells.length; index++) {
                     const element = _MyList.cells[index];

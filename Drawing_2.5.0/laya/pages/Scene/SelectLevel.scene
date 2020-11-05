@@ -2,13 +2,13 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":17,
+    "selecteID":42,
     "searchKey":"View",
     "referenceLines":[
         ],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":42,
+    "maxID":43,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -448,6 +448,20 @@
             "isAniNode":true,
             "hasChild":false,
             "compId":19,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Sprite",
+            "searchKey":"Sprite,BtnBack,BtnBack",
+            "props":{"y":1203,"x":100,"width":91,"var":"BtnBack","texture":"Game/UI/SelectLevel/icon_back.png","pivotY":48,"pivotX":46,"name":"BtnBack","height":95},
+            "nodeParent":2,
+            "label":"BtnBack",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":42,
             "child":[
                 ]
         }],

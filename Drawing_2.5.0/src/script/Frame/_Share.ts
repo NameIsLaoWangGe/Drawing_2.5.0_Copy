@@ -5,9 +5,8 @@ import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 export module _Share {
     export class _Data {
-        static _base64: string;
         static _photo = {
-            _texture: null as Laya.Texture,
+            _base64: null as string,
             _width: 400,
             _height: 400,
         };
@@ -24,14 +23,9 @@ export module _Share {
         lwgOnAwake(): void {
             this.ImgVar('Photo').width = Laya.stage.width;
             this.ImgVar('Photo').height = Laya.stage.height;
-            if (_Data._base64) {
-                this.ImgVar('Photo').skin = _Data._base64;
-            }
-            if (_Data._photo._texture) {
-                // this.ImgVar('Photo').texture = _Data._photo._texture;
-                // this.ImgVar('Photo').width = _Data._photo._width;
-                // this.ImgVar('Photo').height = _Data._photo._height;
-                // this.ImgVar('Photo').graphics.drawTexture( _Data._texture, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
+            if (_Data._photo._base64) {
+                this.ImgVar('Photo').skin = _Data._photo._base64;
+                this.ImgVar('Photo').scale(0.8, 0.8);
             }
         }
         lwgBtnClick(): void {

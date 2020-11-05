@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":13,
-    "selecteID":514,
+    "selectedBox":2,
+    "selecteID":11,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -24,7 +24,7 @@
             "x":15,
             "type":"Image",
             "searchKey":"Image,Background,Background",
-            "props":{"width":720,"var":"Background","top":0,"skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","right":0,"name":"Background","left":0,"height":1280,"bottom":0},
+            "props":{"y":0,"x":0,"width":720,"var":"Background","skin":"Frame/UI/ui_orthogon_white.png","sizeGrid":"16,15,18,8","rotation":0,"name":"Background","height":1280},
             "nodeParent":2,
             "label":"Background",
             "isDirectory":false,
