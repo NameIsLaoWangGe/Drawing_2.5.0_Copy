@@ -1,4 +1,4 @@
-import ADManager from "../TJ/Admanager";
+import ADManager, { TaT } from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { Admin, Animation2D, Click, Color, EventAdmin, Share, TimerAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _PreloadUrl } from "./_PreLoad";
@@ -219,6 +219,7 @@ export module _Game {
         _dataSource: any;
         lwgOnStart(): void {
             this._dataSource = this.Owner['_dataSource'];
+            ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
             Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 600, () => {
                 if ((_GeneralPencils._pitchName == this._dataSource[_GeneralPencils._property.name])) {
                     Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
@@ -238,6 +239,7 @@ export module _Game {
                 func,
                 (e: Laya.Event) => {
                     e.stopPropagation();
+                    ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
                     let lasName = _GeneralPencils._pitchName;
                     _GeneralPencils._setPitchByName(this._dataSource[_GeneralPencils._property.name]);
                     if (this._dataSource[_GeneralPencils._property.name] == 'colours') {
@@ -296,6 +298,8 @@ export module _Game {
         }
 
         lwgOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'playpage');
+            ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
             _Gold.goldVinish(100);
             _passLenght = 50;
             _stepIndex.present = 0;
@@ -739,7 +743,6 @@ export module _Game {
                 }
                 // 消除颜色
                 Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
-
                 this.Draw.frontPos = endPos;
             }
         }
@@ -806,6 +809,8 @@ export module _Game {
         }
         lwgOnDisable(): void {
             _ColoursPencils._Switch = false;
+            ADManager.TAPoint(TaT.PageShow, 'playpage');
+            ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name}`);
         }
     }
 }

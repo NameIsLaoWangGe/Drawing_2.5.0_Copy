@@ -14,6 +14,9 @@ export module _PropTry {
     }
     export class PropTryBase extends Admin._SceneBase {
         moduleOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'skintrypage');
+            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
+
             if (_comeFrom == _SceneName.SelectLevel) {
                 _beforeTry = _Game._Pencils.pencilType;
                 _Game._Pencils.pencilType = _Game._Pencils.type.general;
@@ -23,7 +26,6 @@ export module _PropTry {
     }
     export class PropTry extends PropTryBase {
         lwgOnAwake(): void {
-            ADManager.TAPoint(TaT.BtnShow, 'UIPropTry_BtnGet');
             if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
                 Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
                 Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
@@ -144,7 +146,7 @@ export module _PropTry {
         }
         advFunc(): void {
             ADManager.ShowReward(() => {
-                ADManager.TAPoint(TaT.BtnClick, 'UIPropTry_BtnGet');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                 _Game._GeneralPencils._setPitchByName('colours');
                 _Game._ColoursPencils._Switch = true;
                 _Game._Pencils.pencilType = _Game._Pencils.type.colours;
@@ -154,6 +156,7 @@ export module _PropTry {
 
         onDisable(): void {
             _Game._activate = true;
+            ADManager.TAPoint(TaT.PageLeave, 'skintrypage');
         }
     }
 }

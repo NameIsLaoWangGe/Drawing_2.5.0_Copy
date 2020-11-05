@@ -1,3 +1,4 @@
+import ADManager, { TaT } from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { Admin, Click, DateAdmin, EventAdmin, TimerAdmin, _Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
@@ -23,6 +24,10 @@ export module _Special {
     export function _init(): void {
     };
     export class SpecialBase extends Admin._SceneBase {
+        moduleOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, '100Mpage');
+            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_100M');
+        }
     }
     export class Special extends _Special.SpecialBase {
         lwgBtnClick(): void {
@@ -52,8 +57,12 @@ export module _Special {
 
             });
             Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
+                ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_100M');
                 this.lwgCloseScene();
             });
+        }
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, '100Mpage');
         }
     }
 }

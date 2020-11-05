@@ -1,4 +1,4 @@
-import ADManager from "../TJ/Admanager";
+import ADManager, { TaT } from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin } from "./Lwg";
 import { _Game } from "./_Game";
@@ -17,6 +17,10 @@ export module _Share {
     }
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
     export class ShareBase extends Admin._SceneBase {
+        moduleOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'sharepage');
+            ADManager.TAPoint(TaT.BtnShow, 'share_share');
+        }
     }
     /**可以手动挂在脚本中的类，全脚本唯一的默认导出，也可动态添加，动态添加写在模块内更方便*/
     export class Share extends _Share.ShareBase {
@@ -37,10 +41,15 @@ export module _Share {
                 func();
             });
             Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                RecordManager._share('award', () => {
+                RecordManager.startRecord();
+                RecordManager._share('noAward', () => {
+                    ADManager.TAPoint(TaT.BtnClick, 'share_share');
                     func();
                 });
             });
+        }
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, 'sharepage');
         }
     }
 }

@@ -1287,7 +1287,7 @@ export module lwg {
             VictoryBox = 'VictoryBox',
             CheckIn = 'CheckIn',
             Resurgence = 'Resurgence',
-            Ads = 'Ads',
+            AdsHint = 'AdsHint',
             LwgInit = 'LwgInit',
             Game = 'Game',
             SmallHint = 'SmallHint',

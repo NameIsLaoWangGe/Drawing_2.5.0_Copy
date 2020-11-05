@@ -1,4 +1,4 @@
-import ADManager from "../TJ/Admanager";
+import ADManager, { TaT } from "../TJ/Admanager";
 import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, Animation2D } from "./Lwg";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
@@ -140,6 +140,7 @@ export module _SelectLevel {
     export let _MyList: Laya.List;
     export class _SelectLevelItem extends Admin._Object {
         lwgOnEnable(): void {
+            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_choosecard');
             // let Content = this.Owner.getChildByName('Content') as Laya.Image;
             // let BtnContent = Content.getChildByName('BtnContent') as Laya.Image;
             // let IconLock = BtnContent.getChildByName('IconLock') as Laya.Image;
@@ -160,11 +161,12 @@ export module _SelectLevel {
                     switch (this.owner['_dataSource'][_Data._property.unlockWay]) {
                         case _Data._unlockWay.ads:
                             ADManager.ShowReward(() => {
+                                ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_choosecard');
                                 _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                             });
                             break;
                         case _Data._unlockWay.gold:
-                            let num = this.owner['_dataSource'][_Data._property.resCondition]
+                            let num = this.owner['_dataSource'][_Data._property.condition]
                             if (_Gold._num.value >= num) {
                                 _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                 _Gold._num.value -= num;
@@ -188,6 +190,7 @@ export module _SelectLevel {
     /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
     export class SelectLevelBase extends Admin._SceneBase {
         moduleOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'choosecardpage');
             _MyList = this.ListVar('MyList');
             _MyList.array = _Data._getClassifyArr(_Data._pich.classify);
             _MyList.selectEnable = true;
@@ -325,6 +328,9 @@ export module _SelectLevel {
                     }
                 });
             }
+        }
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, 'choosecardpage');
         }
     }
 }

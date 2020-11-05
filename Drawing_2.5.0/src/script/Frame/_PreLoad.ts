@@ -1,3 +1,4 @@
+import ADManager, { TaT } from "../TJ/Admanager";
 import { Admin, EventAdmin, _LwgPreLoad, _SceneName } from "./Lwg";
 export module _PreloadUrl {
     export let _list = {
@@ -107,6 +108,7 @@ export module _PreloadUrl {
 export module _PreLoad {
     export class PreLoad extends _LwgPreLoad._PreLoadScene {
         lwgOnStart(): void {
+            ADManager.TAPoint(TaT.PageShow, 'loadpage');
             this.AniVar('ani1').play(0, false);
             this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
                 EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
@@ -118,7 +120,11 @@ export module _PreLoad {
         lwgAllComplete(): number {
             return 1000;
         }
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, 'loadpage');
+        }
     }
+
 }
 export default PreLoad;
 

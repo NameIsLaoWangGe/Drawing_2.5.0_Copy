@@ -1,3 +1,4 @@
+import ADManager, { TaT } from "../TJ/Admanager";
 import lwg, { Admin, Animation2D, Click, TimerAdmin, _Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
 import { _SelectLevel } from "./_SelectLevel";
@@ -10,6 +11,8 @@ export module _Start {
     /**通用类，进行通用初始化，可在每个游戏中重复使用重复*/
     export class _StartScene extends Admin._SceneBase {
         moduleOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'mainpage');
+            ADManager.TAPoint(TaT.BtnShow, 'start_main');
             _Gold.createGoldNode(38, 68);
         }
     }
@@ -27,12 +30,17 @@ export module _Start {
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
+                ADManager.TAPoint(TaT.BtnClick, 'start_main');
                 this.lwgOpenScene(_SceneName.SelectLevel);
             })
             Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
                 this.lwgOpenScene(_SceneName.SelectLevel);
                 _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
             })
+        }
+
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, 'mainpage');
         }
     }
     export class StartItem extends Admin._Object {

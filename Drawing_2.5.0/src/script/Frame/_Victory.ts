@@ -1,4 +1,4 @@
-import ADManager from "../TJ/Admanager";
+import ADManager, { TaT } from "../TJ/Admanager";
 import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, DateAdmin, PalyAudio, Effects } from "./Lwg";
 import OldEffects from "./OldEffects";
 import { _Game } from "./_Game";
@@ -14,9 +14,13 @@ export module _Victory {
     export function _init(): void {
     }
     export class VictoryBase extends Admin._SceneBase {
+        lwgOnAwake(): void {
+            ADManager.TAPoint(TaT.PageShow, 'endpage');
+            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_end');
+            ADManager.TAPoint(TaT.BtnShow, 'close_end');
+        }
     }
     export class Victory extends _Victory.VictoryBase {
-
         lwgOnAwake(): void {
             if (_Game._Pencils.pencilType == _Game._Pencils.type.colours && _Special._data._lastDate
                 !== DateAdmin._date.date) {
@@ -53,6 +57,7 @@ export module _Victory {
                 let num = 25;
                 Click._on(Click._Type.largen, this.btnVar('BtnNext'), this, null, null, () => {
                     _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
+                        ADManager.TAPoint(TaT.BtnClick, 'close_end');
                         _Gold._addGold(num);
                         EventAdmin._notify(_Game._Event.colseScene);
                         this.lwgOpenScene(_SceneName.Start);
@@ -60,6 +65,7 @@ export module _Victory {
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnThreeGet'), this, null, null, () => {
                     ADManager.ShowReward(() => {
+                        ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_end');
                         _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
                             _Gold._addGold(num * 3);
                             EventAdmin._notify(_Game._Event.colseScene);
@@ -70,6 +76,9 @@ export module _Victory {
             })
         }
 
+        lwgOnDisable(): void {
+            ADManager.TAPoint(TaT.PageLeave, 'endpage');
+        }
     }
 }
 export default _Victory.Victory;
