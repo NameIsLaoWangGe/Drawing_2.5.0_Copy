@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":293,
+    "selectedBox":292,
+    "selecteID":13,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -66,7 +66,7 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,DrawRoot,DrawRoot",
-                    "props":{"y":0,"x":0,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"name":"DrawRoot","height":674},
+                    "props":{"y":347,"x":360,"width":720,"var":"DrawRoot","scaleY":1,"scaleX":1,"pivotY":347,"pivotX":360,"name":"DrawRoot","height":674},
                     "nodeParent":292,
                     "label":"DrawRoot",
                     "isOpen":false,

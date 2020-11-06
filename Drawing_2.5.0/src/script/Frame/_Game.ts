@@ -384,6 +384,9 @@ export module _Game {
                 });
             },
             init: () => {
+                console.log(this.ImgVar('DrawRoot').y);
+                this.ImgVar('DrawRoot').y = this.ImgVar('DrawRoot').y / 1280 * Laya.stage.height;
+                console.log(this.ImgVar('DrawRoot').y);
                 let Picture = this.ImgVar('DrawRoot').getChildAt(0) as Laya.Image;
                 let num = 0;
                 for (let index = 0; index < Picture.numChildren; index++) {

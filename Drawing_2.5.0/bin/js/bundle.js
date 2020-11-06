@@ -808,7 +808,7 @@
                             break;
                         case Admin._platform.tpye.Research:
                             Laya.Stat.show();
-                            _Gold._num.value = 5000;
+                            _Gold._num.value = 50000000000000;
                             break;
                         default:
                             break;
@@ -7128,6 +7128,9 @@
                         });
                     },
                     init: () => {
+                        console.log(this.ImgVar('DrawRoot').y);
+                        this.ImgVar('DrawRoot').y = this.ImgVar('DrawRoot').y / 1280 * Laya.stage.height;
+                        console.log(this.ImgVar('DrawRoot').y);
                         let Picture = this.ImgVar('DrawRoot').getChildAt(0);
                         let num = 0;
                         for (let index = 0; index < Picture.numChildren; index++) {
@@ -8468,7 +8471,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Bytedance;
+            Admin._platform.name = Admin._platform.tpye.Research;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,

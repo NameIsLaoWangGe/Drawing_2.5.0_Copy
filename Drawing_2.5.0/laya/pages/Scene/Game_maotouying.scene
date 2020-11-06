@@ -1,40 +1,11 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":402,
+    "selectedBox":401,
+    "selecteID":13,
     "searchKey":"View",
     "referenceLines":[
-        {
-            "value":141,
-            "type":1,
-            "id":8
-        },
-        {
-            "value":69,
-            "type":0,
-            "id":9
-        },
-        {
-            "value":652,
-            "type":0,
-            "id":10
-        },
-        {
-            "value":571,
-            "type":1,
-            "id":11
-        },
-        {
-            "value":363,
-            "type":0,
-            "id":12
-        },
-        {
-            "value":361,
-            "type":1,
-            "id":13
-        }],
+        ],
     "props":{"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
     "maxID":406,
@@ -76,7 +47,7 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,DrawRoot,DrawRoot",
-                    "props":{"y":29,"x":64,"width":720,"var":"DrawRoot","scaleY":0.85,"scaleX":0.85,"name":"DrawRoot","height":970},
+                    "props":{"y":441,"x":382,"width":720,"var":"DrawRoot","scaleY":0.85,"scaleX":0.85,"pivotY":485,"pivotX":374,"name":"DrawRoot","height":970},
                     "nodeParent":401,
                     "label":"DrawRoot",
                     "isOpen":false,

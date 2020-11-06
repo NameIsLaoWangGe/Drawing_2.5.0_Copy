@@ -1,5 +1,4 @@
-import LwgInit from "./LwgInit";
-
+import GameConfig from "../../GameConfig";
 /**综合模板*/
 export module lwg {
     /**暂停模块，控制游戏的暂停和开启*/
@@ -1121,7 +1120,7 @@ export module lwg {
                         break;
                     case _platform.tpye.Research:
                         Laya.Stat.show();
-                        _Gold._num.value = 5000;
+                        _Gold._num.value = 50000000000000;
                         break;
 
                     default:
@@ -1742,6 +1741,13 @@ export module lwg {
             lwgOpenAniAfter(): void { };
             /**按钮点击事件注册*/
             lwgBtnClick(): void { };
+            /**按照y坐标的比例适配*/
+            lwgAdaptiveProportion(arr: Array<Laya.Sprite>): void {
+                for (let index = 0; index < arr.length; index++) {
+                    const element = arr[index] as Laya.Sprite;
+                    element.y / GameConfig.height * Laya.stage.height;
+                }
+            };
             /**一些节点的自适应*/
             lwgAdaptive(): void { };
             onUpdate(): void { this.lwgOnUpdate() };

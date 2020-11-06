@@ -286,8 +286,6 @@ export module _SelectLevel {
                     element.y = 69;
                 }
             }
-
-
         }
         lwgAdaptive(): void {
             this.ImgVar('UiLand').y = Laya.stage.height - 74;
