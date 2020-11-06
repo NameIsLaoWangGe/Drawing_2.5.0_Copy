@@ -101,7 +101,7 @@ export default class ADManager {
     static wx = Laya.Browser.window.wx;
 
     static shareImgUrl = "http://image.tomatojoy.cn/6847506204006681a5d5fa0cd91ce408";
-    static shareContent = "比谁猜的快";
+    static shareContent = "涂鸦小画手";
     static initShare() {
         if (TJ.API.AppInfo.Channel() == TJ.Define.Channel.AppRt.WX_AppRt) {
             this.wx.onShareAppMessage(() => {

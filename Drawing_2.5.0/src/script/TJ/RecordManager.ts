@@ -85,7 +85,7 @@ export default class RecordManager {
         console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
         if (RecordManager.grv.videoPath) {
             let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
-            p.extra.videoTopics = ["比谁猜的快", "番茄小游戏", "抖音小游戏"]
+            p.extra.videoTopics = ["涂鸦小画手", "番茄小游戏", "抖音小游戏"]
             p.channel = "video";
             p.success = () => {
                 Dialogue.createHint_Middle(Dialogue.HintContent["分享成功!"]);
@@ -93,9 +93,9 @@ export default class RecordManager {
             };
             p.fail = () => {
                 if (type === 'noAward') {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
-                } else {
                     Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
+                } else {
+                    Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
                 }
                 failAc();
             }

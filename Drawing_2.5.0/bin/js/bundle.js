@@ -5863,7 +5863,7 @@
     ADManager.CanShowCD = true;
     ADManager.wx = Laya.Browser.window.wx;
     ADManager.shareImgUrl = "http://image.tomatojoy.cn/6847506204006681a5d5fa0cd91ce408";
-    ADManager.shareContent = "比谁猜的快";
+    ADManager.shareContent = "涂鸦小画手";
     var TaT;
     (function (TaT) {
         TaT[TaT["BtnShow"] = 0] = "BtnShow";
@@ -5956,7 +5956,7 @@
             console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
             if (RecordManager.grv.videoPath) {
                 let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
-                p.extra.videoTopics = ["比谁猜的快", "番茄小游戏", "抖音小游戏"];
+                p.extra.videoTopics = ["涂鸦小画手", "番茄小游戏", "抖音小游戏"];
                 p.channel = "video";
                 p.success = () => {
                     Dialogue.createHint_Middle(Dialogue.HintContent["分享成功!"]);
@@ -5964,10 +5964,10 @@
                 };
                 p.fail = () => {
                     if (type === 'noAward') {
-                        Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
                     }
                     else {
-                        Dialogue.createHint_Middle(Dialogue.HintContent["分享失败！"]);
+                        Dialogue.createHint_Middle(Dialogue.HintContent["分享成功后才能获取奖励！"]);
                     }
                     failAc();
                 };
@@ -6835,8 +6835,7 @@
                     EventAdmin._notify(_Game._Event.victory);
                     this.lwgOpenScene(_SceneName.Victory);
                 };
-                Click._on(Click._Type.largen, this.btnVar('BtnShareBg'), this, null, null, () => {
-                    RecordManager.startRecord();
+                Click._on(Click._Type.noEffect, this.btnVar('BtnShareBg'), this, null, null, () => {
                     RecordManager._share('noAward', () => {
                         ADManager.TAPoint(TaT.BtnClick, 'share_share');
                         func();
@@ -6846,7 +6845,6 @@
                     func();
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                    RecordManager.startRecord();
                     RecordManager._share('noAward', () => {
                         ADManager.TAPoint(TaT.BtnClick, 'share_share');
                         func();
@@ -7233,7 +7231,7 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
-                RecordManager.startRecord();
+                RecordManager.startAutoRecord();
             }
             lwgOpenAni() {
                 this.ImgVar('DrawingBoard').zOrder = 100;
@@ -7671,6 +7669,9 @@
                     this.Owner['BtnClose'].visible = true;
                 });
             }
+            lwgOpenAni() {
+                return 10;
+            }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.Owner['BtnClose'], this, null, null, () => {
                     this.lwgCloseScene();
@@ -7922,6 +7923,7 @@
         class Settle extends _Settle.SettleBase {
             lwgOnAwake() {
                 EventAdmin._notify(_Game._Event.playAni1, [true]);
+                RecordManager.stopAutoRecord();
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
@@ -7933,7 +7935,6 @@
                     this.lwgOpenScene(_SceneName.Share);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                    RecordManager.startRecord();
                     RecordManager._share('noAward', () => {
                         ADManager.TAPoint(TaT.BtnClick, 'share_ACT');
                     });
@@ -7981,21 +7982,23 @@
         class Special extends _Special.SpecialBase {
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
-                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
-                    TimerAdmin._frameOnce(5, this, () => {
-                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
-                    });
-                    TimerAdmin._frameOnce(10, this, () => {
-                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
-                    });
-                    TimerAdmin._frameOnce(15, this, () => {
-                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
-                    });
-                    TimerAdmin._frameOnce(20, this, () => {
-                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
-                            _Gold._addGold(100000000000);
-                            this.lwgCloseScene(this.Owner.name, () => {
-                                console.log(Laya.stage);
+                    ADManager.ShowReward(() => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
+                        TimerAdmin._frameOnce(5, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
+                        });
+                        TimerAdmin._frameOnce(10, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
+                        });
+                        TimerAdmin._frameOnce(15, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
+                        });
+                        TimerAdmin._frameOnce(20, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
+                                _Gold._addGold(100000000000);
+                                this.lwgCloseScene(this.Owner.name, () => {
+                                    console.log(Laya.stage);
+                                });
                             });
                         });
                     });

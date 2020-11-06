@@ -292,7 +292,7 @@ export module _Game {
                 index++;
             }
             // console.log(_stepOrderImg);
-            RecordManager.startRecord();
+            RecordManager.startAutoRecord();
         }
         lwgOpenAni(): number {
             this.ImgVar('DrawingBoard').zOrder = 100;

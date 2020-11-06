@@ -12,6 +12,9 @@ export module _AdsHint {
                 this.Owner['BtnClose'].visible = true;
             })
         }
+        lwgOpenAni(): number {
+            return 10;
+        }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.Owner['BtnClose'], this, null, null, () => {
                 this.lwgCloseScene();

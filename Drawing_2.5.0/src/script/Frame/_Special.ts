@@ -32,28 +32,31 @@ export module _Special {
     export class Special extends _Special.SpecialBase {
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
-                _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
+                ADManager.ShowReward(() => {
+                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
 
-                TimerAdmin._frameOnce(5, this, () => {
-                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
-                });
+                    TimerAdmin._frameOnce(5, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
+                    });
 
-                TimerAdmin._frameOnce(10, this, () => {
-                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
-                });
+                    TimerAdmin._frameOnce(10, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
+                    });
 
-                TimerAdmin._frameOnce(15, this, () => {
-                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
-                });
+                    TimerAdmin._frameOnce(15, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
+                    });
 
-                TimerAdmin._frameOnce(20, this, () => {
-                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
-                        _Gold._addGold(100000000000);
-                        this.lwgCloseScene(this.Owner.name, () => {
-                            console.log(Laya.stage);
+                    TimerAdmin._frameOnce(20, this, () => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
+                            _Gold._addGold(100000000000);
+                            this.lwgCloseScene(this.Owner.name, () => {
+                                console.log(Laya.stage);
+                            });
                         });
                     });
-                });
+
+                })
 
             });
             Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
