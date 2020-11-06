@@ -1,11 +1,12 @@
 {
+    "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":10,
+    "selecteID":15,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#b7b7b7","height":1280},
     "nodeParent":-1,
-    "maxID":20,
+    "maxID":21,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -14,6 +15,7 @@
     "compId":2,
     "child":[
         {
+            "x":15,
             "type":"Sprite",
             "searchKey":"Sprite,Logo",
             "props":{"y":-117,"x":360,"width":309,"texture":"Game/UI/Victory/gxwc.png","pivotY":44,"pivotX":155,"name":"Logo","height":88},
@@ -27,6 +29,7 @@
                 ]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image",
             "props":{"y":782,"x":360,"width":203,"skin":"Game/UI/Victory/an.png","pivotY":32,"pivotX":102,"height":64},
@@ -66,21 +69,23 @@
                 }]
         },
         {
+            "x":15,
             "type":"Sprite",
             "searchKey":"Sprite,BtnThreeGet,BtnThreeGet",
             "props":{"y":1050,"x":360,"width":230,"var":"BtnThreeGet","texture":"Game/UI/Common/zan.png","pivotY":53,"pivotX":115,"name":"BtnThreeGet","height":105},
             "nodeParent":2,
             "label":"BtnThreeGet",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":15,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
-                    "props":{"skin":"Game/UI/Victory/sblq.png","centerY":-8,"centerX":0},
+                    "props":{"width":139,"skin":"Game/UI/Victory/sblq.png","height":32,"centerY":-9,"centerX":-26},
                     "nodeParent":15,
                     "label":"Image",
                     "isDirectory":false,
@@ -89,9 +94,24 @@
                     "compId":18,
                     "child":[
                         ]
+                },
+                {
+                    "x":30,
+                    "type":"Sprite",
+                    "searchKey":"Sprite",
+                    "props":{"y":18,"x":216,"width":51,"texture":"Game/UI/Settle/s.png","rotation":90,"height":45},
+                    "nodeParent":15,
+                    "label":"Sprite",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":20,
+                    "child":[
+                        ]
                 }]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,BtnNext,BtnNext",
             "props":{"y":927,"x":360,"width":230,"var":"BtnNext","skin":"Game/UI/Common/lan.png","pivotY":53,"pivotX":115,"name":"BtnNext","height":105},
@@ -118,6 +138,7 @@
                 }]
         },
         {
+            "x":15,
             "type":"Image",
             "searchKey":"Image,NoAni_Remark,NoAni_Remark",
             "props":{"y":443,"x":-180,"width":268,"var":"NoAni_Remark","pivotY":72,"pivotX":134,"name":"NoAni_Remark","height":144},

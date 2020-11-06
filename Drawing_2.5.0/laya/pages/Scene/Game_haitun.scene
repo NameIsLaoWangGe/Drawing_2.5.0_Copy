@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":213,
+    "selecteID":215,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -17,7 +17,7 @@
         }],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":215,
+    "maxID":216,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -313,6 +313,60 @@
                                         }]
                                 }]
                         }]
+                }]
+        },
+        {
+            "x":15,
+            "type":"List",
+            "selectedBox":45,
+            "selecteID":46,
+            "searchKey":"List,PencilsList,PencilsList",
+            "props":{"zOrder":200,"y":1057,"x":360,"var":"PencilsList","presetID":1,"preset":"laya/pages/Prefab/PencilsList.prefab","name":"PencilsList"},
+            "nodeParent":2,
+            "maxID":47,
+            "label":"PencilsList",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "compId":215,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Box",
+                    "searchKey":"Box",
+                    "props":{"presetID":2,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                    "nodeParent":215,
+                    "label":"Box(PencilsList)",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":false,
+                    "hasChild":true,
+                    "compId":46,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Image",
+                            "searchKey":"Image",
+                            "props":{"presetID":3,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                            "nodeParent":46,
+                            "label":"Pic",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":31,
+                            "child":[
+                                ]
+                        }]
+                }],
+            "animations":[
+                {
+                    "nodes":[
+                        ],
+                    "name":"ani1",
+                    "id":1,
+                    "frameRate":24,
+                    "action":0
                 }]
         }],
     "animations":[

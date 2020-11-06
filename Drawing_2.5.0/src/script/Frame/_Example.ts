@@ -48,6 +48,8 @@ export module _Example {
                 return _data['name'];
             }
         }
+
+      
     }
 
     /**普通变量监听*/
@@ -61,6 +63,8 @@ export module _Example {
     }
     /**类模式，用于可继承时，或者多列时，例如商店中的商品种类*/
     export class _Classify1 {
+
+
         static _property = {
             pro1: 'pro1',
             pro2: 'pro2',
@@ -83,6 +87,11 @@ export module _Example {
     }
     export class _Classify2 extends _Classify1 {
         static _init(): void {
+
+            // var canvx = new HTMLCanvas(true); //创建一个canvas
+            // canvx.size(canvasWidth, canvasHeight); //设置宽高，这个和ImageData保持一致
+            // var ctx2dx = canvx.getContext('2d'); //获取上下文
+            // var imgdata = ctx2dx.getImageData(0,0,canvasWidth,canvasHeight); //获取imageData，来替代ImageData
         }
     }
 

@@ -1,5 +1,5 @@
 import ADManager, { TaT } from "../TJ/Admanager";
-import lwg, { Admin, Animation2D, Click, TimerAdmin, _Gold, _SceneName } from "./Lwg";
+import lwg, { Admin, Animation2D, Click, Dialogue, TimerAdmin, _Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
 import { _SelectLevel } from "./_SelectLevel";
 
@@ -32,19 +32,23 @@ export module _Start {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                 ADManager.TAPoint(TaT.BtnClick, 'start_main');
                 this.lwgOpenScene(_SceneName.SelectLevel);
+                _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
             })
             Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
                 this.lwgOpenScene(_SceneName.SelectLevel);
                 _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
+            })
+            Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
+                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["敬请期待!"]);
+            })
+            Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
+                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["敬请期待!"]);
             })
         }
 
         lwgOnDisable(): void {
             ADManager.TAPoint(TaT.PageLeave, 'mainpage');
         }
-    }
-    export class StartItem extends Admin._Object {
-
     }
 }
 export default _Start.Start;

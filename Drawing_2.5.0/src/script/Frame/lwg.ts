@@ -1121,6 +1121,7 @@ export module lwg {
                         break;
                     case _platform.tpye.Research:
                         Laya.Stat.show();
+                        _Gold._num.value = 5000;
                         break;
 
                     default:

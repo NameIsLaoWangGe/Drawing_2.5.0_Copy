@@ -3,7 +3,7 @@
     "type":"Image",
     "selectedBox":90,
     "searchKey":"Image,BtnCompelet",
-    "props":{"y":0,"x":0,"width":104,"skin":"Game/UI/GameScene/compelet.png","presetID":1,"preset":"laya/pages/Prefab/BtnCompelet.prefab","pivotY":39,"pivotX":52,"name":"BtnCompelet","isPresetRoot":true,"height":78},
+    "props":{"zOrder":210,"y":0,"x":0,"width":104,"skin":"Game/UI/GameScene/compelet.png","presetID":1,"preset":"laya/pages/Prefab/BtnCompelet.prefab","pivotY":39,"pivotX":52,"name":"BtnCompelet","isPresetRoot":true,"height":78},
     "nodeParent":-1,
     "maxID":91,
     "label":"BtnCompelet",

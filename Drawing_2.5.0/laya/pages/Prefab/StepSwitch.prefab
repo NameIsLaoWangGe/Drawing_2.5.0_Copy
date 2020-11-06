@@ -4,7 +4,7 @@
     "selectedBox":48,
     "selecteID":50,
     "searchKey":"Image,StepSwitch,StepSwitch",
-    "props":{"y":0,"x":0,"width":573,"visible":true,"var":"StepSwitch","presetID":1,"preset":"laya/pages/Prefab/StepSwitch.prefab","pivotY":56,"pivotX":287,"name":"StepSwitch","isPresetRoot":true,"height":112},
+    "props":{"zOrder":210,"y":0,"x":0,"width":573,"visible":true,"var":"StepSwitch","presetID":1,"preset":"laya/pages/Prefab/StepSwitch.prefab","pivotY":56,"pivotX":287,"name":"StepSwitch","isPresetRoot":true,"height":112},
     "nodeParent":-1,
     "maxID":51,
     "label":"StepSwitch",

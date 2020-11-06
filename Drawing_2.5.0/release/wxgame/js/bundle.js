@@ -1025,6 +1025,7 @@
                             break;
                         case Admin._platform.tpye.Research:
                             Laya.Stat.show();
+                            _Gold._num.value = 5000;
                             break;
                         default:
                             break;
@@ -6275,9 +6276,27 @@
                 },
             },
             scene2D: {
-                UIStart: "Scene/" + _SceneName.Start + '.json',
-                GameScene: "Scene/" + _SceneName.Game + '.json',
-                UIPreLoad: "Scene/" + _SceneName.PreLoad + '.json',
+                Start: `Scene/${_SceneName.Start}.json`,
+                AdsHint: `Scene/${_SceneName.AdsHint}.json`,
+                Special: `Scene/${_SceneName.Special}.json`,
+                Victory: `Scene/${_SceneName.Victory}.json`,
+                SelectLevel: `Scene/${_SceneName.SelectLevel}.json`,
+                Settle: `Scene/${_SceneName.Settle}.json`,
+                PropTry: `Scene/${_SceneName.PropTry}.json`,
+                PreLoadStep: `Scene/${_SceneName.PreLoadStep}.json`,
+                Share: `Scene/${_SceneName.Share}.json`,
+                Game_dinglaotai: `Scene/Game_dinglaotai.json`,
+                Game_dinglaotou: `Scene/Game_dinglaotou.json`,
+                Game_haitun: `Scene/Game_haitun.json`,
+                Game_maomaochong: `Scene/Game_maomaochong.json`,
+                Game_maotouying: `Scene/Game_maotouying.json`,
+                Game_wanshengnangua: `Scene/Game_wanshengnangua.json`,
+                Game_wugui: `Scene/Game_wugui.json`,
+                Game_xiaohonghua: `Scene/Game_xiaohonghua.json`,
+                Game_xiaohuamao: `Scene/Game_xiaohuamao.json`,
+                Game_xiaonainiu: `Scene/Game_xiaonainiu.json`,
+                Game_xiaoqiche: `Scene/Game_xiaoqiche.json`,
+                Game_zhangyugege: `Scene/Game_zhangyugege.json`,
             },
             json: {
                 SingleColor: {
@@ -6448,7 +6467,6 @@
             _Event["_SelectLevel_Close"] = "_SelectLevel_Close";
         })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
         function _init() {
-            _Data._pich.classify = _Data._classify.animal;
         }
         _SelectLevel._init = _init;
         class _SelectLevelItem extends Admin._Object {
@@ -6584,6 +6602,7 @@
         _SelectLevel.SelectLevelBase = SelectLevelBase;
         class SelectLevel extends _SelectLevel.SelectLevelBase {
             lwgOnAwake() {
+                console.log(_Data._pich.classify);
                 _PropTry._comeFrom = _SceneName.SelectLevel;
                 for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                     const element = this.ImgVar('CutBtn').getChildAt(index);
@@ -6597,6 +6616,7 @@
             }
             lwgAdaptive() {
                 this.ImgVar('UiLand').y = Laya.stage.height - 74;
+                this.ImgVar('BtnBack').y = Laya.stage.height - 80;
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event._SelectLevel_Close, this, () => {
@@ -7063,16 +7083,6 @@
         class _PencilsListItem extends Admin._Object {
             lwgOnStart() {
                 this._dataSource = this.Owner['_dataSource'];
-                ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
-                Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 600, () => {
-                    if ((_GeneralPencils._pitchName == this._dataSource[_GeneralPencils._property.name])) {
-                        Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
-                            Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
-                                this.Owner.rotation = 0;
-                            });
-                        });
-                    }
-                });
             }
             lwgBtnClick() {
                 var func = (e) => {
@@ -7245,17 +7255,8 @@
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
-                _Game._PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-                this.Owner.addChild(_Game._PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
+                _Game._PencilsList = this.ListVar('PencilsList');
                 _Game._PencilsList.array = _GeneralPencils._data;
-                if (_Game._PencilsList.cells.length !== 0) {
-                    for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
-                        const element = _Game._PencilsList.cells[index];
-                        if (!element.getComponent(_PencilsListItem)) {
-                            element.addComponent(_PencilsListItem);
-                        }
-                    }
-                }
                 _Game._PencilsList.selectEnable = true;
                 _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
                 _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell, index) => {
@@ -7317,6 +7318,14 @@
                 this.Step.init();
             }
             lwgOnStart() {
+                if (_Game._PencilsList.cells.length !== 0) {
+                    for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
+                        const element = _Game._PencilsList.cells[index];
+                        if (!element.getComponent(_PencilsListItem)) {
+                            element.addComponent(_PencilsListItem);
+                        }
+                    }
+                }
                 EventAdmin._notify(_Event.start);
             }
             lwgEventRegister() {
@@ -7989,10 +7998,17 @@
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                     ADManager.TAPoint(TaT.BtnClick, 'start_main');
                     this.lwgOpenScene(_SceneName.SelectLevel);
+                    _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
                     this.lwgOpenScene(_SceneName.SelectLevel);
                     _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
+                    lwg$1.Dialogue.createHint_Middle(lwg$1.Dialogue.HintContent["敬请期待!"]);
+                });
+                Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
+                    lwg$1.Dialogue.createHint_Middle(lwg$1.Dialogue.HintContent["敬请期待!"]);
                 });
             }
             lwgOnDisable() {
@@ -8000,9 +8016,6 @@
             }
         }
         _Start.Start = Start;
-        class StartItem extends Admin._Object {
-        }
-        _Start.StartItem = StartItem;
     })(_Start || (_Start = {}));
     var _Start$1 = _Start.Start;
 
@@ -8011,31 +8024,29 @@
         let SkinUrl;
         (function (SkinUrl) {
             SkinUrl[SkinUrl["Frame/Effects/cir_white.png"] = 0] = "Frame/Effects/cir_white.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_black.png"] = 1] = "Frame/Effects/cir_black.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_blue.png"] = 2] = "Frame/Effects/cir_blue.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_bluish.png"] = 3] = "Frame/Effects/cir_bluish.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_cyan.png"] = 4] = "Frame/Effects/cir_cyan.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_grass.png"] = 5] = "Frame/Effects/cir_grass.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_green.png"] = 6] = "Frame/Effects/cir_green.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_orange.png"] = 7] = "Frame/Effects/cir_orange.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_pink.png"] = 8] = "Frame/Effects/cir_pink.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_purple.png"] = 9] = "Frame/Effects/cir_purple.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_red.png"] = 10] = "Frame/Effects/cir_red.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_yellow.png"] = 11] = "Frame/Effects/cir_yellow.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_black.png"] = 12] = "Frame/Effects/star_black.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_blue.png"] = 13] = "Frame/Effects/star_blue.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_bluish.png"] = 14] = "Frame/Effects/star_bluish.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_cyan.png"] = 15] = "Frame/Effects/star_cyan.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_grass.png"] = 16] = "Frame/Effects/star_grass.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_green.png"] = 17] = "Frame/Effects/star_green.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_orange.png"] = 18] = "Frame/Effects/star_orange.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_pink.png"] = 19] = "Frame/Effects/star_pink.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_purple.png"] = 20] = "Frame/Effects/star_purple.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_red.png"] = 21] = "Frame/Effects/star_red.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_white.png"] = 22] = "Frame/Effects/star_white.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_yellow.png"] = 23] = "Frame/Effects/star_yellow.png";
-            SkinUrl[SkinUrl["Frame/Effects/ui_Circular_l_yellow.png"] = 24] = "Frame/Effects/ui_Circular_l_yellow.png";
-            SkinUrl[SkinUrl["Frame/UI/ui_square_guang.png"] = 25] = "Frame/UI/ui_square_guang.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_blue.png"] = 1] = "Frame/Effects/cir_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_bluish.png"] = 2] = "Frame/Effects/cir_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_cyan.png"] = 3] = "Frame/Effects/cir_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_grass.png"] = 4] = "Frame/Effects/cir_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_green.png"] = 5] = "Frame/Effects/cir_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_orange.png"] = 6] = "Frame/Effects/cir_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_pink.png"] = 7] = "Frame/Effects/cir_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_purple.png"] = 8] = "Frame/Effects/cir_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_red.png"] = 9] = "Frame/Effects/cir_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_yellow.png"] = 10] = "Frame/Effects/cir_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_blue.png"] = 11] = "Frame/Effects/star_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_bluish.png"] = 12] = "Frame/Effects/star_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_cyan.png"] = 13] = "Frame/Effects/star_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_grass.png"] = 14] = "Frame/Effects/star_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_green.png"] = 15] = "Frame/Effects/star_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_orange.png"] = 16] = "Frame/Effects/star_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_pink.png"] = 17] = "Frame/Effects/star_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_purple.png"] = 18] = "Frame/Effects/star_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_red.png"] = 19] = "Frame/Effects/star_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_white.png"] = 20] = "Frame/Effects/star_white.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_yellow.png"] = 21] = "Frame/Effects/star_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/ui_Circular_l_yellow.png"] = 22] = "Frame/Effects/ui_Circular_l_yellow.png";
+            SkinUrl[SkinUrl["Frame/UI/ui_square_guang.png"] = 23] = "Frame/UI/ui_square_guang.png";
         })(SkinUrl = OldEffects.SkinUrl || (OldEffects.SkinUrl = {}));
         let SkinStyle;
         (function (SkinStyle) {
@@ -8093,7 +8104,7 @@
                 ele.name = 'ele';
                 let num;
                 if (style === SkinStyle.star) {
-                    num = 12 + Math.floor(Math.random() * 12);
+                    num = 10 + Math.floor(Math.random() * 12);
                 }
                 else if (style === SkinStyle.dot) {
                     num = Math.floor(Math.random() * 12);
@@ -8149,7 +8160,7 @@
                 ele.name = 'ele';
                 let num;
                 if (style === SkinStyle.star) {
-                    num = 12 + Math.floor(Math.random() * 12);
+                    num = 10 + Math.floor(Math.random() * 12);
                 }
                 else if (style === SkinStyle.dot) {
                     num = Math.floor(Math.random() * 12);
@@ -8410,7 +8421,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Bytedance;
+            Admin._platform.name = Admin._platform.tpye.Research;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,

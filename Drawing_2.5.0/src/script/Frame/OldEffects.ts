@@ -5,7 +5,7 @@ import { TimerAdmin, Tools } from "./Lwg";
     /**特效元素的图片地址，所有项目都可用*/
     export enum SkinUrl {
         'Frame/Effects/cir_white.png',
-        "Frame/Effects/cir_black.png",
+        // "Frame/Effects/cir_black.png",
         "Frame/Effects/cir_blue.png",
         "Frame/Effects/cir_bluish.png",
         "Frame/Effects/cir_cyan.png",
@@ -17,7 +17,7 @@ import { TimerAdmin, Tools } from "./Lwg";
         "Frame/Effects/cir_red.png",
         "Frame/Effects/cir_yellow.png",
 
-        "Frame/Effects/star_black.png",
+        // "Frame/Effects/star_black.png",
         "Frame/Effects/star_blue.png",
         "Frame/Effects/star_bluish.png",
         "Frame/Effects/star_cyan.png",
@@ -152,7 +152,7 @@ import { TimerAdmin, Tools } from "./Lwg";
             ele.name = 'ele';//标识符和名称一样
             let num
             if (style === SkinStyle.star) {
-                num = 12 + Math.floor(Math.random() * 12);
+                num = 10 + Math.floor(Math.random() * 12);
             } else if (style === SkinStyle.dot) {
                 num = Math.floor(Math.random() * 12);
             }
@@ -216,7 +216,7 @@ import { TimerAdmin, Tools } from "./Lwg";
             ele.name = 'ele';//标识符和名称一样
             let num;
             if (style === SkinStyle.star) {
-                num = 12 + Math.floor(Math.random() * 12);
+                num = 10 + Math.floor(Math.random() * 12);
             } else if (style === SkinStyle.dot) {
                 num = Math.floor(Math.random() * 12);
             }

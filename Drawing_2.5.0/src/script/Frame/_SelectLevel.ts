@@ -135,7 +135,6 @@ export module _SelectLevel {
         _SelectLevel_Close = '_SelectLevel_Close',
     }
     export function _init(): void {
-        _Data._pich.classify = _Data._classify.animal;
     }
     export let _MyList: Laya.List;
     export class _SelectLevelItem extends Admin._Object {
@@ -185,9 +184,8 @@ export module _SelectLevel {
                 _MyList.refresh();
             });
         }
-
     }
-    /**通用类，进行通用初始化，这里有两个作用，第一个是不同游戏通用，另一个是同一个游戏中拥有相同部分的基类*/
+
     export class SelectLevelBase extends Admin._SceneBase {
         moduleOnAwake(): void {
             ADManager.TAPoint(TaT.PageShow, 'choosecardpage');
@@ -278,6 +276,7 @@ export module _SelectLevel {
     }
     export class SelectLevel extends _SelectLevel.SelectLevelBase {
         lwgOnAwake(): void {
+            console.log(_Data._pich.classify);
             _PropTry._comeFrom = _SceneName.SelectLevel;
             for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                 const element = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
@@ -287,9 +286,12 @@ export module _SelectLevel {
                     element.y = 69;
                 }
             }
+
+            
         }
         lwgAdaptive(): void {
             this.ImgVar('UiLand').y = Laya.stage.height - 74;
+            this.ImgVar('BtnBack').y = Laya.stage.height - 80;
         }
         lwgEventRegister(): void {
             EventAdmin._register(_Event._SelectLevel_Close, this, () => {

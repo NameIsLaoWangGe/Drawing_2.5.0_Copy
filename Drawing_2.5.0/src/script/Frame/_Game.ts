@@ -219,16 +219,17 @@ export module _Game {
         _dataSource: any;
         lwgOnStart(): void {
             this._dataSource = this.Owner['_dataSource'];
-            ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
-            Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 600, () => {
-                if ((_GeneralPencils._pitchName == this._dataSource[_GeneralPencils._property.name])) {
-                    Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
-                        Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
-                            this.Owner.rotation = 0;
-                        });
-                    });
-                }
-            });
+            // // console.log(this.Owner['_dataSource']);
+            // ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
+            // Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 600, () => {
+            //     if ((_GeneralPencils._pitchName == this._dataSource[_GeneralPencils._property.name])) {
+            //         Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
+            //             Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
+            //                 this.Owner.rotation = 0;
+            //             });
+            //         });
+            //     }
+            // });
         }
         lwgBtnClick(): void {
             var func = (e: Laya.Event) => {
@@ -305,17 +306,12 @@ export module _Game {
             _stepIndex.present = 0;
             _stepIndex.present = 0;
             _stepIndex.max = 0;
-            _PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
-            this.Owner.addChild(_PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.824);
+            _PencilsList = this.ListVar('PencilsList');
+            // _PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
+            // _PencilsList.zOrder = 200;
+            // this.Owner.addChild(_PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.835);
             _PencilsList.array = _GeneralPencils._data;
-            if (_PencilsList.cells.length !== 0) {
-                for (let index = 0; index < _PencilsList.cells.length; index++) {
-                    const element = _PencilsList.cells[index];
-                    if (!element.getComponent(_PencilsListItem)) {
-                        element.addComponent(_PencilsListItem);
-                    }
-                }
-            }
+
             _PencilsList.selectEnable = true;
             //  _PencilsList.vScrollBarSkin = "";
             // this._ShopList.scrollBar.elasticBackTime = 0;//设置橡皮筋回弹时间。单位为毫秒。
@@ -465,6 +461,14 @@ export module _Game {
             this.Step.init();
         }
         lwgOnStart(): void {
+            if (_PencilsList.cells.length !== 0) {
+                for (let index = 0; index < _PencilsList.cells.length; index++) {
+                    const element = _PencilsList.cells[index];
+                    if (!element.getComponent(_PencilsListItem)) {
+                        element.addComponent(_PencilsListItem);
+                    }
+                }
+            }
             EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
