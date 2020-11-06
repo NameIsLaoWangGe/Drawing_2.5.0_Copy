@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":28,
-    "selecteID":31,
+    "selectedBox":2,
+    "selecteID":28,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":33,
+    "maxID":35,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -137,6 +137,34 @@
                             "child":[
                                 ]
                         }]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image,BtnShareBg,BtnShareBg",
+                    "props":{"y":280,"x":294,"width":568,"var":"BtnShareBg","skin":"Game/UI/Share/zhezhao.png","pivotY":276,"pivotX":284,"name":"BtnShareBg","height":533},
+                    "nodeParent":28,
+                    "label":"BtnShareBg",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":33,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Sprite",
+                    "searchKey":"Sprite",
+                    "props":{"y":217,"x":267.5,"texture":"Game/UI/Share/形状 19.png"},
+                    "nodeParent":28,
+                    "label":"Sprite",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":34,
+                    "child":[
+                        ]
                 },
                 {
                     "x":30,

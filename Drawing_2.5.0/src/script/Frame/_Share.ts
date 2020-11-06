@@ -37,6 +37,13 @@ export module _Share {
                 EventAdmin._notify(_Game._Event.victory);
                 this.lwgOpenScene(_SceneName.Victory);
             }
+            Click._on(Click._Type.largen, this.btnVar('BtnShareBg'), this, null, null, () => {
+                RecordManager.startRecord();
+                RecordManager._share('noAward', () => {
+                    ADManager.TAPoint(TaT.BtnClick, 'share_share');
+                    func();
+                });
+            });
             Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
                 func();
             });

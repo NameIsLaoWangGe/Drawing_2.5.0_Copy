@@ -23,14 +23,14 @@ export module _SelectLevel {
         };
         static _pich = {
             get classify(): string {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
+                return this['_SelectLevel_pichclassify'] ? this['_SelectLevel_pichclassify'] : 'animal';
             },
             set classify(str: string) {
                 if (_MyList) {
                     _MyList.array = _Data._getClassifyArr(str);
                     _MyList.refresh();
                 }
-                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
+                this['_SelectLevel_pichclassify'] = str;
             },
             get customs(): string {
                 return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
@@ -287,7 +287,7 @@ export module _SelectLevel {
                 }
             }
 
-            
+
         }
         lwgAdaptive(): void {
             this.ImgVar('UiLand').y = Laya.stage.height - 74;

@@ -67,1686 +67,6 @@ var DP =
     {
         QG:   //oppo小游戏
         {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
-        productName:"涂鸦小画手",
-        packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"ZJTD_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"7d5bcb7e-cd62-be5f-04e3-11c393952a82",
-        productName:"剃头大师",
-        packageName:"com.tomatojoy.ttds.vivominigame",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"VIVO_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    ReYun:   //热云统计
-    {
-        appId:"2990f7eeaf4df351f7a59f86ceb2b7b0",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"7d5bcb7e-cd62-be5f-04e3-11c393952a82",
-        productName:"剃头大师",
-        packageName:"com.tomatojoy.ttds.vivominigame",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"VIVO_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    ReYun:   //热云统计
-    {
-        appId:"2990f7eeaf4df351f7a59f86ceb2b7b0",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"7d5bcb7e-cd62-be5f-04e3-11c393952a82",
-        productName:"剃头大师",
-        packageName:"com.tomatojoy.ttds.vivominigame",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"VIVO_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    ReYun:   //热云统计
-    {
-        appId:"2990f7eeaf4df351f7a59f86ceb2b7b0",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:null,
-            bannerId:null,
-            insertId:null,
-            videoId:null,
-            nativeId:null,
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
-        },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
-    },
-}
-
-var DP = 
-{
-    Basic:
-    {
-        appGuid:"7d5bcb7e-cd62-be5f-04e3-11c393952a82",
-        productName:"剃头大师",
-        packageName:"com.tomatojoy.ttds.vivominigame",
-        versionName:"1.0.0",
-        versionCode:1,
-        channel:"VIVO_AppRt",
-    },
-    XIAOMI:
-    {
-        QG:   //小米快游戏
-        {
-            insertId:null,
-            videoId:null,
-        },
-    },
-    WX:   //微信小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    VIVO:
-    {
-        QG:   //vivo小游戏
-        {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    ReYun:   //热云统计
-    {
-        appId:"2990f7eeaf4df351f7a59f86ceb2b7b0",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
             appId:"30328407",
             bannerId:"214580",
             insertId:null,
@@ -1834,7 +154,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 /*
 DESKTOP-BT8F2H9
 Microsoft Windows NT 10.0.17763.0
-中国标准时间 2020/10/10 10:08:39
+中国标准时间 2020/11/6 18:29:12
 */
 var TJ;
 (function (TJ) {
@@ -5060,6 +3380,56 @@ var TJ;
 (function (TJ) {
     var Develop;
     (function (Develop) {
+        var ABTest;
+        (function (ABTest) {
+            function Init(checkVersion) {
+                if (checkVersion === void 0) { checkVersion = false; }
+                var pk = "ABTest.plan";
+                var vk = "ABTest.version";
+                if (checkVersion) {
+                    var ver = TJ.Common.Prefs.System.GetString(vk);
+                    if (ver != TJ.API.AppInfo.VersionName()) {
+                        ABTest.plan = null;
+                        TJ.Common.Prefs.System.SetString(vk, TJ.API.AppInfo.VersionName());
+                    }
+                    else {
+                        if (ABTest.plan != null) {
+                            return;
+                        }
+                        else {
+                            ABTest.plan = TJ.Common.Prefs.System.GetString(pk);
+                        }
+                    }
+                }
+                else {
+                    if (ABTest.plan != null) {
+                        return;
+                    }
+                    else {
+                        ABTest.plan = TJ.Common.Prefs.System.GetString(pk);
+                    }
+                }
+                if (ABTest.plan == null) {
+                    if (ABTest.plans != null && ABTest.plans.length > 0) {
+                        var i = Math.random() * ABTest.plans.length;
+                        ABTest.plan = ABTest.plans[Math.floor(i)];
+                    }
+                }
+                if (ABTest.plan == null) {
+                    ABTest.plan = "A";
+                }
+                else {
+                    ABTest.plan = ABTest.plan.toUpperCase();
+                }
+                TJ.Common.Prefs.System.SetString(pk, ABTest.plan);
+            }
+            ABTest.Init = Init;
+        })(ABTest = Develop.ABTest || (Develop.ABTest = {}));
+    })(Develop = TJ.Develop || (TJ.Develop = {}));
+})(TJ || (TJ = {}));
+(function (TJ) {
+    var Develop;
+    (function (Develop) {
         var ReYun;
         (function (ReYun) {
             var Raw;
@@ -5551,34 +3921,85 @@ var TJ;
                 Location.syncPromise = new Promise(function (r) { syncResolve = r; });
                 function Sync() {
                     return __awaiter(this, void 0, void 0, function () {
-                        var apiUrl, www, res;
+                        var url, www, res, citys, _i, citys_1, c;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    apiUrl = "https://yxapi.tomatojoy.cn/getIp";
-                                    www = new TJ.Common.WWW(apiUrl);
+                                    url = "https://yxapi.tomatojoy.cn/getIp";
+                                    www = new TJ.Common.WWW(url);
+                                    www.logText = true;
+                                    return [4 /*yield*/, www.Send()];
+                                case 1:
+                                    _a.sent();
+                                    if (!(www.error == null)) return [3 /*break*/, 4];
+                                    res = JSON.parse(www.text);
+                                    if (!(res.code == 200)) return [3 /*break*/, 4];
+                                    Location.ip = res.data.ip;
+                                    Location.country = res.data.country;
+                                    Location.province = res.data.province;
+                                    Location.city = res.data.city;
+                                    server_time = res.data.server_time * 1000;
+                                    syncTime = Date.now();
+                                    if (!(Location.city != null)) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, GetShieldCity()];
+                                case 2:
+                                    citys = _a.sent();
+                                    if (citys != null) {
+                                        Location.shield = false;
+                                        for (_i = 0, citys_1 = citys; _i < citys_1.length; _i++) {
+                                            c = citys_1[_i];
+                                            if (Location.city.search(c) != -1 || c.search(Location.city) != -1) {
+                                                Location.shield = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    _a.label = 3;
+                                case 3:
+                                    syncResolve();
+                                    _a.label = 4;
+                                case 4: return [2 /*return*/];
+                            }
+                        });
+                    });
+                }
+                Location.Sync = Sync;
+                Location.shield = true;
+                function GetShieldCity() {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var citys, channel, url, www, res;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    citys = null;
+                                    channel = TJ.API.AppInfo.Channel();
+                                    if (!(channel != null && channel.length > 0)) return [3 /*break*/, 4];
+                                    if (!(channel == TJ.Define.Channel.AppRt.OPPO_AppRt)) return [3 /*break*/, 2];
+                                    url = "https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.Channel() + "/config.json";
+                                    www = new TJ.Common.WWW(url);
                                     www.logText = true;
                                     return [4 /*yield*/, www.Send()];
                                 case 1:
                                     _a.sent();
                                     if (www.error == null) {
                                         res = JSON.parse(www.text);
-                                        if (res.code == 200) {
-                                            Location.ip = res.data.ip;
-                                            Location.country = res.data.country;
-                                            Location.province = res.data.province;
-                                            Location.city = res.data.city;
-                                            server_time = res.data.server_time * 1000;
-                                            syncTime = Date.now();
-                                            syncResolve();
+                                        if (res.shield_city != null) {
+                                            citys = res.shield_city;
                                         }
                                     }
-                                    return [2 /*return*/];
+                                    return [3 /*break*/, 3];
+                                case 2:
+                                    citys = [];
+                                    _a.label = 3;
+                                case 3: return [3 /*break*/, 5];
+                                case 4:
+                                    citys = [];
+                                    _a.label = 5;
+                                case 5: return [2 /*return*/, citys];
                             }
                         });
                     });
                 }
-                Location.Sync = Sync;
             })(Location = Yun.Location || (Yun.Location = {}));
         })(Yun = Develop.Yun || (Develop.Yun = {}));
     })(Develop = TJ.Develop || (TJ.Develop = {}));
@@ -6046,13 +4467,18 @@ var TJ;
                         Develop.ReYun.Event(Data.reyunData, Data.formatLogApp + "-" + Data.FormatLogStyle(style) + "-" + Data.FormatLogEvent(event));
                     };
                     Data.prototype.Load = function () {
-                        if (this.iconList.length > 0) {
-                            var i = Math.random() * this.iconList.length;
-                            i = Math.floor(i);
-                            this.iconMD5 = this.iconList[i];
+                        if (Develop.Yun.Location.shield) {
+                            this.iconMD5 = this.promoOriginIcon;
                         }
                         else {
-                            this.iconMD5 = null;
+                            if (this.iconList.length > 0) {
+                                var i = Math.random() * this.iconList.length;
+                                i = Math.floor(i);
+                                this.iconMD5 = this.iconList[i];
+                            }
+                            else {
+                                this.iconMD5 = null;
+                            }
                         }
                         this.loaded = false;
                         this.showed = false;
@@ -6067,6 +4493,9 @@ var TJ;
                         param.appId = this.appId;
                         param.appPackage = this.appPackageName;
                         param.storePackage = this.channelPackageName;
+                        if (this.path != null && this.path.length > 0) {
+                            param.path = this.path;
+                        }
                         param.extraData = { "TJ_Promo": this.promoGuid, "TJ_App": TJ.API.AppInfo.AppGuid() };
                         param.uri = TJ.Common.String_.Format(this.channelRule, this.appPackageName);
                         param.cbi.Add(TJ.Define.Event.Success, function () { _this.ReportOpen(); });
@@ -10493,6 +8922,8 @@ var TJ;
                             if (DP.OPPO.QG.gamePortalId == null)
                                 return;
                             var ad = AppRt.Extern.OPPO.QG.CreateGamePortalAd({ adUnitId: DP.OPPO.QG.gamePortalId });
+                            if (ad == null)
+                                return;
                             ad.OnLoad(function (res) {
                                 console.log("OPPO.QG.GamePortalAd OnLoad = " + JSON.stringify(res));
                                 ad.Show();
@@ -10768,6 +9199,8 @@ var TJ;
                             properties["startup_guid"] = TJ.Common.SystemInfo.startupGuid;
                             properties["startup_time"] = Math.floor((TJ.Common.Date_.nowSeconds - TJ.Common.SystemInfo.startupTime) * 1000) / 1000;
                             properties["tj_version"] = TJ.Define.SDK.version;
+                            if (TJ.Develop.ABTest.plan != null)
+                                properties["ab_plan"] = TJ.Develop.ABTest.plan;
                             sync_data(param);
                         }
                         Raw.track = track;
@@ -12910,6 +11343,30 @@ var TJ;
                         return Video;
                     }());
                 })(_4399 = SDK._4399 || (SDK._4399 = {}));
+            })(SDK = AppRt.SDK || (AppRt.SDK = {}));
+        })(AppRt = Platform.AppRt || (Platform.AppRt = {}));
+    })(Platform = TJ.Platform || (TJ.Platform = {}));
+})(TJ || (TJ = {}));
+(function (TJ) {
+    var Platform;
+    (function (Platform) {
+        var AppRt;
+        (function (AppRt) {
+            var SDK;
+            (function (SDK) {
+                var ABTest;
+                (function (ABTest) {
+                    TJ.Common.PriorityInit.Add(10, function () {
+                        switch (TJ.Engine.RuntimeInfo.platform) {
+                            case TJ.Define.Platform.AppRt:
+                                if (DP["ABTest"] != null) {
+                                    TJ.Develop.ABTest.plans = DP["ABTest"]["plans"];
+                                    TJ.Develop.ABTest.Init();
+                                }
+                                break;
+                        }
+                    });
+                })(ABTest = SDK.ABTest || (SDK.ABTest = {}));
             })(SDK = AppRt.SDK || (AppRt.SDK = {}));
         })(AppRt = Platform.AppRt || (Platform.AppRt = {}));
     })(Platform = TJ.Platform || (TJ.Platform = {}));
@@ -16344,6 +14801,7 @@ var TJ;
                         Promo.prototype.Pop = function (param) {
                             var p = new AppRt.Extern.WX.NavigateToMiniProgramParam();
                             p.appId = param.appId;
+                            p.path = param.path;
                             p.extraData = param.extraData;
                             p.success = function (res) {
                                 param.cbi.Run(TJ.Define.Event.Success);
@@ -16351,6 +14809,7 @@ var TJ;
                             p.complete = function (res) {
                                 console.log("WX.NavigateToMiniProgram complete", JSON.stringify(res));
                             };
+                            console.log("WX.NavigateToMiniProgram = " + JSON.stringify(p));
                             AppRt.Extern.WX.NavigateToMiniProgram(p);
                         };
                         return Promo;
@@ -17388,20 +15847,4 @@ var TJ;
     })(IAP = TJ.IAP || (TJ.IAP = {}));
 })(TJ || (TJ = {}));
 window["TJ"] = TJ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

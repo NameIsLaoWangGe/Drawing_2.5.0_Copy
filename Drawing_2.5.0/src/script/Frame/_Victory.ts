@@ -6,8 +6,6 @@ import { _PreloadUrl } from "./_PreLoad";
 import { _Share } from "./_Share";
 import { _Special } from "./_Special";
 export module _Victory {
-    export class _data {
-    }
     export enum _Event {
         _Settle_CloseScene = '_Settle_CloseScene',
     }
@@ -22,6 +20,10 @@ export module _Victory {
     }
     export class Victory extends _Victory.VictoryBase {
         lwgOnAwake(): void {
+            if (_Share._Data._photo._base64) {
+                this.ImgVar('Photo').skin = _Share._Data._photo._base64;
+                this.ImgVar('Photo').scale(0.75, 0.75);
+            }
             if (_Game._Pencils.pencilType == _Game._Pencils.type.colours && _Special._data._lastDate
                 !== DateAdmin._date.date) {
                 this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';

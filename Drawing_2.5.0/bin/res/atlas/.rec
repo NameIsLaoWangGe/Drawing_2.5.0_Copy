@@ -188,7 +188,7 @@ P 50A4ECB6 a.png
 R 5F25687D bg1.png
 R 311DBFF1 bj.png
 R AD876E59 d.png
-R 8AB1A78E d2.png
+R 01AACCAC d2.png
 P 3F3A6FD8 jb.png
 P 954962E8 lan.png
 P 2F4BEF3D zan.png
@@ -290,6 +290,8 @@ R CD765C86 hf.png
 P 56EE0949 jx.png
 R E25B0592 k.png
 P 56E331BC spfx.png
+R B9862FF0 zhezhao.png
+P 66B6CA88 形状 19.png
 D Game/UI/Shop
 D Game/UI/Skin
 D Game/UI/SkinQualified
@@ -328,11 +330,13 @@ P 3F3A6FD8 jb.png
 P EF1DA0F4 jmjl.png
 P B0E3502B lt.png
 P CA46521C pptt.png
-P F50BADF5 sblq.png
+P 439A4834 s.png
 P 6D43035A sbml.png
+P 24ED0725 spp.png
 P A116030B sz.png
 P 3492B417 tie.png
 P CC8BE738 xyg.png
+R D5B85F64 组 20.png
 D Game/UI/VictoryBox
 D Game/UI/CheckIn/SelectLevel
 D Game/UI/GameScene/design

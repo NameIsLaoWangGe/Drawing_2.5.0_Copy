@@ -666,6 +666,7 @@ declare namespace TJ.API.Promo {
         appId: string;
         appPackage: string;
         storePackage: string;
+        path: string;
         extraData: {};
         uri: string;
         cbi: Common.CallbackInfo;
@@ -725,6 +726,11 @@ declare namespace TJ.API.Vibrate {
     function Short(): void;
     function Long(): void;
     function Time(seconds: number): void;
+}
+declare namespace TJ.Develop.ABTest {
+    let plan: string;
+    let plans: string[];
+    function Init(checkVersion?: boolean): void;
 }
 declare namespace TJ.Develop.ReYun {
     namespace Raw {
@@ -795,6 +801,7 @@ declare namespace TJ.Develop.Yun.Location {
     function NowTime(): number;
     let syncPromise: Promise<void>;
     function Sync(): Promise<void>;
+    let shield: boolean;
 }
 declare namespace TJ.Develop.Yun.Login {
     let apiUrl: string;
@@ -893,6 +900,7 @@ declare namespace TJ.Develop.Yun.Promo {
         promoGuid: string;
         appGuid: string;
         appPackageName: string;
+        promoOriginIcon: string;
         weight: number;
         title: string;
         describe: string;
@@ -900,6 +908,7 @@ declare namespace TJ.Develop.Yun.Promo {
         private promoStyle;
         private iconList;
         appId: string;
+        path: string;
         private channelPackageName;
         private channelRule;
         private style;
@@ -2747,6 +2756,8 @@ declare namespace TJ.Platform.AppRt.SDK._4399 {
     class Manager extends Common.Component.Interface {
         OnInit(): void;
     }
+}
+declare namespace TJ.Platform.AppRt.SDK.ABTest {
 }
 declare namespace TJ.Platform.AppRt.SDK.AdService {
 }

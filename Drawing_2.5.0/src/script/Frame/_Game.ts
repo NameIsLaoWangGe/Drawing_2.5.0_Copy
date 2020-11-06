@@ -214,71 +214,6 @@ export module _Game {
     }
     /**画笔列表*/
     export let _PencilsList: Laya.List;
-    /**画笔脚本*/
-    export class _PencilsListItem extends Admin._Object {
-        _dataSource: any;
-        lwgOnStart(): void {
-            this._dataSource = this.Owner['_dataSource'];
-            // // console.log(this.Owner['_dataSource']);
-            // ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
-            // Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 600, () => {
-            //     if ((_GeneralPencils._pitchName == this._dataSource[_GeneralPencils._property.name])) {
-            //         Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
-            //             Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
-            //                 this.Owner.rotation = 0;
-            //             });
-            //         });
-            //     }
-            // });
-        }
-        lwgBtnClick(): void {
-            var func = (e: Laya.Event) => {
-                e.stopPropagation();
-            }
-            Click._on(Click._Type.largen, this.Owner, this,
-                func,
-                func,
-                (e: Laya.Event) => {
-                    e.stopPropagation();
-                    ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
-                    let lasName = _GeneralPencils._pitchName;
-                    _GeneralPencils._setPitchByName(this._dataSource[_GeneralPencils._property.name]);
-                    if (this._dataSource[_GeneralPencils._property.name] == 'colours') {
-                        console.log(this._dataSource['name']);
-                        if (!_ColoursPencils._Switch) {
-                            _GeneralPencils._setPitchByName(lasName);
-                            _PropTry._comeFrom = _SceneName.Game;
-                            this.lwgOpenScene(_SceneName.PropTry, false);
-                            _activate = false;
-                            return;
-                        }
-                        for (let index = 0; index < _ColoursPencils._data.length; index++) {
-                            const element = _ColoursPencils._data[index];
-                            if (_ColoursPencils._pitchName == element[_GeneralPencils._property.name]) {
-                                let nameIndex = Number(_ColoursPencils._pitchName.substr(5));
-                                // console.log(nameIndex);
-                                if (_Pencils.pencilType == _Pencils.type.colours) {
-                                    if (!nameIndex) {
-                                        nameIndex = 1;
-                                    }
-                                    nameIndex++;
-                                    if (nameIndex > 7) {
-                                        nameIndex = 1;
-                                    }
-                                    _ColoursPencils._pitchName = `caise${nameIndex}`;
-                                    _ColoursPencils._setPresentColorArr();
-                                }
-                                _PencilsList.refresh();
-                                return;
-                            }
-                        }
-                    } else {
-                        _Pencils.pencilType = _Pencils.type.general;
-                    }
-                },
-                func);
-        }
-    }
 
     export class Game extends Admin._SceneBase {
         /**每个步骤需要绘制的长度监听*/
@@ -307,6 +242,7 @@ export module _Game {
             _stepIndex.present = 0;
             _stepIndex.max = 0;
             _PencilsList = this.ListVar('PencilsList');
+            _PencilsList.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
             // _PencilsList = Laya.Pool.getItemByCreateFun('_prefab2D', _PreloadUrl._list.prefab2D.PencilsList.prefab.create, _PreloadUrl._list.prefab2D.PencilsList.prefab);
             // _PencilsList.zOrder = 200;
             // this.Owner.addChild(_PencilsList)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.835);
@@ -359,12 +295,13 @@ export module _Game {
             RecordManager.startRecord();
         }
         lwgOpenAni(): number {
+            this.ImgVar('DrawingBoard').zOrder = 100;
             this.ImgVar('DrawingBoard').width = Laya.stage.width;
             this.ImgVar('DrawingBoard').height = Laya.stage.height;
             let fX = this.ImgVar('DrawingBoard').x = -Laya.stage.width / 2;
             let fY = this.ImgVar('DrawingBoard').y = -500;
-            let fR = this.ImgVar('DrawingBoard').rotation = 60;
-            let time = 400;
+            let fR = this.ImgVar('DrawingBoard').rotation = 75;
+            let time = 600;
             let delay = 150;
             Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
             Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
@@ -372,9 +309,24 @@ export module _Game {
                     this.Step.cutFocus();
                 })
             });
+
+            let Shadow = new Laya.Image();
+            this.Owner.addChild(Shadow);
+            Shadow.zOrder = this.ImgVar('DrawingBoard').zOrder - 1;
+            Shadow.skin = `Frame/UI/ui_orthogon_black.png`;
+            Shadow.sizeGrid = '14,16,23,12';
+            Shadow.width = this.ImgVar('DrawingBoard').width;
+            Shadow.height = this.ImgVar('DrawingBoard').height;
+            Shadow.x = this.ImgVar('DrawingBoard').x + 100;
+            Shadow.y = this.ImgVar('DrawingBoard').y + 100;
+            Shadow.rotation = this.ImgVar('DrawingBoard').rotation;
+            Animation2D.scale_Alpha(Shadow, 0.2, 1.2, 1.3, 1, 1, 0.4, time);
+            Animation2D.simple_Rotate(Shadow, fR - 20, 0, time, delay);
+            Animation2D.move_Simple(Shadow, fX, fY, 0, 0, time, delay, () => {
+            });
+
             return time + delay;
         }
-
         /**步骤控制*/
         Step = {
             firstRootP: null as Laya.Point,
@@ -407,12 +359,16 @@ export module _Game {
                 if (Parent.name == 'Head' || Parent.name == 'Body') {
                     let oriPovitX = Parent.pivotX;
                     let oriPovitY = Parent.pivotY;
-                    Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
+                    if (this.Owner.name !== 'Game_wugui') {
+                        Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
+                    }
                     let point = (Parent.parent as Laya.Image).localToGlobal(new Laya.Point(Parent.x, Parent.y));
                     let diffPoint = new Laya.Point(Laya.stage.width / 2 - point.x, Laya.stage.width * 3 / 5 - point.y);
                     // console.log(point);
                     Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 400, 0, () => {
-                        Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
+                        if (this.Owner.name !== 'Game_wugui') {
+                            Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
+                        }
                         if (func) {
                             func();
                         }
@@ -461,14 +417,6 @@ export module _Game {
             this.Step.init();
         }
         lwgOnStart(): void {
-            if (_PencilsList.cells.length !== 0) {
-                for (let index = 0; index < _PencilsList.cells.length; index++) {
-                    const element = _PencilsList.cells[index];
-                    if (!element.getComponent(_PencilsListItem)) {
-                        element.addComponent(_PencilsListItem);
-                    }
-                }
-            }
             EventAdmin._notify(_Event.start);
         }
         lwgEventRegister(): void {
@@ -494,11 +442,17 @@ export module _Game {
                     Image.x = 130;
                 } else if (this.Owner.name == 'Game_wanshengnangua') {
                     Image.x = 80;
+                } else if (this.Owner.name == 'Game_xiaonainiu') {
+                    Image.x = 55;
+                } else if (this.Owner.name == 'Game_maotouying') {
+                    Image.x = 85;
                 } else {
                     Image.x = 50;
                 }
                 if (this.Owner.name == 'Game_wugui' || this.Owner.name == 'Game_haitun' || this.Owner.name == 'Game_wanshengnangua') {
                     Image.y = 120;
+                } else if (this.Owner.name == 'Game_xiaonainiu') {
+                    Image.y = 90;
                 } else {
                     Image.y = 100;
                 }
@@ -819,6 +773,4 @@ export module _Game {
     }
 }
 export default _Game.Game;
-
-
 

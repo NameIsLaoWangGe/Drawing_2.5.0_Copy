@@ -1,223 +1,6 @@
 (function () {
     'use strict';
 
-    class shieldTime {
-    }
-    class ShieldScene {
-    }
-    class ConfigInfo {
-    }
-    class ipData {
-    }
-    class IPInfo {
-    }
-    var ShieldLevel;
-    (function (ShieldLevel) {
-        ShieldLevel["low"] = "Low";
-        ShieldLevel["mid"] = "Mid";
-        ShieldLevel["high"] = "High";
-    })(ShieldLevel || (ShieldLevel = {}));
-    class ZJADMgr {
-        constructor() {
-            this.tt = Laya.Browser.window.tt;
-            this.shieldLevel = ShieldLevel.high;
-            this.prk_init = "platform_init";
-            this.prk_shareTimes = "platform_shareTimes";
-            this.prk_shareTs = "platform_shareTs";
-            this.shareItv = 1 * 3600 * 1000;
-            this.shareMaxTimes = 5;
-            this.shareImgUrl = "http://image.tomatojoy.cn/fkbxs01.jpg";
-            this.shareContent = "消灭方块，人人有责！";
-            this.shieldArea = false;
-            this.shieldUser = false;
-            this.shieldVersion = false;
-            this.shieldtime = false;
-            this.shareTimes = 0;
-            this.lastShareTs = 0;
-            this.configInited = false;
-            this.ipInfoInited = false;
-            this.inited = false;
-            this.playVideoIndex = 0;
-            ZJADMgr.ins = this;
-            this.requestInfo();
-        }
-        async GameCfg() {
-            let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
-            await www.Send();
-            if (www.error == null && www.text != null) {
-                this.onGameCfgSuccess(www.text);
-                return;
-            }
-            else {
-                let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
-                await www.Send();
-                if (www.error == null && www.text != null) {
-                    this.onGameCfgSuccess(www.text);
-                    return;
-                }
-                else {
-                    let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
-                    await www.Send();
-                    if (www.error == null && www.text != null) {
-                        this.onGameCfgSuccess(www.text);
-                        return;
-                    }
-                }
-            }
-            return null;
-        }
-        async GetIP() {
-            let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
-            await www.Send();
-            if (www.error == null && www.text != null) {
-                this.onGetIpSuccess(www.text);
-                return;
-            }
-            else {
-                let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
-                await www.Send();
-                if (www.error == null && www.text != null) {
-                    this.onGetIpSuccess(www.text);
-                    return;
-                }
-                else {
-                    let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
-                    await www.Send();
-                    if (www.error == null && www.text != null) {
-                        this.onGetIpSuccess(www.text);
-                        return;
-                    }
-                    else {
-                        console.log(www.error);
-                    }
-                }
-            }
-            return null;
-        }
-        onGameCfgSuccess(config) {
-            let _configinfo = JSON.parse(config);
-            this.configinfo = _configinfo;
-            this.configInited = true;
-            if (this.ipInfoInited) {
-                this.init();
-            }
-        }
-        onGetIpSuccess(ipInfo) {
-            let _iPInfo = JSON.parse(ipInfo);
-            this.iPInfo = _iPInfo;
-            this.ipInfoInited = true;
-            if (this.configInited) {
-                this.init();
-            }
-        }
-        requestInfo() {
-            if (TJ.API.AppInfo.Channel() == TJ.Define.Channel.AppRt.ZJTD_AppRt) {
-                this.GameCfg();
-                this.GetIP();
-            }
-        }
-        init() {
-            if (this.configinfo.shieldStatus) {
-                if (TJ.API.AppInfo.VersionName() == this.configinfo.codeVer)
-                    this.shieldVersion = true;
-            }
-            if (this.iPInfo != null) {
-                if (this.iPInfo.code == 200) {
-                    let m_cityName = this.iPInfo.data.city;
-                    if (this.configinfo.shieldCity != "") {
-                        if (this.configinfo.shieldCity == "all") {
-                            this.shieldArea = true;
-                        }
-                        else {
-                            this.shieldArea = false;
-                            let shieldcities = this.configinfo.shieldCity.split(",");
-                            for (var i = 0; i < shieldcities.length; i++) {
-                                if (m_cityName.indexOf(shieldcities[i]) >= 0) {
-                                    this.shieldArea = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        this.shieldArea = false;
-                    }
-                }
-                else {
-                    this.shieldArea = true;
-                }
-            }
-            if (this.configinfo.shieldTime.status) {
-                let timeLimit = this.configinfo.shieldTime.time.split("-");
-                let date = new Date();
-                if (date.getHours() >= Number(timeLimit[0]) && date.getHours() <= Number(timeLimit[1])) {
-                    this.shieldtime = true;
-                }
-                else {
-                    this.shieldtime = false;
-                }
-            }
-            else {
-                this.shieldtime = false;
-            }
-            let launchRes = this.tt.getLaunchOptionsSync();
-            console.log(launchRes);
-            if (this.configinfo.ShieldScene.status) {
-                let timeLimit = this.configinfo.ShieldScene.Scene.split("|");
-                this.shieldUser = timeLimit.indexOf(launchRes.scene) >= 0;
-                console.log(this.shieldUser);
-            }
-            this.inited = true;
-            if (this.onConFigInited != null)
-                this.onConFigInited();
-            let iswifi = false;
-            this.tt.getNetworkType({
-                success: (obj) => {
-                    if (obj.networkType == "wifi") {
-                        if (ZJADMgr.ins.shieldArea) {
-                            ZJADMgr.ins.shieldLevel = ShieldLevel.high;
-                        }
-                        else {
-                            ZJADMgr.ins.shieldLevel = ShieldLevel.low;
-                        }
-                    }
-                    else {
-                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
-                    }
-                    if (ZJADMgr.ins.shieldUser) {
-                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
-                    }
-                    if (ZJADMgr.ins.shieldVersion) {
-                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
-                    }
-                    if (ZJADMgr.ins.shieldtime) {
-                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
-                    }
-                    console.log("--------ZJADMgr.ins.shieldLevel-------");
-                    console.log(ZJADMgr.ins.shieldLevel);
-                },
-                fail: null,
-                complete: null
-            });
-            this.showVideo = this.configinfo.ADPoint;
-        }
-        CheckPlayVideo() {
-            if (!this.inited)
-                return false;
-            if (this.shieldLevel == ShieldLevel.low) {
-                if (this.showVideo[this.playVideoIndex % this.showVideo.length] == '0') {
-                    this.playVideoIndex++;
-                    return false;
-                }
-                else {
-                    this.playVideoIndex++;
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
     var lwg;
     (function (lwg) {
         let Pause;
@@ -6093,32 +5876,6 @@
         TaT[TaT["LevelFail"] = 7] = "LevelFail";
     })(TaT || (TaT = {}));
 
-    var _AdsHint;
-    (function (_AdsHint) {
-        class AdsHint extends Admin._SceneBase {
-            setCallBack(_adAction) {
-                this.adAction = _adAction;
-            }
-            lwgOnEnable() {
-                this.Owner['BtnClose'].visible = false;
-                Laya.timer.frameOnce(120, this, () => {
-                    this.Owner['BtnClose'].visible = true;
-                });
-            }
-            lwgBtnClick() {
-                Click._on(Click._Type.largen, this.Owner['BtnClose'], this, null, null, () => {
-                    this.lwgCloseScene();
-                });
-                Click._on(Click._Type.largen, this.Owner['BtnConfirm'], this, null, null, () => {
-                    ADManager.ShowReward(this.adAction, null);
-                    this.lwgCloseScene();
-                });
-            }
-        }
-        _AdsHint.AdsHint = AdsHint;
-    })(_AdsHint || (_AdsHint = {}));
-    var _AdsHint$1 = _AdsHint.AdsHint;
-
     class RecordManager {
         constructor() {
             this.GRV = null;
@@ -6337,6 +6094,382 @@
         _PreLoad.PreLoad = PreLoad;
     })(_PreLoad || (_PreLoad = {}));
 
+    class shieldTime {
+    }
+    class ShieldScene {
+    }
+    class ConfigInfo {
+    }
+    class ipData {
+    }
+    class IPInfo {
+    }
+    var ShieldLevel;
+    (function (ShieldLevel) {
+        ShieldLevel["low"] = "Low";
+        ShieldLevel["mid"] = "Mid";
+        ShieldLevel["high"] = "High";
+    })(ShieldLevel || (ShieldLevel = {}));
+    class ZJADMgr {
+        constructor() {
+            this.tt = Laya.Browser.window.tt;
+            this.shieldLevel = ShieldLevel.high;
+            this.prk_init = "platform_init";
+            this.prk_shareTimes = "platform_shareTimes";
+            this.prk_shareTs = "platform_shareTs";
+            this.shareItv = 1 * 3600 * 1000;
+            this.shareMaxTimes = 5;
+            this.shareImgUrl = "http://image.tomatojoy.cn/fkbxs01.jpg";
+            this.shareContent = "消灭方块，人人有责！";
+            this.shieldArea = false;
+            this.shieldUser = false;
+            this.shieldVersion = false;
+            this.shieldtime = false;
+            this.shareTimes = 0;
+            this.lastShareTs = 0;
+            this.configInited = false;
+            this.ipInfoInited = false;
+            this.inited = false;
+            this.playVideoIndex = 0;
+            ZJADMgr.ins = this;
+            this.requestInfo();
+        }
+        async GameCfg() {
+            let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
+            await www.Send();
+            if (www.error == null && www.text != null) {
+                this.onGameCfgSuccess(www.text);
+                return;
+            }
+            else {
+                let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
+                await www.Send();
+                if (www.error == null && www.text != null) {
+                    this.onGameCfgSuccess(www.text);
+                    return;
+                }
+                else {
+                    let www = new TJ.Common.WWW("https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.AppGuid() + "/config/game.json");
+                    await www.Send();
+                    if (www.error == null && www.text != null) {
+                        this.onGameCfgSuccess(www.text);
+                        return;
+                    }
+                }
+            }
+            return null;
+        }
+        async GetIP() {
+            let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
+            await www.Send();
+            if (www.error == null && www.text != null) {
+                this.onGetIpSuccess(www.text);
+                return;
+            }
+            else {
+                let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
+                await www.Send();
+                if (www.error == null && www.text != null) {
+                    this.onGetIpSuccess(www.text);
+                    return;
+                }
+                else {
+                    let www = new TJ.Common.WWW("https://api1.tomatojoy.cn/getIp");
+                    await www.Send();
+                    if (www.error == null && www.text != null) {
+                        this.onGetIpSuccess(www.text);
+                        return;
+                    }
+                    else {
+                        console.log(www.error);
+                    }
+                }
+            }
+            return null;
+        }
+        onGameCfgSuccess(config) {
+            let _configinfo = JSON.parse(config);
+            this.configinfo = _configinfo;
+            this.configInited = true;
+            if (this.ipInfoInited) {
+                this.init();
+            }
+        }
+        onGetIpSuccess(ipInfo) {
+            let _iPInfo = JSON.parse(ipInfo);
+            this.iPInfo = _iPInfo;
+            this.ipInfoInited = true;
+            if (this.configInited) {
+                this.init();
+            }
+        }
+        requestInfo() {
+            if (TJ.API.AppInfo.Channel() == TJ.Define.Channel.AppRt.ZJTD_AppRt) {
+                this.GameCfg();
+                this.GetIP();
+            }
+        }
+        init() {
+            if (this.configinfo.shieldStatus) {
+                if (TJ.API.AppInfo.VersionName() == this.configinfo.codeVer)
+                    this.shieldVersion = true;
+            }
+            if (this.iPInfo != null) {
+                if (this.iPInfo.code == 200) {
+                    let m_cityName = this.iPInfo.data.city;
+                    if (this.configinfo.shieldCity != "") {
+                        if (this.configinfo.shieldCity == "all") {
+                            this.shieldArea = true;
+                        }
+                        else {
+                            this.shieldArea = false;
+                            let shieldcities = this.configinfo.shieldCity.split(",");
+                            for (var i = 0; i < shieldcities.length; i++) {
+                                if (m_cityName.indexOf(shieldcities[i]) >= 0) {
+                                    this.shieldArea = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        this.shieldArea = false;
+                    }
+                }
+                else {
+                    this.shieldArea = true;
+                }
+            }
+            if (this.configinfo.shieldTime.status) {
+                let timeLimit = this.configinfo.shieldTime.time.split("-");
+                let date = new Date();
+                if (date.getHours() >= Number(timeLimit[0]) && date.getHours() <= Number(timeLimit[1])) {
+                    this.shieldtime = true;
+                }
+                else {
+                    this.shieldtime = false;
+                }
+            }
+            else {
+                this.shieldtime = false;
+            }
+            let launchRes = this.tt.getLaunchOptionsSync();
+            console.log(launchRes);
+            if (this.configinfo.ShieldScene.status) {
+                let timeLimit = this.configinfo.ShieldScene.Scene.split("|");
+                this.shieldUser = timeLimit.indexOf(launchRes.scene) >= 0;
+                console.log(this.shieldUser);
+            }
+            this.inited = true;
+            if (this.onConFigInited != null)
+                this.onConFigInited();
+            let iswifi = false;
+            this.tt.getNetworkType({
+                success: (obj) => {
+                    if (obj.networkType == "wifi") {
+                        if (ZJADMgr.ins.shieldArea) {
+                            ZJADMgr.ins.shieldLevel = ShieldLevel.high;
+                        }
+                        else {
+                            ZJADMgr.ins.shieldLevel = ShieldLevel.low;
+                        }
+                    }
+                    else {
+                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
+                    }
+                    if (ZJADMgr.ins.shieldUser) {
+                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
+                    }
+                    if (ZJADMgr.ins.shieldVersion) {
+                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
+                    }
+                    if (ZJADMgr.ins.shieldtime) {
+                        ZJADMgr.ins.shieldLevel = ShieldLevel.high;
+                    }
+                    console.log("--------ZJADMgr.ins.shieldLevel-------");
+                    console.log(ZJADMgr.ins.shieldLevel);
+                },
+                fail: null,
+                complete: null
+            });
+            this.showVideo = this.configinfo.ADPoint;
+        }
+        CheckPlayVideo() {
+            if (!this.inited)
+                return false;
+            if (this.shieldLevel == ShieldLevel.low) {
+                if (this.showVideo[this.playVideoIndex % this.showVideo.length] == '0') {
+                    this.playVideoIndex++;
+                    return false;
+                }
+                else {
+                    this.playVideoIndex++;
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    var _PropTry;
+    (function (_PropTry) {
+        _PropTry._presentTry = false;
+        _PropTry._comeFrom = _SceneName.SelectLevel;
+        function _init() { }
+        _PropTry._init = _init;
+        let _Event;
+        (function (_Event) {
+            _Event["_PropTryClose"] = "_PropTryClose";
+        })(_Event = _PropTry._Event || (_PropTry._Event = {}));
+        class PropTryBase extends Admin._SceneBase {
+            moduleOnAwake() {
+                ADManager.TAPoint(TaT.PageShow, 'skintrypage');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
+                if (_PropTry._comeFrom == _SceneName.SelectLevel) {
+                    _PropTry._beforeTry = _Game._Pencils.pencilType;
+                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                    _Game._GeneralPencils._setPitchByName(_Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name]);
+                }
+            }
+        }
+        _PropTry.PropTryBase = PropTryBase;
+        class PropTry extends PropTryBase {
+            lwgOnAwake() {
+                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
+                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
+                }
+                else {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
+                    if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
+                        Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
+                    }
+                }
+            }
+            lwgOnEnable() {
+                this.ImgVar('BtnClose').visible = false;
+                Laya.timer.once(2000, this, () => {
+                    this.ImgVar('BtnClose').visible = true;
+                });
+            }
+            lwgEventRegister() {
+                EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
+                    if (_PropTry._comeFrom == _SceneName.SelectLevel) {
+                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                        this.lwgOpenScene(levelName, true, () => {
+                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                            }
+                        });
+                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                    }
+                    else {
+                        this.lwgCloseScene();
+                    }
+                });
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Low_Select'), this, null, null, this.bytedanceSelectUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Low_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Mid_Select'), this, null, null, this.bytedanceSelectUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Mid_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    this.advFunc();
+                });
+                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+            }
+            clickBgtUp(e) {
+                e.stopPropagation();
+                if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
+                    return;
+                }
+                let Dot;
+                if (this.ImgVar('Low').visible) {
+                    Dot = this.ImgVar('Bytedance_Low_Dot');
+                }
+                else if (this.ImgVar('Mid').visible) {
+                    Dot = this.ImgVar('Bytedance_Mid_Dot');
+                }
+                if (!Dot) {
+                    return;
+                }
+                if (Dot.visible) {
+                    this.advFunc();
+                }
+                else {
+                    EventAdmin._notify(_Event._PropTryClose);
+                }
+            }
+            bytedanceGetUp(e) {
+                e.stopPropagation();
+                this.advFunc();
+            }
+            bytedanceSelectUp(e) {
+                e.stopPropagation();
+                if (this.ImgVar('Low').visible) {
+                    if (!this.ImgVar('Low')['count']) {
+                        this.ImgVar('Low')['count'] = 0;
+                    }
+                    this.ImgVar('Low')['count']++;
+                    if (this.ImgVar('Low')['count'] >= 4) {
+                        if (this.ImgVar('Bytedance_Low_Dot').visible) {
+                            this.ImgVar('Bytedance_Low_Dot').visible = false;
+                        }
+                        else {
+                            this.ImgVar('Bytedance_Low_Dot').visible = true;
+                        }
+                    }
+                    if (ZJADMgr.ins.CheckPlayVideo()) {
+                        ADManager.ShowReward(null);
+                    }
+                }
+                else if (this.ImgVar('Mid').visible) {
+                    if (!this.ImgVar('Mid')['count']) {
+                        this.ImgVar('Mid')['count'] = 0;
+                    }
+                    this.ImgVar('Mid')['count']++;
+                    if (this.ImgVar('Mid')['count'] >= 4) {
+                        if (this.ImgVar('Bytedance_Mid_Dot').visible) {
+                            this.ImgVar('Bytedance_Mid_Dot').visible = false;
+                        }
+                        else {
+                            this.ImgVar('Bytedance_Mid_Dot').visible = true;
+                        }
+                    }
+                }
+            }
+            advFunc() {
+                ADManager.ShowReward(() => {
+                    ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
+                    _Game._GeneralPencils._setPitchByName('colours');
+                    _Game._ColoursPencils._Switch = true;
+                    _Game._Pencils.pencilType = _Game._Pencils.type.colours;
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+            }
+            onDisable() {
+                _Game._activate = true;
+                ADManager.TAPoint(TaT.PageLeave, 'skintrypage');
+            }
+        }
+        _PropTry.PropTry = PropTry;
+    })(_PropTry || (_PropTry = {}));
+    var _PropTry$1 = _PropTry.PropTry;
+
     var _SelectLevel;
     (function (_SelectLevel) {
         class _Data {
@@ -6438,14 +6571,14 @@
         };
         _Data._pich = {
             get classify() {
-                return Laya.LocalStorage.getItem('_SelectLevel_pichclassify') ? Laya.LocalStorage.getItem('_SelectLevel_pichclassify') : 'animal';
+                return this['_SelectLevel_pichclassify'] ? this['_SelectLevel_pichclassify'] : 'animal';
             },
             set classify(str) {
                 if (_SelectLevel._MyList) {
                     _SelectLevel._MyList.array = _Data._getClassifyArr(str);
                     _SelectLevel._MyList.refresh();
                 }
-                Laya.LocalStorage.setItem('_SelectLevel_pichclassify', str.toString());
+                this['_SelectLevel_pichclassify'] = str;
             },
             get customs() {
                 return Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') ? Laya.LocalStorage.getItem('_SelectLevel_pichcustoms') : null;
@@ -6665,165 +6798,6 @@
     })(_SelectLevel || (_SelectLevel = {}));
     var _SelectLevel$1 = _SelectLevel.SelectLevel;
 
-    var _PropTry;
-    (function (_PropTry) {
-        _PropTry._presentTry = false;
-        _PropTry._comeFrom = _SceneName.SelectLevel;
-        function _init() { }
-        _PropTry._init = _init;
-        let _Event;
-        (function (_Event) {
-            _Event["_PropTryClose"] = "_PropTryClose";
-        })(_Event = _PropTry._Event || (_PropTry._Event = {}));
-        class PropTryBase extends Admin._SceneBase {
-            moduleOnAwake() {
-                ADManager.TAPoint(TaT.PageShow, 'skintrypage');
-                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
-                if (_PropTry._comeFrom == _SceneName.SelectLevel) {
-                    _PropTry._beforeTry = _Game._Pencils.pencilType;
-                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
-                    _Game._GeneralPencils._setPitchByName(_Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name]);
-                }
-            }
-        }
-        _PropTry.PropTryBase = PropTryBase;
-        class PropTry extends PropTryBase {
-            lwgOnAwake() {
-                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
-                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
-                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
-                }
-                else {
-                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
-                    if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
-                        Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
-                    }
-                }
-            }
-            lwgOnEnable() {
-                this.ImgVar('BtnClose').visible = false;
-                Laya.timer.once(2000, this, () => {
-                    this.ImgVar('BtnClose').visible = true;
-                });
-            }
-            lwgEventRegister() {
-                EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
-                    if (_PropTry._comeFrom == _SceneName.SelectLevel) {
-                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
-                        this.lwgOpenScene(levelName, true, () => {
-                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
-                                Admin._sceneControl[levelName].addComponent(_Game.Game);
-                            }
-                        });
-                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
-                    }
-                    else {
-                        this.lwgCloseScene();
-                    }
-                });
-            }
-            lwgBtnClick() {
-                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Low_Select'), this, null, null, this.bytedanceSelectUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Low_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Mid_Select'), this, null, null, this.bytedanceSelectUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Mid_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    this.advFunc();
-                });
-                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-            }
-            clickBgtUp(e) {
-                e.stopPropagation();
-                if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
-                    return;
-                }
-                let Dot;
-                if (this.ImgVar('Low').visible) {
-                    Dot = this.ImgVar('Bytedance_Low_Dot');
-                }
-                else if (this.ImgVar('Mid').visible) {
-                    Dot = this.ImgVar('Bytedance_Mid_Dot');
-                }
-                if (!Dot) {
-                    return;
-                }
-                if (Dot.visible) {
-                    this.advFunc();
-                }
-                else {
-                    EventAdmin._notify(_Event._PropTryClose);
-                }
-            }
-            bytedanceGetUp(e) {
-                e.stopPropagation();
-                this.advFunc();
-            }
-            bytedanceSelectUp(e) {
-                e.stopPropagation();
-                if (this.ImgVar('Low').visible) {
-                    if (!this.ImgVar('Low')['count']) {
-                        this.ImgVar('Low')['count'] = 0;
-                    }
-                    this.ImgVar('Low')['count']++;
-                    if (this.ImgVar('Low')['count'] >= 4) {
-                        if (this.ImgVar('Bytedance_Low_Dot').visible) {
-                            this.ImgVar('Bytedance_Low_Dot').visible = false;
-                        }
-                        else {
-                            this.ImgVar('Bytedance_Low_Dot').visible = true;
-                        }
-                    }
-                    if (ZJADMgr.ins.CheckPlayVideo()) {
-                        ADManager.ShowReward(null);
-                    }
-                }
-                else if (this.ImgVar('Mid').visible) {
-                    if (!this.ImgVar('Mid')['count']) {
-                        this.ImgVar('Mid')['count'] = 0;
-                    }
-                    this.ImgVar('Mid')['count']++;
-                    if (this.ImgVar('Mid')['count'] >= 4) {
-                        if (this.ImgVar('Bytedance_Mid_Dot').visible) {
-                            this.ImgVar('Bytedance_Mid_Dot').visible = false;
-                        }
-                        else {
-                            this.ImgVar('Bytedance_Mid_Dot').visible = true;
-                        }
-                    }
-                }
-            }
-            advFunc() {
-                ADManager.ShowReward(() => {
-                    ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
-                    _Game._GeneralPencils._setPitchByName('colours');
-                    _Game._ColoursPencils._Switch = true;
-                    _Game._Pencils.pencilType = _Game._Pencils.type.colours;
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-            }
-            onDisable() {
-                _Game._activate = true;
-                ADManager.TAPoint(TaT.PageLeave, 'skintrypage');
-            }
-        }
-        _PropTry.PropTry = PropTry;
-    })(_PropTry || (_PropTry = {}));
-    var _PropTry$1 = _PropTry.PropTry;
-
     var _Share;
     (function (_Share) {
         class _Data {
@@ -6861,6 +6835,13 @@
                     EventAdmin._notify(_Game._Event.victory);
                     this.lwgOpenScene(_SceneName.Victory);
                 };
+                Click._on(Click._Type.largen, this.btnVar('BtnShareBg'), this, null, null, () => {
+                    RecordManager.startRecord();
+                    RecordManager._share('noAward', () => {
+                        ADManager.TAPoint(TaT.BtnClick, 'share_share');
+                        func();
+                    });
+                });
                 Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
                     func();
                 });
@@ -7080,55 +7061,6 @@
             _ColoursPencils._init();
         }
         _Game._init = _init;
-        class _PencilsListItem extends Admin._Object {
-            lwgOnStart() {
-                this._dataSource = this.Owner['_dataSource'];
-            }
-            lwgBtnClick() {
-                var func = (e) => {
-                    e.stopPropagation();
-                };
-                Click._on(Click._Type.largen, this.Owner, this, func, func, (e) => {
-                    e.stopPropagation();
-                    ADManager.TAPoint(TaT.BtnShow, `id_${this._dataSource['name']}`);
-                    let lasName = _GeneralPencils._pitchName;
-                    _GeneralPencils._setPitchByName(this._dataSource[_GeneralPencils._property.name]);
-                    if (this._dataSource[_GeneralPencils._property.name] == 'colours') {
-                        console.log(this._dataSource['name']);
-                        if (!_ColoursPencils._Switch) {
-                            _GeneralPencils._setPitchByName(lasName);
-                            _PropTry._comeFrom = _SceneName.Game;
-                            this.lwgOpenScene(_SceneName.PropTry, false);
-                            _Game._activate = false;
-                            return;
-                        }
-                        for (let index = 0; index < _ColoursPencils._data.length; index++) {
-                            const element = _ColoursPencils._data[index];
-                            if (_ColoursPencils._pitchName == element[_GeneralPencils._property.name]) {
-                                let nameIndex = Number(_ColoursPencils._pitchName.substr(5));
-                                if (_Game._Pencils.pencilType == _Game._Pencils.type.colours) {
-                                    if (!nameIndex) {
-                                        nameIndex = 1;
-                                    }
-                                    nameIndex++;
-                                    if (nameIndex > 7) {
-                                        nameIndex = 1;
-                                    }
-                                    _ColoursPencils._pitchName = `caise${nameIndex}`;
-                                    _ColoursPencils._setPresentColorArr();
-                                }
-                                _Game._PencilsList.refresh();
-                                return;
-                            }
-                        }
-                    }
-                    else {
-                        _Game._Pencils.pencilType = _Game._Pencils.type.general;
-                    }
-                }, func);
-            }
-        }
-        _Game._PencilsListItem = _PencilsListItem;
         class Game extends Admin._SceneBase {
             constructor() {
                 super(...arguments);
@@ -7175,11 +7107,15 @@
                         if (Parent.name == 'Head' || Parent.name == 'Body') {
                             let oriPovitX = Parent.pivotX;
                             let oriPovitY = Parent.pivotY;
-                            Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
+                            if (this.Owner.name !== 'Game_wugui') {
+                                Tools.Node.changePovit(Parent, Parent.width / 2, Parent.height / 2, true);
+                            }
                             let point = Parent.parent.localToGlobal(new Laya.Point(Parent.x, Parent.y));
                             let diffPoint = new Laya.Point(Laya.stage.width / 2 - point.x, Laya.stage.width * 3 / 5 - point.y);
                             Animation2D.move_Simple(this.ImgVar('DrawRoot'), this.ImgVar('DrawRoot').x, this.ImgVar('DrawRoot').y, this.ImgVar('DrawRoot').x + diffPoint.x, this.ImgVar('DrawRoot').y + diffPoint.y, 400, 0, () => {
-                                Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
+                                if (this.Owner.name !== 'Game_wugui') {
+                                    Tools.Node.changePovit(Parent, oriPovitX, oriPovitY, true);
+                                }
                                 if (func) {
                                     func();
                                 }
@@ -7256,6 +7192,7 @@
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
                 _Game._PencilsList = this.ListVar('PencilsList');
+                _Game._PencilsList.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
                 _Game._PencilsList.array = _GeneralPencils._data;
                 _Game._PencilsList.selectEnable = true;
                 _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
@@ -7299,12 +7236,13 @@
                 RecordManager.startRecord();
             }
             lwgOpenAni() {
+                this.ImgVar('DrawingBoard').zOrder = 100;
                 this.ImgVar('DrawingBoard').width = Laya.stage.width;
                 this.ImgVar('DrawingBoard').height = Laya.stage.height;
                 let fX = this.ImgVar('DrawingBoard').x = -Laya.stage.width / 2;
                 let fY = this.ImgVar('DrawingBoard').y = -500;
-                let fR = this.ImgVar('DrawingBoard').rotation = 60;
-                let time = 400;
+                let fR = this.ImgVar('DrawingBoard').rotation = 75;
+                let time = 600;
                 let delay = 150;
                 Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
                 Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
@@ -7312,20 +7250,26 @@
                         this.Step.cutFocus();
                     });
                 });
+                let Shadow = new Laya.Image();
+                this.Owner.addChild(Shadow);
+                Shadow.zOrder = this.ImgVar('DrawingBoard').zOrder - 1;
+                Shadow.skin = `Frame/UI/ui_orthogon_black.png`;
+                Shadow.sizeGrid = '14,16,23,12';
+                Shadow.width = this.ImgVar('DrawingBoard').width;
+                Shadow.height = this.ImgVar('DrawingBoard').height;
+                Shadow.x = this.ImgVar('DrawingBoard').x + 100;
+                Shadow.y = this.ImgVar('DrawingBoard').y + 100;
+                Shadow.rotation = this.ImgVar('DrawingBoard').rotation;
+                Animation2D.scale_Alpha(Shadow, 0.2, 1.2, 1.3, 1, 1, 0.4, time);
+                Animation2D.simple_Rotate(Shadow, fR - 20, 0, time, delay);
+                Animation2D.move_Simple(Shadow, fX, fY, 0, 0, time, delay, () => {
+                });
                 return time + delay;
             }
             lwgOnEnable() {
                 this.Step.init();
             }
             lwgOnStart() {
-                if (_Game._PencilsList.cells.length !== 0) {
-                    for (let index = 0; index < _Game._PencilsList.cells.length; index++) {
-                        const element = _Game._PencilsList.cells[index];
-                        if (!element.getComponent(_PencilsListItem)) {
-                            element.addComponent(_PencilsListItem);
-                        }
-                    }
-                }
                 EventAdmin._notify(_Event.start);
             }
             lwgEventRegister() {
@@ -7354,11 +7298,20 @@
                     else if (this.Owner.name == 'Game_wanshengnangua') {
                         Image.x = 80;
                     }
+                    else if (this.Owner.name == 'Game_xiaonainiu') {
+                        Image.x = 55;
+                    }
+                    else if (this.Owner.name == 'Game_maotouying') {
+                        Image.x = 85;
+                    }
                     else {
                         Image.x = 50;
                     }
                     if (this.Owner.name == 'Game_wugui' || this.Owner.name == 'Game_haitun' || this.Owner.name == 'Game_wanshengnangua') {
                         Image.y = 120;
+                    }
+                    else if (this.Owner.name == 'Game_xiaonainiu') {
+                        Image.y = 90;
                     }
                     else {
                         Image.y = 100;
@@ -7641,6 +7594,96 @@
         _Game.Game = Game;
     })(_Game || (_Game = {}));
     var _Game$1 = _Game.Game;
+
+    class _PencilsListItem extends Admin._Object {
+        lwgOnStart() {
+            Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
+                var caller = {};
+                TimerAdmin._frameLoop(1, caller, () => {
+                    if (this.Owner['_dataSource']) {
+                        Laya.timer.clearAll(caller);
+                        if ((_Game._GeneralPencils._pitchName == this.Owner['_dataSource'][_Game._GeneralPencils._property.name])) {
+                            Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
+                                Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
+                                    this.Owner.rotation = 0;
+                                });
+                            });
+                        }
+                    }
+                });
+            });
+        }
+        lwgBtnClick() {
+            var func = (e) => {
+                e.stopPropagation();
+            };
+            Click._on(Click._Type.largen, this.Owner, this, func, func, (e) => {
+                console.log(this.Owner);
+                e.stopPropagation();
+                ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
+                let lasName = _Game._GeneralPencils._pitchName;
+                _Game._GeneralPencils._setPitchByName(this.Owner['_dataSource'][_Game._GeneralPencils._property.name]);
+                if (this.Owner['_dataSource'][_Game._GeneralPencils._property.name] == 'colours') {
+                    console.log(this.Owner['_dataSource']['name']);
+                    if (!_Game._ColoursPencils._Switch) {
+                        _Game._GeneralPencils._setPitchByName(lasName);
+                        _PropTry._comeFrom = _SceneName.Game;
+                        this.lwgOpenScene(_SceneName.PropTry, false);
+                        _Game._activate = false;
+                        return;
+                    }
+                    for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
+                        const element = _Game._ColoursPencils._data[index];
+                        if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
+                            let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
+                            if (_Game._Pencils.pencilType == _Game._Pencils.type.colours) {
+                                if (!nameIndex) {
+                                    nameIndex = 1;
+                                }
+                                nameIndex++;
+                                if (nameIndex > 7) {
+                                    nameIndex = 1;
+                                }
+                                _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
+                                _Game._ColoursPencils._setPresentColorArr();
+                            }
+                            _Game._PencilsList.refresh();
+                            return;
+                        }
+                    }
+                }
+                else {
+                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                }
+            }, func);
+        }
+    }
+
+    var _AdsHint;
+    (function (_AdsHint) {
+        class AdsHint extends Admin._SceneBase {
+            setCallBack(_adAction) {
+                this.adAction = _adAction;
+            }
+            lwgOnEnable() {
+                this.Owner['BtnClose'].visible = false;
+                Laya.timer.frameOnce(120, this, () => {
+                    this.Owner['BtnClose'].visible = true;
+                });
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.Owner['BtnClose'], this, null, null, () => {
+                    this.lwgCloseScene();
+                });
+                Click._on(Click._Type.largen, this.Owner['BtnConfirm'], this, null, null, () => {
+                    ADManager.ShowReward(this.adAction, null);
+                    this.lwgCloseScene();
+                });
+            }
+        }
+        _AdsHint.AdsHint = AdsHint;
+    })(_AdsHint || (_AdsHint = {}));
+    var _AdsHint$1 = _AdsHint.AdsHint;
 
     var _Guide;
     (function (_Guide) {
@@ -7997,12 +8040,12 @@
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                     ADManager.TAPoint(TaT.BtnClick, 'start_main');
-                    this.lwgOpenScene(_SceneName.SelectLevel);
                     _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
+                    this.lwgOpenScene(_SceneName.SelectLevel);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
-                    this.lwgOpenScene(_SceneName.SelectLevel);
                     _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
+                    this.lwgOpenScene(_SceneName.SelectLevel);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
                     lwg$1.Dialogue.createHint_Middle(lwg$1.Dialogue.HintContent["敬请期待!"]);
@@ -8330,9 +8373,6 @@
 
     var _Victory;
     (function (_Victory) {
-        class _data {
-        }
-        _Victory._data = _data;
         let _Event;
         (function (_Event) {
             _Event["_Settle_CloseScene"] = "_Settle_CloseScene";
@@ -8350,6 +8390,10 @@
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
             lwgOnAwake() {
+                if (_Share._Data._photo._base64) {
+                    this.ImgVar('Photo').skin = _Share._Data._photo._base64;
+                    this.ImgVar('Photo').scale(0.75, 0.75);
+                }
                 if (_Game._Pencils.pencilType == _Game._Pencils.type.colours && _Special._data._lastDate
                     !== DateAdmin._date.date) {
                     this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
@@ -8421,7 +8465,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Research;
+            Admin._platform.name = Admin._platform.tpye.Bytedance;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
@@ -8447,6 +8491,7 @@
         }
         static init() {
             var reg = Laya.ClassUtils.regClass;
+            reg("script/Frame/_GamePencilItem.ts", _PencilsListItem);
             reg("script/Frame/LwgInit.ts", LwgInit);
         }
     }

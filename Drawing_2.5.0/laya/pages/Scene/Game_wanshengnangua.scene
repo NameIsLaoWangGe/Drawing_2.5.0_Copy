@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":311,
+    "selecteID":313,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -22,7 +22,7 @@
         }],
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":313,
+    "maxID":317,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -262,6 +262,77 @@
                                         ]
                                 }]
                         }]
+                }]
+        },
+        {
+            "x":15,
+            "type":"List",
+            "selectedBox":46,
+            "selecteID":47,
+            "searchKey":"List,PencilsList,PencilsList",
+            "props":{"zOrder":200,"y":1037,"x":360,"var":"PencilsList","presetID":1,"preset":"laya/pages/Prefab/PencilsList.prefab","name":"PencilsList"},
+            "nodeParent":2,
+            "maxID":48,
+            "label":"PencilsList",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "compId":313,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Box",
+                    "searchKey":"Box",
+                    "props":{"presetID":2,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                    "nodeParent":313,
+                    "label":"Box(PencilsList)",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":false,
+                    "hasChild":true,
+                    "compId":314,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Image",
+                            "searchKey":"Image",
+                            "props":{"presetID":3,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                            "nodeParent":314,
+                            "label":"Pic",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":315,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Script",
+                            "switchAble":true,
+                            "source":"src/script/Frame/_GamePencilItem.ts",
+                            "searchKey":"Script,_GamePencilItem",
+                            "removeAble":true,
+                            "props":{},
+                            "nodeParent":314,
+                            "label":"_GamePencilItem",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":316,
+                            "child":[
+                                ]
+                        }]
+                }],
+            "animations":[
+                {
+                    "nodes":[
+                        ],
+                    "name":"ani1",
+                    "id":1,
+                    "frameRate":24,
+                    "action":0
                 }]
         }],
     "animations":[

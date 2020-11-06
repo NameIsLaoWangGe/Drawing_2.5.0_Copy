@@ -31,12 +31,12 @@ export module _Start {
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                 ADManager.TAPoint(TaT.BtnClick, 'start_main');
-                this.lwgOpenScene(_SceneName.SelectLevel);
                 _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
+                this.lwgOpenScene(_SceneName.SelectLevel);
             })
             Click._on(Click._Type.largen, this.btnVar('BtnLimit'), this, null, null, () => {
-                this.lwgOpenScene(_SceneName.SelectLevel);
                 _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.limit;
+                this.lwgOpenScene(_SceneName.SelectLevel);
             })
             Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
                 lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["敬请期待!"]);
