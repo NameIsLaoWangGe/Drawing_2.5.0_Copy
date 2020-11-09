@@ -1,16 +1,16 @@
 {
     "x":0,
     "type":"Image",
-    "selectedBox":99,
+    "selectedBox":105,
     "searchKey":"Image,BtnTurnLeft,BtnTurnLeft",
     "props":{"zOrder":250,"y":0,"x":0,"width":39,"var":"BtnTurnLeft","skin":"Game/UI/GameScene/z.png","presetID":1,"preset":"laya/pages/Prefab/BtnTurnLeft.prefab","pivotY":35,"pivotX":20,"name":"BtnTurnLeft","isPresetRoot":true,"height":69},
     "nodeParent":-1,
-    "maxID":100,
+    "maxID":106,
     "label":"BtnTurnLeft",
     "isDirectory":false,
     "isAniNode":true,
     "hasChild":false,
-    "compId":99,
+    "compId":105,
     "child":[
         ],
     "animations":[

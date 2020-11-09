@@ -6799,7 +6799,7 @@
                         for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                             const Btn = this.ImgVar('CutBtn').getChildAt(index);
                             if (Btn == e.currentTarget) {
-                                Btn.y = 11;
+                                Btn.y = 35;
                                 _Data._pich.classify = Btn.name;
                             }
                             else {
@@ -7171,12 +7171,30 @@
                             return _PreloadUrl._list.texture.bishua3.texture;
                         }
                     },
-                    space: 15,
-                    radius: {
-                        get value() {
+                    getColor: () => {
+                        let color;
+                        switch (_GeneralPencils._pitchName) {
+                            case _Game._Pencils.type.eraser:
+                                color = '#000000';
+                                break;
+                            case _Game._Pencils.type.colours:
+                                color = _ColoursPencils._outputColor;
+                                break;
+                            default:
+                                color = _GeneralPencils._pitchColor;
+                                break;
+                        }
+                        return color;
+                    },
+                    getRadius: () => {
+                        if (this.Owner.name == 'Game_dinglaotai' || this.Owner.name == 'Game_dinglaotou' || this.Owner.name == 'Game_zhangyugege') {
+                            return 25;
+                        }
+                        else {
                             return 50;
                         }
                     },
+                    space: 15,
                     len: {
                         get count() {
                             return this['lenCount'] ? this['lenCount'] : 0;
@@ -7493,8 +7511,11 @@
                     this.Step.compeletCutFocus(() => {
                         this.Step.BtnNext.visible = false;
                         this.Step.BtnLast.visible = false;
+                        this.Step.BtnTurnLeft.visible = false;
+                        this.Step.BtnTurnRight.visible = false;
                         this.Step.BtnCompelet.visible = true;
                         Animation2D.fadeOut(_Game._GeneralList, 1, 0, 200);
+                        Animation2D.fadeOut(_Game._BlinsList, 1, 0, 200);
                     });
                     EventAdmin._notify(_Event.restoreZOder);
                 });
@@ -7508,60 +7529,52 @@
                     let Sp;
                     let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
                     this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                    let color;
                     switch (_GeneralPencils._pitchName) {
                         case _Game._Pencils.type.eraser:
                             Sp = this.Draw.EraserSp = new Laya.Sprite();
                             this.Draw.EraserSp.blendMode = "destination-out";
-                            color = '#000000';
                             break;
                         case _Game._Pencils.type.colours:
                             Sp = this.Draw.DrawSp = new Laya.Sprite();
                             this.Draw.DrawSp.blendMode = "none";
-                            color = _ColoursPencils._outputColor;
                             break;
                         default:
                             Sp = this.Draw.DrawSp = new Laya.Sprite();
                             this.Draw.DrawSp.blendMode = "none";
-                            color = _GeneralPencils._pitchColor;
                             break;
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.radius.value / 2, this.Draw.frontPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                 }
             }
             onStageMouseMove(e) {
                 if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                     let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let Sp;
-                    let color;
                     switch (_GeneralPencils._pitchName) {
                         case _Game._Pencils.type.eraser:
                             Sp = this.Draw.EraserSp;
-                            color = '#000000';
                             break;
                         case _Game._Pencils.type.colours:
                             Sp = this.Draw.DrawSp;
-                            color = _ColoursPencils._outputColor;
                             break;
                         default:
                             Sp = this.Draw.DrawSp;
-                            color = _GeneralPencils._pitchColor;
                             break;
                     }
                     if (!Sp) {
                         return;
                     }
-                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                     let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
                     if (destance > this.Draw.space) {
                         let num = destance / this.Draw.space;
                         let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
-                            Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                            Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                         }
                     }
-                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
                     this.Draw.frontPos = endPos;
                 }
             }
@@ -7571,7 +7584,6 @@
                     this.Draw.frontPos = null;
                 }
                 if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
-                    console.log('合并！');
                     let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
                     NewBoard.width = this.Draw.DrawRoot.width;
                     NewBoard.height = this.Draw.DrawRoot.height;
@@ -7617,18 +7629,20 @@
                     this.Draw.frontPos = null;
                     EventAdmin._notify(_Event.nextStep);
                 });
-                Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, null, null, () => {
+                Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, null, null, (e) => {
+                    e.stopPropagation();
                     this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2, _Game._BlinsList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinsList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                         });
                     });
                 });
-                Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, null, null, () => {
+                Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, null, null, (e) => {
+                    e.stopPropagation();
                     this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinsList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2, _Game._BlinsList.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                         });
                     });
@@ -7672,7 +7686,6 @@
                 e.stopPropagation();
             };
             Click._on(Click._Type.largen, this.Owner, this, func, func, (e) => {
-                console.log(this.Owner);
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lasName = _Game._GeneralPencils._pitchName;

@@ -390,7 +390,7 @@
             "x":15,
             "type":"List",
             "searchKey":"List,BlinkList,BlinkList",
-            "props":{"y":1037,"x":1060,"width":638,"var":"BlinkList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":190,"pivotX":319,"name":"BlinkList","height":379,"bgColor":"#a87776"},
+            "props":{"zOrder":200,"y":1046,"x":1059,"width":638,"var":"BlinkList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":190,"pivotX":319,"name":"BlinkList","height":379},
             "nodeParent":2,
             "label":"BlinkList",
             "isOpen":true,

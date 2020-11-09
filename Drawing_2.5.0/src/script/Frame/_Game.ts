@@ -74,6 +74,21 @@ export module _Game {
 
     /**通用画笔套装*/
     export class _GeneralPencils {
+        protected static effectType = {
+            general: 'general',
+            colours: 'colours',
+            blink: 'blink',
+            colours_blink: 'colours_blink',
+            eraser: 'eraser',
+        };
+        /**当前使用*/
+        protected static get presentUse(): string {
+            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'general';
+        };
+        protected static set presentUse(name: string) {
+            Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
+        };
+
         static _property = {
             _dataSource: '_dataSource',
             index: 'index',
@@ -598,8 +613,11 @@ export module _Game {
                 this.Step.compeletCutFocus(() => {
                     this.Step.BtnNext.visible = false;
                     this.Step.BtnLast.visible = false;
+                    this.Step.BtnTurnLeft.visible = false;
+                    this.Step.BtnTurnRight.visible = false;
                     this.Step.BtnCompelet.visible = true;
                     Animation2D.fadeOut(_GeneralList, 1, 0, 200);
+                    Animation2D.fadeOut(_BlinsList, 1, 0, 200);
                 });
                 EventAdmin._notify(_Event.restoreZOder);
             })
@@ -614,19 +632,36 @@ export module _Game {
             DrawSp: null as Laya.Sprite,
             frontPos: null as Laya.Point,
             endPos: null as Laya.Point,
-            getTex: () => {
+            getTex: (): Laya.Texture => {
                 if (_Pencils.presentUse == _Pencils.type.blink) {
                     return _PreloadUrl._list.texture.blink1.texture;
                 } else {
                     return _PreloadUrl._list.texture.bishua3.texture;
                 }
             },
-            space: 15,
-            radius: {
-                get value(): number {
+            getColor: (): string => {
+                let color: string;
+                switch (_GeneralPencils._pitchName) {
+                    case _Pencils.type.eraser:
+                        color = '#000000';
+                        break;
+                    case _Pencils.type.colours:
+                        color = _ColoursPencils._outputColor;
+                        break;
+                    default:
+                        color = _GeneralPencils._pitchColor;
+                        break;
+                }
+                return color;
+            },
+            getRadius: (): number => {
+                if (this.Owner.name == 'Game_dinglaotai' || this.Owner.name == 'Game_dinglaotou' || this.Owner.name == 'Game_zhangyugege') {
+                    return 25;
+                } else {
                     return 50;
                 }
             },
+            space: 15,
             len: {
                 get count(): number {
                     return this['lenCount'] ? this['lenCount'] : 0;
@@ -661,61 +696,53 @@ export module _Game {
                 let Sp: Laya.Sprite;
                 let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                 this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                let color: string;
                 switch (_GeneralPencils._pitchName) {
                     case _Pencils.type.eraser:
                         Sp = this.Draw.EraserSp = new Laya.Sprite();
                         this.Draw.EraserSp.blendMode = "destination-out";
-                        color = '#000000';
                         break;
                     case _Pencils.type.colours:
                         Sp = this.Draw.DrawSp = new Laya.Sprite();
                         this.Draw.DrawSp.blendMode = "none";
-                        color = _ColoursPencils._outputColor;
                         break;
                     default:
                         Sp = this.Draw.DrawSp = new Laya.Sprite();
                         this.Draw.DrawSp.blendMode = "none";
-                        color = _GeneralPencils._pitchColor;
                         break;
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
-                Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.radius.value / 2, this.Draw.frontPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
             }
         }
         onStageMouseMove(e: Laya.Event): void {
             if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
-                let color: string;
                 switch (_GeneralPencils._pitchName) {
                     case _Pencils.type.eraser:
                         Sp = this.Draw.EraserSp;
-                        color = '#000000';
                         break;
                     case _Pencils.type.colours:
                         Sp = this.Draw.DrawSp;
-                        color = _ColoursPencils._outputColor;
                         break;
                     default:
                         Sp = this.Draw.DrawSp;
-                        color = _GeneralPencils._pitchColor;
                         break;
                 }
                 if (!Sp) {
                     return;
                 }
-                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                 let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
                 if (destance > this.Draw.space) {
                     let num = destance / this.Draw.space;
                     let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                     for (let index = 0; index < pointArr.length; index++) {
-                        Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                        Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                     }
                 }
                 // 消除颜色
-                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
+                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
                 this.Draw.frontPos = endPos;
             }
         }
@@ -726,7 +753,7 @@ export module _Game {
             }
             // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
             if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
-                console.log('合并！')
+                // console.log('合并！');
                 let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
                 NewBoard.width = this.Draw.DrawRoot.width;
                 NewBoard.height = this.Draw.DrawRoot.height;
@@ -776,8 +803,8 @@ export module _Game {
             Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, null, null, (e: Laya.Event) => {
                 e.stopPropagation();
                 this.Step.btnSwitch = false;
-                Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _GeneralList.y, 250, 0, () => {
-                    Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2, _BlinsList.y, 250, 0, () => {
+                Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinsList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2, _GeneralList.y, 250, 0, () => {
                         this.Step.btnSwitch = true;
                     });
                 });
@@ -785,8 +812,8 @@ export module _Game {
             Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, null, null, (e: Laya.Event) => {
                 e.stopPropagation();
                 this.Step.btnSwitch = false;
-                Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2, _GeneralList.y, 250, 0, () => {
-                    Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinsList.y, 250, 0, () => {
+                Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _GeneralList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2, _BlinsList.y, 250, 0, () => {
                         this.Step.btnSwitch = true;
                     });
                 });

@@ -31,7 +31,7 @@ export default class _PencilsListItem extends Admin._Object {
             func,
             func,
             (e: Laya.Event) => {
-                console.log(this.Owner);
+                // console.log(this.Owner);
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lasName = _Game._GeneralPencils._pitchName;

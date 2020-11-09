@@ -320,7 +320,7 @@ export module _SelectLevel {
                     for (let index = 0; index < this.ImgVar('CutBtn').numChildren; index++) {
                         const Btn = this.ImgVar('CutBtn').getChildAt(index) as Laya.Image;
                         if (Btn == e.currentTarget) {
-                            Btn.y = 11;
+                            Btn.y = 35;
                             _Data._pich.classify = Btn.name;
                         } else {
                             Btn.y = 69;

@@ -2,11 +2,11 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":101,
+    "selecteID":105,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":104,
+    "maxID":106,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -566,34 +566,6 @@
         },
         {
             "x":15,
-            "type":"Image",
-            "searchKey":"Image",
-            "props":{"y":1073,"x":37,"presetID":1,"preset":"laya/pages/prefab/BtnTurnLeft.prefab"},
-            "nodeParent":2,
-            "label":"BtnTurnLeft",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":99,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "searchKey":"Image",
-            "props":{"y":1073,"x":687,"presetID":1,"preset":"laya/pages/prefab/BtnTurnRight.prefab"},
-            "nodeParent":2,
-            "label":"BtnTurnRight",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":100,
-            "child":[
-                ]
-        },
-        {
-            "x":15,
             "type":"List",
             "searchKey":"List,BlinkcList,BlinkcList",
             "props":{"y":1073,"x":1053,"width":638,"var":"BlinkcList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":190,"pivotX":319,"name":"BlinkcList","height":379},
@@ -633,6 +605,34 @@
                                 ]
                         }]
                 }]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "searchKey":"Image",
+            "props":{"y":1070,"x":692,"presetID":1,"preset":"laya/pages/prefab/BtnTurnRight.prefab"},
+            "nodeParent":2,
+            "label":"BtnTurnRight",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":104,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "searchKey":"Image",
+            "props":{"y":1070,"x":38,"presetID":1,"preset":"laya/pages/prefab/BtnTurnLeft.prefab"},
+            "nodeParent":2,
+            "label":"BtnTurnLeft",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":105,
+            "child":[
+                ]
         }],
     "animations":[
         {
