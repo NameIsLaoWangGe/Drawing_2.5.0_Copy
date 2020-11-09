@@ -26,15 +26,8 @@ export module _Game {
         action1 = 'action1',
         action2 = 'action2',
     }
-    /**笔刷名称*/
-    export enum _Brush {
-        chalk = 'chalk',
-        pencil = 'pencil',
-    }
     /**需要绘画的名称顺序*/
     export let _stepOrderImg: Array<Laya.Image> = [];
-    /**每个阶段需要过关的绘画长度*/
-    export let _passLenght: number = 100;
     /**当前最高绘制到哪一步*/
     export let _stepMaskIndex: number = 0;
     export let _activate: boolean = true;
@@ -55,40 +48,15 @@ export module _Game {
             this['maxIndex'] = val;
         },
     }
-    /**画笔切换*/
-    export let _Pencils = {
-        type: {
-            general: 'general',
-            colours: 'colours',
-            blink: 'blink',
-            eraser: 'eraser',
-        },
-        /**当前使用*/
-        get presentUse(): string {
-            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'general';
-        },
-        set presentUse(name: string) {
-            Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
-        },
-    }
 
     /**通用画笔套装*/
     export class _GeneralPencils {
-        protected static effectType = {
+        static _effectType = {
             general: 'general',
             colours: 'colours',
             blink: 'blink',
-            colours_blink: 'colours_blink',
             eraser: 'eraser',
         };
-        /**当前使用*/
-        protected static get presentUse(): string {
-            return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'general';
-        };
-        protected static set presentUse(name: string) {
-            Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
-        };
-
         static _property = {
             _dataSource: '_dataSource',
             index: 'index',
@@ -100,20 +68,22 @@ export module _Game {
         };
         static _init(): void {
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.General.data);
-            this._setPitchByName(this._data[0][this._property.name]);
+            this._pitchName = this._data[0][this._property.name];
         }
-        /**当前选中画笔*/
-        static _pitchName: string = '';
+
         /**当前选中画笔的颜色*/
         static _pitchColor: string = '';
         /**数据表*/
         static _data: Array<any> = [];
-        /**设置选中*/
-        static _setPitchByName(name: string): void {
+
+        static get _pitchName(): string {
+            return this['pitchName'] ? this['pitchName'] : this._data[0][this._property.name];
+        }
+        static set _pitchName(name: string) {
             for (let index = 0; index < this._data.length; index++) {
                 if (name == this._data[index][this._property.name]) {
                     this._data[index][this._property.pitch] = true;
-                    this._pitchName = name;
+                    this['pitchName'] = name;
                     this._pitchColor = this._data[index][this._property.color];
                 } else {
                     this._data[index][this._property.pitch] = false;
@@ -128,7 +98,7 @@ export module _Game {
     /**彩色画笔套装*/
     export class _ColoursPencils extends _GeneralPencils {
         /**是否打开了彩色画笔*/
-        static _Switch: boolean = false;
+        static _switch: boolean = false;
         /**次数*/
         static _drawTime: number = 0;
         /**两种画多少次后，进入另外两个颜色区间*/
@@ -182,35 +152,44 @@ export module _Game {
         }
         static _init(): void {
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.Colours.data);
-            this._setPitchByName(this._data[0][this._property.name]);
+            this._pitchName = this._data[0][this._property.name];
         }
     };
     /**星星画笔套装*/
     export class _BlinkPencils extends _GeneralPencils {
-        /**设置选中*/
-        static _setPitchByName(name: string): void {
+        /**是否打开了星星画笔*/
+        static _switch: boolean = false;
+        /**随机出一个还没有获得的画笔,如果为null,说明没有了*/
+        static randomNoHave(): string {
+            let noArr = [];
             for (let index = 0; index < this._data.length; index++) {
-                if (name == this._data[index][this._property.name]) {
-                    this._data[index][this._property.pitch] = true;
-                    this._pitchName = name;
-                    this._pitchColor = this._data[index][this._property.color];
-                } else {
-                    this._data[index][this._property.pitch] = false;
+                const element = this._data[index];
+                if (!element['have']) {
+                    noArr.push(element);
                 }
-                if (_BlinsList) {
-                    _BlinsList.refresh();
+            }
+            let random = Tools.arrayRandomGetOne(noArr);
+            return random['name'];
+        }
+        static addPencil(name: string): void {
+            for (let index = 0; index < this._data.length; index++) {
+                const element = this._data[index];
+                if (element['name'] == name) {
+                    element['have'] = true;
+                    Laya.LocalStorage.setJSON('_Game_Blink', JSON.stringify(this._data));
+                    return;
                 }
             }
         }
         static _init(): void {
             this._data = Tools.jsonCompare(_PreloadUrl._list.json.Blink.url, '_Game_Blink', this._property.name);
-            this._setPitchByName(this._data[0][this._property.name]);
         }
     };
-
     /**画板属性*/
     export enum _drawBoardProperty {
+        /**原来的层级*/
         originalZOder = 'originalZOder',
+        /**当前部件是否通关*/
         whetherPass = 'whetherPass',
     }
     export function _init(): void {
@@ -221,14 +200,13 @@ export module _Game {
     }
     /**画笔列表*/
     export let _GeneralList: Laya.List;
-    export let _BlinsList: Laya.List;
+    export let _BlinkList: Laya.List;
 
     export class Game extends Admin._SceneBase {
         lwgOnAwake(): void {
             ADManager.TAPoint(TaT.PageShow, 'playpage');
             ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
             _Gold.goldVinish(100);
-            _passLenght = 50;
             _stepIndex.present = 0;
             _stepIndex.present = 0;
             _stepIndex.max = 0;
@@ -252,13 +230,13 @@ export module _Game {
                         Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
                         break;
                 }
+
                 if (_dataSource[_GeneralPencils._property.pitch]) {
                     Pic.scale(1.2, 1.2);
                 } else {
                     Pic.scale(1, 1);
                 }
             });
-
             _stepOrderImg = [];
             let index = 1;
             while (this.Owner['Draw' + index]) {
@@ -281,20 +259,28 @@ export module _Game {
             }
             // console.log(_stepOrderImg);
 
-            _BlinsList = this.ListVar('BlinkList');
-            _BlinsList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
-            _BlinsList.array = _BlinkPencils._data;
-            _BlinsList.selectEnable = true;
-            _BlinsList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
+            _BlinkList = this.ListVar('BlinkList');
+            _BlinkList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
+            _BlinkList.array = _BlinkPencils._data;
+            _BlinkList.selectEnable = true;
+            _BlinkList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
                 let _dataSource = cell.dataSource;
                 let Pic = cell.getChildByName('Pic') as Laya.Image;
                 switch (_dataSource['name']) {
                     case 'colours':
+                        // if (condition) {
+                            
+                        // }
                         Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
                         break;
                     default:
                         Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
                         break;
+                }
+                if (_dataSource['have']) {
+                    Pic.gray = false;
+                } else {
+                    Pic.gray = true;
                 }
                 if (_dataSource[_GeneralPencils._property.pitch]) {
                     Pic.scale(1.2, 1.2);
@@ -363,6 +349,7 @@ export module _Game {
             needCut: false as boolean,
             /**焦点切换*/
             cutFocus: (func?: Function) => {
+                this.Draw.len.count = 0;
                 let Img = _stepOrderImg[_stepIndex.present];
                 let Parent = Img.parent as Laya.Image;
                 if (!this.Step.needCut) {
@@ -617,7 +604,7 @@ export module _Game {
                     this.Step.BtnTurnRight.visible = false;
                     this.Step.BtnCompelet.visible = true;
                     Animation2D.fadeOut(_GeneralList, 1, 0, 200);
-                    Animation2D.fadeOut(_BlinsList, 1, 0, 200);
+                    Animation2D.fadeOut(_BlinkList, 1, 0, 200);
                 });
                 EventAdmin._notify(_Event.restoreZOder);
             })
@@ -633,24 +620,27 @@ export module _Game {
             frontPos: null as Laya.Point,
             endPos: null as Laya.Point,
             getTex: (): Laya.Texture => {
-                if (_Pencils.presentUse == _Pencils.type.blink) {
-                    return _PreloadUrl._list.texture.blink1.texture;
-                } else {
-                    return _PreloadUrl._list.texture.bishua3.texture;
-                }
+                return _PreloadUrl._list.texture.bishua3.texture;
+            },
+            getBlinkTex: (): Laya.Texture => {
+                return _PreloadUrl._list.texture.blink1.texture;
             },
             getColor: (): string => {
                 let color: string;
-                switch (_GeneralPencils._pitchName) {
-                    case _Pencils.type.eraser:
-                        color = '#000000';
-                        break;
-                    case _Pencils.type.colours:
-                        color = _ColoursPencils._outputColor;
-                        break;
-                    default:
-                        color = _GeneralPencils._pitchColor;
-                        break;
+                if (_BlinkPencils._switch) {
+                    color = _BlinkPencils._pitchColor;
+                } else {
+                    switch (_GeneralPencils._pitchName) {
+                        case _GeneralPencils._effectType.eraser:
+                            color = '#000000';
+                            break;
+                        case _GeneralPencils._effectType.colours:
+                            color = _ColoursPencils._outputColor;
+                            break;
+                        default:
+                            color = _GeneralPencils._pitchColor;
+                            break;
+                    }
                 }
                 return color;
             },
@@ -667,12 +657,13 @@ export module _Game {
                     return this['lenCount'] ? this['lenCount'] : 0;
                 },
                 set count(val: number) {
+                    // console.log(val);
                     if (_stepIndex.present == _stepIndex.max) {
                         this['lenCount'] = val;
-                        if (this['lenCount'] >= _passLenght && !_stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass]) {
+                        if (this['lenCount'] >= 50 && !_stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass]) {
                             EventAdmin._notify(_Event.showStepBtn);
                             _stepOrderImg[_stepIndex.present][_drawBoardProperty.whetherPass] = true;
-                            this['len'] = 0;
+                            this['lenCount'] = 0;
                         }
                     }
                 },
@@ -697,11 +688,11 @@ export module _Game {
                 let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                 this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 switch (_GeneralPencils._pitchName) {
-                    case _Pencils.type.eraser:
+                    case _GeneralPencils._effectType.eraser:
                         Sp = this.Draw.EraserSp = new Laya.Sprite();
                         this.Draw.EraserSp.blendMode = "destination-out";
                         break;
-                    case _Pencils.type.colours:
+                    case _GeneralPencils._effectType.colours:
                         Sp = this.Draw.DrawSp = new Laya.Sprite();
                         this.Draw.DrawSp.blendMode = "none";
                         break;
@@ -719,10 +710,10 @@ export module _Game {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
                 switch (_GeneralPencils._pitchName) {
-                    case _Pencils.type.eraser:
+                    case _GeneralPencils._effectType.eraser:
                         Sp = this.Draw.EraserSp;
                         break;
-                    case _Pencils.type.colours:
+                    case _GeneralPencils._effectType.colours:
                         Sp = this.Draw.DrawSp;
                         break;
                     default:
@@ -747,10 +738,10 @@ export module _Game {
             }
         }
         onStageMouseUp(): void {
-            if (this.Draw.frontPos) {
+            if (this.Draw.len.count > 0) {
                 this.Step.setAutomaticNext();
-                this.Draw.frontPos = null;
             }
+            this.Draw.frontPos = null;
             // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
             if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
                 // console.log('合并！');
@@ -772,60 +763,67 @@ export module _Game {
                         this.Step.automaticNext = true;
                     }
                 }
-                Click._on(Click._Type.noEffect, _stepOrderImg[index], this, func, (e: Laya.Event) => {
-                    if (this.Draw.frontPos && this.Draw.switch && index == _stepIndex.present) {
-                        let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                        switch (_GeneralPencils._pitchName) {
-                            case _Pencils.type.eraser:
-                                break;
-                            case _Pencils.type.colours:
-                                this.Draw.len.count += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-                                break;
-                            default:
-                                this.Draw.len.count += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
-                                break;
+                Click._on(Click._Type.noEffect, _stepOrderImg[index], this,
+                    (e: Laya.Event) => {
+                        if (this.Draw.switch && index == _stepIndex.present) {
+                            this.Draw.len.count += 1;
                         }
-                    }
-                }, func, func)
+                    },
+                    (e: Laya.Event) => {
+                        if (this.Draw.frontPos && this.Draw.switch && index == _stepIndex.present) {
+                            let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
+                            if (_GeneralPencils._pitchName != _GeneralPencils._effectType.eraser) {
+                                this.Draw.len.count += (this.Draw.frontPos as Laya.Point).distance(endPos.x, endPos.y);
+                            }
+                        }
+                    }, func, func)
             }
-            Click._on(Click._Type.largen, this.Step.BtnLast, this, null, null, (e: Laya.Event) => {
+
+            var stop = (e: Laya.Event) => {
+                e.stopPropagation();
+            }
+            Click._on(Click._Type.largen, this.Step.BtnLast, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 Laya.timer.clearAll(this.Step);
                 this.Draw.frontPos = null;
                 EventAdmin._notify(_Event.lastStep);
+                this.Draw.len.count = 0;
             });
-            Click._on(Click._Type.largen, this.Step.BtnNext, this, null, null, (e: Laya.Event) => {
+            Click._on(Click._Type.largen, this.Step.BtnNext, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 Laya.timer.clearAll(this.Step);
                 this.Draw.frontPos = null;
                 EventAdmin._notify(_Event.nextStep);
+                this.Draw.len.count = 0;
             });
-            Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, null, null, (e: Laya.Event) => {
+            Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 this.Step.btnSwitch = false;
-                Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinsList.y, 250, 0, () => {
+                Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinkList.y, 250, 0, () => {
                     Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2, _GeneralList.y, 250, 0, () => {
                         this.Step.btnSwitch = true;
+                        _BlinkPencils._switch = false;
                     });
                 });
             });
-            Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, null, null, (e: Laya.Event) => {
+            Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 this.Step.btnSwitch = false;
                 Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _GeneralList.y, 250, 0, () => {
-                    Animation2D.move_Simple(_BlinsList, _BlinsList.x, _BlinsList.y, Laya.stage.width / 2, _BlinsList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2, _BlinkList.y, 250, 0, () => {
                         this.Step.btnSwitch = true;
+                        _BlinkPencils._switch = true;
                     });
                 });
             });
-            Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
+            Click._on(Click._Type.largen, this.Step.BtnCompelet, this, stop, stop, () => {
                 this.lwgOpenScene(_SceneName.Settle, false, () => {
                     this.Step.BtnCompelet.visible = false;
                 });
             });
         }
         lwgOnDisable(): void {
-            _ColoursPencils._Switch = false;
+            _ColoursPencils._switch = false;
             ADManager.TAPoint(TaT.PageShow, 'playpage');
             ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name}`);
         }

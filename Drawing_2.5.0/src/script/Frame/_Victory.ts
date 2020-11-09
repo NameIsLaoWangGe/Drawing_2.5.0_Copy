@@ -24,7 +24,7 @@ export module _Victory {
                 this.ImgVar('Photo').skin = _Share._Data._photo._base64;
                 this.ImgVar('Photo').scale(0.75, 0.75);
             }
-            if (_Game._Pencils.pencilType == _Game._Pencils.type.colours && _Special._data._lastDate
+            if (_Game._ColoursPencils._switch && _Special._data._lastDate
                 !== DateAdmin._date.date) {
                 this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
             } else {
@@ -43,8 +43,8 @@ export module _Victory {
                 OldEffects.createFireworks(Laya.stage, 40, 109, 200);
                 OldEffects.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
                 OldEffects.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
-                console.log(_Game._Pencils.pencilType, _Special._data._lastDate);
-                if (_Game._Pencils.pencilType == _Game._Pencils.type.colours && _Special._data._lastDate
+                console.log(_Game._GeneralPencils._pitchName, _Special._data._lastDate);
+                if (_Game._ColoursPencils._switch && _Special._data._lastDate
                     !== DateAdmin._date.date) {
                     _Special._data._lastDate = DateAdmin._date.date;
                     this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
@@ -58,6 +58,11 @@ export module _Victory {
                 }
                 let num = 25;
                 Click._on(Click._Type.largen, this.btnVar('BtnNext'), this, null, null, () => {
+                    if (this['BtnNextSwitch']) {
+                        return;
+                    } else {
+                        this['BtnNextSwitch'] = true;
+                    }
                     _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
                         ADManager.TAPoint(TaT.BtnClick, 'close_end');
                         _Gold._addGold(num);
@@ -66,6 +71,11 @@ export module _Victory {
                     });
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnThreeGet'), this, null, null, () => {
+                    if (this['BtnThreeGetSwitch']) {
+                        return;
+                    } else {
+                        this['BtnThreeGetSwitch'] = true;
+                    }
                     ADManager.ShowReward(() => {
                         ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_end');
                         _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {

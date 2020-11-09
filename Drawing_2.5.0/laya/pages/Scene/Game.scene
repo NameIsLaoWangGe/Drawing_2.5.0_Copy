@@ -2,11 +2,11 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":105,
+    "selecteID":101,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":106,
+    "maxID":107,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -601,6 +601,23 @@
                             "isAniNode":false,
                             "hasChild":false,
                             "compId":103,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Script",
+                            "switchAble":true,
+                            "source":"src/script/Frame/_GamePencilItem.ts",
+                            "searchKey":"Script,_GamePencilItem",
+                            "removeAble":true,
+                            "props":{},
+                            "nodeParent":102,
+                            "label":"_GamePencilItem",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":106,
                             "child":[
                                 ]
                         }]

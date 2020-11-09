@@ -39,10 +39,10 @@ export module _Start {
                 this.lwgOpenScene(_SceneName.SelectLevel);
             })
             Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
-                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["敬请期待!"]);
+                Dialogue.createHint_Middle(Dialogue.HintContent["敬请期待!"]);
             })
             Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
-                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["敬请期待!"]);
+                Dialogue.createHint_Middle(Dialogue.HintContent["敬请期待!"]);
             })
         }
 

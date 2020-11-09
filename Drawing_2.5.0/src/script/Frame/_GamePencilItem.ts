@@ -35,11 +35,11 @@ export default class _PencilsListItem extends Admin._Object {
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lasName = _Game._GeneralPencils._pitchName;
-                _Game._GeneralPencils._setPitchByName(this.Owner['_dataSource'][_Game._GeneralPencils._property.name]);
-                if (this.Owner['_dataSource'][_Game._GeneralPencils._property.name] == 'colours') {
+                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+                if (this.Owner['_dataSource']['name'] == 'colours') {
                     console.log(this.Owner['_dataSource']['name']);
-                    if (!_Game._ColoursPencils._Switch) {
-                        _Game._GeneralPencils._setPitchByName(lasName);
+                    if (!_Game._ColoursPencils._switch) {
+                        _Game._GeneralPencils._pitchName = lasName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                         _Game._activate = false;
@@ -50,7 +50,7 @@ export default class _PencilsListItem extends Admin._Object {
                         if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
                             let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
                             // console.log(nameIndex);
-                            if (_Game._Pencils.presentUse == _Game._Pencils.type.colours) {
+                            if (_Game._ColoursPencils._switch) {
                                 if (!nameIndex) {
                                     nameIndex = 1;
                                 }
@@ -65,8 +65,6 @@ export default class _PencilsListItem extends Admin._Object {
                             return;
                         }
                     }
-                } else {
-                    _Game._Pencils.presentUse = _Game._Pencils.type.general;
                 }
             },
             func);

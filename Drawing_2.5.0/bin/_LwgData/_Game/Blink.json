@@ -7,7 +7,7 @@
     "color": "#ef8a33",
     "pitch": true,
     "serial": 1,
-    "have": false
+    "have": true
   },
   {
     "index": 2,
@@ -15,7 +15,7 @@
     "color": "#323232",
     "pitch": false,
     "serial": 2,
-    "have": false
+    "have": true
   },
   {
     "index": 3,
@@ -23,7 +23,7 @@
     "color": "#85552e",
     "pitch": false,
     "serial": 3,
-    "have": false
+    "have": true
   },
   {
     "index": 4,
@@ -31,7 +31,7 @@
     "color": "#e93323",
     "pitch": false,
     "serial": 4,
-    "have": false
+    "have": true
   },
   {
     "index": 5,
@@ -47,7 +47,7 @@
     "color": "#000000",
     "pitch": false,
     "serial": 6,
-    "have": false
+    "have": true
   },
   {
     "index": 6,

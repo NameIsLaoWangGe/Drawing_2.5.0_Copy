@@ -87,7 +87,8 @@ export module lwg {
             '没有库存了！',
             '牌数太少，无法使用道具！',
             '没有可以购买的卡牌了！',
-            '敬请期待!'
+            '敬请期待!',
+            '尚未获得!',
         }
         enum Skin {
             blackBord = 'Frame/UI/ui_orthogon_black.png'
