@@ -27,22 +27,27 @@ export default class _PencilsListItem extends Admin._Object {
         var func = (e: Laya.Event) => {
             e.stopPropagation();
         }
-        Click._on(Click._Type.largen, this.Owner, this,
+        Click._on(Click._Type.noEffect, this.Owner, this,
             func,
             func,
             (e: Laya.Event) => {
                 // console.log(this.Owner);
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                let lasName = _Game._GeneralPencils._pitchName;
+                let lastName = _Game._GeneralPencils._pitchName;
                 _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
                 if (this.Owner['_dataSource']['name'] == 'colours') {
-                    console.log(this.Owner['_dataSource']['name']);
+                    // console.log(this.Owner['_dataSource']['name']);
                     if (!_Game._ColoursPencils._switch) {
-                        _Game._GeneralPencils._pitchName = lasName;
+                        _Game._GeneralPencils._pitchName = lastName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                         _Game._activate = false;
+                        return;
+                    }
+                    _Game._ColoursPencils._clickNum++;
+                    if (_Game._ColoursPencils._clickNum == 1) {
+                        _Game._GeneralList.refresh();
                         return;
                     }
                     for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
@@ -65,6 +70,8 @@ export default class _PencilsListItem extends Admin._Object {
                             return;
                         }
                     }
+                } else {
+                    _Game._ColoursPencils._clickNum = 0;
                 }
             },
             func);

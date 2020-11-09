@@ -6476,6 +6476,7 @@
                     ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                     _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
                     _Game._ColoursPencils._switch = true;
+                    _Game._ColoursPencils._clickNum = 2;
                     EventAdmin._notify(_Event._PropTryClose);
                 });
             }
@@ -7014,12 +7015,34 @@
                 this._pitchName = this._data[0][this._property.name];
             }
         }
+        _ColoursPencils._clickNum = 0;
         _ColoursPencils._switch = false;
         _ColoursPencils._drawTime = 0;
         _ColoursPencils._drawInterval = 30;
         _Game._ColoursPencils = _ColoursPencils;
         ;
         class _BlinkPencils extends _GeneralPencils {
+            static randomNoHave() {
+                let noArr = [];
+                for (let index = 0; index < this._data.length; index++) {
+                    const element = this._data[index];
+                    if (!element['have']) {
+                        noArr.push(element);
+                    }
+                }
+                let random = Tools.arrayRandomGetOne(noArr);
+                return random['name'];
+            }
+            static addPencil(name) {
+                for (let index = 0; index < this._data.length; index++) {
+                    const element = this._data[index];
+                    if (element['name'] == name) {
+                        element['have'] = true;
+                        Laya.LocalStorage.setJSON('_Game_Blink', JSON.stringify(this._data));
+                        return;
+                    }
+                }
+            }
             static _init() {
                 this._data = Tools.jsonCompare(_PreloadUrl._list.json.Blink.url, '_Game_Blink', this._property.name);
             }
@@ -7139,6 +7162,9 @@
                     getTex: () => {
                         return _PreloadUrl._list.texture.bishua3.texture;
                     },
+                    getBlinkTex: () => {
+                        return _PreloadUrl._list.texture.blink1.texture;
+                    },
                     getColor: () => {
                         let color;
                         if (_BlinkPencils._switch) {
@@ -7241,11 +7267,11 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
-                _Game._BlinsList = this.ListVar('BlinkList');
-                _Game._BlinsList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
-                _Game._BlinsList.array = _BlinkPencils._data;
-                _Game._BlinsList.selectEnable = true;
-                _Game._BlinsList.renderHandler = new Laya.Handler(this, (cell, index) => {
+                _Game._BlinkList = this.ListVar('BlinkList');
+                _Game._BlinkList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
+                _Game._BlinkList.array = _BlinkPencils._data;
+                _Game._BlinkList.selectEnable = true;
+                _Game._BlinkList.renderHandler = new Laya.Handler(this, (cell, index) => {
                     let _dataSource = cell.dataSource;
                     let Pic = cell.getChildByName('Pic');
                     switch (_dataSource['name']) {
@@ -7493,7 +7519,7 @@
                         this.Step.BtnTurnRight.visible = false;
                         this.Step.BtnCompelet.visible = true;
                         Animation2D.fadeOut(_Game._GeneralList, 1, 0, 200);
-                        Animation2D.fadeOut(_Game._BlinsList, 1, 0, 200);
+                        Animation2D.fadeOut(_Game._BlinkList, 1, 0, 200);
                     });
                     EventAdmin._notify(_Event.restoreZOder);
                 });
@@ -7552,7 +7578,6 @@
                             Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                         }
                     }
-                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
                     this.Draw.frontPos = endPos;
                 }
             }
@@ -7561,7 +7586,7 @@
                     this.Step.setAutomaticNext();
                 }
                 this.Draw.frontPos = null;
-                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
+                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 50) {
                     let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
                     NewBoard.width = this.Draw.DrawRoot.width;
                     NewBoard.height = this.Draw.DrawRoot.height;
@@ -7612,7 +7637,7 @@
                 Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e) => {
                     e.stopPropagation();
                     this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinsList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinkList.y, 250, 0, () => {
                         Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                             _BlinkPencils._switch = false;
@@ -7623,7 +7648,7 @@
                     e.stopPropagation();
                     this.Step.btnSwitch = false;
                     Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2, _Game._BlinsList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2, _Game._BlinkList.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                             _BlinkPencils._switch = true;
                         });
@@ -7667,18 +7692,22 @@
             var func = (e) => {
                 e.stopPropagation();
             };
-            Click._on(Click._Type.largen, this.Owner, this, func, func, (e) => {
+            Click._on(Click._Type.noEffect, this.Owner, this, func, func, (e) => {
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                let lasName = _Game._GeneralPencils._pitchName;
+                let lastName = _Game._GeneralPencils._pitchName;
                 _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
                 if (this.Owner['_dataSource']['name'] == 'colours') {
-                    console.log(this.Owner['_dataSource']['name']);
                     if (!_Game._ColoursPencils._switch) {
-                        _Game._GeneralPencils._pitchName = lasName;
+                        _Game._GeneralPencils._pitchName = lastName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                         _Game._activate = false;
+                        return;
+                    }
+                    _Game._ColoursPencils._clickNum++;
+                    if (_Game._ColoursPencils._clickNum == 1) {
+                        _Game._GeneralList.refresh();
                         return;
                     }
                     for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
@@ -7700,6 +7729,9 @@
                             return;
                         }
                     }
+                }
+                else {
+                    _Game._ColoursPencils._clickNum = 0;
                 }
             }, func);
         }
@@ -7731,7 +7763,7 @@
                                     _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
                                     _Game._ColoursPencils._setPresentColorArr();
                                 }
-                                _Game._BlinsList.refresh();
+                                _Game._BlinkList.refresh();
                                 return;
                             }
                         }

@@ -147,6 +147,7 @@ export module _PropTry {
                 ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                 _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
                 _Game._ColoursPencils._switch = true;
+                _Game._ColoursPencils._clickNum = 2;
                 EventAdmin._notify(_Event._PropTryClose);
             })
         }

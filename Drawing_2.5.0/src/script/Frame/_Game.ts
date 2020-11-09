@@ -66,7 +66,9 @@ export module _Game {
             serial: 'serial',
             have: 'have',
         };
+
         static _init(): void {
+
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.General.data);
             this._pitchName = this._data[0][this._property.name];
         }
@@ -95,8 +97,13 @@ export module _Game {
         }
     }
 
+
+
     /**彩色画笔套装*/
     export class _ColoursPencils extends _GeneralPencils {
+
+        /**第二次点击才会变色*/
+        static _clickNum = 0;
         /**是否打开了彩色画笔*/
         static _switch: boolean = false;
         /**次数*/
@@ -268,9 +275,6 @@ export module _Game {
                 let Pic = cell.getChildByName('Pic') as Laya.Image;
                 switch (_dataSource['name']) {
                     case 'colours':
-                        // if (condition) {
-                            
-                        // }
                         Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
                         break;
                     default:
@@ -282,6 +286,7 @@ export module _Game {
                 } else {
                     Pic.gray = true;
                 }
+
                 if (_dataSource[_GeneralPencils._property.pitch]) {
                     Pic.scale(1.2, 1.2);
                 } else {
@@ -733,7 +738,7 @@ export module _Game {
                     }
                 }
                 // 消除颜色
-                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
+                // Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
                 this.Draw.frontPos = endPos;
             }
         }
@@ -743,7 +748,7 @@ export module _Game {
             }
             this.Draw.frontPos = null;
             // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
-            if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 3) {
+            if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 50) {
                 // console.log('合并！');
                 let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
                 NewBoard.width = this.Draw.DrawRoot.width;

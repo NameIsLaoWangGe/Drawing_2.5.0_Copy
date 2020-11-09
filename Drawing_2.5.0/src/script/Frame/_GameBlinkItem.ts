@@ -35,7 +35,7 @@ export default class _GameBlinkItem extends Admin._Object {
                                     _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
                                     _Game._ColoursPencils._setPresentColorArr();
                                 }
-                                _Game._BlinsList.refresh();
+                                _Game._BlinkList.refresh();
                                 return;
                             }
                         }
