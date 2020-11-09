@@ -50,7 +50,7 @@ export default class _PencilsListItem extends Admin._Object {
                         if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
                             let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
                             // console.log(nameIndex);
-                            if (_Game._Pencils.pencilType == _Game._Pencils.type.colours) {
+                            if (_Game._Pencils.presentUse == _Game._Pencils.type.colours) {
                                 if (!nameIndex) {
                                     nameIndex = 1;
                                 }
@@ -61,12 +61,12 @@ export default class _PencilsListItem extends Admin._Object {
                                 _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
                                 _Game._ColoursPencils._setPresentColorArr();
                             }
-                            _Game._PencilsList.refresh();
+                            _Game._GeneralList.refresh();
                             return;
                         }
                     }
                 } else {
-                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                    _Game._Pencils.presentUse = _Game._Pencils.type.general;
                 }
             },
             func);

@@ -39,12 +39,16 @@ export module _PreloadUrl {
                 url: 'Prefab/BtnCompelet.json',
                 prefab: new Laya.Prefab,
             },
+            BtnTurnLeft: {
+                url: 'Prefab/BtnTurnLeft.json',
+                prefab: new Laya.Prefab,
+            },
+            BtnTurnRight: {
+                url: 'Prefab/BtnTurnRight.json',
+                prefab: new Laya.Prefab,
+            },
         },
         texture: {
-            star1: {
-                url: 'Frame/Effects/hua4.png',
-                texture: new Laya.Texture,
-            },
             bishua1: {
                 url: 'Game/UI/GameScene/bishua1.png',
                 texture: new Laya.Texture,
@@ -67,6 +71,10 @@ export module _PreloadUrl {
             },
             bishua6: {
                 url: 'Game/UI/GameScene/bishua6.png',
+                texture: new Laya.Texture,
+            },
+            blink1: {
+                url: 'Game/UI/GameScene/blink1.png',
                 texture: new Laya.Texture,
             },
         },
@@ -101,12 +109,16 @@ export module _PreloadUrl {
             Game_zhangyugege: `Scene/Game_zhangyugege.json`,
         },
         json: {
-            SingleColor: {
-                url: "_LwgData" + "/_Game/SingleColor" + ".json",
+            General: {
+                url: "_LwgData" + "/_Game/General" + ".json",
                 data: new Array,
             },
             Colours: {
                 url: "_LwgData" + "/_Game/Colours" + ".json",
+                data: new Array,
+            },
+            Blink: {
+                url: "_LwgData" + "/_Game/Blink" + ".json",
                 data: new Array,
             },
             SelectLevel: {

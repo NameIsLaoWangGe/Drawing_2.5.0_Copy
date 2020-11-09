@@ -18,8 +18,8 @@ export module _PropTry {
             ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
 
             if (_comeFrom == _SceneName.SelectLevel) {
-                _beforeTry = _Game._Pencils.pencilType;
-                _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                _beforeTry = _Game._Pencils.presentUse;
+                _Game._Pencils.presentUse = _Game._Pencils.type.general;
                 _Game._GeneralPencils._setPitchByName(_Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name]);
             }
         }
@@ -149,7 +149,7 @@ export module _PropTry {
                 ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                 _Game._GeneralPencils._setPitchByName('colours');
                 _Game._ColoursPencils._Switch = true;
-                _Game._Pencils.pencilType = _Game._Pencils.type.colours;
+                _Game._Pencils.presentUse = _Game._Pencils.type.colours;
                 EventAdmin._notify(_Event._PropTryClose);
             })
         }

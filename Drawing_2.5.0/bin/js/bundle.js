@@ -1339,6 +1339,13 @@
                 ;
                 lwgBtnClick() { }
                 ;
+                lwgAdaptiveProportion(arr) {
+                    for (let index = 0; index < arr.length; index++) {
+                        const element = arr[index];
+                        element.y / GameConfig.height * Laya.stage.height;
+                    }
+                }
+                ;
                 lwgAdaptive() { }
                 ;
                 onUpdate() { this.lwgOnUpdate(); }
@@ -6001,12 +6008,16 @@
                     url: 'Prefab/BtnCompelet.json',
                     prefab: new Laya.Prefab,
                 },
+                BtnTurnLeft: {
+                    url: 'Prefab/BtnTurnLeft.json',
+                    prefab: new Laya.Prefab,
+                },
+                BtnTurnRight: {
+                    url: 'Prefab/BtnTurnRight.json',
+                    prefab: new Laya.Prefab,
+                },
             },
             texture: {
-                star1: {
-                    url: 'Frame/Effects/hua4.png',
-                    texture: new Laya.Texture,
-                },
                 bishua1: {
                     url: 'Game/UI/GameScene/bishua1.png',
                     texture: new Laya.Texture,
@@ -6029,6 +6040,10 @@
                 },
                 bishua6: {
                     url: 'Game/UI/GameScene/bishua6.png',
+                    texture: new Laya.Texture,
+                },
+                blink1: {
+                    url: 'Game/UI/GameScene/blink1.png',
                     texture: new Laya.Texture,
                 },
             },
@@ -6056,12 +6071,16 @@
                 Game_zhangyugege: `Scene/Game_zhangyugege.json`,
             },
             json: {
-                SingleColor: {
-                    url: "_LwgData" + "/_Game/SingleColor" + ".json",
+                General: {
+                    url: "_LwgData" + "/_Game/General" + ".json",
                     data: new Array,
                 },
                 Colours: {
                     url: "_LwgData" + "/_Game/Colours" + ".json",
+                    data: new Array,
+                },
+                Blink: {
+                    url: "_LwgData" + "/_Game/Blink" + ".json",
                     data: new Array,
                 },
                 SelectLevel: {
@@ -6326,8 +6345,8 @@
                 ADManager.TAPoint(TaT.PageShow, 'skintrypage');
                 ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                 if (_PropTry._comeFrom == _SceneName.SelectLevel) {
-                    _PropTry._beforeTry = _Game._Pencils.pencilType;
-                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                    _PropTry._beforeTry = _Game._Pencils.presentUse;
+                    _Game._Pencils.presentUse = _Game._Pencils.type.general;
                     _Game._GeneralPencils._setPitchByName(_Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name]);
                 }
             }
@@ -6457,7 +6476,7 @@
                     ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
                     _Game._GeneralPencils._setPitchByName('colours');
                     _Game._ColoursPencils._Switch = true;
-                    _Game._Pencils.pencilType = _Game._Pencils.type.colours;
+                    _Game._Pencils.presentUse = _Game._Pencils.type.colours;
                     EventAdmin._notify(_Event._PropTryClose);
                 });
             }
@@ -6910,46 +6929,19 @@
             type: {
                 general: 'general',
                 colours: 'colours',
-                stars: 'stars',
+                blink: 'blink',
                 eraser: 'eraser',
             },
-            get pencilType() {
+            get presentUse() {
                 return Laya.LocalStorage.getItem('_Pencils_presentUse') ? Laya.LocalStorage.getItem('_Pencils_presentUse') : 'general';
             },
-            set pencilType(name) {
+            set presentUse(name) {
                 Laya.LocalStorage.setItem('_Pencils_presentUse', name.toString());
             },
-            allPencils: ['colours', 'general', 'stars'],
-            get have() {
-                try {
-                    let data = Laya.LocalStorage.getJSON('_Pencils_have');
-                    if (data) {
-                        return JSON.parse(data);
-                        ;
-                    }
-                    else {
-                        return ['general'];
-                    }
-                }
-                catch (error) {
-                    return ['general'];
-                }
-            },
-            set have(array) {
-                Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(array));
-            },
-            get nohave() {
-                return Tools.array1ExcludeArray2(_Game._Pencils.allPencils, _Game._Pencils.have);
-            },
-            add(str) {
-                let arr = Tools.array_Copy(_Game._Pencils.have);
-                arr.push(str);
-                Laya.LocalStorage.setJSON('_Pencils_have', JSON.stringify(arr));
-            }
         };
         class _GeneralPencils {
             static _init() {
-                this._data = Tools.objArray_Copy(_PreloadUrl._list.json.SingleColor.data);
+                this._data = Tools.objArray_Copy(_PreloadUrl._list.json.General.data);
                 this._setPitchByName(this._data[0][this._property.name]);
             }
             static _setPitchByName(name) {
@@ -6962,8 +6954,8 @@
                     else {
                         this._data[index][this._property.pitch] = false;
                     }
-                    if (_Game._PencilsList) {
-                        _Game._PencilsList.refresh();
+                    if (_Game._GeneralList) {
+                        _Game._GeneralList.refresh();
                     }
                 }
             }
@@ -6975,6 +6967,7 @@
             color: 'color',
             pitch: 'pitch',
             serial: 'serial',
+            have: 'have',
         };
         _GeneralPencils._pitchName = '';
         _GeneralPencils._pitchColor = '';
@@ -7039,13 +7032,28 @@
         _ColoursPencils._drawInterval = 30;
         _Game._ColoursPencils = _ColoursPencils;
         ;
-        class _StarsPencils extends _GeneralPencils {
+        class _BlinkPencils extends _GeneralPencils {
+            static _setPitchByName(name) {
+                for (let index = 0; index < this._data.length; index++) {
+                    if (name == this._data[index][this._property.name]) {
+                        this._data[index][this._property.pitch] = true;
+                        this._pitchName = name;
+                        this._pitchColor = this._data[index][this._property.color];
+                    }
+                    else {
+                        this._data[index][this._property.pitch] = false;
+                    }
+                    if (_Game._BlinsList) {
+                        _Game._BlinsList.refresh();
+                    }
+                }
+            }
             static _init() {
-                this._data = Tools.objArray_Copy(_PreloadUrl._list.json.Colours.data);
+                this._data = Tools.jsonCompare(_PreloadUrl._list.json.Blink.url, '_Game_Blink', this._property.name);
                 this._setPitchByName(this._data[0][this._property.name]);
             }
         }
-        _Game._StarsPencils = _StarsPencils;
+        _Game._BlinkPencils = _BlinkPencils;
         ;
         let _drawBoardProperty;
         (function (_drawBoardProperty) {
@@ -7055,35 +7063,21 @@
         function _init() {
             Admin._game.loopLevel = 12;
             _GeneralPencils._init();
-            _StarsPencils._init();
+            _BlinkPencils._init();
             _ColoursPencils._init();
         }
         _Game._init = _init;
         class Game extends Admin._SceneBase {
             constructor() {
                 super(...arguments);
-                this._drawingLenth = {
-                    get value() {
-                        return this['len'] ? this['len'] : 0;
-                    },
-                    set value(val) {
-                        if (_Game._stepIndex.present == _Game._stepIndex.max) {
-                            this['len'] = val;
-                            if (this['len'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass]) {
-                                EventAdmin._notify(_Event.showStepBtn);
-                                _Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass] = true;
-                                this['len'] = 0;
-                            }
-                        }
-                    },
-                };
                 this.Step = {
                     firstRootP: null,
                     firstRootScaleX: null,
                     firstRootScaleY: null,
-                    currentFocus: null,
                     BtnNext: null,
                     BtnLast: null,
+                    BtnTurnLeft: null,
+                    BtnTurnRight: null,
                     btnSwitch: true,
                     automaticNext: false,
                     setAutomaticNext: () => {
@@ -7128,9 +7122,7 @@
                         });
                     },
                     init: () => {
-                        console.log(this.ImgVar('DrawRoot').y);
                         this.ImgVar('DrawRoot').y = this.ImgVar('DrawRoot').y / 1280 * Laya.stage.height;
-                        console.log(this.ImgVar('DrawRoot').y);
                         let Picture = this.ImgVar('DrawRoot').getChildAt(0);
                         let num = 0;
                         for (let index = 0; index < Picture.numChildren; index++) {
@@ -7149,16 +7141,18 @@
                         this.Step.firstRootScaleX = this.ImgVar('DrawRoot').scaleX;
                         this.Step.firstRootScaleY = this.ImgVar('DrawRoot').scaleY;
                         let StepSwitch = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.StepSwitch.prefab);
-                        this.Owner.addChild(StepSwitch);
-                        StepSwitch.pos(Laya.stage.width / 2, Laya.stage.height * 0.641);
+                        this.Owner.addChild(StepSwitch)['pos'](Laya.stage.width / 2, Laya.stage.height * 0.641);
                         this.Step.BtnNext = StepSwitch.getChildByName('BtnNextStep');
                         this.Step.BtnLast = StepSwitch.getChildByName('BtnLastStep');
                         this.Step.BtnNext.visible = false;
                         this.Step.BtnLast.visible = false;
                         this.Step.BtnCompelet = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnCompelet.prefab);
-                        this.Owner.addChild(this.Step.BtnCompelet);
+                        this.Owner.addChild(this.Step.BtnCompelet)['pos'](563, Laya.stage.height * 0.641);
                         this.Step.BtnCompelet.visible = false;
-                        this.Step.BtnCompelet.pos(563, Laya.stage.height * 0.641);
+                        this.Step.BtnTurnLeft = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnTurnLeft.prefab);
+                        this.Owner.addChild(this.Step.BtnTurnLeft)['pos'](37, Laya.stage.height * 0.838);
+                        this.Step.BtnTurnRight = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnTurnRight.prefab);
+                        this.Owner.addChild(this.Step.BtnTurnRight)['pos'](687, Laya.stage.height * 0.838);
                     }
                 };
                 this.Draw = {
@@ -7169,11 +7163,34 @@
                     DrawSp: null,
                     frontPos: null,
                     endPos: null,
+                    getTex: () => {
+                        if (_Game._Pencils.presentUse == _Game._Pencils.type.blink) {
+                            return _PreloadUrl._list.texture.blink1.texture;
+                        }
+                        else {
+                            return _PreloadUrl._list.texture.bishua3.texture;
+                        }
+                    },
                     space: 15,
                     radius: {
                         get value() {
                             return 50;
                         }
+                    },
+                    len: {
+                        get count() {
+                            return this['lenCount'] ? this['lenCount'] : 0;
+                        },
+                        set count(val) {
+                            if (_Game._stepIndex.present == _Game._stepIndex.max) {
+                                this['lenCount'] = val;
+                                if (this['lenCount'] >= _Game._passLenght && !_Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass]) {
+                                    EventAdmin._notify(_Event.showStepBtn);
+                                    _Game._stepOrderImg[_Game._stepIndex.present][_drawBoardProperty.whetherPass] = true;
+                                    this['len'] = 0;
+                                }
+                            }
+                        },
                     },
                     restoration: () => {
                         this.Draw.switch = false;
@@ -7192,12 +7209,12 @@
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
-                _Game._PencilsList = this.ListVar('PencilsList');
-                _Game._PencilsList.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
-                _Game._PencilsList.array = _GeneralPencils._data;
-                _Game._PencilsList.selectEnable = true;
-                _Game._PencilsList.selectHandler = new Laya.Handler(this, (index) => { });
-                _Game._PencilsList.renderHandler = new Laya.Handler(this, (cell, index) => {
+                _Game._GeneralList = this.ListVar('GeneralList');
+                _Game._GeneralList.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
+                _Game._GeneralList.array = _GeneralPencils._data;
+                _Game._GeneralList.selectEnable = true;
+                _Game._GeneralList.selectHandler = new Laya.Handler(this, (index) => { });
+                _Game._GeneralList.renderHandler = new Laya.Handler(this, (cell, index) => {
                     let _dataSource = cell.dataSource;
                     let Pic = cell.getChildByName('Pic');
                     switch (_dataSource['name']) {
@@ -7234,6 +7251,28 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
+                _Game._BlinsList = this.ListVar('BlinkList');
+                _Game._BlinsList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
+                _Game._BlinsList.array = _BlinkPencils._data;
+                _Game._BlinsList.selectEnable = true;
+                _Game._BlinsList.renderHandler = new Laya.Handler(this, (cell, index) => {
+                    let _dataSource = cell.dataSource;
+                    let Pic = cell.getChildByName('Pic');
+                    switch (_dataSource['name']) {
+                        case 'colours':
+                            Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
+                            break;
+                        default:
+                            Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
+                            break;
+                    }
+                    if (_dataSource[_GeneralPencils._property.pitch]) {
+                        Pic.scale(1.2, 1.2);
+                    }
+                    else {
+                        Pic.scale(1, 1);
+                    }
+                });
                 RecordManager.startAutoRecord();
             }
             lwgOpenAni() {
@@ -7455,7 +7494,7 @@
                         this.Step.BtnNext.visible = false;
                         this.Step.BtnLast.visible = false;
                         this.Step.BtnCompelet.visible = true;
-                        Animation2D.fadeOut(_Game._PencilsList, 1, 0, 200);
+                        Animation2D.fadeOut(_Game._GeneralList, 1, 0, 200);
                     });
                     EventAdmin._notify(_Event.restoreZOder);
                 });
@@ -7488,8 +7527,7 @@
                             break;
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.bishua3.url));
-                    Sp.graphics.drawTexture(tex, this.Draw.frontPos.x - this.Draw.radius.value / 2, this.Draw.frontPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.radius.value / 2, this.Draw.frontPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                 }
             }
             onStageMouseMove(e) {
@@ -7514,17 +7552,16 @@
                     if (!Sp) {
                         return;
                     }
-                    let tex = Laya.loader.getRes((_PreloadUrl._list.texture.bishua3.url));
-                    Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                     let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
                     if (destance > this.Draw.space) {
                         let num = destance / this.Draw.space;
                         let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
-                            Sp.graphics.drawTexture(tex, pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
+                            Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.radius.value / 2, pointArr[index].y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 1, color, null);
                         }
                     }
-                    Sp.graphics.drawTexture(tex, endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
+                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.radius.value / 2, endPos.y - this.Draw.radius.value / 2, this.Draw.radius.value, this.Draw.radius.value, null, 0, null, null);
                     this.Draw.frontPos = endPos;
                 }
             }
@@ -7559,10 +7596,10 @@
                                 case _Game._Pencils.type.eraser:
                                     break;
                                 case _Game._Pencils.type.colours:
-                                    this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
+                                    this.Draw.len.count += this.Draw.frontPos.distance(endPos.x, endPos.y);
                                     break;
                                 default:
-                                    this._drawingLenth.value += this.Draw.frontPos.distance(endPos.x, endPos.y);
+                                    this.Draw.len.count += this.Draw.frontPos.distance(endPos.x, endPos.y);
                                     break;
                             }
                         }
@@ -7579,6 +7616,22 @@
                     Laya.timer.clearAll(this.Step);
                     this.Draw.frontPos = null;
                     EventAdmin._notify(_Event.nextStep);
+                });
+                Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, null, null, () => {
+                    this.Step.btnSwitch = false;
+                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2, _Game._BlinsList.y, 250, 0, () => {
+                            this.Step.btnSwitch = true;
+                        });
+                    });
+                });
+                Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, null, null, () => {
+                    this.Step.btnSwitch = false;
+                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._BlinsList, _Game._BlinsList.x, _Game._BlinsList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinsList.y, 250, 0, () => {
+                            this.Step.btnSwitch = true;
+                        });
+                    });
                 });
                 Click._on(Click._Type.largen, this.Step.BtnCompelet, this, null, null, () => {
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
@@ -7637,7 +7690,7 @@
                         const element = _Game._ColoursPencils._data[index];
                         if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
                             let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
-                            if (_Game._Pencils.pencilType == _Game._Pencils.type.colours) {
+                            if (_Game._Pencils.presentUse == _Game._Pencils.type.colours) {
                                 if (!nameIndex) {
                                     nameIndex = 1;
                                 }
@@ -7648,13 +7701,13 @@
                                 _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
                                 _Game._ColoursPencils._setPresentColorArr();
                             }
-                            _Game._PencilsList.refresh();
+                            _Game._GeneralList.refresh();
                             return;
                         }
                     }
                 }
                 else {
-                    _Game._Pencils.pencilType = _Game._Pencils.type.general;
+                    _Game._Pencils.presentUse = _Game._Pencils.type.general;
                 }
             }, func);
         }
