@@ -98,8 +98,7 @@ export module lwg {
          * 动态创建，第一次创建比较卡，是因为第一次绘制，而不是加载，需要优化
          * @param describe 类型，也就是提示文字类型
          */
-        export function createHint_Middle(describe: number): void {
-
+        export function createHint_Middle(describe: string): void {
             let Hint_M = Laya.Pool.getItemByClass('Hint_M', Laya.Sprite);
             Hint_M.name = 'Hint_M';//标识符和名称一样
 
@@ -128,7 +127,7 @@ export module lwg {
             let Dec = new Laya.Label();
             Hint_M.addChild(Dec);
             Dec.width = Laya.stage.width
-            Dec.text = HintContent[describe];
+            Dec.text = describe;
             Dec.pivotX = Laya.stage.width / 2;
             Dec.x = Laya.stage.width / 2;
             Dec.height = 100;
@@ -1301,6 +1300,7 @@ export module lwg {
             SelectLevel = 'SelectLevel',
             Settle = 'Settle',
             Special = 'Special',
+            Compound = 'Compound',
         }
 
         /**
@@ -1341,7 +1341,7 @@ export module lwg {
                         }
                     }
                 } else {
-                    console.log('当前场景没有同名脚本！');
+                    console.log(`${openSceneName}场景没有同名脚本！`);
                 }
                 scene.width = Laya.stage.width;
                 scene.height = Laya.stage.height;

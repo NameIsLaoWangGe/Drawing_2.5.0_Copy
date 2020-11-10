@@ -170,7 +170,7 @@ export module _SelectLevel {
                                 _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                 _Gold._num.value -= num;
                             } else {
-                                Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
+                                Dialogue.createHint_Middle('金币不够了！');
                             }
                             break;
                         default:

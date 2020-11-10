@@ -7,7 +7,7 @@
     "color": "#ef8a33",
     "pitch": true,
     "serial": 1,
-    "have": true
+    "have": false
   },
   {
     "index": 2,
@@ -15,7 +15,7 @@
     "color": "#323232",
     "pitch": false,
     "serial": 2,
-    "have": true
+    "have": false
   },
   {
     "index": 3,
@@ -23,7 +23,7 @@
     "color": "#85552e",
     "pitch": false,
     "serial": 3,
-    "have": true
+    "have": false
   },
   {
     "index": 4,
@@ -31,7 +31,7 @@
     "color": "#e93323",
     "pitch": false,
     "serial": 4,
-    "have": true
+    "have": false
   },
   {
     "index": 5,
@@ -42,11 +42,11 @@
     "have": false
   },
   {
-    "index": 12,
-    "name": "colours",
+    "index": 11,
+    "name": "eraser",
     "color": "#000000",
     "pitch": false,
-    "serial": 6,
+    "serial": 12,
     "have": true
   },
   {
@@ -87,14 +87,6 @@
     "color": "#b737f6",
     "pitch": false,
     "serial": 11,
-    "have": false
-  },
-  {
-    "index": 11,
-    "name": "eraser",
-    "color": "#000000",
-    "pitch": false,
-    "serial": 12,
     "have": false
   }
 ]

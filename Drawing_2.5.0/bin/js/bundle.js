@@ -110,7 +110,7 @@
                 let Dec = new Laya.Label();
                 Hint_M.addChild(Dec);
                 Dec.width = Laya.stage.width;
-                Dec.text = HintContent[describe];
+                Dec.text = describe;
                 Dec.pivotX = Laya.stage.width / 2;
                 Dec.x = Laya.stage.width / 2;
                 Dec.height = 100;
@@ -971,6 +971,7 @@
                 _SceneName["SelectLevel"] = "SelectLevel";
                 _SceneName["Settle"] = "Settle";
                 _SceneName["Special"] = "Special";
+                _SceneName["Compound"] = "Compound";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
             function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOrder) {
                 _openScene(_SceneName.PreLoadStep);
@@ -997,7 +998,7 @@
                         }
                     }
                     else {
-                        console.log('当前场景没有同名脚本！');
+                        console.log(`${openSceneName}场景没有同名脚本！`);
                     }
                     scene.width = Laya.stage.width;
                     scene.height = Laya.stage.height;
@@ -5884,6 +5885,315 @@
         TaT[TaT["LevelFail"] = 7] = "LevelFail";
     })(TaT || (TaT = {}));
 
+    var OldEffects;
+    (function (OldEffects) {
+        let SkinUrl;
+        (function (SkinUrl) {
+            SkinUrl[SkinUrl["Frame/Effects/cir_white.png"] = 0] = "Frame/Effects/cir_white.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_blue.png"] = 1] = "Frame/Effects/cir_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_bluish.png"] = 2] = "Frame/Effects/cir_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_cyan.png"] = 3] = "Frame/Effects/cir_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_grass.png"] = 4] = "Frame/Effects/cir_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_green.png"] = 5] = "Frame/Effects/cir_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_orange.png"] = 6] = "Frame/Effects/cir_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_pink.png"] = 7] = "Frame/Effects/cir_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_purple.png"] = 8] = "Frame/Effects/cir_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_red.png"] = 9] = "Frame/Effects/cir_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/cir_yellow.png"] = 10] = "Frame/Effects/cir_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_blue.png"] = 11] = "Frame/Effects/star_blue.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_bluish.png"] = 12] = "Frame/Effects/star_bluish.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_cyan.png"] = 13] = "Frame/Effects/star_cyan.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_grass.png"] = 14] = "Frame/Effects/star_grass.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_green.png"] = 15] = "Frame/Effects/star_green.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_orange.png"] = 16] = "Frame/Effects/star_orange.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_pink.png"] = 17] = "Frame/Effects/star_pink.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_purple.png"] = 18] = "Frame/Effects/star_purple.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_red.png"] = 19] = "Frame/Effects/star_red.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_white.png"] = 20] = "Frame/Effects/star_white.png";
+            SkinUrl[SkinUrl["Frame/Effects/star_yellow.png"] = 21] = "Frame/Effects/star_yellow.png";
+            SkinUrl[SkinUrl["Frame/Effects/ui_Circular_l_yellow.png"] = 22] = "Frame/Effects/ui_Circular_l_yellow.png";
+            SkinUrl[SkinUrl["Frame/UI/ui_square_guang.png"] = 23] = "Frame/UI/ui_square_guang.png";
+        })(SkinUrl = OldEffects.SkinUrl || (OldEffects.SkinUrl = {}));
+        let SkinStyle;
+        (function (SkinStyle) {
+            SkinStyle["star"] = "star";
+            SkinStyle["dot"] = "dot";
+        })(SkinStyle = OldEffects.SkinStyle || (OldEffects.SkinStyle = {}));
+        class EffectsBase extends Laya.Script {
+            onAwake() {
+                this.initProperty();
+            }
+            onEnable() {
+                this.self = this.owner;
+                this.selfScene = this.self.scene;
+                let calssName = this['__proto__']['constructor'].name;
+                this.self[calssName] = this;
+                this.timer = 0;
+                this.lwgInit();
+                this.propertyAssign();
+            }
+            lwgInit() {
+            }
+            initProperty() {
+            }
+            propertyAssign() {
+                if (this.startAlpha) {
+                    this.self.alpha = this.startAlpha;
+                }
+                if (this.startScale) {
+                    this.self.scale(this.startScale, this.startScale);
+                }
+                if (this.startRotat) {
+                    this.self.rotation = this.startRotat;
+                }
+            }
+            commonSpeedXYByAngle(angle, speed) {
+                this.self.x += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).x;
+                this.self.y += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).y;
+            }
+            moveRules() {
+            }
+            onUpdate() {
+                this.moveRules();
+            }
+            onDisable() {
+                Laya.Pool.recover(this.self.name, this.self);
+                this.destroy();
+                Laya.Tween.clearAll(this);
+                Laya.timer.clearAll(this);
+            }
+        }
+        OldEffects.EffectsBase = EffectsBase;
+        function createCommonExplosion(parent, quantity, x, y, style, speed, continueTime) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
+                ele.name = 'ele';
+                let num;
+                if (style === SkinStyle.star) {
+                    num = 10 + Math.floor(Math.random() * 12);
+                }
+                else if (style === SkinStyle.dot) {
+                    num = Math.floor(Math.random() * 12);
+                }
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.addComponent(commonExplosion);
+                scirpt.startSpeed = Math.random() * speed;
+                scirpt.continueTime = 2 * Math.random() + continueTime;
+            }
+        }
+        OldEffects.createCommonExplosion = createCommonExplosion;
+        class commonExplosion extends EffectsBase {
+            lwgInit() {
+                this.self.width = 25;
+                this.self.height = 25;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 8;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 2;
+                this.continueTime = 8 + Math.random() * 10;
+                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
+                this.rotateRan = Math.random() * 10;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.rotateDir === 'left') {
+                    this.self.rotation += this.rotateRan;
+                }
+                else {
+                    this.self.rotation -= this.rotateRan;
+                }
+                if (this.timer >= this.continueTime / 2) {
+                    this.self.alpha -= 0.04;
+                    if (this.self.alpha <= 0.65) {
+                        this.self.removeSelf();
+                    }
+                }
+                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed + this.accelerated);
+                this.accelerated += 0.2;
+            }
+        }
+        OldEffects.commonExplosion = commonExplosion;
+        function createExplosion_Rotate(parent, quantity, x, y, style, speed, rotate) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
+                ele.name = 'ele';
+                let num;
+                if (style === SkinStyle.star) {
+                    num = 10 + Math.floor(Math.random() * 12);
+                }
+                else if (style === SkinStyle.dot) {
+                    num = Math.floor(Math.random() * 12);
+                }
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.addComponent(Explosion_Rotate);
+                scirpt.startSpeed = 2 + Math.random() * speed;
+                scirpt.rotateRan = Math.random() * rotate;
+            }
+        }
+        OldEffects.createExplosion_Rotate = createExplosion_Rotate;
+        class Explosion_Rotate extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 8;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0;
+                this.continueTime = 5 + Math.random() * 20;
+                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
+                this.rotateRan = Math.random() * 15;
+            }
+            moveRules() {
+                if (this.rotateDir === 'left') {
+                    this.self.rotation += this.rotateRan;
+                }
+                else {
+                    this.self.rotation -= this.rotateRan;
+                }
+                if (this.startSpeed - this.accelerated <= 0.1) {
+                    this.self.alpha -= 0.03;
+                    if (this.self.alpha <= 0) {
+                        this.self.removeSelf();
+                    }
+                }
+                else {
+                    this.accelerated += 0.2;
+                }
+                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed - this.accelerated);
+            }
+        }
+        OldEffects.Explosion_Rotate = Explosion_Rotate;
+        function createFireworks(parent, quantity, x, y) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('fireworks', Laya.Image);
+                ele.name = 'fireworks';
+                let num = 12 + Math.floor(Math.random() * 11);
+                ele.alpha = 1;
+                ele.skin = SkinUrl[num];
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.getComponent(Fireworks);
+                if (!scirpt) {
+                    ele.addComponent(Fireworks);
+                }
+            }
+        }
+        OldEffects.createFireworks = createFireworks;
+        class Fireworks extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                this.startAngle = 360 * Math.random();
+                this.startSpeed = 5 * Math.random() + 5;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0.1;
+                this.continueTime = 200 + Math.random() * 10;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.timer >= this.continueTime * 3 / 5) {
+                    this.self.alpha -= 0.1;
+                }
+                if (this.timer >= this.continueTime) {
+                    this.self.removeSelf();
+                }
+                else {
+                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
+                }
+                if (this.self.scaleX < 0) {
+                    this.self.scaleX += 0.01;
+                }
+                else if (this.self.scaleX >= this.startScale) {
+                    this.self.scaleX -= 0.01;
+                }
+            }
+        }
+        OldEffects.Fireworks = Fireworks;
+        function createLeftOrRightJet(parent, direction, quantity, x, y) {
+            for (let index = 0; index < quantity; index++) {
+                let ele = Laya.Pool.getItemByClass('Jet', Laya.Image);
+                ele.name = 'Jet';
+                let num = 12 + Math.floor(Math.random() * 11);
+                ele.skin = SkinUrl[num];
+                ele.alpha = 1;
+                parent.addChild(ele);
+                ele.pos(x, y);
+                let scirpt = ele.getComponent(leftOrRightJet);
+                if (!scirpt) {
+                    ele.addComponent(leftOrRightJet);
+                    let scirpt1 = ele.getComponent(leftOrRightJet);
+                    scirpt1.direction = direction;
+                    scirpt1.initProperty();
+                }
+                else {
+                    scirpt.direction = direction;
+                    scirpt.initProperty();
+                }
+            }
+        }
+        OldEffects.createLeftOrRightJet = createLeftOrRightJet;
+        class leftOrRightJet extends EffectsBase {
+            lwgInit() {
+                this.self.width = 41;
+                this.self.height = 41;
+                this.self.pivotX = this.self.width / 2;
+                this.self.pivotY = this.self.height / 2;
+            }
+            initProperty() {
+                if (this.direction === 'left') {
+                    this.startAngle = 100 * Math.random() - 90 + 45 - 10 - 20;
+                }
+                else if (this.direction === 'right') {
+                    this.startAngle = 100 * Math.random() + 90 + 45 + 20;
+                }
+                this.startSpeed = 10 * Math.random() + 3;
+                this.startScale = 0.4 + Math.random() * 0.6;
+                this.accelerated = 0.1;
+                this.continueTime = 300 + Math.random() * 50;
+                this.randomRotate = 1 + Math.random() * 20;
+            }
+            moveRules() {
+                this.timer++;
+                if (this.timer >= this.continueTime * 3 / 5) {
+                    this.self.alpha -= 0.1;
+                }
+                if (this.timer >= this.continueTime) {
+                    this.self.removeSelf();
+                }
+                else {
+                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
+                }
+                this.self.rotation += this.randomRotate;
+                if (this.self.scaleX < 0) {
+                    this.self.scaleX += 0.01;
+                }
+                else if (this.self.scaleX >= this.startScale) {
+                    this.self.scaleX -= 0.01;
+                }
+            }
+        }
+        OldEffects.leftOrRightJet = leftOrRightJet;
+    })(OldEffects || (OldEffects = {}));
+    var OldEffects$1 = OldEffects;
+
     class RecordManager {
         constructor() {
             this.GRV = null;
@@ -6643,7 +6953,7 @@
                                     _Gold._num.value -= num;
                                 }
                                 else {
-                                    Dialogue.createHint_Middle(Dialogue.HintContent["金币不够了！"]);
+                                    Dialogue.createHint_Middle('金币不够了！');
                                 }
                                 break;
                             default:
@@ -6893,6 +7203,8 @@
             _Event["colseScene"] = "_Game_colseScene";
             _Event["victory"] = "_Game_victory";
             _Event["Photo"] = "_Game_Photo";
+            _Event["turnRight"] = "_Game_turnRight";
+            _Event["turnLeft"] = "_Game_turnLeft";
         })(_Event = _Game._Event || (_Game._Event = {}));
         let _Animation;
         (function (_Animation) {
@@ -6941,6 +7253,13 @@
                         _Game._GeneralList.refresh();
                     }
                 }
+            }
+            static _randomOne() {
+                let name = Tools.arrayRandomGetOne(this._data)['name'];
+                if (name == 'colours' || name == 'eraser') {
+                    name = this._data[0]['name'];
+                }
+                return name;
             }
         }
         _GeneralPencils._effectType = {
@@ -7022,7 +7341,7 @@
         _Game._ColoursPencils = _ColoursPencils;
         ;
         class _BlinkPencils extends _GeneralPencils {
-            static randomNoHave() {
+            static _randomNoHaveOne() {
                 let noArr = [];
                 for (let index = 0; index < this._data.length; index++) {
                     const element = this._data[index];
@@ -7030,15 +7349,23 @@
                         noArr.push(element);
                     }
                 }
-                let random = Tools.arrayRandomGetOne(noArr);
-                return random['name'];
+                if (noArr.length > 0) {
+                    let random = Tools.arrayRandomGetOne(noArr);
+                    return random['name'];
+                }
+                else {
+                    return null;
+                }
             }
-            static addPencil(name) {
+            static _addPencil(name) {
                 for (let index = 0; index < this._data.length; index++) {
                     const element = this._data[index];
                     if (element['name'] == name) {
                         element['have'] = true;
                         Laya.LocalStorage.setJSON('_Game_Blink', JSON.stringify(this._data));
+                        if (_Game._BlinkList) {
+                            _Game._BlinkList.refresh();
+                        }
                         return;
                     }
                 }
@@ -7523,6 +7850,24 @@
                     });
                     EventAdmin._notify(_Event.restoreZOder);
                 });
+                EventAdmin._register(_Event.turnRight, this, () => {
+                    this.Step.btnSwitch = false;
+                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2, _Game._BlinkList.y, 250, 0, () => {
+                            this.Step.btnSwitch = true;
+                            _BlinkPencils._switch = true;
+                        });
+                    });
+                });
+                EventAdmin._register(_Event.turnLeft, this, () => {
+                    this.Step.btnSwitch = false;
+                    Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinkList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
+                            this.Step.btnSwitch = true;
+                            _BlinkPencils._switch = false;
+                        });
+                    });
+                });
             }
             onStageMouseDown(e) {
                 Laya.timer.clearAll(this.Step);
@@ -7533,19 +7878,33 @@
                     let Sp;
                     let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard');
                     this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                    switch (_GeneralPencils._pitchName) {
-                        case _GeneralPencils._effectType.eraser:
-                            Sp = this.Draw.EraserSp = new Laya.Sprite();
-                            this.Draw.EraserSp.blendMode = "destination-out";
-                            break;
-                        case _GeneralPencils._effectType.colours:
-                            Sp = this.Draw.DrawSp = new Laya.Sprite();
-                            this.Draw.DrawSp.blendMode = "none";
-                            break;
-                        default:
-                            Sp = this.Draw.DrawSp = new Laya.Sprite();
-                            this.Draw.DrawSp.blendMode = "none";
-                            break;
+                    if (_BlinkPencils._switch) {
+                        switch (_BlinkPencils._pitchName) {
+                            case _BlinkPencils._effectType.eraser:
+                                Sp = this.Draw.EraserSp = new Laya.Sprite();
+                                this.Draw.EraserSp.blendMode = "destination-out";
+                                break;
+                            default:
+                                Sp = this.Draw.DrawSp = new Laya.Sprite();
+                                this.Draw.DrawSp.blendMode = "none";
+                                break;
+                        }
+                    }
+                    else {
+                        switch (_GeneralPencils._pitchName) {
+                            case _GeneralPencils._effectType.eraser:
+                                Sp = this.Draw.EraserSp = new Laya.Sprite();
+                                this.Draw.EraserSp.blendMode = "destination-out";
+                                break;
+                            case _GeneralPencils._effectType.colours:
+                                Sp = this.Draw.DrawSp = new Laya.Sprite();
+                                this.Draw.DrawSp.blendMode = "none";
+                                break;
+                            default:
+                                Sp = this.Draw.DrawSp = new Laya.Sprite();
+                                this.Draw.DrawSp.blendMode = "none";
+                                break;
+                        }
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
                     Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
@@ -7555,16 +7914,28 @@
                 if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                     let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                     let Sp;
-                    switch (_GeneralPencils._pitchName) {
-                        case _GeneralPencils._effectType.eraser:
-                            Sp = this.Draw.EraserSp;
-                            break;
-                        case _GeneralPencils._effectType.colours:
-                            Sp = this.Draw.DrawSp;
-                            break;
-                        default:
-                            Sp = this.Draw.DrawSp;
-                            break;
+                    if (_BlinkPencils._switch) {
+                        switch (_BlinkPencils._pitchName) {
+                            case _BlinkPencils._effectType.eraser:
+                                Sp = this.Draw.EraserSp;
+                                break;
+                            default:
+                                Sp = this.Draw.DrawSp;
+                                break;
+                        }
+                    }
+                    else {
+                        switch (_GeneralPencils._pitchName) {
+                            case _GeneralPencils._effectType.eraser:
+                                Sp = this.Draw.EraserSp;
+                                break;
+                            case _GeneralPencils._effectType.colours:
+                                Sp = this.Draw.DrawSp;
+                                break;
+                            default:
+                                Sp = this.Draw.DrawSp;
+                                break;
+                        }
                     }
                     if (!Sp) {
                         return;
@@ -7636,23 +8007,11 @@
                 });
                 Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e) => {
                     e.stopPropagation();
-                    this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinkList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
-                            this.Step.btnSwitch = true;
-                            _BlinkPencils._switch = false;
-                        });
-                    });
+                    EventAdmin._notify(_Event.turnLeft);
                 });
                 Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, stop, stop, (e) => {
                     e.stopPropagation();
-                    this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2, _Game._BlinkList.y, 250, 0, () => {
-                            this.Step.btnSwitch = true;
-                            _BlinkPencils._switch = true;
-                        });
-                    });
+                    EventAdmin._notify(_Event.turnRight);
                 });
                 Click._on(Click._Type.largen, this.Step.BtnCompelet, this, stop, stop, () => {
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
@@ -7670,6 +8029,87 @@
     })(_Game || (_Game = {}));
     var _Game$1 = _Game.Game;
 
+    var _Compound;
+    (function (_Compound) {
+        class Compound extends Admin._SceneBase {
+            constructor() {
+                super(...arguments);
+                this.getCompound = {
+                    setPro: (p) => {
+                        console.log(p);
+                        if (p == 1) {
+                            this.getCompound.name = _Game._BlinkPencils._randomNoHaveOne();
+                            if (this.getCompound.name == null) {
+                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
+                                this.btnVar('BtnConfirm').visible = true;
+                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
+                            }
+                            else {
+                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = true;
+                                this.btnVar('BtnConfirm').visible = false;
+                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Blink/${this.getCompound.name}.png`;
+                            }
+                        }
+                        else {
+                            this.getCompound.name = _Game._GeneralPencils._randomOne();
+                            this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
+                            this.btnVar('BtnConfirm').visible = true;
+                            this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
+                        }
+                        this['_pro'] = p;
+                    },
+                    name: null,
+                };
+            }
+            lwgOnAwake() {
+                this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin1}.png`;
+                this.ImgVar('Pencil1').sizeGrid = '112,0,17,0';
+                this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin2}.png`;
+                this.ImgVar('Pencil2').sizeGrid = '112,0,17,0';
+                this.getCompound.setPro(Tools.randomOneHalf());
+            }
+            lwgOnEnable() {
+                _Game._activate = false;
+                this.AniVar('ani1').play(0, false);
+                this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
+                    OldEffects$1.createFireworks(Laya.stage, 40, 430, 200);
+                    OldEffects$1.createFireworks(Laya.stage, 40, 109, 200);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
+                });
+            }
+            lwgOpenAni() {
+                return 100;
+            }
+            lwgBtnClick() {
+                var close = () => {
+                    _Game._activate = true;
+                    this.lwgCloseScene();
+                };
+                Click._on(Click._Type.largen, this.btnVar('BtnConfirm'), this, null, null, (e) => {
+                    _Game._GeneralPencils._pitchName = this.getCompound.name;
+                    EventAdmin._notify(_Game._Event.turnLeft);
+                    close();
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnGet'), this, null, null, (e) => {
+                    ADManager.ShowReward(() => {
+                        EventAdmin._notify(_Game._Event.turnRight);
+                        _Game._BlinkPencils._pitchName = this.getCompound.name;
+                        _Game._BlinkPencils._addPencil(this.getCompound.name);
+                        Dialogue.createHint_Middle(`恭喜获得一只新的闪光画笔！`);
+                        close();
+                    });
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnNo'), this, null, null, (e) => {
+                    EventAdmin._notify(_Game._Event.turnLeft);
+                    close();
+                });
+            }
+        }
+        _Compound.Compound = Compound;
+    })(_Compound || (_Compound = {}));
+    var _Compound$1 = _Compound.Compound;
+
     class _PencilsListItem extends Admin._Object {
         constructor() {
             super(...arguments);
@@ -7682,23 +8122,16 @@
                 PosArr: null,
                 homing: () => {
                     if (this.Compound.Img) {
-                        Animation2D.move_Simple(this.Compound.Img, this.Compound.Img.x, this.Compound.Img.y, this.Compound.firstPos.x, this.Compound.firstPos.y, 100, 0, () => {
-                            this.Compound.Img.destroy();
-                            this.Compound.Img = null;
-                            this.Compound.Pic.visible = true;
-                            _Game._GeneralPencils.compoundName = null;
-                        });
+                        this.Compound.Img.destroy();
+                        this.Compound.Img = null;
+                        this.Compound.Pic.visible = true;
                     }
-                },
-                doing() {
-                    this.Compound.homing();
-                    this.Compound.time = 0;
-                    _Game._GeneralPencils.compoundName = 'doing';
                 },
                 remake: () => {
                     this.Compound.homing();
                     this.Compound.time = 0;
                     _Game._GeneralPencils.compoundName = null;
+                    _Game._activate = true;
                 }
             };
         }
@@ -7723,7 +8156,7 @@
             });
         }
         onStageMouseMove(e) {
-            if (this.Compound.time > this.Compound.restrict && this.Compound.Img && _Game._GeneralPencils.compoundName !== 'doing') {
+            if (this.Compound.time > this.Compound.restrict && this.Compound.Img) {
                 _Game._activate = false;
                 _Game._GeneralPencils.compoundName = this.Owner.name;
                 this.Compound.Img.visible = true;
@@ -7732,9 +8165,7 @@
             }
         }
         onStageMouseUp(e) {
-            _Game._activate = true;
-            this.Compound.time = 0;
-            this.Compound.homing();
+            this.Compound.remake();
         }
         lwgBtnClick() {
             Click._on(Click._Type.noEffect, this.Owner, this, (e) => {
@@ -7753,11 +8184,13 @@
                 e.stopPropagation();
             }, (e) => {
                 this.Compound.time++;
-                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name && _Game._GeneralPencils.compoundName !== 'doing') {
-                    console.log('合成！');
+                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name) {
+                    _Compound.Skin1 = _Game._GeneralPencils.compoundName;
+                    _Compound.Skin2 = this.Owner.name;
+                    this.lwgOpenScene(_SceneName.Compound, false);
+                    this.Compound.remake();
                 }
             }, (e) => {
-                e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lastName = _Game._GeneralPencils._pitchName;
                 _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
@@ -7813,30 +8246,9 @@
                 e.stopPropagation();
                 if (this.Owner['_dataSource']['have']) {
                     _Game._BlinkPencils._pitchName = this.Owner['_dataSource']['name'];
-                    if (this.Owner['_dataSource']['name'] == 'colours') {
-                        for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
-                            const element = _Game._ColoursPencils._data[index];
-                            if (_Game._ColoursPencils._pitchName == element[_Game._BlinkPencils._property.name]) {
-                                let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
-                                if (_Game._ColoursPencils._switch) {
-                                    if (!nameIndex) {
-                                        nameIndex = 1;
-                                    }
-                                    nameIndex++;
-                                    if (nameIndex > 7) {
-                                        nameIndex = 1;
-                                    }
-                                    _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
-                                    _Game._ColoursPencils._setPresentColorArr();
-                                }
-                                _Game._BlinkList.refresh();
-                                return;
-                            }
-                        }
-                    }
                 }
                 else {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["尚未获得!"]);
+                    Dialogue.createHint_Middle('尚未获得！');
                 }
             }, func);
         }
@@ -8236,10 +8648,10 @@
                     this.lwgOpenScene(_SceneName.SelectLevel);
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnConversion'), this, null, null, () => {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["敬请期待!"]);
+                    Dialogue.createHint_Middle('敬请期待！');
                 });
                 Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["敬请期待!"]);
+                    Dialogue.createHint_Middle('敬请期待！');
                 });
             }
             lwgOnDisable() {
@@ -8249,315 +8661,6 @@
         _Start.Start = Start;
     })(_Start || (_Start = {}));
     var _Start$1 = _Start.Start;
-
-    var OldEffects;
-    (function (OldEffects) {
-        let SkinUrl;
-        (function (SkinUrl) {
-            SkinUrl[SkinUrl["Frame/Effects/cir_white.png"] = 0] = "Frame/Effects/cir_white.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_blue.png"] = 1] = "Frame/Effects/cir_blue.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_bluish.png"] = 2] = "Frame/Effects/cir_bluish.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_cyan.png"] = 3] = "Frame/Effects/cir_cyan.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_grass.png"] = 4] = "Frame/Effects/cir_grass.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_green.png"] = 5] = "Frame/Effects/cir_green.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_orange.png"] = 6] = "Frame/Effects/cir_orange.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_pink.png"] = 7] = "Frame/Effects/cir_pink.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_purple.png"] = 8] = "Frame/Effects/cir_purple.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_red.png"] = 9] = "Frame/Effects/cir_red.png";
-            SkinUrl[SkinUrl["Frame/Effects/cir_yellow.png"] = 10] = "Frame/Effects/cir_yellow.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_blue.png"] = 11] = "Frame/Effects/star_blue.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_bluish.png"] = 12] = "Frame/Effects/star_bluish.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_cyan.png"] = 13] = "Frame/Effects/star_cyan.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_grass.png"] = 14] = "Frame/Effects/star_grass.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_green.png"] = 15] = "Frame/Effects/star_green.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_orange.png"] = 16] = "Frame/Effects/star_orange.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_pink.png"] = 17] = "Frame/Effects/star_pink.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_purple.png"] = 18] = "Frame/Effects/star_purple.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_red.png"] = 19] = "Frame/Effects/star_red.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_white.png"] = 20] = "Frame/Effects/star_white.png";
-            SkinUrl[SkinUrl["Frame/Effects/star_yellow.png"] = 21] = "Frame/Effects/star_yellow.png";
-            SkinUrl[SkinUrl["Frame/Effects/ui_Circular_l_yellow.png"] = 22] = "Frame/Effects/ui_Circular_l_yellow.png";
-            SkinUrl[SkinUrl["Frame/UI/ui_square_guang.png"] = 23] = "Frame/UI/ui_square_guang.png";
-        })(SkinUrl = OldEffects.SkinUrl || (OldEffects.SkinUrl = {}));
-        let SkinStyle;
-        (function (SkinStyle) {
-            SkinStyle["star"] = "star";
-            SkinStyle["dot"] = "dot";
-        })(SkinStyle = OldEffects.SkinStyle || (OldEffects.SkinStyle = {}));
-        class EffectsBase extends Laya.Script {
-            onAwake() {
-                this.initProperty();
-            }
-            onEnable() {
-                this.self = this.owner;
-                this.selfScene = this.self.scene;
-                let calssName = this['__proto__']['constructor'].name;
-                this.self[calssName] = this;
-                this.timer = 0;
-                this.lwgInit();
-                this.propertyAssign();
-            }
-            lwgInit() {
-            }
-            initProperty() {
-            }
-            propertyAssign() {
-                if (this.startAlpha) {
-                    this.self.alpha = this.startAlpha;
-                }
-                if (this.startScale) {
-                    this.self.scale(this.startScale, this.startScale);
-                }
-                if (this.startRotat) {
-                    this.self.rotation = this.startRotat;
-                }
-            }
-            commonSpeedXYByAngle(angle, speed) {
-                this.self.x += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).x;
-                this.self.y += Tools.Point.SpeedXYByAngle(angle, speed + this.accelerated).y;
-            }
-            moveRules() {
-            }
-            onUpdate() {
-                this.moveRules();
-            }
-            onDisable() {
-                Laya.Pool.recover(this.self.name, this.self);
-                this.destroy();
-                Laya.Tween.clearAll(this);
-                Laya.timer.clearAll(this);
-            }
-        }
-        OldEffects.EffectsBase = EffectsBase;
-        function createCommonExplosion(parent, quantity, x, y, style, speed, continueTime) {
-            for (let index = 0; index < quantity; index++) {
-                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
-                ele.name = 'ele';
-                let num;
-                if (style === SkinStyle.star) {
-                    num = 10 + Math.floor(Math.random() * 12);
-                }
-                else if (style === SkinStyle.dot) {
-                    num = Math.floor(Math.random() * 12);
-                }
-                ele.skin = SkinUrl[num];
-                ele.alpha = 1;
-                parent.addChild(ele);
-                ele.pos(x, y);
-                let scirpt = ele.addComponent(commonExplosion);
-                scirpt.startSpeed = Math.random() * speed;
-                scirpt.continueTime = 2 * Math.random() + continueTime;
-            }
-        }
-        OldEffects.createCommonExplosion = createCommonExplosion;
-        class commonExplosion extends EffectsBase {
-            lwgInit() {
-                this.self.width = 25;
-                this.self.height = 25;
-                this.self.pivotX = this.self.width / 2;
-                this.self.pivotY = this.self.height / 2;
-            }
-            initProperty() {
-                this.startAngle = 360 * Math.random();
-                this.startSpeed = 5 * Math.random() + 8;
-                this.startScale = 0.4 + Math.random() * 0.6;
-                this.accelerated = 2;
-                this.continueTime = 8 + Math.random() * 10;
-                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
-                this.rotateRan = Math.random() * 10;
-            }
-            moveRules() {
-                this.timer++;
-                if (this.rotateDir === 'left') {
-                    this.self.rotation += this.rotateRan;
-                }
-                else {
-                    this.self.rotation -= this.rotateRan;
-                }
-                if (this.timer >= this.continueTime / 2) {
-                    this.self.alpha -= 0.04;
-                    if (this.self.alpha <= 0.65) {
-                        this.self.removeSelf();
-                    }
-                }
-                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed + this.accelerated);
-                this.accelerated += 0.2;
-            }
-        }
-        OldEffects.commonExplosion = commonExplosion;
-        function createExplosion_Rotate(parent, quantity, x, y, style, speed, rotate) {
-            for (let index = 0; index < quantity; index++) {
-                let ele = Laya.Pool.getItemByClass('ele', Laya.Image);
-                ele.name = 'ele';
-                let num;
-                if (style === SkinStyle.star) {
-                    num = 10 + Math.floor(Math.random() * 12);
-                }
-                else if (style === SkinStyle.dot) {
-                    num = Math.floor(Math.random() * 12);
-                }
-                ele.skin = SkinUrl[num];
-                ele.alpha = 1;
-                parent.addChild(ele);
-                ele.pos(x, y);
-                let scirpt = ele.addComponent(Explosion_Rotate);
-                scirpt.startSpeed = 2 + Math.random() * speed;
-                scirpt.rotateRan = Math.random() * rotate;
-            }
-        }
-        OldEffects.createExplosion_Rotate = createExplosion_Rotate;
-        class Explosion_Rotate extends EffectsBase {
-            lwgInit() {
-                this.self.width = 41;
-                this.self.height = 41;
-                this.self.pivotX = this.self.width / 2;
-                this.self.pivotY = this.self.height / 2;
-            }
-            initProperty() {
-                this.startAngle = 360 * Math.random();
-                this.startSpeed = 5 * Math.random() + 8;
-                this.startScale = 0.4 + Math.random() * 0.6;
-                this.accelerated = 0;
-                this.continueTime = 5 + Math.random() * 20;
-                this.rotateDir = Math.floor(Math.random() * 2) === 1 ? 'left' : 'right';
-                this.rotateRan = Math.random() * 15;
-            }
-            moveRules() {
-                if (this.rotateDir === 'left') {
-                    this.self.rotation += this.rotateRan;
-                }
-                else {
-                    this.self.rotation -= this.rotateRan;
-                }
-                if (this.startSpeed - this.accelerated <= 0.1) {
-                    this.self.alpha -= 0.03;
-                    if (this.self.alpha <= 0) {
-                        this.self.removeSelf();
-                    }
-                }
-                else {
-                    this.accelerated += 0.2;
-                }
-                this.commonSpeedXYByAngle(this.startAngle, this.startSpeed - this.accelerated);
-            }
-        }
-        OldEffects.Explosion_Rotate = Explosion_Rotate;
-        function createFireworks(parent, quantity, x, y) {
-            for (let index = 0; index < quantity; index++) {
-                let ele = Laya.Pool.getItemByClass('fireworks', Laya.Image);
-                ele.name = 'fireworks';
-                let num = 12 + Math.floor(Math.random() * 11);
-                ele.alpha = 1;
-                ele.skin = SkinUrl[num];
-                parent.addChild(ele);
-                ele.pos(x, y);
-                let scirpt = ele.getComponent(Fireworks);
-                if (!scirpt) {
-                    ele.addComponent(Fireworks);
-                }
-            }
-        }
-        OldEffects.createFireworks = createFireworks;
-        class Fireworks extends EffectsBase {
-            lwgInit() {
-                this.self.width = 41;
-                this.self.height = 41;
-                this.self.pivotX = this.self.width / 2;
-                this.self.pivotY = this.self.height / 2;
-            }
-            initProperty() {
-                this.startAngle = 360 * Math.random();
-                this.startSpeed = 5 * Math.random() + 5;
-                this.startScale = 0.4 + Math.random() * 0.6;
-                this.accelerated = 0.1;
-                this.continueTime = 200 + Math.random() * 10;
-            }
-            moveRules() {
-                this.timer++;
-                if (this.timer >= this.continueTime * 3 / 5) {
-                    this.self.alpha -= 0.1;
-                }
-                if (this.timer >= this.continueTime) {
-                    this.self.removeSelf();
-                }
-                else {
-                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
-                }
-                if (this.self.scaleX < 0) {
-                    this.self.scaleX += 0.01;
-                }
-                else if (this.self.scaleX >= this.startScale) {
-                    this.self.scaleX -= 0.01;
-                }
-            }
-        }
-        OldEffects.Fireworks = Fireworks;
-        function createLeftOrRightJet(parent, direction, quantity, x, y) {
-            for (let index = 0; index < quantity; index++) {
-                let ele = Laya.Pool.getItemByClass('Jet', Laya.Image);
-                ele.name = 'Jet';
-                let num = 12 + Math.floor(Math.random() * 11);
-                ele.skin = SkinUrl[num];
-                ele.alpha = 1;
-                parent.addChild(ele);
-                ele.pos(x, y);
-                let scirpt = ele.getComponent(leftOrRightJet);
-                if (!scirpt) {
-                    ele.addComponent(leftOrRightJet);
-                    let scirpt1 = ele.getComponent(leftOrRightJet);
-                    scirpt1.direction = direction;
-                    scirpt1.initProperty();
-                }
-                else {
-                    scirpt.direction = direction;
-                    scirpt.initProperty();
-                }
-            }
-        }
-        OldEffects.createLeftOrRightJet = createLeftOrRightJet;
-        class leftOrRightJet extends EffectsBase {
-            lwgInit() {
-                this.self.width = 41;
-                this.self.height = 41;
-                this.self.pivotX = this.self.width / 2;
-                this.self.pivotY = this.self.height / 2;
-            }
-            initProperty() {
-                if (this.direction === 'left') {
-                    this.startAngle = 100 * Math.random() - 90 + 45 - 10 - 20;
-                }
-                else if (this.direction === 'right') {
-                    this.startAngle = 100 * Math.random() + 90 + 45 + 20;
-                }
-                this.startSpeed = 10 * Math.random() + 3;
-                this.startScale = 0.4 + Math.random() * 0.6;
-                this.accelerated = 0.1;
-                this.continueTime = 300 + Math.random() * 50;
-                this.randomRotate = 1 + Math.random() * 20;
-            }
-            moveRules() {
-                this.timer++;
-                if (this.timer >= this.continueTime * 3 / 5) {
-                    this.self.alpha -= 0.1;
-                }
-                if (this.timer >= this.continueTime) {
-                    this.self.removeSelf();
-                }
-                else {
-                    this.commonSpeedXYByAngle(this.startAngle, this.startSpeed);
-                }
-                this.self.rotation += this.randomRotate;
-                if (this.self.scaleX < 0) {
-                    this.self.scaleX += 0.01;
-                }
-                else if (this.self.scaleX >= this.startScale) {
-                    this.self.scaleX -= 0.01;
-                }
-            }
-        }
-        OldEffects.leftOrRightJet = leftOrRightJet;
-    })(OldEffects || (OldEffects = {}));
-    var OldEffects$1 = OldEffects;
 
     var _Victory;
     (function (_Victory) {
@@ -8681,6 +8784,7 @@
                 _Special: _Special,
                 _PropTry: _PropTry,
                 _AdsHint: _AdsHint,
+                _Compound: _Compound,
             };
             new ZJADMgr();
         }

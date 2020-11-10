@@ -1,6 +1,7 @@
 import GameConfig from "../../GameConfig";
 import ADManager, { TaT } from "../TJ/Admanager";
-import { Admin, Animation2D, Click, TimerAdmin, Tools, _SceneName } from "./Lwg";
+import { Admin, Animation2D, Click, EventAdmin, TimerAdmin, Tools, _SceneName } from "./Lwg";
+import { _Compound } from "./_Compound";
 import { _Game } from "./_Game";
 import { _PropTry } from "./_PropTry";
 
@@ -35,32 +36,22 @@ export default class _PencilsListItem extends Admin._Object {
         firstPos: null as Laya.Point,
         PosArr: null,
         homing: () => {
-            console.log(this.Compound.Img);
             if (this.Compound.Img) {
-                Animation2D.move_Simple(this.Compound.Img, this.Compound.Img.x, this.Compound.Img.y, this.Compound.firstPos.x, this.Compound.firstPos.y, 100, 0, () => {
-                    this.Compound.Img.destroy();
-                    this.Compound.Img = null;
-                    this.Compound.Pic.visible = true;
-                    _Game._GeneralPencils.compoundName = null;
-                });
+                this.Compound.Img.destroy();
+                this.Compound.Img = null;
+                this.Compound.Pic.visible = true;
             }
         },
-        doing(): void {
-            this.Compound.homing();
-            this.Compound.time = 0;
-            _Game._GeneralPencils.compoundName = 'doing';
-        },
         remake: () => {
+            // console.log('重制')
             this.Compound.homing();
             this.Compound.time = 0;
             _Game._GeneralPencils.compoundName = null;
             _Game._activate = true;
         }
     }
-
     onStageMouseMove(e: Laya.Event): void {
-        // console.log(this.Compound.time);
-        if (this.Compound.time > this.Compound.restrict && this.Compound.Img && _Game._GeneralPencils.compoundName !== 'doing') {
+        if (this.Compound.time > this.Compound.restrict && this.Compound.Img) {
             _Game._activate = false;
             _Game._GeneralPencils.compoundName = this.Owner.name;
             this.Compound.Img.visible = true;
@@ -69,10 +60,7 @@ export default class _PencilsListItem extends Admin._Object {
         }
     }
     onStageMouseUp(e: Laya.Event): void {
-        if (_Game._GeneralPencils.compoundName) {
-            this.Compound.remake();
-        }
-
+        this.Compound.remake();
     }
     lwgBtnClick(): void {
         Click._on(Click._Type.noEffect, this.Owner, this,
@@ -93,14 +81,16 @@ export default class _PencilsListItem extends Admin._Object {
             },
             (e: Laya.Event) => {
                 this.Compound.time++;
-                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name && _Game._GeneralPencils.compoundName !== 'doing') {
-                    console.log('合成！');
-                    // this.Compound.remake();
+                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name) {
+                    _Compound.Skin1 = _Game._GeneralPencils.compoundName;
+                    _Compound.Skin2 = this.Owner.name;
+                    this.lwgOpenScene(_SceneName.Compound, false);
+                    this.Compound.remake();
                 }
             },
             (e: Laya.Event) => {
                 // console.log(this.Owner);
-                e.stopPropagation();
+                // e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lastName = _Game._GeneralPencils._pitchName;
                 _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
@@ -144,10 +134,6 @@ export default class _PencilsListItem extends Admin._Object {
             },
             (e: Laya.Event) => {
                 e.stopPropagation();
-                // if (!_Game._GeneralPencils.compoundName && this.Compound.Img) {
-                //     this.Compound.Img.destroy();
-                //     this.Compound.Img = null;
-                // }
             });
     }
 }

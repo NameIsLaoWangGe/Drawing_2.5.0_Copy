@@ -1,6 +1,7 @@
 import ZJADMgr from "../TJ/ZJADMgr";
 import { Admin, DateAdmin, EventAdmin, _LwgInit, _LwgInitScene, _SceneName } from "./Lwg";
 import { _AdsHint } from "./_AdsHint";
+import { _Compound } from "./_Compound";
 import { _Game } from "./_Game";
 import { _Guide } from "./_Guide";
 import { _PreLoad } from "./_PreLoad";
@@ -39,6 +40,7 @@ export default class LwgInit extends _LwgInitScene {
             _Special: _Special,
             _PropTry: _PropTry,
             _AdsHint: _AdsHint,
+            _Compound:_Compound,
         };
         new ZJADMgr();
     }

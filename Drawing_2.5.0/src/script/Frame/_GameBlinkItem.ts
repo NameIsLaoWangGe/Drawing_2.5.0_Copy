@@ -18,30 +18,30 @@ export default class _GameBlinkItem extends Admin._Object {
                 // ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 if (this.Owner['_dataSource']['have']) {
                     _Game._BlinkPencils._pitchName = this.Owner['_dataSource']['name'];
-                    if (this.Owner['_dataSource']['name'] == 'colours') {
-                        for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
-                            const element = _Game._ColoursPencils._data[index];
-                            if (_Game._ColoursPencils._pitchName == element[_Game._BlinkPencils._property.name]) {
-                                let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
-                                // console.log(nameIndex);
-                                if (_Game._ColoursPencils._switch) {
-                                    if (!nameIndex) {
-                                        nameIndex = 1;
-                                    }
-                                    nameIndex++;
-                                    if (nameIndex > 7) {
-                                        nameIndex = 1;
-                                    }
-                                    _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
-                                    _Game._ColoursPencils._setPresentColorArr();
-                                }
-                                _Game._BlinkList.refresh();
-                                return;
-                            }
-                        }
-                    }
+                    // if (this.Owner['_dataSource']['name'] == 'colours') {
+                    //     for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
+                    //         const element = _Game._ColoursPencils._data[index];
+                    //         if (_Game._ColoursPencils._pitchName == element[_Game._BlinkPencils._property.name]) {
+                    //             let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
+                    //             // console.log(nameIndex);
+                    //             if (_Game._ColoursPencils._switch) {
+                    //                 if (!nameIndex) {
+                    //                     nameIndex = 1;
+                    //                 }
+                    //                 nameIndex++;
+                    //                 if (nameIndex > 7) {
+                    //                     nameIndex = 1;
+                    //                 }
+                    //                 _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
+                    //                 _Game._ColoursPencils._setPresentColorArr();
+                    //             }
+                    //             _Game._BlinkList.refresh();
+                    //             return;
+                    //         }
+                    //     }
+                    // }
                 } else {
-                    Dialogue.createHint_Middle(Dialogue.HintContent["尚未获得!"]);
+                    Dialogue.createHint_Middle('尚未获得！');
                 }
             },
             func

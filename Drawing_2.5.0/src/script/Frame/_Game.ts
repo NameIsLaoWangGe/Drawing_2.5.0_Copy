@@ -20,6 +20,8 @@ export module _Game {
         colseScene = '_Game_colseScene',
         victory = '_Game_victory',
         Photo = '_Game_Photo',
+        turnRight = '_Game_turnRight',
+        turnLeft = '_Game_turnLeft',
     }
     /**动画名称*/
     export enum _Animation {
@@ -68,12 +70,11 @@ export module _Game {
         };
 
         static _init(): void {
-
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.General.data);
             this._pitchName = this._data[0][this._property.name];
         }
         /**是否处于合成状态*/
-        static compoundName: string;
+        static _compoundName: string;
         /**当前选中画笔的颜色*/
         static _pitchColor: string = '';
         /**数据表*/
@@ -95,6 +96,14 @@ export module _Game {
                     _GeneralList.refresh();
                 }
             }
+        }
+        /**随机选出一个画笔的名称,排除彩色画笔和橡皮*/
+        static _randomOne(): string {
+            let name = Tools.arrayRandomGetOne(this._data)['name'];
+            if (name == 'colours' || name == 'eraser') {
+                name = this._data[0]['name'];
+            }
+            return name;
         }
     }
 
@@ -166,7 +175,7 @@ export module _Game {
         /**是否打开了星星画笔*/
         static _switch: boolean = false;
         /**随机出一个还没有获得的画笔,如果为null,说明没有了*/
-        static randomNoHave(): string {
+        static _randomNoHaveOne(): string {
             let noArr = [];
             for (let index = 0; index < this._data.length; index++) {
                 const element = this._data[index];
@@ -174,15 +183,22 @@ export module _Game {
                     noArr.push(element);
                 }
             }
-            let random = Tools.arrayRandomGetOne(noArr);
-            return random['name'];
+            if (noArr.length > 0) {
+                let random = Tools.arrayRandomGetOne(noArr);
+                return random['name'];
+            } else {
+                return null;
+            }
         }
-        static addPencil(name: string): void {
+        static _addPencil(name: string): void {
             for (let index = 0; index < this._data.length; index++) {
                 const element = this._data[index];
                 if (element['name'] == name) {
                     element['have'] = true;
                     Laya.LocalStorage.setJSON('_Game_Blink', JSON.stringify(this._data));
+                    if (_BlinkList) {
+                        _BlinkList.refresh();
+                    }
                     return;
                 }
             }
@@ -264,7 +280,6 @@ export module _Game {
                 index++;
             }
             // console.log(_stepOrderImg);
-
             _BlinkList = this.ListVar('BlinkList');
             _BlinkList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
             _BlinkList.array = _BlinkPencils._data;
@@ -612,6 +627,26 @@ export module _Game {
                 });
                 EventAdmin._notify(_Event.restoreZOder);
             })
+
+            EventAdmin._register(_Event.turnRight, this, () => {
+                this.Step.btnSwitch = false;
+                Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _GeneralList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2, _BlinkList.y, 250, 0, () => {
+                        this.Step.btnSwitch = true;
+                        _BlinkPencils._switch = true;
+                    });
+                });
+            })
+
+            EventAdmin._register(_Event.turnLeft, this, () => {
+                this.Step.btnSwitch = false;
+                Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinkList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2, _GeneralList.y, 250, 0, () => {
+                        this.Step.btnSwitch = true;
+                        _BlinkPencils._switch = false;
+                    });
+                });
+            })
         }
 
         /**绘画控制*/
@@ -691,19 +726,32 @@ export module _Game {
                 let Sp: Laya.Sprite;
                 let DrawBoard = this.Draw.DrawRoot.getChildByName('DrawBoard') as Laya.Sprite;
                 this.Draw.frontPos = DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
-                switch (_GeneralPencils._pitchName) {
-                    case _GeneralPencils._effectType.eraser:
-                        Sp = this.Draw.EraserSp = new Laya.Sprite();
-                        this.Draw.EraserSp.blendMode = "destination-out";
-                        break;
-                    case _GeneralPencils._effectType.colours:
-                        Sp = this.Draw.DrawSp = new Laya.Sprite();
-                        this.Draw.DrawSp.blendMode = "none";
-                        break;
-                    default:
-                        Sp = this.Draw.DrawSp = new Laya.Sprite();
-                        this.Draw.DrawSp.blendMode = "none";
-                        break;
+                if (_BlinkPencils._switch) {
+                    switch (_BlinkPencils._pitchName) {
+                        case _BlinkPencils._effectType.eraser:
+                            Sp = this.Draw.EraserSp = new Laya.Sprite();
+                            this.Draw.EraserSp.blendMode = "destination-out";
+                            break;
+                        default:
+                            Sp = this.Draw.DrawSp = new Laya.Sprite();
+                            this.Draw.DrawSp.blendMode = "none";
+                            break;
+                    }
+                } else {
+                    switch (_GeneralPencils._pitchName) {
+                        case _GeneralPencils._effectType.eraser:
+                            Sp = this.Draw.EraserSp = new Laya.Sprite();
+                            this.Draw.EraserSp.blendMode = "destination-out";
+                            break;
+                        case _GeneralPencils._effectType.colours:
+                            Sp = this.Draw.DrawSp = new Laya.Sprite();
+                            this.Draw.DrawSp.blendMode = "none";
+                            break;
+                        default:
+                            Sp = this.Draw.DrawSp = new Laya.Sprite();
+                            this.Draw.DrawSp.blendMode = "none";
+                            break;
+                    }
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
                 Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
@@ -713,16 +761,27 @@ export module _Game {
             if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
-                switch (_GeneralPencils._pitchName) {
-                    case _GeneralPencils._effectType.eraser:
-                        Sp = this.Draw.EraserSp;
-                        break;
-                    case _GeneralPencils._effectType.colours:
-                        Sp = this.Draw.DrawSp;
-                        break;
-                    default:
-                        Sp = this.Draw.DrawSp;
-                        break;
+                if (_BlinkPencils._switch) {
+                    switch (_BlinkPencils._pitchName) {
+                        case _BlinkPencils._effectType.eraser:
+                            Sp = this.Draw.EraserSp;
+                            break;
+                        default:
+                            Sp = this.Draw.DrawSp;
+                            break;
+                    }
+                } else {
+                    switch (_GeneralPencils._pitchName) {
+                        case _GeneralPencils._effectType.eraser:
+                            Sp = this.Draw.EraserSp;
+                            break;
+                        case _GeneralPencils._effectType.colours:
+                            Sp = this.Draw.DrawSp;
+                            break;
+                        default:
+                            Sp = this.Draw.DrawSp;
+                            break;
+                    }
                 }
                 if (!Sp) {
                     return;
@@ -736,8 +795,6 @@ export module _Game {
                         Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
                     }
                 }
-                // 消除颜色
-                // Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 0, null, null);
                 this.Draw.frontPos = endPos;
             }
         }
@@ -802,23 +859,11 @@ export module _Game {
             });
             Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
-                this.Step.btnSwitch = false;
-                Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _BlinkList.y, 250, 0, () => {
-                    Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2, _GeneralList.y, 250, 0, () => {
-                        this.Step.btnSwitch = true;
-                        _BlinkPencils._switch = false;
-                    });
-                });
+                EventAdmin._notify(_Event.turnLeft);
             });
             Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
-                this.Step.btnSwitch = false;
-                Animation2D.move_Simple(_GeneralList, _GeneralList.x, _GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _GeneralList.y, 250, 0, () => {
-                    Animation2D.move_Simple(_BlinkList, _BlinkList.x, _BlinkList.y, Laya.stage.width / 2, _BlinkList.y, 250, 0, () => {
-                        this.Step.btnSwitch = true;
-                        _BlinkPencils._switch = true;
-                    });
-                });
+                EventAdmin._notify(_Event.turnRight);
             });
             Click._on(Click._Type.largen, this.Step.BtnCompelet, this, stop, stop, () => {
                 this.lwgOpenScene(_SceneName.Settle, false, () => {
