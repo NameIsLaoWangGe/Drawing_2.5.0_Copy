@@ -77,6 +77,18 @@ export module _PreloadUrl {
                 url: 'Game/UI/GameScene/blink1.png',
                 texture: new Laya.Texture,
             },
+            blink2: {
+                url: 'Game/UI/GameScene/blink2.png',
+                texture: new Laya.Texture,
+            },
+            blink3: {
+                url: 'Game/UI/GameScene/blink3.png',
+                texture: new Laya.Texture,
+            },
+            blink4: {
+                url: 'Game/UI/GameScene/blink4.png',
+                texture: new Laya.Texture,
+            },
         },
         // texture2D: {
         //     star1: {

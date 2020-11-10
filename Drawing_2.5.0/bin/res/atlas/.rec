@@ -224,7 +224,10 @@ P DBB72208 bishua3.png
 P D7DB889B bishua4.png
 P 4FF59F0F bishua5.png
 P 1DB5E033 bishua6.png
-P 192CF4B5 blink1.png
+P 32ED7CCC blink1.png
+P CB027B41 blink2.png
+P A75206AA blink3.png
+P 32656C70 blink4.png
 P 774A2C20 compelet.png
 P ABC0EF21 y.png
 P 752BA2A5 you.png
@@ -589,16 +592,17 @@ P 30CAB7B3 xiaonainiu.png
 P 87AC5571 xiaoqiche.png
 P 48E6A39F zhangyugege.png
 D Game/UI/GameScene/Pencils/Blink
-P 4CA28590 chengse.png
-P 3241905A heise.png
-P 91EFC757 hese.png
-P 539DE1B4 hongse.png
-P 4EA50AFA huangse.png
-P 3B8ED712 lanse.png
-P 7DE4AA07 lvse.png
-P 3D9E9DAE taohong.png
-P 85BBB43A tianlan.png
-P 1352ECB5 zise.png
+P 1F892192 chengse.png
+P 318A0B0A eraser.png
+P 4597D229 heise.png
+P 5CC15B2E hese.png
+P AAB5203C hongse.png
+P DBD66B9B huangse.png
+P D88F2D82 lanse.png
+P 01C47DCA lvse.png
+P 4A868E92 taohong.png
+P 32E07411 tianlan.png
+P BD9412AB zise.png
 D Game/UI/GameScene/Pencils/ColoursPencils
 P 7375C4D4 caise1.png
 P 62888DA4 caise2.png

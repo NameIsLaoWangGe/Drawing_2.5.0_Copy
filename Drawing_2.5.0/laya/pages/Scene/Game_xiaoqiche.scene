@@ -2,11 +2,11 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":226,
+    "selecteID":230,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":230,
+    "maxID":234,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -359,6 +359,65 @@
                     "id":1,
                     "frameRate":24,
                     "action":0
+                }]
+        },
+        {
+            "x":15,
+            "type":"List",
+            "searchKey":"List,BlinkList,BlinkList",
+            "props":{"zOrder":200,"y":1046,"x":1059,"width":638,"var":"BlinkList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":190,"pivotX":319,"name":"BlinkList","height":379},
+            "nodeParent":2,
+            "label":"BlinkList",
+            "isOpen":true,
+            "isDirectory":true,
+            "isAniNode":true,
+            "hasChild":true,
+            "compId":230,
+            "child":[
+                {
+                    "x":30,
+                    "type":"Box",
+                    "searchKey":"Box",
+                    "props":{"y":112,"x":66,"width":113,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
+                    "nodeParent":230,
+                    "label":"Box",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":false,
+                    "hasChild":true,
+                    "compId":231,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Image",
+                            "searchKey":"Image,Pic",
+                            "props":{"width":64,"skin":"Game/UI/GameScene/Pencils/Single/chengse.png","sizeGrid":"101,0,17,0","rotation":0,"pivotY":70,"pivotX":32,"name":"Pic","height":140,"gray":false,"centerY":0,"centerX":0},
+                            "nodeParent":231,
+                            "label":"Pic",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":232,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Script",
+                            "switchAble":true,
+                            "source":"src/script/Frame/_GameBlinkItem.ts",
+                            "searchKey":"Script,_GameBlinkItem",
+                            "removeAble":true,
+                            "props":{},
+                            "nodeParent":231,
+                            "label":"_GameBlinkItem",
+                            "isDirectory":false,
+                            "isAniNode":false,
+                            "hasChild":false,
+                            "compId":233,
+                            "child":[
+                                ]
+                        }]
                 }]
         }],
     "animations":[

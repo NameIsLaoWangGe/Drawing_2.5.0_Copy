@@ -13,7 +13,7 @@ export default class _GameBlinkItem extends Admin._Object {
             func,
             func,
             (e: Laya.Event) => {
-                console.log(this.Owner['_dataSource']);
+                // console.log(this.Owner['_dataSource']);
                 e.stopPropagation();
                 // ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 if (this.Owner['_dataSource']['have']) {

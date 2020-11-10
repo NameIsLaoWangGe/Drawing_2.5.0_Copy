@@ -229,6 +229,7 @@ export module _Game {
             ADManager.TAPoint(TaT.PageShow, 'playpage');
             ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
             _Gold.goldVinish(100);
+            _BlinkPencils._switch = false;
             _stepIndex.present = 0;
             _stepIndex.present = 0;
             _stepIndex.max = 0;
@@ -287,21 +288,22 @@ export module _Game {
             _BlinkList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
                 let _dataSource = cell.dataSource;
                 let Pic = cell.getChildByName('Pic') as Laya.Image;
-                switch (_dataSource['name']) {
-                    case 'colours':
-                        Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
-                        break;
-                    default:
-                        Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
-                        break;
-                }
+                Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
+                // switch (_dataSource['name']) {
+                //     case 'colours':
+                //         Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
+                //         break;
+                //     default:
+                //         Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
+                //         break;
+                // }
                 if (_dataSource['have']) {
                     Pic.gray = false;
                 } else {
                     Pic.gray = true;
                 }
 
-                if (_dataSource[_GeneralPencils._property.pitch]) {
+                if (_dataSource[_GeneralPencils._property.pitch] && _dataSource[_GeneralPencils._property.have]) {
                     Pic.scale(1.2, 1.2);
                 } else {
                     Pic.scale(1, 1);
@@ -656,10 +658,12 @@ export module _Game {
             DrawBoard: null as Laya.Image,
             EraserSp: null as Laya.Sprite,
             DrawSp: null as Laya.Sprite,
+            BlinkSp: null as Laya.Sprite,
             frontPos: null as Laya.Point,
             endPos: null as Laya.Point,
             getTex: (): Laya.Texture => {
-                return _PreloadUrl._list.texture.bishua3.texture;
+                return _PreloadUrl._list.texture[`bishua${1 + Math.floor(Math.random() * 4)
+                    }`]['texture'];
             },
             getBlinkTex: (): Laya.Texture => {
                 return _PreloadUrl._list.texture.blink1.texture;
@@ -690,7 +694,13 @@ export module _Game {
                     return 50;
                 }
             },
-            space: 15,
+            draw: (Sp: Laya.Sprite, x?: number, y?: number, tex?: Laya.Texture, color?: string) => {
+                Sp.graphics.drawTexture(tex ? tex : this.Draw.getTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, color ? color : this.Draw.getColor(), null);
+            },
+            drawBlink: (x?: number, y?: number) => {
+                this.Draw.BlinkSp.graphics.drawTexture(this.Draw.getBlinkTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, null, null);
+            },
+            space: 5,
             len: {
                 get count(): number {
                     return this['lenCount'] ? this['lenCount'] : 0;
@@ -735,6 +745,7 @@ export module _Game {
                         default:
                             Sp = this.Draw.DrawSp = new Laya.Sprite();
                             this.Draw.DrawSp.blendMode = "none";
+                            this.Draw.BlinkSp = new Laya.Sprite();
                             break;
                     }
                 } else {
@@ -754,7 +765,13 @@ export module _Game {
                     }
                 }
                 DrawBoard.addChild(Sp)['pos'](0, 0);
-                Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                Sp.zOrder = DrawBoard.numChildren;
+                this.Draw.draw(Sp);
+                if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                    DrawBoard.addChild(this.Draw.BlinkSp)['pos'](0, 0);
+                    this.Draw.BlinkSp.zOrder = Sp.zOrder + 1;
+                    this.Draw.drawBlink();
+                }
             }
         }
         onStageMouseMove(e: Laya.Event): void {
@@ -786,13 +803,19 @@ export module _Game {
                 if (!Sp) {
                     return;
                 }
-                Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                this.Draw.draw(Sp);
+                if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                    this.Draw.drawBlink();
+                }
                 let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
                 if (destance > this.Draw.space) {
                     let num = destance / this.Draw.space;
                     let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                     for (let index = 0; index < pointArr.length; index++) {
-                        Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                        this.Draw.draw(Sp, pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2);
+                        if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                            this.Draw.drawBlink(pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2);
+                        }
                     }
                 }
                 this.Draw.frontPos = endPos;
@@ -874,7 +897,7 @@ export module _Game {
         lwgOnDisable(): void {
             _ColoursPencils._switch = false;
             ADManager.TAPoint(TaT.PageShow, 'playpage');
-            ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name}`);
+            ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name} `);
         }
     }
 }

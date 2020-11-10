@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":7,
+    "selectedBox":7,
+    "selecteID":8,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -106,7 +106,7 @@
                             "x":45,
                             "type":"Image",
                             "searchKey":"Image,GetPic,GetPic",
-                            "props":{"width":68,"var":"GetPic","skin":"Game/UI/Compound/bi2.png","name":"GetPic","height":249,"centerY":0,"centerX":0},
+                            "props":{"width":68,"var":"GetPic","skin":"Game/UI/GameScene/Pencils/Blink/lanse.png","sizeGrid":"70,0,71,0","scaleY":1.5,"scaleX":1.5,"name":"GetPic","height":142,"centerY":0,"centerX":0},
                             "nodeParent":8,
                             "label":"GetPic",
                             "isDirectory":false,

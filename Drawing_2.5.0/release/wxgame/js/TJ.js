@@ -5,8 +5,8 @@ var DP =
         appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
         productName:"涂鸦小画手",
         packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.0",
-        versionCode:1,
+        versionName:"1.0.1",
+        versionCode:2,
         channel:"ZJTD_AppRt",
     },
     XIAOMI:
@@ -154,7 +154,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 /*
 DESKTOP-BT8F2H9
 Microsoft Windows NT 10.0.17763.0
-中国标准时间 2020/11/6 18:29:12
+中国标准时间 2020/11/10 20:54:14
 */
 var TJ;
 (function (TJ) {

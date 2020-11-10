@@ -69,7 +69,7 @@ export default class ADManager {
                 PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
 
                 //UIMgr.show("UISubSkinTry", 1);
-                lwg.Dialogue.createHint_Middle(lwg.Dialogue.HintContent["暂时没有广告，过会儿再试试吧！"]);
+                lwg.Dialogue.createHint_Middle("暂时没有广告，过会儿再试试吧！");
                 //TipPanel.ins.showString("暂时没有广告，过会儿再试试吧！");
             });
 

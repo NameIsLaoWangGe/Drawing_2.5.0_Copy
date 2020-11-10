@@ -5774,7 +5774,7 @@
                 });
                 p.cbi.Add(TJ.Define.Event.NoAds, () => {
                     PalyAudio.playMusic(PalyAudio.voiceUrl.bgm, 0, 1000);
-                    lwg$1.Dialogue.createHint_Middle(lwg$1.Dialogue.HintContent["暂时没有广告，过会儿再试试吧！"]);
+                    lwg$1.Dialogue.createHint_Middle("暂时没有广告，过会儿再试试吧！");
                 });
                 TJ.ADS.Api.ShowReward(p);
                 ADManager.CanShowCD = false;
@@ -6355,6 +6355,18 @@
                 },
                 blink1: {
                     url: 'Game/UI/GameScene/blink1.png',
+                    texture: new Laya.Texture,
+                },
+                blink2: {
+                    url: 'Game/UI/GameScene/blink2.png',
+                    texture: new Laya.Texture,
+                },
+                blink3: {
+                    url: 'Game/UI/GameScene/blink3.png',
+                    texture: new Laya.Texture,
+                },
+                blink4: {
+                    url: 'Game/UI/GameScene/blink4.png',
                     texture: new Laya.Texture,
                 },
             },
@@ -7484,10 +7496,11 @@
                     DrawBoard: null,
                     EraserSp: null,
                     DrawSp: null,
+                    BlinkSp: null,
                     frontPos: null,
                     endPos: null,
                     getTex: () => {
-                        return _PreloadUrl._list.texture.bishua3.texture;
+                        return _PreloadUrl._list.texture[`bishua${1 + Math.floor(Math.random() * 4)}`]['texture'];
                     },
                     getBlinkTex: () => {
                         return _PreloadUrl._list.texture.blink1.texture;
@@ -7520,7 +7533,13 @@
                             return 50;
                         }
                     },
-                    space: 15,
+                    draw: (Sp, x, y, tex, color) => {
+                        Sp.graphics.drawTexture(tex ? tex : this.Draw.getTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, color ? color : this.Draw.getColor(), null);
+                    },
+                    drawBlink: (x, y) => {
+                        this.Draw.BlinkSp.graphics.drawTexture(this.Draw.getBlinkTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, null, null);
+                    },
+                    space: 5,
                     len: {
                         get count() {
                             return this['lenCount'] ? this['lenCount'] : 0;
@@ -7549,6 +7568,7 @@
                 ADManager.TAPoint(TaT.PageShow, 'playpage');
                 ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
                 _Gold.goldVinish(100);
+                _BlinkPencils._switch = false;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
@@ -7601,21 +7621,14 @@
                 _Game._BlinkList.renderHandler = new Laya.Handler(this, (cell, index) => {
                     let _dataSource = cell.dataSource;
                     let Pic = cell.getChildByName('Pic');
-                    switch (_dataSource['name']) {
-                        case 'colours':
-                            Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
-                            break;
-                        default:
-                            Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
-                            break;
-                    }
+                    Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
                     if (_dataSource['have']) {
                         Pic.gray = false;
                     }
                     else {
                         Pic.gray = true;
                     }
-                    if (_dataSource[_GeneralPencils._property.pitch]) {
+                    if (_dataSource[_GeneralPencils._property.pitch] && _dataSource[_GeneralPencils._property.have]) {
                         Pic.scale(1.2, 1.2);
                     }
                     else {
@@ -7887,6 +7900,7 @@
                             default:
                                 Sp = this.Draw.DrawSp = new Laya.Sprite();
                                 this.Draw.DrawSp.blendMode = "none";
+                                this.Draw.BlinkSp = new Laya.Sprite();
                                 break;
                         }
                     }
@@ -7907,7 +7921,13 @@
                         }
                     }
                     DrawBoard.addChild(Sp)['pos'](0, 0);
-                    Sp.graphics.drawTexture(this.Draw.getTex(), this.Draw.frontPos.x - this.Draw.getRadius() / 2, this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                    Sp.zOrder = DrawBoard.numChildren;
+                    this.Draw.draw(Sp);
+                    if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                        DrawBoard.addChild(this.Draw.BlinkSp)['pos'](0, 0);
+                        this.Draw.BlinkSp.zOrder = Sp.zOrder + 1;
+                        this.Draw.drawBlink();
+                    }
                 }
             }
             onStageMouseMove(e) {
@@ -7940,13 +7960,19 @@
                     if (!Sp) {
                         return;
                     }
-                    Sp.graphics.drawTexture(this.Draw.getTex(), endPos.x - this.Draw.getRadius() / 2, endPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                    this.Draw.draw(Sp);
+                    if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                        this.Draw.drawBlink();
+                    }
                     let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
                     if (destance > this.Draw.space) {
                         let num = destance / this.Draw.space;
                         let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
-                            Sp.graphics.drawTexture(this.Draw.getTex(), pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, this.Draw.getColor(), null);
+                            this.Draw.draw(Sp, pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2);
+                            if (_BlinkPencils._switch && _BlinkPencils._pitchName !== _BlinkPencils._effectType.eraser) {
+                                this.Draw.drawBlink(pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2);
+                            }
                         }
                     }
                     this.Draw.frontPos = endPos;
@@ -8022,7 +8048,7 @@
             lwgOnDisable() {
                 _ColoursPencils._switch = false;
                 ADManager.TAPoint(TaT.PageShow, 'playpage');
-                ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name}`);
+                ADManager.TAPoint(TaT.LevelFinish, `level_${this.Owner.name} `);
             }
         }
         _Game.Game = Game;
@@ -8242,7 +8268,6 @@
                 e.stopPropagation();
             };
             Click._on(Click._Type.noEffect, this.Owner, this, func, func, (e) => {
-                console.log(this.Owner['_dataSource']);
                 e.stopPropagation();
                 if (this.Owner['_dataSource']['have']) {
                     _Game._BlinkPencils._pitchName = this.Owner['_dataSource']['name'];
@@ -8768,7 +8793,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Research;
+            Admin._platform.name = Admin._platform.tpye.Bytedance;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
