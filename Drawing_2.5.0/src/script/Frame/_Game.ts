@@ -72,7 +72,8 @@ export module _Game {
             this._data = Tools.objArray_Copy(_PreloadUrl._list.json.General.data);
             this._pitchName = this._data[0][this._property.name];
         }
-
+        /**是否处于合成状态*/
+        static compoundName: string;
         /**当前选中画笔的颜色*/
         static _pitchColor: string = '';
         /**数据表*/
@@ -96,8 +97,6 @@ export module _Game {
             }
         }
     }
-
-
 
     /**彩色画笔套装*/
     export class _ColoursPencils extends _GeneralPencils {
@@ -743,12 +742,12 @@ export module _Game {
             }
         }
         onStageMouseUp(): void {
-            if (this.Draw.len.count > 0) {
+            if (this.Draw.len.count > 0 && _Game._activate) {
                 this.Step.setAutomaticNext();
             }
             this.Draw.frontPos = null;
             // 画板内绘制节点过多时，则将图像绘制到新的画板上，删掉旧的画板
-            if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 50) {
+            if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 30) {
                 // console.log('合并！');
                 let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0)) as Laya.Sprite;
                 NewBoard.width = this.Draw.DrawRoot.width;
@@ -756,7 +755,7 @@ export module _Game {
                 NewBoard.cacheAs = "bitmap";
                 NewBoard.name = 'DrawBoard';
                 NewBoard.texture = this.Draw.DrawBoard.drawToTexture(this.Draw.DrawBoard.width, this.Draw.DrawBoard.height, this.Draw.DrawBoard.x, this.Draw.DrawBoard.y) as Laya.Texture;
-                this.Draw.DrawBoard.destroy();
+                this.Draw.DrawBoard.removeSelf();
             }
         }
 

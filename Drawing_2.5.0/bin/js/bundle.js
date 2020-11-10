@@ -7582,18 +7582,18 @@
                 }
             }
             onStageMouseUp() {
-                if (this.Draw.len.count > 0) {
+                if (this.Draw.len.count > 0 && _Game._activate) {
                     this.Step.setAutomaticNext();
                 }
                 this.Draw.frontPos = null;
-                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 50) {
+                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 30) {
                     let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
                     NewBoard.width = this.Draw.DrawRoot.width;
                     NewBoard.height = this.Draw.DrawRoot.height;
                     NewBoard.cacheAs = "bitmap";
                     NewBoard.name = 'DrawBoard';
                     NewBoard.texture = this.Draw.DrawBoard.drawToTexture(this.Draw.DrawBoard.width, this.Draw.DrawBoard.height, this.Draw.DrawBoard.x, this.Draw.DrawBoard.y);
-                    this.Draw.DrawBoard.destroy();
+                    this.Draw.DrawBoard.removeSelf();
                 }
             }
             lwgBtnClick() {
@@ -7671,6 +7671,40 @@
     var _Game$1 = _Game.Game;
 
     class _PencilsListItem extends Admin._Object {
+        constructor() {
+            super(...arguments);
+            this.Compound = {
+                Pic: null,
+                time: 0,
+                restrict: 30,
+                Img: null,
+                firstPos: null,
+                PosArr: null,
+                homing: () => {
+                    if (this.Compound.Img) {
+                        Animation2D.move_Simple(this.Compound.Img, this.Compound.Img.x, this.Compound.Img.y, this.Compound.firstPos.x, this.Compound.firstPos.y, 100, 0, () => {
+                            this.Compound.Img.destroy();
+                            this.Compound.Img = null;
+                            this.Compound.Pic.visible = true;
+                            _Game._GeneralPencils.compoundName = null;
+                        });
+                    }
+                },
+                doing() {
+                    this.Compound.homing();
+                    this.Compound.time = 0;
+                    _Game._GeneralPencils.compoundName = 'doing';
+                },
+                remake: () => {
+                    this.Compound.homing();
+                    this.Compound.time = 0;
+                    _Game._GeneralPencils.compoundName = null;
+                }
+            };
+        }
+        lwgOnAwake() {
+            this.Compound.Pic = this.Owner.getChildByName('Pic');
+        }
         lwgOnStart() {
             Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
                 var caller = {};
@@ -7688,11 +7722,41 @@
                 });
             });
         }
+        onStageMouseMove(e) {
+            if (this.Compound.time > this.Compound.restrict && this.Compound.Img && _Game._GeneralPencils.compoundName !== 'doing') {
+                _Game._activate = false;
+                _Game._GeneralPencils.compoundName = this.Owner.name;
+                this.Compound.Img.visible = true;
+                this.Compound.Pic.visible = false;
+                this.Compound.Img.pos(e.stageX, e.stageY);
+            }
+        }
+        onStageMouseUp(e) {
+            _Game._activate = true;
+            this.Compound.time = 0;
+            this.Compound.homing();
+        }
         lwgBtnClick() {
-            var func = (e) => {
+            Click._on(Click._Type.noEffect, this.Owner, this, (e) => {
+                if (!this.Compound.Img) {
+                    this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
+                    this.Compound.Img = new Laya.Image;
+                    this.OwnerScene.addChild(this.Compound.Img);
+                    this.Compound.Img.zOrder = 300;
+                    this.Compound.Img.width = this.Compound.Pic.width;
+                    this.Compound.Img.height = this.Compound.Pic.height;
+                    this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
+                    Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
+                    this.Compound.Img.skin = this.Compound.Pic.skin;
+                    this.Compound.Img.visible = false;
+                }
                 e.stopPropagation();
-            };
-            Click._on(Click._Type.noEffect, this.Owner, this, func, func, (e) => {
+            }, (e) => {
+                this.Compound.time++;
+                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name && _Game._GeneralPencils.compoundName !== 'doing') {
+                    console.log('合成！');
+                }
+            }, (e) => {
                 e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
                 let lastName = _Game._GeneralPencils._pitchName;
@@ -7733,7 +7797,9 @@
                 else {
                     _Game._ColoursPencils._clickNum = 0;
                 }
-            }, func);
+            }, (e) => {
+                e.stopPropagation();
+            });
         }
     }
 

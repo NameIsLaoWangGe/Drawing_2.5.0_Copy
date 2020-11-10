@@ -1,3 +1,4 @@
+import GameConfig from "../../GameConfig";
 import ADManager, { TaT } from "../TJ/Admanager";
 import { Admin, Animation2D, Click, TimerAdmin, Tools, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
@@ -5,6 +6,9 @@ import { _PropTry } from "./_PropTry";
 
 /**画笔脚本*/
 export default class _PencilsListItem extends Admin._Object {
+    lwgOnAwake(): void {
+        this.Compound.Pic = this.Owner.getChildByName('Pic') as Laya.Image;
+    }
     lwgOnStart(): void {
         // console.log(this.Owner);
         Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
@@ -23,13 +27,77 @@ export default class _PencilsListItem extends Admin._Object {
             })
         });
     }
-    lwgBtnClick(): void {
-        var func = (e: Laya.Event) => {
-            e.stopPropagation();
+    Compound = {
+        Pic: null as Laya.Image,
+        time: 0,
+        restrict: 30,
+        Img: null as Laya.Image,
+        firstPos: null as Laya.Point,
+        PosArr: null,
+        homing: () => {
+            console.log(this.Compound.Img);
+            if (this.Compound.Img) {
+                Animation2D.move_Simple(this.Compound.Img, this.Compound.Img.x, this.Compound.Img.y, this.Compound.firstPos.x, this.Compound.firstPos.y, 100, 0, () => {
+                    this.Compound.Img.destroy();
+                    this.Compound.Img = null;
+                    this.Compound.Pic.visible = true;
+                    _Game._GeneralPencils.compoundName = null;
+                });
+            }
+        },
+        doing(): void {
+            this.Compound.homing();
+            this.Compound.time = 0;
+            _Game._GeneralPencils.compoundName = 'doing';
+        },
+        remake: () => {
+            this.Compound.homing();
+            this.Compound.time = 0;
+            _Game._GeneralPencils.compoundName = null;
+            _Game._activate = true;
         }
+    }
+
+    onStageMouseMove(e: Laya.Event): void {
+        // console.log(this.Compound.time);
+        if (this.Compound.time > this.Compound.restrict && this.Compound.Img && _Game._GeneralPencils.compoundName !== 'doing') {
+            _Game._activate = false;
+            _Game._GeneralPencils.compoundName = this.Owner.name;
+            this.Compound.Img.visible = true;
+            this.Compound.Pic.visible = false;
+            this.Compound.Img.pos(e.stageX, e.stageY);
+        }
+    }
+    onStageMouseUp(e: Laya.Event): void {
+        if (_Game._GeneralPencils.compoundName) {
+            this.Compound.remake();
+        }
+
+    }
+    lwgBtnClick(): void {
         Click._on(Click._Type.noEffect, this.Owner, this,
-            func,
-            func,
+            (e: Laya.Event) => {
+                if (!this.Compound.Img) {
+                    this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
+                    this.Compound.Img = new Laya.Image;
+                    this.OwnerScene.addChild(this.Compound.Img);
+                    this.Compound.Img.zOrder = 300;
+                    this.Compound.Img.width = this.Compound.Pic.width;
+                    this.Compound.Img.height = this.Compound.Pic.height;
+                    this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
+                    Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
+                    this.Compound.Img.skin = this.Compound.Pic.skin;
+                    this.Compound.Img.visible = false;
+                }
+                e.stopPropagation();
+            },
+            (e: Laya.Event) => {
+                this.Compound.time++;
+                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name && _Game._GeneralPencils.compoundName !== 'doing') {
+                    console.log('合成！');
+                    // this.Compound.remake();
+                }
+            },
             (e: Laya.Event) => {
                 // console.log(this.Owner);
                 e.stopPropagation();
@@ -74,6 +142,12 @@ export default class _PencilsListItem extends Admin._Object {
                     _Game._ColoursPencils._clickNum = 0;
                 }
             },
-            func);
+            (e: Laya.Event) => {
+                e.stopPropagation();
+                // if (!_Game._GeneralPencils.compoundName && this.Compound.Img) {
+                //     this.Compound.Img.destroy();
+                //     this.Compound.Img = null;
+                // }
+            });
     }
 }

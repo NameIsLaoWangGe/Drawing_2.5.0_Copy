@@ -190,10 +190,23 @@ R 311DBFF1 bj.png
 R AD876E59 d.png
 R 01AACCAC d2.png
 P 3F3A6FD8 jb.png
+P 7A9FD0DE kggsy.png
 P 954962E8 lan.png
+P C93A3527 y.png
+P 74712E39 y2.png
 P 2F4BEF3D zan.png
+D Game/UI/Compound
+P E906685B an.png
+P 910F2AAA bi1.png
+P 97ED9C42 bi2.png
+P 18FF3088 gxhd.png
+R 6F816EA8 hf.png
+P DA99B524 k.png
+P 5056AABD qd.png
 D Game/UI/Defeated
 D Game/UI/DesignPic
+R F57C45EB Compound1.png
+R F7EA23D4 Compound2.png
 R 3D70B944 game.png
 R 22791D75 loding.png
 R 81F38B33 Proptry.png
