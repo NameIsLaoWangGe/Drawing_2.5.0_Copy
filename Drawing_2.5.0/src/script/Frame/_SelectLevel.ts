@@ -60,13 +60,13 @@ export module _SelectLevel {
             ads: 'ads',
         };
         static get _arr(): Array<string> {
-            if (!this['_SelectLevel_Data']) {
-                this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _Data._property.name);
+            if (!this['_SelectLevel_Data3']) {
+                this['_SelectLevel_Data3'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data3', _Data._property.name);
             }
-            return this['_SelectLevel_Data'];
+            return this['_SelectLevel_Data3'];
         };
         static set _arr(array: Array<string>) {
-            this['_SelectLevel_Data'] = array;
+            this['_SelectLevel_Data3'] = array;
         };
         // 查看当前名称的关卡是否解锁
         static _getUnlockByName(name: string): any {
@@ -104,7 +104,7 @@ export module _SelectLevel {
                     if (element[this._property.name] == name) {
                         element[pro] = value;
                         _MyList.refresh();
-                        Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                        Laya.LocalStorage.setJSON('_SelectLevel_Data3', JSON.stringify(this._arr));
                         break;
                     }
                 }
@@ -125,7 +125,7 @@ export module _SelectLevel {
                     name = name ? name : this._pich.customs;
                     if (element[this._property.name] == name) {
                         element[this._property.haveBeenDrawn] = imgSkin;
-                        Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                        Laya.LocalStorage.setJSON('_SelectLevel_Data3', JSON.stringify(this._arr));
                     }
                 }
             }

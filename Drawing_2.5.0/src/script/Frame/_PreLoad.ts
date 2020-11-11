@@ -133,8 +133,8 @@ export module _PreloadUrl {
                 url: "_LwgData" + "/_Game/Blink" + ".json",
                 data: new Array,
             },
-            SelectLevel: {
-                url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
+            SelectLevel1: {
+                url: "_LwgData" + "/_SelectLevel/SelectLevel1" + ".json",
                 data: new Array,
             }
         },

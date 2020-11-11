@@ -4086,6 +4086,7 @@
                 }
                 catch (error) {
                     dataArr = Laya.loader.getRes(url)['RECORDS'];
+                    console.log(dataArr);
                     Laya.LocalStorage.setJSON(storageName, JSON.stringify(dataArr));
                     return dataArr;
                 }
@@ -6721,8 +6722,8 @@
                     url: "_LwgData" + "/_Game/Blink" + ".json",
                     data: new Array,
                 },
-                SelectLevel: {
-                    url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
+                SelectLevel1: {
+                    url: "_LwgData" + "/_SelectLevel/SelectLevel1" + ".json",
                     data: new Array,
                 }
             },
@@ -6768,14 +6769,14 @@
             }
             ;
             static get _arr() {
-                if (!this['_SelectLevel_Data']) {
-                    this['_SelectLevel_Data'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data', _Data._property.name);
+                if (!this['_SelectLevel_Data2']) {
+                    this['_SelectLevel_Data2'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel1.url, '_SelectLevel_Data2', _Data._property.name);
                 }
-                return this['_SelectLevel_Data'];
+                return this['_SelectLevel_Data2'];
             }
             ;
             static set _arr(array) {
-                this['_SelectLevel_Data'] = array;
+                this['_SelectLevel_Data2'] = array;
             }
             ;
             static _getUnlockByName(name) {
@@ -6813,7 +6814,7 @@
                         if (element[this._property.name] == name) {
                             element[pro] = value;
                             _SelectLevel._MyList.refresh();
-                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data2', JSON.stringify(this._arr));
                             break;
                         }
                     }
@@ -6828,7 +6829,7 @@
                         name = name ? name : this._pich.customs;
                         if (element[this._property.name] == name) {
                             element[this._property.haveBeenDrawn] = imgSkin;
-                            Laya.LocalStorage.setJSON('_SelectLevel_Data', JSON.stringify(this._arr));
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data2', JSON.stringify(this._arr));
                         }
                     }
                 }
@@ -8839,7 +8840,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Research;
+            Admin._platform.name = Admin._platform.tpye.Bytedance;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,

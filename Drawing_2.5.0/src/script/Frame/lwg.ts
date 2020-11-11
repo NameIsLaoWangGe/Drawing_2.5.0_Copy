@@ -5654,7 +5654,7 @@ export module lwg {
             // 第一步，先尝试从本地缓存获取数据，
             // 第二步，如果本地缓存有，那么需要和数据表中的数据进行对比，把缓存没有的新增对象复制进去
             // 第三步，如果本地缓存没有，那么直接从数据表获取
-            let dataArr;
+            let dataArr:any;
             try {
                 Laya.LocalStorage.getJSON(storageName);
                 // console.log(Laya.LocalStorage.getJSON(storageName));
