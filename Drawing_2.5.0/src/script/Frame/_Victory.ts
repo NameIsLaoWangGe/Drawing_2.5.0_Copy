@@ -1,4 +1,5 @@
 import ADManager, { TaT } from "../TJ/Admanager";
+import RecordManager from "../TJ/RecordManager";
 import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, DateAdmin, PalyAudio, Effects } from "./Lwg";
 import OldEffects from "./OldEffects";
 import { _Game } from "./_Game";
@@ -20,6 +21,7 @@ export module _Victory {
     }
     export class Victory extends _Victory.VictoryBase {
         lwgOnAwake(): void {
+            RecordManager.stopAutoRecord();
             if (_Share._Data._photo._base64) {
                 this.ImgVar('Photo').skin = _Share._Data._photo._base64;
                 this.ImgVar('Photo').scale(0.75, 0.75);

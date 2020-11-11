@@ -22,7 +22,6 @@ export module _Settle {
     export class Settle extends _Settle.SettleBase {
         lwgOnAwake(): void {
             EventAdmin._notify(_Game._Event.playAni1, [true]);
-            RecordManager.stopAutoRecord();
             // 消除颜色
             // let Sp: Laya.Sprite = new Laya.Sprite;
             // Laya.stage.addChild(Sp);
@@ -37,14 +36,15 @@ export module _Settle {
                 EventAdmin._notify(_Game._Event.Photo);
                 this.lwgOpenScene(_SceneName.Share);
             });
-            Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                RecordManager._share('noAward', () => {
-                    ADManager.TAPoint(TaT.BtnClick, 'share_ACT');
-                });
-            });
+            // Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
+            //     RecordManager._share('noAward', () => {
+            //         ADManager.TAPoint(TaT.BtnClick, 'share_ACT');
+            //     });
+            // });
         }
 
         lwgOnDisable(): void {
+            RecordManager.stopAutoRecord();
             ADManager.TAPoint(TaT.PageLeave, 'ACTpage');
         }
     }

@@ -33,10 +33,10 @@
         {
             "x":15,
             "type":"List",
-            "searchKey":"List,MyList,MyList",
-            "props":{"x":0,"width":720,"var":"MyList","top":38,"spaceY":-150,"rotation":0,"name":"MyList","height":922,"bottom":320},
+            "searchKey":"List,NoAni_MyList,MyList",
+            "props":{"y":38,"x":0,"width":720,"var":"MyList","spaceY":-150,"rotation":0,"name":"NoAni_MyList","height":922},
             "nodeParent":2,
-            "label":"MyList",
+            "label":"NoAni_MyList",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
@@ -468,10 +468,65 @@
     "animations":[
         {
             "nodes":[
-                ],
+                {
+                    "target":17,
+                    "keyframes":{
+                        "y":[
+                            {
+                                "value":-312,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"y",
+                                "index":0
+                            },
+                            {
+                                "value":38,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"y",
+                                "index":30
+                            }],
+                        "x":[
+                            {
+                                "value":-290,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"x",
+                                "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"x",
+                                "index":30
+                            }],
+                        "rotation":[
+                            {
+                                "value":67,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"rotation",
+                                "index":0
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":17,
+                                "key":"rotation",
+                                "index":30
+                            }]
+                    }
+                }],
             "name":"ani1",
             "id":1,
-            "frameRate":24,
-            "action":0
+            "frameRate":60,
+            "action":1
         }]
 }

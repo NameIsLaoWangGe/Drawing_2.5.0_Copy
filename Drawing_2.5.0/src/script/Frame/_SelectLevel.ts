@@ -290,6 +290,7 @@ export module _SelectLevel {
         lwgAdaptive(): void {
             this.ImgVar('UiLand').y = Laya.stage.height - 74;
             this.ImgVar('BtnBack').y = Laya.stage.height - 80;
+            this.ListVar('MyList').height = Laya.stage.height - 320;
         }
         lwgEventRegister(): void {
             EventAdmin._register(_Event._SelectLevel_Close, this, () => {

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":8,
+    "selectedBox":24,
+    "selecteID":15,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
@@ -73,7 +73,7 @@
                     "x":30,
                     "type":"Image",
                     "searchKey":"Image,BtnContinue,BtnContinue",
-                    "props":{"y":63,"x":418,"width":230,"var":"BtnContinue","skin":"Game/UI/Common/zan.png","pivotY":42,"pivotX":115,"name":"BtnContinue","height":105},
+                    "props":{"y":56,"width":230,"var":"BtnContinue","skin":"Game/UI/Common/zan.png","pivotY":42,"pivotX":115,"name":"BtnContinue","height":105,"centerX":0},
                     "nodeParent":24,
                     "label":"BtnContinue",
                     "isOpen":false,
@@ -92,33 +92,6 @@
                             "isAniNode":true,
                             "hasChild":false,
                             "compId":18,
-                            "child":[
-                                ]
-                        }]
-                },
-                {
-                    "x":30,
-                    "type":"Image",
-                    "searchKey":"Image,BtnShare,BtnShare",
-                    "props":{"y":70,"x":136,"width":230,"var":"BtnShare","skin":"Game/UI/Common/lan.png","pivotY":49,"pivotX":115,"name":"BtnShare","height":98},
-                    "nodeParent":24,
-                    "label":"BtnShare",
-                    "isOpen":false,
-                    "isDirectory":true,
-                    "isAniNode":true,
-                    "hasChild":true,
-                    "compId":16,
-                    "child":[
-                        {
-                            "type":"Image",
-                            "searchKey":"Image",
-                            "props":{"skin":"Game/UI/Settle/fx.png","centerY":-8,"centerX":0},
-                            "nodeParent":16,
-                            "label":"Image",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":17,
                             "child":[
                                 ]
                         }]

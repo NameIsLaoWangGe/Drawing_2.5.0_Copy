@@ -2,16 +2,29 @@ import ADManager from "../TJ/Admanager";
 import { Admin, Click, Dialogue, EventAdmin, Tools } from "./Lwg";
 import OldEffects from "./OldEffects";
 import { _Game } from "./_Game";
+import _GameBlinkItem from "./_GameBlinkItem";
 
 export module _Compound {
     export let Skin1: string;
     export let Skin2: string;
     export class Compound extends Admin._SceneBase {
         lwgOnAwake(): void {
-            this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/Single/${Skin1}.png`;
+            if (Skin1 == 'colours') {
+                Skin1 = _Game._ColoursPencils._pitchName;
+                this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${Skin1}.png`;
+            } else {
+                this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/Single/${Skin1}.png`;
+            }
             this.ImgVar('Pencil1').sizeGrid = '112,0,17,0';
-            this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/Single/${Skin2}.png`;
+
+            if (Skin2 == 'colours') {
+                Skin2 = _Game._ColoursPencils._pitchName;
+                this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${Skin2}.png`;
+            } else {
+                this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/Single/${Skin2}.png`;
+            }
             this.ImgVar('Pencil2').sizeGrid = '112,0,17,0';
+
             this.getCompound.setPro(Tools.randomOneHalf());
         }
         getCompound = {

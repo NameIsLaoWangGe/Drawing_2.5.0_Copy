@@ -5546,6 +5546,11 @@
     let Backpack = lwg.Backpack;
     let BackpackScene = lwg.Backpack.BackpackScene;
 
+    class _GamePencilItem extends Admin._Object {
+        lwgBtnClick() {
+        }
+    }
+
     var _Task;
     (function (_Task) {
         _Task._allClassifyArr = [];
@@ -5885,6 +5890,111 @@
         TaT[TaT["LevelFail"] = 7] = "LevelFail";
     })(TaT || (TaT = {}));
 
+    class RecordManager {
+        constructor() {
+            this.GRV = null;
+            this.isRecordVideoing = false;
+            this.isVideoRecord = false;
+            this.videoRecordTimer = 0;
+            this.isHasVideoRecord = false;
+        }
+        static Init() {
+            RecordManager.grv = new TJ.Platform.AppRt.DevKit.TT.GameRecorderVideo();
+        }
+        static startAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.grv == null)
+                RecordManager.Init();
+            if (RecordManager.recording)
+                return;
+            RecordManager.autoRecording = true;
+            console.log("******************开始录屏");
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopAutoRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (!RecordManager.autoRecording) {
+                console.log("RecordManager.autoRecording", RecordManager.autoRecording);
+                return false;
+            }
+            RecordManager.autoRecording = false;
+            RecordManager._end(false);
+            if (Date.now() - RecordManager.lastRecordTime > 6000) {
+                return true;
+            }
+            if (Date.now() - RecordManager.lastRecordTime < 3000) {
+                console.log("小于3秒");
+                return false;
+            }
+            return true;
+        }
+        static startRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            if (RecordManager.autoRecording) {
+                this.stopAutoRecord();
+            }
+            RecordManager.recording = true;
+            RecordManager._start();
+            RecordManager.lastRecordTime = Date.now();
+        }
+        static stopRecord() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("time:" + (Date.now() - RecordManager.lastRecordTime));
+            if (Date.now() - RecordManager.lastRecordTime <= 3000) {
+                return false;
+            }
+            RecordManager.recording = false;
+            RecordManager._end(true);
+            return true;
+        }
+        static _start() {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180s  ？？？？？");
+            RecordManager.grv.Start(180);
+        }
+        static _end(share) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************180结束 ？？？？？");
+            RecordManager.grv.Stop(share);
+        }
+        static _share(type, successedAc, completedAc = null, failAc = null) {
+            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
+                return;
+            console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
+            if (RecordManager.grv.videoPath) {
+                let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
+                p.extra.videoTopics = ["涂鸦小画手", "番茄小游戏", "抖音小游戏"];
+                p.channel = "video";
+                p.success = () => {
+                    Dialogue.createHint_Middle("分享成功!");
+                    successedAc();
+                };
+                p.fail = () => {
+                    if (type === 'noAward') {
+                        Dialogue.createHint_Middle("分享失败！");
+                    }
+                    else {
+                        Dialogue.createHint_Middle("分享成功后才能获取奖励！");
+                    }
+                    failAc();
+                };
+                RecordManager.grv.Share(p);
+            }
+            else {
+                Dialogue.createHint_Middle("暂无视频，玩一局游戏之后分享！");
+            }
+        }
+    }
+    RecordManager.recording = false;
+    RecordManager.autoRecording = false;
+
     var OldEffects;
     (function (OldEffects) {
         let SkinUrl;
@@ -6194,247 +6304,98 @@
     })(OldEffects || (OldEffects = {}));
     var OldEffects$1 = OldEffects;
 
-    class RecordManager {
-        constructor() {
-            this.GRV = null;
-            this.isRecordVideoing = false;
-            this.isVideoRecord = false;
-            this.videoRecordTimer = 0;
-            this.isHasVideoRecord = false;
-        }
-        static Init() {
-            RecordManager.grv = new TJ.Platform.AppRt.DevKit.TT.GameRecorderVideo();
-        }
-        static startAutoRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (RecordManager.grv == null)
-                RecordManager.Init();
-            if (RecordManager.recording)
-                return;
-            RecordManager.autoRecording = true;
-            console.log("******************开始录屏");
-            RecordManager._start();
-            RecordManager.lastRecordTime = Date.now();
-        }
-        static stopAutoRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (!RecordManager.autoRecording) {
-                console.log("RecordManager.autoRecording", RecordManager.autoRecording);
-                return false;
-            }
-            RecordManager.autoRecording = false;
-            RecordManager._end(false);
-            if (Date.now() - RecordManager.lastRecordTime > 6000) {
-                return true;
-            }
-            if (Date.now() - RecordManager.lastRecordTime < 3000) {
-                console.log("小于3秒");
-                return false;
-            }
-            return true;
-        }
-        static startRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            if (RecordManager.autoRecording) {
-                this.stopAutoRecord();
-            }
-            RecordManager.recording = true;
-            RecordManager._start();
-            RecordManager.lastRecordTime = Date.now();
-        }
-        static stopRecord() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("time:" + (Date.now() - RecordManager.lastRecordTime));
-            if (Date.now() - RecordManager.lastRecordTime <= 3000) {
-                return false;
-            }
-            RecordManager.recording = false;
-            RecordManager._end(true);
-            return true;
-        }
-        static _start() {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************180s  ？？？？？");
-            RecordManager.grv.Start(180);
-        }
-        static _end(share) {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************180结束 ？？？？？");
-            RecordManager.grv.Stop(share);
-        }
-        static _share(type, successedAc, completedAc = null, failAc = null) {
-            if (TJ.API.AppInfo.Channel() != TJ.Define.Channel.AppRt.ZJTD_AppRt)
-                return;
-            console.log("******************吊起分享 ？？？？？", RecordManager.grv, RecordManager.grv.videoPath);
-            if (RecordManager.grv.videoPath) {
-                let p = new TJ.Platform.AppRt.Extern.TT.ShareAppMessageParam();
-                p.extra.videoTopics = ["涂鸦小画手", "番茄小游戏", "抖音小游戏"];
-                p.channel = "video";
-                p.success = () => {
-                    Dialogue.createHint_Middle("分享成功!");
-                    successedAc();
+    var _Compound;
+    (function (_Compound) {
+        class Compound extends Admin._SceneBase {
+            constructor() {
+                super(...arguments);
+                this.getCompound = {
+                    setPro: (p) => {
+                        console.log(p);
+                        if (p == 1) {
+                            this.getCompound.name = _Game._BlinkPencils._randomNoHaveOne();
+                            if (this.getCompound.name == null) {
+                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
+                                this.btnVar('BtnConfirm').visible = true;
+                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
+                            }
+                            else {
+                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = true;
+                                this.btnVar('BtnConfirm').visible = false;
+                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Blink/${this.getCompound.name}.png`;
+                            }
+                        }
+                        else {
+                            this.getCompound.name = _Game._GeneralPencils._randomOne();
+                            this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
+                            this.btnVar('BtnConfirm').visible = true;
+                            this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
+                        }
+                        this['_pro'] = p;
+                    },
+                    name: null,
                 };
-                p.fail = () => {
-                    if (type === 'noAward') {
-                        Dialogue.createHint_Middle("分享失败！");
-                    }
-                    else {
-                        Dialogue.createHint_Middle("分享成功后才能获取奖励！");
-                    }
-                    failAc();
-                };
-                RecordManager.grv.Share(p);
             }
-            else {
-                Dialogue.createHint_Middle("暂无视频，玩一局游戏之后分享！");
-            }
-        }
-    }
-    RecordManager.recording = false;
-    RecordManager.autoRecording = false;
-
-    var _PreloadUrl;
-    (function (_PreloadUrl) {
-        _PreloadUrl._list = {
-            prefab2D: {
-                LwgGold: {
-                    url: 'Prefab/LwgGold.json',
-                    prefab: new Laya.Prefab,
-                },
-                PencilsList: {
-                    url: 'Prefab/PencilsList.json',
-                    prefab: new Laya.Prefab,
-                },
-                StepSwitch: {
-                    url: 'Prefab/StepSwitch.json',
-                    prefab: new Laya.Prefab,
-                },
-                BtnCompelet: {
-                    url: 'Prefab/BtnCompelet.json',
-                    prefab: new Laya.Prefab,
-                },
-                BtnTurnLeft: {
-                    url: 'Prefab/BtnTurnLeft.json',
-                    prefab: new Laya.Prefab,
-                },
-                BtnTurnRight: {
-                    url: 'Prefab/BtnTurnRight.json',
-                    prefab: new Laya.Prefab,
-                },
-            },
-            texture: {
-                bishua1: {
-                    url: 'Game/UI/GameScene/bishua1.png',
-                    texture: new Laya.Texture,
-                },
-                bishua2: {
-                    url: 'Game/UI/GameScene/bishua2.png',
-                    texture: new Laya.Texture,
-                },
-                bishua3: {
-                    url: 'Game/UI/GameScene/bishua3.png',
-                    texture: new Laya.Texture,
-                },
-                bishua4: {
-                    url: 'Game/UI/GameScene/bishua4.png',
-                    texture: new Laya.Texture,
-                },
-                bishua5: {
-                    url: 'Game/UI/GameScene/bishua5.png',
-                    texture: new Laya.Texture,
-                },
-                bishua6: {
-                    url: 'Game/UI/GameScene/bishua6.png',
-                    texture: new Laya.Texture,
-                },
-                blink1: {
-                    url: 'Game/UI/GameScene/blink1.png',
-                    texture: new Laya.Texture,
-                },
-                blink2: {
-                    url: 'Game/UI/GameScene/blink2.png',
-                    texture: new Laya.Texture,
-                },
-                blink3: {
-                    url: 'Game/UI/GameScene/blink3.png',
-                    texture: new Laya.Texture,
-                },
-                blink4: {
-                    url: 'Game/UI/GameScene/blink4.png',
-                    texture: new Laya.Texture,
-                },
-            },
-            scene2D: {
-                Start: `Scene/${_SceneName.Start}.json`,
-                AdsHint: `Scene/${_SceneName.AdsHint}.json`,
-                Special: `Scene/${_SceneName.Special}.json`,
-                Victory: `Scene/${_SceneName.Victory}.json`,
-                SelectLevel: `Scene/${_SceneName.SelectLevel}.json`,
-                Settle: `Scene/${_SceneName.Settle}.json`,
-                PropTry: `Scene/${_SceneName.PropTry}.json`,
-                PreLoadStep: `Scene/${_SceneName.PreLoadStep}.json`,
-                Share: `Scene/${_SceneName.Share}.json`,
-                Game_dinglaotai: `Scene/Game_dinglaotai.json`,
-                Game_dinglaotou: `Scene/Game_dinglaotou.json`,
-                Game_haitun: `Scene/Game_haitun.json`,
-                Game_maomaochong: `Scene/Game_maomaochong.json`,
-                Game_maotouying: `Scene/Game_maotouying.json`,
-                Game_wanshengnangua: `Scene/Game_wanshengnangua.json`,
-                Game_wugui: `Scene/Game_wugui.json`,
-                Game_xiaohonghua: `Scene/Game_xiaohonghua.json`,
-                Game_xiaohuamao: `Scene/Game_xiaohuamao.json`,
-                Game_xiaonainiu: `Scene/Game_xiaonainiu.json`,
-                Game_xiaoqiche: `Scene/Game_xiaoqiche.json`,
-                Game_zhangyugege: `Scene/Game_zhangyugege.json`,
-            },
-            json: {
-                General: {
-                    url: "_LwgData" + "/_Game/General" + ".json",
-                    data: new Array,
-                },
-                Colours: {
-                    url: "_LwgData" + "/_Game/Colours" + ".json",
-                    data: new Array,
-                },
-                Blink: {
-                    url: "_LwgData" + "/_Game/Blink" + ".json",
-                    data: new Array,
-                },
-                SelectLevel: {
-                    url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
-                    data: new Array,
+            lwgOnAwake() {
+                if (_Compound.Skin1 == 'colours') {
+                    _Compound.Skin1 = _Game._ColoursPencils._pitchName;
+                    this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_Compound.Skin1}.png`;
                 }
-            },
-        };
-    })(_PreloadUrl || (_PreloadUrl = {}));
-    var _PreLoad;
-    (function (_PreLoad) {
-        class PreLoad extends _LwgPreLoad._PreLoadScene {
-            lwgOnStart() {
-                ADManager.TAPoint(TaT.PageShow, 'loadpage');
+                else {
+                    this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin1}.png`;
+                }
+                this.ImgVar('Pencil1').sizeGrid = '112,0,17,0';
+                if (_Compound.Skin2 == 'colours') {
+                    _Compound.Skin2 = _Game._ColoursPencils._pitchName;
+                    this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_Compound.Skin2}.png`;
+                }
+                else {
+                    this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin2}.png`;
+                }
+                this.ImgVar('Pencil2').sizeGrid = '112,0,17,0';
+                this.getCompound.setPro(Tools.randomOneHalf());
+            }
+            lwgOnEnable() {
+                _Game._activate = false;
                 this.AniVar('ani1').play(0, false);
                 this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
-                    EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+                    OldEffects$1.createFireworks(Laya.stage, 40, 430, 200);
+                    OldEffects$1.createFireworks(Laya.stage, 40, 109, 200);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
+                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
                 });
             }
-            lwgOpenAni() { return 1; }
-            lwgStepComplete() {
+            lwgOpenAni() {
+                return 100;
             }
-            lwgAllComplete() {
-                return 1000;
-            }
-            lwgOnDisable() {
-                ADManager.TAPoint(TaT.PageLeave, 'loadpage');
+            lwgBtnClick() {
+                var close = () => {
+                    _Game._activate = true;
+                    this.lwgCloseScene();
+                };
+                Click._on(Click._Type.largen, this.btnVar('BtnConfirm'), this, null, null, (e) => {
+                    _Game._GeneralPencils._pitchName = this.getCompound.name;
+                    EventAdmin._notify(_Game._Event.turnLeft);
+                    close();
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnGet'), this, null, null, (e) => {
+                    ADManager.ShowReward(() => {
+                        EventAdmin._notify(_Game._Event.turnRight);
+                        _Game._BlinkPencils._pitchName = this.getCompound.name;
+                        _Game._BlinkPencils._addPencil(this.getCompound.name);
+                        Dialogue.createHint_Middle(`恭喜获得一只新的闪光画笔！`);
+                        close();
+                    });
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnNo'), this, null, null, (e) => {
+                    EventAdmin._notify(_Game._Event.turnLeft);
+                    close();
+                });
             }
         }
-        _PreLoad.PreLoad = PreLoad;
-    })(_PreLoad || (_PreLoad = {}));
+        _Compound.Compound = Compound;
+    })(_Compound || (_Compound = {}));
+    var _Compound$1 = _Compound.Compound;
 
     class shieldTime {
     }
@@ -6653,163 +6614,142 @@
         }
     }
 
-    var _PropTry;
-    (function (_PropTry) {
-        _PropTry._presentTry = false;
-        _PropTry._comeFrom = _SceneName.SelectLevel;
-        function _init() { }
-        _PropTry._init = _init;
-        let _Event;
-        (function (_Event) {
-            _Event["_PropTryClose"] = "_PropTryClose";
-        })(_Event = _PropTry._Event || (_PropTry._Event = {}));
-        class PropTryBase extends Admin._SceneBase {
-            moduleOnAwake() {
-                ADManager.TAPoint(TaT.PageShow, 'skintrypage');
-                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
-                if (_PropTry._comeFrom == _SceneName.SelectLevel) {
-                    _Game._GeneralPencils._pitchName = _Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name];
-                    _Game._ColoursPencils._switch = false;
+    var _PreloadUrl;
+    (function (_PreloadUrl) {
+        _PreloadUrl._list = {
+            prefab2D: {
+                LwgGold: {
+                    url: 'Prefab/LwgGold.json',
+                    prefab: new Laya.Prefab,
+                },
+                PencilsList: {
+                    url: 'Prefab/PencilsList.json',
+                    prefab: new Laya.Prefab,
+                },
+                StepSwitch: {
+                    url: 'Prefab/StepSwitch.json',
+                    prefab: new Laya.Prefab,
+                },
+                BtnCompelet: {
+                    url: 'Prefab/BtnCompelet.json',
+                    prefab: new Laya.Prefab,
+                },
+                BtnTurnLeft: {
+                    url: 'Prefab/BtnTurnLeft.json',
+                    prefab: new Laya.Prefab,
+                },
+                BtnTurnRight: {
+                    url: 'Prefab/BtnTurnRight.json',
+                    prefab: new Laya.Prefab,
+                },
+            },
+            texture: {
+                bishua1: {
+                    url: 'Game/UI/GameScene/bishua1.png',
+                    texture: new Laya.Texture,
+                },
+                bishua2: {
+                    url: 'Game/UI/GameScene/bishua2.png',
+                    texture: new Laya.Texture,
+                },
+                bishua3: {
+                    url: 'Game/UI/GameScene/bishua3.png',
+                    texture: new Laya.Texture,
+                },
+                bishua4: {
+                    url: 'Game/UI/GameScene/bishua4.png',
+                    texture: new Laya.Texture,
+                },
+                bishua5: {
+                    url: 'Game/UI/GameScene/bishua5.png',
+                    texture: new Laya.Texture,
+                },
+                bishua6: {
+                    url: 'Game/UI/GameScene/bishua6.png',
+                    texture: new Laya.Texture,
+                },
+                blink1: {
+                    url: 'Game/UI/GameScene/blink1.png',
+                    texture: new Laya.Texture,
+                },
+                blink2: {
+                    url: 'Game/UI/GameScene/blink2.png',
+                    texture: new Laya.Texture,
+                },
+                blink3: {
+                    url: 'Game/UI/GameScene/blink3.png',
+                    texture: new Laya.Texture,
+                },
+                blink4: {
+                    url: 'Game/UI/GameScene/blink4.png',
+                    texture: new Laya.Texture,
+                },
+            },
+            scene2D: {
+                Start: `Scene/${_SceneName.Start}.json`,
+                AdsHint: `Scene/${_SceneName.AdsHint}.json`,
+                Special: `Scene/${_SceneName.Special}.json`,
+                Victory: `Scene/${_SceneName.Victory}.json`,
+                SelectLevel: `Scene/${_SceneName.SelectLevel}.json`,
+                Settle: `Scene/${_SceneName.Settle}.json`,
+                PropTry: `Scene/${_SceneName.PropTry}.json`,
+                PreLoadStep: `Scene/${_SceneName.PreLoadStep}.json`,
+                Share: `Scene/${_SceneName.Share}.json`,
+                Game_dinglaotai: `Scene/Game_dinglaotai.json`,
+                Game_dinglaotou: `Scene/Game_dinglaotou.json`,
+                Game_haitun: `Scene/Game_haitun.json`,
+                Game_maomaochong: `Scene/Game_maomaochong.json`,
+                Game_maotouying: `Scene/Game_maotouying.json`,
+                Game_wanshengnangua: `Scene/Game_wanshengnangua.json`,
+                Game_wugui: `Scene/Game_wugui.json`,
+                Game_xiaohonghua: `Scene/Game_xiaohonghua.json`,
+                Game_xiaohuamao: `Scene/Game_xiaohuamao.json`,
+                Game_xiaonainiu: `Scene/Game_xiaonainiu.json`,
+                Game_xiaoqiche: `Scene/Game_xiaoqiche.json`,
+                Game_zhangyugege: `Scene/Game_zhangyugege.json`,
+            },
+            json: {
+                General: {
+                    url: "_LwgData" + "/_Game/General" + ".json",
+                    data: new Array,
+                },
+                Colours: {
+                    url: "_LwgData" + "/_Game/Colours" + ".json",
+                    data: new Array,
+                },
+                Blink: {
+                    url: "_LwgData" + "/_Game/Blink" + ".json",
+                    data: new Array,
+                },
+                SelectLevel: {
+                    url: "_LwgData" + "/_SelectLevel/SelectLevel" + ".json",
+                    data: new Array,
                 }
+            },
+        };
+    })(_PreloadUrl || (_PreloadUrl = {}));
+    var _PreLoad;
+    (function (_PreLoad) {
+        class PreLoad extends _LwgPreLoad._PreLoadScene {
+            lwgOnStart() {
+                ADManager.TAPoint(TaT.PageShow, 'loadpage');
+                this.AniVar('ani1').play(0, false);
+                this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
+                    EventAdmin._notify(_LwgPreLoad._Event.importList, (_PreloadUrl._list));
+                });
+            }
+            lwgOpenAni() { return 1; }
+            lwgStepComplete() {
+            }
+            lwgAllComplete() {
+                return 1000;
+            }
+            lwgOnDisable() {
+                ADManager.TAPoint(TaT.PageLeave, 'loadpage');
             }
         }
-        _PropTry.PropTryBase = PropTryBase;
-        class PropTry extends PropTryBase {
-            lwgOnAwake() {
-                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
-                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
-                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
-                }
-                else {
-                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
-                    if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
-                        Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
-                    }
-                }
-            }
-            lwgOnEnable() {
-                this.ImgVar('BtnClose').visible = false;
-                Laya.timer.once(2000, this, () => {
-                    this.ImgVar('BtnClose').visible = true;
-                });
-            }
-            lwgEventRegister() {
-                EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
-                    if (_PropTry._comeFrom == _SceneName.SelectLevel) {
-                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
-                        this.lwgOpenScene(levelName, true, () => {
-                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
-                                Admin._sceneControl[levelName].addComponent(_Game.Game);
-                            }
-                        });
-                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
-                    }
-                    else {
-                        this.lwgCloseScene();
-                    }
-                });
-            }
-            lwgBtnClick() {
-                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Low_Select'), this, null, null, this.bytedanceSelectUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Low_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Mid_Select'), this, null, null, this.bytedanceSelectUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Mid_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
-                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    this.advFunc();
-                });
-                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e) => {
-                    e.stopPropagation();
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-            }
-            clickBgtUp(e) {
-                e.stopPropagation();
-                if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
-                    return;
-                }
-                let Dot;
-                if (this.ImgVar('Low').visible) {
-                    Dot = this.ImgVar('Bytedance_Low_Dot');
-                }
-                else if (this.ImgVar('Mid').visible) {
-                    Dot = this.ImgVar('Bytedance_Mid_Dot');
-                }
-                if (!Dot) {
-                    return;
-                }
-                if (Dot.visible) {
-                    this.advFunc();
-                }
-                else {
-                    EventAdmin._notify(_Event._PropTryClose);
-                }
-            }
-            bytedanceGetUp(e) {
-                e.stopPropagation();
-                this.advFunc();
-            }
-            bytedanceSelectUp(e) {
-                e.stopPropagation();
-                if (this.ImgVar('Low').visible) {
-                    if (!this.ImgVar('Low')['count']) {
-                        this.ImgVar('Low')['count'] = 0;
-                    }
-                    this.ImgVar('Low')['count']++;
-                    if (this.ImgVar('Low')['count'] >= 4) {
-                        if (this.ImgVar('Bytedance_Low_Dot').visible) {
-                            this.ImgVar('Bytedance_Low_Dot').visible = false;
-                        }
-                        else {
-                            this.ImgVar('Bytedance_Low_Dot').visible = true;
-                        }
-                    }
-                    if (ZJADMgr.ins.CheckPlayVideo()) {
-                        ADManager.ShowReward(null);
-                    }
-                }
-                else if (this.ImgVar('Mid').visible) {
-                    if (!this.ImgVar('Mid')['count']) {
-                        this.ImgVar('Mid')['count'] = 0;
-                    }
-                    this.ImgVar('Mid')['count']++;
-                    if (this.ImgVar('Mid')['count'] >= 4) {
-                        if (this.ImgVar('Bytedance_Mid_Dot').visible) {
-                            this.ImgVar('Bytedance_Mid_Dot').visible = false;
-                        }
-                        else {
-                            this.ImgVar('Bytedance_Mid_Dot').visible = true;
-                        }
-                    }
-                }
-            }
-            advFunc() {
-                ADManager.ShowReward(() => {
-                    ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
-                    _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
-                    _Game._ColoursPencils._switch = true;
-                    _Game._ColoursPencils._clickNum = 2;
-                    EventAdmin._notify(_Event._PropTryClose);
-                });
-            }
-            onDisable() {
-                _Game._activate = true;
-                ADManager.TAPoint(TaT.PageLeave, 'skintrypage');
-            }
-        }
-        _PropTry.PropTry = PropTry;
-    })(_PropTry || (_PropTry = {}));
-    var _PropTry$1 = _PropTry.PropTry;
+        _PreLoad.PreLoad = PreLoad;
+    })(_PreLoad || (_PreLoad = {}));
 
     var _SelectLevel;
     (function (_SelectLevel) {
@@ -7091,6 +7031,7 @@
             lwgAdaptive() {
                 this.ImgVar('UiLand').y = Laya.stage.height - 74;
                 this.ImgVar('BtnBack').y = Laya.stage.height - 80;
+                this.ListVar('MyList').height = Laya.stage.height - 320;
             }
             lwgEventRegister() {
                 EventAdmin._register(_Event._SelectLevel_Close, this, () => {
@@ -7138,6 +7079,297 @@
         _SelectLevel.SelectLevel = SelectLevel;
     })(_SelectLevel || (_SelectLevel = {}));
     var _SelectLevel$1 = _SelectLevel.SelectLevel;
+
+    var _PropTry;
+    (function (_PropTry) {
+        _PropTry._presentTry = false;
+        _PropTry._comeFrom = _SceneName.SelectLevel;
+        function _init() { }
+        _PropTry._init = _init;
+        let _Event;
+        (function (_Event) {
+            _Event["_PropTryClose"] = "_PropTryClose";
+        })(_Event = _PropTry._Event || (_PropTry._Event = {}));
+        class PropTryBase extends Admin._SceneBase {
+            moduleOnAwake() {
+                ADManager.TAPoint(TaT.PageShow, 'skintrypage');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
+                if (_PropTry._comeFrom == _SceneName.SelectLevel) {
+                    _Game._GeneralPencils._pitchName = _Game._GeneralPencils._data[0][_Game._GeneralPencils._property.name];
+                    _Game._ColoursPencils._switch = false;
+                }
+            }
+        }
+        _PropTry.PropTryBase = PropTryBase;
+        class PropTry extends PropTryBase {
+            lwgOnAwake() {
+                if (Admin._platform.name == Admin._platform.tpye.Research || Admin._platform.name == Admin._platform.tpye.WebTest) {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.tpye.Bytedance], true);
+                    Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), ['High'], true);
+                }
+                else {
+                    Tools.Node.showExcludedChild2D(this.ImgVar('Platform'), [Admin._platform.name], true);
+                    if (Admin._platform.name == Admin._platform.tpye.Bytedance) {
+                        Tools.Node.showExcludedChild2D(this.ImgVar(Admin._platform.tpye.Bytedance), [ZJADMgr.ins.shieldLevel], true);
+                    }
+                }
+            }
+            lwgOnEnable() {
+                this.ImgVar('BtnClose').visible = false;
+                Laya.timer.once(2000, this, () => {
+                    this.ImgVar('BtnClose').visible = true;
+                });
+            }
+            lwgEventRegister() {
+                EventAdmin._registerOnce(_Event._PropTryClose, this, () => {
+                    if (_PropTry._comeFrom == _SceneName.SelectLevel) {
+                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                        this.lwgOpenScene(levelName, true, () => {
+                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                            }
+                        });
+                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                    }
+                    else {
+                        this.lwgCloseScene();
+                    }
+                });
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Low_Select'), this, null, null, this.bytedanceSelectUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Low_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.noEffect, this.ImgVar('Bytedance_Mid_Select'), this, null, null, this.bytedanceSelectUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_Mid_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.noEffect, this.ImgVar('ClickBg'), this, null, null, this.clickBgtUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnGet'), this, null, null, this.bytedanceGetUp);
+                Click._on(Click._Type.largen, this.ImgVar('Bytedance_High_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnNo'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+                Click._on(Click._Type.largen, this.ImgVar('OPPO_BtnGet'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    this.advFunc();
+                });
+                Click._on(Click._Type.largen, this.ImgVar('BtnClose'), this, null, null, (e) => {
+                    e.stopPropagation();
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+            }
+            clickBgtUp(e) {
+                e.stopPropagation();
+                if (Admin._platform.name !== Admin._platform.tpye.Bytedance) {
+                    return;
+                }
+                let Dot;
+                if (this.ImgVar('Low').visible) {
+                    Dot = this.ImgVar('Bytedance_Low_Dot');
+                }
+                else if (this.ImgVar('Mid').visible) {
+                    Dot = this.ImgVar('Bytedance_Mid_Dot');
+                }
+                if (!Dot) {
+                    return;
+                }
+                if (Dot.visible) {
+                    this.advFunc();
+                }
+                else {
+                    EventAdmin._notify(_Event._PropTryClose);
+                }
+            }
+            bytedanceGetUp(e) {
+                e.stopPropagation();
+                this.advFunc();
+            }
+            bytedanceSelectUp(e) {
+                e.stopPropagation();
+                if (this.ImgVar('Low').visible) {
+                    if (!this.ImgVar('Low')['count']) {
+                        this.ImgVar('Low')['count'] = 0;
+                    }
+                    this.ImgVar('Low')['count']++;
+                    if (this.ImgVar('Low')['count'] >= 4) {
+                        if (this.ImgVar('Bytedance_Low_Dot').visible) {
+                            this.ImgVar('Bytedance_Low_Dot').visible = false;
+                        }
+                        else {
+                            this.ImgVar('Bytedance_Low_Dot').visible = true;
+                        }
+                    }
+                    if (ZJADMgr.ins.CheckPlayVideo()) {
+                        ADManager.ShowReward(null);
+                    }
+                }
+                else if (this.ImgVar('Mid').visible) {
+                    if (!this.ImgVar('Mid')['count']) {
+                        this.ImgVar('Mid')['count'] = 0;
+                    }
+                    this.ImgVar('Mid')['count']++;
+                    if (this.ImgVar('Mid')['count'] >= 4) {
+                        if (this.ImgVar('Bytedance_Mid_Dot').visible) {
+                            this.ImgVar('Bytedance_Mid_Dot').visible = false;
+                        }
+                        else {
+                            this.ImgVar('Bytedance_Mid_Dot').visible = true;
+                        }
+                    }
+                }
+            }
+            advFunc() {
+                ADManager.ShowReward(() => {
+                    ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_skintry');
+                    _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
+                    _Game._ColoursPencils._switch = true;
+                    _Game._ColoursPencils._clickNum = 2;
+                    EventAdmin._notify(_Event._PropTryClose);
+                });
+            }
+            onDisable() {
+                _Game._activate = true;
+                ADManager.TAPoint(TaT.PageLeave, 'skintrypage');
+            }
+        }
+        _PropTry.PropTry = PropTry;
+    })(_PropTry || (_PropTry = {}));
+    var _PropTry$1 = _PropTry.PropTry;
+
+    class _GameItem extends Admin._Object {
+        constructor() {
+            super(...arguments);
+            this.Compound = {
+                Pic: null,
+                time: 0,
+                restrict: 1,
+                Img: null,
+                firstPos: null,
+                PosArr: null,
+                homing: () => {
+                    if (this.Compound.Img) {
+                        this.Compound.Img.destroy();
+                        this.Compound.Img = null;
+                        this.Compound.Pic.visible = true;
+                    }
+                },
+                remake: () => {
+                    this.Compound.homing();
+                    this.Compound.time = 0;
+                    _Game._GeneralPencils._compoundName = null;
+                    _Game._activate = true;
+                }
+            };
+        }
+        lwgOnAwake() {
+            this.Compound.Pic = this.Owner.getChildByName('Pic');
+        }
+        lwgOnStart() {
+            var caller = {};
+            TimerAdmin._frameLoop(1, caller, () => {
+                if (this.Owner['_dataSource']) {
+                    Laya.timer.clearAll(caller);
+                    Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
+                        if (!this.Owner.getComponents(_GameItem)) {
+                            !this.Owner.addComponent(_GameItem);
+                        }
+                        if ((_Game._GeneralPencils._pitchName == this.Owner['_dataSource'][_Game._GeneralPencils._property.name])) {
+                            Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
+                                Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
+                                    this.Owner.rotation = 0;
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        onStageMouseMove(e) {
+            if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.Img) {
+                _Game._activate = false;
+                _Game._GeneralPencils._compoundName = this.Owner['_dataSource']['name'];
+                this.Compound.Img.visible = true;
+                this.Compound.Pic.visible = false;
+                this.Compound.Img.pos(e.stageX, e.stageY);
+            }
+        }
+        onStageMouseUp(e) {
+            if (this.Owner['_dataSource']) {
+                this.Compound.remake();
+            }
+        }
+        lwgBtnClick() {
+            Click._on(Click._Type.noEffect, this.Compound.Pic, this, (e) => {
+                if (!this.Compound.Img && this.Owner['_dataSource']) {
+                    this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
+                    this.Compound.Img = new Laya.Image;
+                    this.OwnerScene.addChild(this.Compound.Img);
+                    this.Compound.Img.zOrder = 300;
+                    this.Compound.Img.width = this.Compound.Pic.width;
+                    this.Compound.Img.height = this.Compound.Pic.height;
+                    this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
+                    Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
+                    this.Compound.Img.skin = this.Compound.Pic.skin;
+                    this.Compound.Img.visible = false;
+                }
+                e.stopPropagation();
+            }, (e) => {
+                this.Compound.time++;
+            }, (e) => {
+                console.log('抬起！');
+                if (_Game._GeneralPencils._compoundName && _Game._GeneralPencils._compoundName !== this.Owner['_dataSource']['name']) {
+                    _Compound.Skin1 = _Game._GeneralPencils._compoundName;
+                    _Compound.Skin2 = this.Owner['_dataSource']['name'];
+                    this.lwgOpenScene(_SceneName.Compound, false);
+                    this.Compound.remake();
+                    return;
+                }
+                ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
+                let lastName = _Game._GeneralPencils._pitchName;
+                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+                if (this.Owner['_dataSource']['name'] == 'colours') {
+                    if (!_Game._ColoursPencils._switch) {
+                        _Game._GeneralPencils._pitchName = lastName;
+                        _PropTry._comeFrom = _SceneName.Game;
+                        this.lwgOpenScene(_SceneName.PropTry, false);
+                        _Game._activate = false;
+                        return;
+                    }
+                    _Game._ColoursPencils._clickNum++;
+                    if (_Game._ColoursPencils._clickNum == 1) {
+                        EventAdmin._notify(_Game._Event.generalRefresh);
+                        return;
+                    }
+                    for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
+                        const element = _Game._ColoursPencils._data[index];
+                        if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
+                            let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
+                            if (_Game._ColoursPencils._switch) {
+                                if (!nameIndex) {
+                                    nameIndex = 1;
+                                }
+                                nameIndex++;
+                                if (nameIndex > 7) {
+                                    nameIndex = 1;
+                                }
+                                _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
+                                _Game._ColoursPencils._setPresentColorArr();
+                            }
+                            EventAdmin._notify(_Game._Event.generalRefresh);
+                            return;
+                        }
+                    }
+                }
+                else {
+                    _Game._ColoursPencils._clickNum = 0;
+                }
+            }, (e) => {
+                e.stopPropagation();
+            });
+        }
+    }
 
     var _Share;
     (function (_Share) {
@@ -7217,6 +7449,7 @@
             _Event["Photo"] = "_Game_Photo";
             _Event["turnRight"] = "_Game_turnRight";
             _Event["turnLeft"] = "_Game_turnLeft";
+            _Event["generalRefresh"] = "_Game_generalRefresh";
         })(_Event = _Game._Event || (_Game._Event = {}));
         let _Animation;
         (function (_Animation) {
@@ -7261,9 +7494,7 @@
                     else {
                         this._data[index][this._property.pitch] = false;
                     }
-                    if (_Game._GeneralList) {
-                        _Game._GeneralList.refresh();
-                    }
+                    EventAdmin._notify(_Event.generalRefresh);
                 }
             }
             static _randomOne() {
@@ -7381,6 +7612,18 @@
                         return;
                     }
                 }
+            }
+            static checkHave(name) {
+                let bool = false;
+                for (let index = 0; index < this._data.length; index++) {
+                    const element = this._data[index];
+                    if (element['name'] == name) {
+                        if (element['have']) {
+                            bool = true;
+                        }
+                    }
+                }
+                return bool;
             }
             static _init() {
                 this._data = Tools.jsonCompare(_PreloadUrl._list.json.Blink.url, '_Game_Blink', this._property.name);
@@ -7537,9 +7780,19 @@
                         Sp.graphics.drawTexture(tex ? tex : this.Draw.getTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, color ? color : this.Draw.getColor(), null);
                     },
                     drawBlink: (x, y) => {
+                        if (!_BlinkPencils.checkHave(_BlinkPencils._pitchName)) {
+                            return;
+                        }
                         this.Draw.BlinkSp.graphics.drawTexture(this.Draw.getBlinkTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, null, null);
                     },
-                    space: 15,
+                    getSpace: () => {
+                        if (this.Owner.name == 'Game_dinglaotai' || this.Owner.name == 'Game_dinglaotou' || this.Owner.name == 'Game_zhangyugege') {
+                            return 5;
+                        }
+                        else {
+                            return 10;
+                        }
+                    },
                     len: {
                         get count() {
                             return this['lenCount'] ? this['lenCount'] : 0;
@@ -7572,29 +7825,8 @@
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.present = 0;
                 _Game._stepIndex.max = 0;
-                _Game._GeneralList = this.ListVar('GeneralList');
-                _Game._GeneralList.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
-                _Game._GeneralList.array = _GeneralPencils._data;
-                _Game._GeneralList.selectEnable = true;
-                _Game._GeneralList.selectHandler = new Laya.Handler(this, (index) => { });
-                _Game._GeneralList.renderHandler = new Laya.Handler(this, (cell, index) => {
-                    let _dataSource = cell.dataSource;
-                    let Pic = cell.getChildByName('Pic');
-                    switch (_dataSource['name']) {
-                        case 'colours':
-                            Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
-                            break;
-                        default:
-                            Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
-                            break;
-                    }
-                    if (_dataSource[_GeneralPencils._property.pitch]) {
-                        Pic.scale(1.2, 1.2);
-                    }
-                    else {
-                        Pic.scale(1, 1);
-                    }
-                });
+                _Game._GeneralList1 = this.ImgVar('GeneralList1');
+                _Game._GeneralList1.pos(Laya.stage.width / 2, Laya.stage.height * 0.835);
                 _Game._stepOrderImg = [];
                 let index = 1;
                 while (this.Owner['Draw' + index]) {
@@ -7614,7 +7846,6 @@
                     this.Owner['Draw' + index].skin = null;
                     index++;
                 }
-                RecordManager.startAutoRecord();
             }
             lwgOpenAni() {
                 this.ImgVar('DrawingBoard').zOrder = 100;
@@ -7628,6 +7859,7 @@
                 Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
                 Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
                     TimerAdmin._frameOnce(30, this, () => {
+                        RecordManager.startAutoRecord();
                         this.Step.cutFocus();
                     });
                 });
@@ -7672,9 +7904,34 @@
                 this.Step.init();
             }
             lwgOnStart() {
+                EventAdmin._notify(_Event.generalRefresh);
                 EventAdmin._notify(_Event.start);
             }
             lwgEventRegister() {
+                EventAdmin._register(_Event.generalRefresh, this, () => {
+                    for (let index = 0; index < _Game._GeneralList1.numChildren; index++) {
+                        const cell = _Game._GeneralList1.getChildAt(index);
+                        let _dataSource = cell['_dataSource'] = _GeneralPencils._data[index];
+                        if (!cell.getComponent(_GameItem)) {
+                            cell.addComponent(_GameItem);
+                        }
+                        let Pic = cell.getChildByName('Pic');
+                        switch (_dataSource['name']) {
+                            case 'colours':
+                                Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
+                                break;
+                            default:
+                                Pic.skin = `Game/UI/GameScene/Pencils/Single/${_dataSource['name']}.png`;
+                                break;
+                        }
+                        if (_dataSource[_GeneralPencils._property.pitch]) {
+                            Pic.scale(1.2, 1.2);
+                        }
+                        else {
+                            Pic.scale(1, 1);
+                        }
+                    }
+                });
                 EventAdmin._register(_Event.Photo, this, () => {
                     this.AniVar(_Animation.action1).play();
                     this.AniVar(_Animation.action1).stop();
@@ -7858,14 +8115,14 @@
                         this.Step.BtnTurnLeft.visible = false;
                         this.Step.BtnTurnRight.visible = false;
                         this.Step.BtnCompelet.visible = true;
-                        Animation2D.fadeOut(_Game._GeneralList, 1, 0, 200);
+                        Animation2D.fadeOut(_Game._GeneralList1, 1, 0, 200);
                         Animation2D.fadeOut(_Game._BlinkList, 1, 0, 200);
                     });
                     EventAdmin._notify(_Event.restoreZOder);
                 });
                 EventAdmin._register(_Event.turnRight, this, () => {
                     this.Step.btnSwitch = false;
-                    Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList.y, 250, 0, () => {
+                    Animation2D.move_Simple(_Game._GeneralList1, _Game._GeneralList1.x, _Game._GeneralList1.y, Laya.stage.width / 2 - Laya.stage.width, _Game._GeneralList1.y, 250, 0, () => {
                         Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2, _Game._BlinkList.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                             _BlinkPencils._switch = true;
@@ -7875,7 +8132,7 @@
                 EventAdmin._register(_Event.turnLeft, this, () => {
                     this.Step.btnSwitch = false;
                     Animation2D.move_Simple(_Game._BlinkList, _Game._BlinkList.x, _Game._BlinkList.y, Laya.stage.width / 2 + Laya.stage.width, _Game._BlinkList.y, 250, 0, () => {
-                        Animation2D.move_Simple(_Game._GeneralList, _Game._GeneralList.x, _Game._GeneralList.y, Laya.stage.width / 2, _Game._GeneralList.y, 250, 0, () => {
+                        Animation2D.move_Simple(_Game._GeneralList1, _Game._GeneralList1.x, _Game._GeneralList1.y, Laya.stage.width / 2, _Game._GeneralList1.y, 250, 0, () => {
                             this.Step.btnSwitch = true;
                             _BlinkPencils._switch = false;
                         });
@@ -7965,8 +8222,8 @@
                         this.Draw.drawBlink();
                     }
                     let destance = this.Draw.frontPos.distance(endPos.x, endPos.y);
-                    if (destance > this.Draw.space) {
-                        let num = destance / this.Draw.space;
+                    if (destance > this.Draw.getSpace()) {
+                        let num = destance / this.Draw.getSpace();
                         let pointArr = Tools.Point.getPArrBetweenTwoP(this.Draw.frontPos, endPos, num);
                         for (let index = 0; index < pointArr.length; index++) {
                             this.Draw.draw(Sp, pointArr[index].x - this.Draw.getRadius() / 2, pointArr[index].y - this.Draw.getRadius() / 2);
@@ -7983,7 +8240,7 @@
                     this.Step.setAutomaticNext();
                 }
                 this.Draw.frontPos = null;
-                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 30) {
+                if (this.Draw.DrawBoard && this.Draw.DrawBoard.numChildren > 40) {
                     let NewBoard = this.Draw.DrawRoot.addChild((new Laya.Sprite()).pos(0, 0));
                     NewBoard.width = this.Draw.DrawRoot.width;
                     NewBoard.height = this.Draw.DrawRoot.height;
@@ -8054,224 +8311,6 @@
         _Game.Game = Game;
     })(_Game || (_Game = {}));
     var _Game$1 = _Game.Game;
-
-    var _Compound;
-    (function (_Compound) {
-        class Compound extends Admin._SceneBase {
-            constructor() {
-                super(...arguments);
-                this.getCompound = {
-                    setPro: (p) => {
-                        console.log(p);
-                        if (p == 1) {
-                            this.getCompound.name = _Game._BlinkPencils._randomNoHaveOne();
-                            if (this.getCompound.name == null) {
-                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
-                                this.btnVar('BtnConfirm').visible = true;
-                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
-                            }
-                            else {
-                                this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = true;
-                                this.btnVar('BtnConfirm').visible = false;
-                                this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Blink/${this.getCompound.name}.png`;
-                            }
-                        }
-                        else {
-                            this.getCompound.name = _Game._GeneralPencils._randomOne();
-                            this.btnVar('BtnNo').visible = this.btnVar('BtnGet').visible = false;
-                            this.btnVar('BtnConfirm').visible = true;
-                            this.ImgVar('GetPic').skin = `Game/UI/GameScene/Pencils/Single/${this.getCompound.name}.png`;
-                        }
-                        this['_pro'] = p;
-                    },
-                    name: null,
-                };
-            }
-            lwgOnAwake() {
-                this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin1}.png`;
-                this.ImgVar('Pencil1').sizeGrid = '112,0,17,0';
-                this.ImgVar('Pencil2').skin = `Game/UI/GameScene/Pencils/Single/${_Compound.Skin2}.png`;
-                this.ImgVar('Pencil2').sizeGrid = '112,0,17,0';
-                this.getCompound.setPro(Tools.randomOneHalf());
-            }
-            lwgOnEnable() {
-                _Game._activate = false;
-                this.AniVar('ani1').play(0, false);
-                this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
-                    OldEffects$1.createFireworks(Laya.stage, 40, 430, 200);
-                    OldEffects$1.createFireworks(Laya.stage, 40, 109, 200);
-                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
-                    OldEffects$1.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
-                });
-            }
-            lwgOpenAni() {
-                return 100;
-            }
-            lwgBtnClick() {
-                var close = () => {
-                    _Game._activate = true;
-                    this.lwgCloseScene();
-                };
-                Click._on(Click._Type.largen, this.btnVar('BtnConfirm'), this, null, null, (e) => {
-                    _Game._GeneralPencils._pitchName = this.getCompound.name;
-                    EventAdmin._notify(_Game._Event.turnLeft);
-                    close();
-                });
-                Click._on(Click._Type.largen, this.btnVar('BtnGet'), this, null, null, (e) => {
-                    ADManager.ShowReward(() => {
-                        EventAdmin._notify(_Game._Event.turnRight);
-                        _Game._BlinkPencils._pitchName = this.getCompound.name;
-                        _Game._BlinkPencils._addPencil(this.getCompound.name);
-                        Dialogue.createHint_Middle(`恭喜获得一只新的闪光画笔！`);
-                        close();
-                    });
-                });
-                Click._on(Click._Type.largen, this.btnVar('BtnNo'), this, null, null, (e) => {
-                    EventAdmin._notify(_Game._Event.turnLeft);
-                    close();
-                });
-            }
-        }
-        _Compound.Compound = Compound;
-    })(_Compound || (_Compound = {}));
-    var _Compound$1 = _Compound.Compound;
-
-    class _PencilsListItem extends Admin._Object {
-        constructor() {
-            super(...arguments);
-            this.Compound = {
-                Pic: null,
-                time: 0,
-                restrict: 30,
-                Img: null,
-                firstPos: null,
-                PosArr: null,
-                homing: () => {
-                    if (this.Compound.Img) {
-                        this.Compound.Img.destroy();
-                        this.Compound.Img = null;
-                        this.Compound.Pic.visible = true;
-                    }
-                },
-                remake: () => {
-                    this.Compound.homing();
-                    this.Compound.time = 0;
-                    _Game._GeneralPencils._compoundName = null;
-                    _Game._activate = true;
-                }
-            };
-        }
-        lwgOnAwake() {
-            this.Compound.Pic = this.Owner.getChildByName('Pic');
-        }
-        lwgOnStart() {
-            var caller = {};
-            TimerAdmin._frameLoop(1, caller, () => {
-                if (this.Owner['_dataSource']) {
-                    Laya.timer.clearAll(caller);
-                    Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
-                        this.Compound.Pic = this.Owner.getChildByName('Pic');
-                        if ((_Game._GeneralPencils._pitchName == this.Owner['_dataSource'][_Game._GeneralPencils._property.name])) {
-                            Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
-                                Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
-                                    this.Owner.rotation = 0;
-                                });
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        onStageMouseMove(e) {
-            if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.Img) {
-                _Game._activate = false;
-                _Game._GeneralPencils._compoundName = this.Owner.name;
-                this.Compound.Img.visible = true;
-                this.Compound.Pic.visible = false;
-                this.Compound.Img.pos(e.stageX, e.stageY);
-            }
-        }
-        onStageMouseUp(e) {
-            if (this.Owner['_dataSource']) {
-                this.Compound.remake();
-            }
-        }
-        btn() {
-            Click._on(Click._Type.noEffect, this.Owner, this, (e) => {
-                if (!this.Compound.Img && this.Owner['_dataSource']) {
-                    this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
-                    this.Compound.Img = new Laya.Image;
-                    this.OwnerScene.addChild(this.Compound.Img);
-                    this.Compound.Img.zOrder = 300;
-                    this.Compound.Img.width = this.Compound.Pic.width;
-                    this.Compound.Img.height = this.Compound.Pic.height;
-                    this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
-                    Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
-                    this.Compound.Img.skin = this.Compound.Pic.skin;
-                    this.Compound.Img.visible = false;
-                }
-                e.stopPropagation();
-            }, (e) => {
-                if (this.Owner['_dataSource']) {
-                    this.Compound.time++;
-                    if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils._compoundName && _Game._GeneralPencils._compoundName !== this.Owner.name) {
-                        _Compound.Skin1 = _Game._GeneralPencils._compoundName;
-                        _Compound.Skin2 = this.Owner.name;
-                        this.lwgOpenScene(_SceneName.Compound, false);
-                        this.Compound.remake();
-                    }
-                }
-            }, (e) => {
-                if (this.Owner['_dataSource']) {
-                    ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                    let lastName = _Game._GeneralPencils._pitchName;
-                    _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
-                    if (this.Owner['_dataSource']['name'] == 'colours') {
-                        if (!_Game._ColoursPencils._switch) {
-                            _Game._GeneralPencils._pitchName = lastName;
-                            _PropTry._comeFrom = _SceneName.Game;
-                            this.lwgOpenScene(_SceneName.PropTry, false);
-                            _Game._activate = false;
-                            return;
-                        }
-                        _Game._ColoursPencils._clickNum++;
-                        if (_Game._ColoursPencils._clickNum == 1) {
-                            _Game._GeneralList.refresh();
-                            return;
-                        }
-                        for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
-                            const element = _Game._ColoursPencils._data[index];
-                            if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
-                                let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
-                                if (_Game._ColoursPencils._switch) {
-                                    if (!nameIndex) {
-                                        nameIndex = 1;
-                                    }
-                                    nameIndex++;
-                                    if (nameIndex > 7) {
-                                        nameIndex = 1;
-                                    }
-                                    _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
-                                    _Game._ColoursPencils._setPresentColorArr();
-                                }
-                                _Game._GeneralList.refresh();
-                                return;
-                            }
-                        }
-                    }
-                    else {
-                        _Game._ColoursPencils._clickNum = 0;
-                    }
-                }
-            }, (e) => {
-                if (this.Owner['_dataSource']) {
-                    e.stopPropagation();
-                }
-            });
-        }
-        lwgBtnClick() {
-        }
-    }
 
     class _GameBlinkItem extends Admin._Object {
         lwgBtnClick() {
@@ -8556,7 +8595,6 @@
         class Settle extends _Settle.SettleBase {
             lwgOnAwake() {
                 EventAdmin._notify(_Game._Event.playAni1, [true]);
-                RecordManager.stopAutoRecord();
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnPlayAni'), this, null, null, () => {
@@ -8567,13 +8605,9 @@
                     EventAdmin._notify(_Game._Event.Photo);
                     this.lwgOpenScene(_SceneName.Share);
                 });
-                Click._on(Click._Type.largen, this.btnVar('BtnShare'), this, null, null, () => {
-                    RecordManager._share('noAward', () => {
-                        ADManager.TAPoint(TaT.BtnClick, 'share_ACT');
-                    });
-                });
             }
             lwgOnDisable() {
+                RecordManager.stopAutoRecord();
                 ADManager.TAPoint(TaT.PageLeave, 'ACTpage');
             }
         }
@@ -8717,6 +8751,7 @@
         _Victory.VictoryBase = VictoryBase;
         class Victory extends _Victory.VictoryBase {
             lwgOnAwake() {
+                RecordManager.stopAutoRecord();
                 if (_Share._Data._photo._base64) {
                     this.ImgVar('Photo').skin = _Share._Data._photo._base64;
                     this.ImgVar('Photo').scale(0.75, 0.75);
@@ -8804,7 +8839,7 @@
     class LwgInit extends _LwgInitScene {
         lwgOnAwake() {
             _LwgInit._pkgInfo = [];
-            Admin._platform.name = Admin._platform.tpye.Bytedance;
+            Admin._platform.name = Admin._platform.tpye.Research;
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
             Admin._moudel = {
                 _PreLoad: _PreLoad,
@@ -8831,7 +8866,7 @@
         }
         static init() {
             var reg = Laya.ClassUtils.regClass;
-            reg("script/Frame/_GamePencilItem.ts", _PencilsListItem);
+            reg("script/Frame/_GamePencilItem.ts", _GamePencilItem);
             reg("script/Frame/_GameBlinkItem.ts", _GameBlinkItem);
             reg("script/Frame/LwgInit.ts", LwgInit);
         }
