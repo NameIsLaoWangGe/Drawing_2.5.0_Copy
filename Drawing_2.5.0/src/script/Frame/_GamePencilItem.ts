@@ -11,12 +11,12 @@ export default class _PencilsListItem extends Admin._Object {
         this.Compound.Pic = this.Owner.getChildByName('Pic') as Laya.Image;
     }
     lwgOnStart(): void {
-        // console.log(this.Owner);
-        Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
-            var caller = {};
-            TimerAdmin._frameLoop(1, caller, () => {
-                if (this.Owner['_dataSource']) {
-                    Laya.timer.clearAll(caller);
+        var caller = {};
+        TimerAdmin._frameLoop(1, caller, () => {
+            if (this.Owner['_dataSource']) {
+                Laya.timer.clearAll(caller);
+                Animation2D.bombs_Appear(this.Owner, 0, 1, 1.3, Tools.randomOneHalf() == 1 ? 10 : -10, 300, 150, Math.round(Math.random() * 500) + 800, () => {
+                    this.Compound.Pic = this.Owner.getChildByName('Pic') as Laya.Image;
                     if ((_Game._GeneralPencils._pitchName == this.Owner['_dataSource'][_Game._GeneralPencils._property.name])) {
                         Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 180, 1.2, 1.2, 250, 0, () => {
                             Animation2D.rotate_Scale(this.Owner, 0, 1, 1, 360, 1, 1, 250, 0, () => {
@@ -24,9 +24,12 @@ export default class _PencilsListItem extends Admin._Object {
                             });
                         });
                     }
-                }
-            })
+                })
+            }
         });
+        // TimerAdmin._frameOnce(240, this, () => {
+        //     this.btn();
+        // })
     }
     Compound = {
         Pic: null as Laya.Image,
@@ -46,26 +49,29 @@ export default class _PencilsListItem extends Admin._Object {
             // console.log('重制')
             this.Compound.homing();
             this.Compound.time = 0;
-            _Game._GeneralPencils.compoundName = null;
+            _Game._GeneralPencils._compoundName = null;
             _Game._activate = true;
         }
     }
     onStageMouseMove(e: Laya.Event): void {
-        if (this.Compound.time > this.Compound.restrict && this.Compound.Img) {
+        if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.Img) {
             _Game._activate = false;
-            _Game._GeneralPencils.compoundName = this.Owner.name;
+            _Game._GeneralPencils._compoundName = this.Owner.name;
             this.Compound.Img.visible = true;
             this.Compound.Pic.visible = false;
             this.Compound.Img.pos(e.stageX, e.stageY);
         }
     }
     onStageMouseUp(e: Laya.Event): void {
-        this.Compound.remake();
+        if (this.Owner['_dataSource']) {
+            this.Compound.remake();
+        }
     }
-    lwgBtnClick(): void {
+
+    btn(): void {
         Click._on(Click._Type.noEffect, this.Owner, this,
             (e: Laya.Event) => {
-                if (!this.Compound.Img) {
+                if (!this.Compound.Img && this.Owner['_dataSource']) {
                     this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
                     this.Compound.Img = new Laya.Image;
                     this.OwnerScene.addChild(this.Compound.Img);
@@ -80,60 +86,141 @@ export default class _PencilsListItem extends Admin._Object {
                 e.stopPropagation();
             },
             (e: Laya.Event) => {
-                this.Compound.time++;
-                if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils.compoundName && _Game._GeneralPencils.compoundName !== this.Owner.name) {
-                    _Compound.Skin1 = _Game._GeneralPencils.compoundName;
-                    _Compound.Skin2 = this.Owner.name;
-                    this.lwgOpenScene(_SceneName.Compound, false);
-                    this.Compound.remake();
+                if (this.Owner['_dataSource']) {
+                    this.Compound.time++;
+                    if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils._compoundName && _Game._GeneralPencils._compoundName !== this.Owner.name) {
+                        _Compound.Skin1 = _Game._GeneralPencils._compoundName;
+                        _Compound.Skin2 = this.Owner.name;
+                        this.lwgOpenScene(_SceneName.Compound, false);
+                        this.Compound.remake();
+                    }
                 }
             },
             (e: Laya.Event) => {
-                // console.log(this.Owner);
-                // e.stopPropagation();
-                ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                let lastName = _Game._GeneralPencils._pitchName;
-                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
-                if (this.Owner['_dataSource']['name'] == 'colours') {
-                    // console.log(this.Owner['_dataSource']['name']);
-                    if (!_Game._ColoursPencils._switch) {
-                        _Game._GeneralPencils._pitchName = lastName;
-                        _PropTry._comeFrom = _SceneName.Game;
-                        this.lwgOpenScene(_SceneName.PropTry, false);
-                        _Game._activate = false;
-                        return;
-                    }
-                    _Game._ColoursPencils._clickNum++;
-                    if (_Game._ColoursPencils._clickNum == 1) {
-                        _Game._GeneralList.refresh();
-                        return;
-                    }
-                    for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
-                        const element = _Game._ColoursPencils._data[index];
-                        if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
-                            let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
-                            // console.log(nameIndex);
-                            if (_Game._ColoursPencils._switch) {
-                                if (!nameIndex) {
-                                    nameIndex = 1;
-                                }
-                                nameIndex++;
-                                if (nameIndex > 7) {
-                                    nameIndex = 1;
-                                }
-                                _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
-                                _Game._ColoursPencils._setPresentColorArr();
-                            }
+                if (this.Owner['_dataSource']) {
+                    // console.log(this.Owner);
+                    // e.stopPropagation();
+                    ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
+                    let lastName = _Game._GeneralPencils._pitchName;
+                    _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+                    if (this.Owner['_dataSource']['name'] == 'colours') {
+                        // console.log(this.Owner['_dataSource']['name']);
+                        if (!_Game._ColoursPencils._switch) {
+                            _Game._GeneralPencils._pitchName = lastName;
+                            _PropTry._comeFrom = _SceneName.Game;
+                            this.lwgOpenScene(_SceneName.PropTry, false);
+                            _Game._activate = false;
+                            return;
+                        }
+                        _Game._ColoursPencils._clickNum++;
+                        if (_Game._ColoursPencils._clickNum == 1) {
                             _Game._GeneralList.refresh();
                             return;
                         }
+                        for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
+                            const element = _Game._ColoursPencils._data[index];
+                            if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
+                                let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
+                                // console.log(nameIndex);
+                                if (_Game._ColoursPencils._switch) {
+                                    if (!nameIndex) {
+                                        nameIndex = 1;
+                                    }
+                                    nameIndex++;
+                                    if (nameIndex > 7) {
+                                        nameIndex = 1;
+                                    }
+                                    _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
+                                    _Game._ColoursPencils._setPresentColorArr();
+                                }
+                                _Game._GeneralList.refresh();
+                                return;
+                            }
+                        }
+                    } else {
+                        _Game._ColoursPencils._clickNum = 0;
                     }
-                } else {
-                    _Game._ColoursPencils._clickNum = 0;
                 }
             },
             (e: Laya.Event) => {
-                e.stopPropagation();
+                if (this.Owner['_dataSource']) {
+                    e.stopPropagation();
+                }
             });
+    }
+
+    lwgBtnClick(): void {
+        // Click._on(Click._Type.noEffect, this.Owner, this,
+        //     (e: Laya.Event) => {
+        //         if (!this.Compound.Img) {
+        //             this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
+        //             this.Compound.Img = new Laya.Image;
+        //             this.OwnerScene.addChild(this.Compound.Img);
+        //             this.Compound.Img.zOrder = 300;
+        //             this.Compound.Img.width = this.Compound.Pic.width;
+        //             this.Compound.Img.height = this.Compound.Pic.height;
+        //             this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
+        //             Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
+        //             this.Compound.Img.skin = this.Compound.Pic.skin;
+        //             this.Compound.Img.visible = false;
+        //         }
+        //         e.stopPropagation();
+        //     },
+        //     (e: Laya.Event) => {
+        //         this.Compound.time++;
+        //         if (this.Compound.time > this.Compound.restrict && _Game._GeneralPencils._compoundName && _Game._GeneralPencils._compoundName !== this.Owner.name) {
+        //             _Compound.Skin1 = _Game._GeneralPencils._compoundName;
+        //             _Compound.Skin2 = this.Owner.name;
+        //             this.lwgOpenScene(_SceneName.Compound, false);
+        //             this.Compound.remake();
+        //         }
+        //     },
+        //     (e: Laya.Event) => {
+        //         // console.log(this.Owner);
+        //         // e.stopPropagation();
+        //         ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
+        //         let lastName = _Game._GeneralPencils._pitchName;
+        //         _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+        //         if (this.Owner['_dataSource']['name'] == 'colours') {
+        //             // console.log(this.Owner['_dataSource']['name']);
+        //             if (!_Game._ColoursPencils._switch) {
+        //                 _Game._GeneralPencils._pitchName = lastName;
+        //                 _PropTry._comeFrom = _SceneName.Game;
+        //                 this.lwgOpenScene(_SceneName.PropTry, false);
+        //                 _Game._activate = false;
+        //                 return;
+        //             }
+        //             _Game._ColoursPencils._clickNum++;
+        //             if (_Game._ColoursPencils._clickNum == 1) {
+        //                 _Game._GeneralList.refresh();
+        //                 return;
+        //             }
+        //             for (let index = 0; index < _Game._ColoursPencils._data.length; index++) {
+        //                 const element = _Game._ColoursPencils._data[index];
+        //                 if (_Game._ColoursPencils._pitchName == element[_Game._GeneralPencils._property.name]) {
+        //                     let nameIndex = Number(_Game._ColoursPencils._pitchName.substr(5));
+        //                     // console.log(nameIndex);
+        //                     if (_Game._ColoursPencils._switch) {
+        //                         if (!nameIndex) {
+        //                             nameIndex = 1;
+        //                         }
+        //                         nameIndex++;
+        //                         if (nameIndex > 7) {
+        //                             nameIndex = 1;
+        //                         }
+        //                         _Game._ColoursPencils._pitchName = `caise${nameIndex}`;
+        //                         _Game._ColoursPencils._setPresentColorArr();
+        //                     }
+        //                     _Game._GeneralList.refresh();
+        //                     return;
+        //                 }
+        //             }
+        //         } else {
+        //             _Game._ColoursPencils._clickNum = 0;
+        //         }
+        //     },
+        //     (e: Laya.Event) => {
+        //         e.stopPropagation();
+        //     });
     }
 }

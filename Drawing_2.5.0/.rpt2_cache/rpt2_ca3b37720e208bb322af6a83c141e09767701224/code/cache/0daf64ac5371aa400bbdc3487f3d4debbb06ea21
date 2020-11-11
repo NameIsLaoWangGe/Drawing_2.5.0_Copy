@@ -1,4 +1,0 @@
-{
-  "code": "export var _GameEvent;\r\n(function (_GameEvent) {\r\n    _GameEvent[_GameEvent[\"getPresentUse\"] = 0] = \"getPresentUse\";\r\n    _GameEvent[_GameEvent[\"setTryPresentUse\"] = 1] = \"setTryPresentUse\";\r\n})(_GameEvent || (_GameEvent = {}));\r\n",
-  "references": []
-}

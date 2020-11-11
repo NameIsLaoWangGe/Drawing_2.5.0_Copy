@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":224,
-    "selecteID":226,
+    "selectedBox":219,
+    "selecteID":220,
     "searchKey":"View",
     "referenceLines":[
         {
@@ -326,7 +326,7 @@
             "selectedBox":46,
             "selecteID":47,
             "searchKey":"List,GeneralList,GeneralList",
-            "props":{"zOrder":200,"y":1037,"x":360,"var":"GeneralList","presetID":1,"preset":"laya/pages/Prefab/PencilsList.prefab","name":"GeneralList"},
+            "props":{"zOrder":200,"y":1037,"x":360,"width":638,"var":"GeneralList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":189,"pivotX":319,"name":"GeneralList","height":397},
             "nodeParent":2,
             "maxID":48,
             "label":"GeneralList",
@@ -340,9 +340,9 @@
                     "x":30,
                     "type":"Box",
                     "searchKey":"Box",
-                    "props":{"presetID":2,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                    "props":{"y":104,"x":66,"width":113,"renderType":"render","pivotY":101,"pivotX":57,"height":201},
                     "nodeParent":218,
-                    "label":"Box(PencilsList)",
+                    "label":"Box",
                     "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":false,
@@ -352,8 +352,8 @@
                         {
                             "x":45,
                             "type":"Image",
-                            "searchKey":"Image",
-                            "props":{"presetID":3,"preset":"laya/pages/Prefab/PencilsList.prefab"},
+                            "searchKey":"Image,Pic",
+                            "props":{"width":64,"skin":"Game/UI/GameScene/Pencils/Single/chengse.png","sizeGrid":"101,0,17,0","rotation":0,"pivotY":70,"pivotX":32,"name":"Pic","height":140,"centerY":0,"centerX":0},
                             "nodeParent":219,
                             "label":"Pic",
                             "isDirectory":false,

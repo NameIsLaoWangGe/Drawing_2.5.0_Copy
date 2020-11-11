@@ -280,35 +280,7 @@ export module _Game {
                 this.Owner['Draw' + index].skin = null;
                 index++;
             }
-            // console.log(_stepOrderImg);
-            _BlinkList = this.ListVar('BlinkList');
-            _BlinkList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
-            _BlinkList.array = _BlinkPencils._data;
-            _BlinkList.selectEnable = true;
-            _BlinkList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
-                let _dataSource = cell.dataSource;
-                let Pic = cell.getChildByName('Pic') as Laya.Image;
-                Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
-                // switch (_dataSource['name']) {
-                //     case 'colours':
-                //         Pic.skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_ColoursPencils._pitchName}.png`;
-                //         break;
-                //     default:
-                //         Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
-                //         break;
-                // }
-                if (_dataSource['have']) {
-                    Pic.gray = false;
-                } else {
-                    Pic.gray = true;
-                }
 
-                if (_dataSource[_GeneralPencils._property.pitch] && _dataSource[_GeneralPencils._property.have]) {
-                    Pic.scale(1.2, 1.2);
-                } else {
-                    Pic.scale(1, 1);
-                }
-            });
 
             RecordManager.startAutoRecord();
         }
@@ -438,6 +410,25 @@ export module _Game {
             }
         }
         lwgOnEnable(): void {
+            _BlinkList = this.ListVar('BlinkList');
+            _BlinkList.pos(Laya.stage.width / 2 + Laya.stage.width, Laya.stage.height * 0.835);
+            _BlinkList.array = _BlinkPencils._data;
+            _BlinkList.selectEnable = true;
+            _BlinkList.renderHandler = new Laya.Handler(this, (cell: Laya.Box, index: number) => {
+                let _dataSource = cell.dataSource;
+                let Pic = cell.getChildByName('Pic') as Laya.Image;
+                Pic.skin = `Game/UI/GameScene/Pencils/Blink/${_dataSource['name']}.png`;
+                if (_dataSource['have']) {
+                    Pic.gray = false;
+                } else {
+                    Pic.gray = true;
+                }
+                if (_dataSource[_GeneralPencils._property.pitch] && _dataSource[_GeneralPencils._property.have]) {
+                    Pic.scale(1.2, 1.2);
+                } else {
+                    Pic.scale(1, 1);
+                }
+            });
             this.Step.init();
         }
         lwgOnStart(): void {
@@ -700,7 +691,7 @@ export module _Game {
             drawBlink: (x?: number, y?: number) => {
                 this.Draw.BlinkSp.graphics.drawTexture(this.Draw.getBlinkTex(), x ? x : this.Draw.frontPos.x - this.Draw.getRadius() / 2, y ? y : this.Draw.frontPos.y - this.Draw.getRadius() / 2, this.Draw.getRadius(), this.Draw.getRadius(), null, 1, null, null);
             },
-            space: 5,
+            space: 15,
             len: {
                 get count(): number {
                     return this['lenCount'] ? this['lenCount'] : 0;
