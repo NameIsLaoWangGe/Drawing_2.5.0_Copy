@@ -61,7 +61,7 @@ export module _SelectLevel {
         };
         static get _arr(): Array<string> {
             if (!this['_SelectLevel_Data3']) {
-                this['_SelectLevel_Data3'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel.url, '_SelectLevel_Data3', _Data._property.name);
+                this['_SelectLevel_Data3'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel1.url, '_SelectLevel_Data3', _Data._property.name);
             }
             return this['_SelectLevel_Data3'];
         };

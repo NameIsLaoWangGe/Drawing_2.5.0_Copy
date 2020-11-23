@@ -4086,7 +4086,6 @@
                 }
                 catch (error) {
                     dataArr = Laya.loader.getRes(url)['RECORDS'];
-                    console.log(dataArr);
                     Laya.LocalStorage.setJSON(storageName, JSON.stringify(dataArr));
                     return dataArr;
                 }
@@ -6769,14 +6768,14 @@
             }
             ;
             static get _arr() {
-                if (!this['_SelectLevel_Data2']) {
-                    this['_SelectLevel_Data2'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel1.url, '_SelectLevel_Data2', _Data._property.name);
+                if (!this['_SelectLevel_Data3']) {
+                    this['_SelectLevel_Data3'] = Tools.jsonCompare(_PreloadUrl._list.json.SelectLevel1.url, '_SelectLevel_Data3', _Data._property.name);
                 }
-                return this['_SelectLevel_Data2'];
+                return this['_SelectLevel_Data3'];
             }
             ;
             static set _arr(array) {
-                this['_SelectLevel_Data2'] = array;
+                this['_SelectLevel_Data3'] = array;
             }
             ;
             static _getUnlockByName(name) {
@@ -6814,7 +6813,7 @@
                         if (element[this._property.name] == name) {
                             element[pro] = value;
                             _SelectLevel._MyList.refresh();
-                            Laya.LocalStorage.setJSON('_SelectLevel_Data2', JSON.stringify(this._arr));
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data3', JSON.stringify(this._arr));
                             break;
                         }
                     }
@@ -6829,7 +6828,7 @@
                         name = name ? name : this._pich.customs;
                         if (element[this._property.name] == name) {
                             element[this._property.haveBeenDrawn] = imgSkin;
-                            Laya.LocalStorage.setJSON('_SelectLevel_Data2', JSON.stringify(this._arr));
+                            Laya.LocalStorage.setJSON('_SelectLevel_Data3', JSON.stringify(this._arr));
                         }
                     }
                 }

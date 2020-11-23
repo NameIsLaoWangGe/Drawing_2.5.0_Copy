@@ -18,27 +18,21 @@ let versionCon; // 版本管理version.json
 let commandSuffix,
 	layarepublicPath;
 
-gulp.task("preCreate_BD", copyLibsTask, function() {
+gulp.task("preCreate_Bili", copyLibsTask, function() {
 	releaseDir = global.releaseDir;
 	config = global.config;
 	commandSuffix = global.commandSuffix;
 	layarepublicPath = global.layarepublicPath;
 });
 
-gulp.task("copyPlatformFile_BD", ["preCreate_BD"], function() {
-	let adapterPath = path.join(layarepublicPath, "LayaAirProjectPack", "lib", "data", "bdfiles");
-	// 如果新建项目时已经点击了"微信/百度小游戏bin目录快速调试"，不再拷贝
-	let hasPlatform =
-		fs.existsSync(path.join(workSpaceDir, "bin", "game.js")) &&
-		fs.existsSync(path.join(workSpaceDir, "bin", "game.json")) &&
-		fs.existsSync(path.join(workSpaceDir, "bin", "project.swan.json"));
+gulp.task("copyPlatformFile_Bili", ["preCreate_Bili"], function() {
+	let adapterPath = path.join(layarepublicPath, "LayaAirProjectPack", "lib", "data", "bilifiles");
 	let hasPublishPlatform = 
 		fs.existsSync(path.join(releaseDir, "game.js")) &&
-		fs.existsSync(path.join(releaseDir, "game.json")) &&
-		fs.existsSync(path.join(releaseDir, "project.swan.json"));
+		fs.existsSync(path.join(releaseDir, "game.json"));
 	let copyLibsList;
-	if (hasPlatform || hasPublishPlatform) {
-		copyLibsList = [`${adapterPath}/swan-game-adapter.js`];
+	if (hasPublishPlatform) {
+		copyLibsList = [`${adapterPath}/weapp-adapter.js`];
 	} else {
 		copyLibsList = [`${adapterPath}/*.*`];
 	}
@@ -46,12 +40,12 @@ gulp.task("copyPlatformFile_BD", ["preCreate_BD"], function() {
 	return stream.pipe(gulp.dest(releaseDir));
 });
 
-gulp.task("modifyFile_BD", versiontask, function() {
+gulp.task("modifyFile_Bili", versiontask, function() {
 	// 修改game.json文件
 	let gameJsonPath = path.join(releaseDir, "game.json");
 	let content = fs.readFileSync(gameJsonPath, "utf8");
 	let conJson = JSON.parse(content);
-	conJson.deviceOrientation = config.bdInfo.orientation;
+	conJson.deviceOrientation = config.biliInfo.orientation;
 	content = JSON.stringify(conJson, null, 4);
 	fs.writeFileSync(gameJsonPath, content, "utf8");
 
@@ -61,7 +55,7 @@ gulp.task("modifyFile_BD", versiontask, function() {
 		versionCon = JSON.parse(versionCon);
 	}
 	let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] :  "index.js";
-	// 百度小游戏项目，修改index.js
+	// bili小游戏项目，修改index.js
 	let filePath = path.join(releaseDir, indexJsStr);
 	if (!fs.existsSync(filePath)) {
 		return;
@@ -71,41 +65,12 @@ gulp.task("modifyFile_BD", versiontask, function() {
 	fs.writeFileSync(filePath, fileContent, "utf8");
 });
 
-// 开放域的情况下，合并game.js和index.js，并删除game.js
-gulp.task("openData_BD", ["modifyFile_BD"], function (cb) {
-	if (config.openDataZone) {
-		let versionCon;
-		if (config.version) {
-			let versionPath = releaseDir + "/version.json";
-			versionCon = fs.readFileSync(versionPath, "utf8");
-			versionCon = JSON.parse(versionCon);
-		}
-		let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] :  "index.js";
-		let indexPath = path.join(releaseDir, indexJsStr);
-		let indexjs = readFile(indexPath);
-		let gamejs = readFile(releaseDir + "/game.js");
-		if (gamejs && indexjs) {
-			gamejs = gamejs.replace(`require("index.js")`, indexjs);
-			fs.writeFileSync(indexPath, gamejs, 'utf-8');
-		}
-		return cb();
-	}
-	cb();
-});
-
-function readFile(path) {
-	if (fs.existsSync(path)) {
-		return fs.readFileSync(path, "utf-8");
-	}
-	return null;
-}
-
-gulp.task("modifyMinJs_BD", ["openData_BD"], function() {
+gulp.task("modifyMinJs_Bili", ["modifyFile_Bili"], function() {
 	// 如果保留了平台文件，如果同时取消使用min类库，就会出现文件引用不正确的问题
 	if (config.keepPlatformFile) {
 		let fileJsPath = path.join(releaseDir, "game.js");
 		let content = fs.readFileSync(fileJsPath, "utf-8");
-		content = content.replace(/min\/laya(-[\w\d]+)?\.bdmini\.min\.js/gm, "laya.bdmini.js");
+		content = content.replace(/min\/laya(-[\w\d]+)?\.bilimini\.min\.js/gm, "laya.bilimini.js");
 		fs.writeFileSync(fileJsPath, content, 'utf-8');
 	}
 	if (!config.useMinJsLibs) {
@@ -113,16 +78,16 @@ gulp.task("modifyMinJs_BD", ["openData_BD"], function() {
 	}
 	let fileJsPath = path.join(releaseDir, "game.js");
 	let content = fs.readFileSync(fileJsPath, "utf-8");
-	content = content.replace(/(min\/)?laya(-[\w\d]+)?\.bdmini(\.min)?\.js/gm, "min/laya.bdmini.min.js");
+	content = content.replace(/(min\/)?laya(-[\w\d]+)?\.bilimini(\.min)?\.js/gm, "min/laya.bilimini.min.js");
 	fs.writeFileSync(fileJsPath, content, 'utf-8');
 });
 
-gulp.task("version_BD", ["modifyMinJs_BD"], function() {
+gulp.task("version_Bili", ["modifyMinJs_Bili"], function() {
 	// 如果保留了平台文件，如果同时开启版本管理，就会出现文件引用不正确的问题
 	if (config.keepPlatformFile) {
 		let fileJsPath = path.join(releaseDir, "game.js");
 		let content = fs.readFileSync(fileJsPath, "utf-8");
-		content = content.replace(/laya(-[\w\d]+)?\.bdmini/gm, "laya.bdmini");
+		content = content.replace(/laya(-[\w\d]+)?\.bilimini/gm, "laya.bilimini");
 		content = content.replace(/index(-[\w\d]+)?\.js/gm, "index.js");
 		fs.writeFileSync(fileJsPath, content, 'utf-8');
 	}
@@ -136,28 +101,6 @@ gulp.task("version_BD", ["modifyMinJs_BD"], function() {
 	}
 });
 
-gulp.task("optimizeOpen_BD", ["version_BD"], function(cb) {
-	let bdOptimize = config.bdOptimize;
-	if (!bdOptimize || !bdOptimize.useOptimizeOpen) {
-		return cb();
-	}
-	// 首屏加载优化(秒开)，修改game.json
-	let filePath = path.join(releaseDir, "game.json");
-	if (!fs.existsSync(filePath)) {
-		return cb();
-	}
-	let fileContent = fs.readFileSync(filePath, "utf8");
-	let fileConObj = JSON.parse(fileContent);
-	if (bdOptimize.preloadRes) {
-		fileConObj.preloadResources = bdOptimize.preloadResList;
-	} else {
-		delete fileConObj.preloadResources;
-	}
-
-	fs.writeFileSync(filePath, JSON.stringify(fileConObj, null, 4), "utf8");
-	return cb();
-});
-
-gulp.task("buildBDProj", ["optimizeOpen_BD"], function() {
+gulp.task("buildBiliProj", ["version_Bili"], function() {
 	console.log("all tasks completed");
 });

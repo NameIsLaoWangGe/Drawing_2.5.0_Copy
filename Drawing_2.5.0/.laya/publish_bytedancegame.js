@@ -1,4 +1,4 @@
-// v1.8.5
+// v1.1.0
 const ideModuleDir = global.ideModuleDir;
 const workSpaceDir = global.workSpaceDir;
 
@@ -10,8 +10,8 @@ const del = require(ideModuleDir + "del");
 const revCollector = require(ideModuleDir + 'gulp-rev-collector');
 const { getEngineVersion, getFileMd5, canUsePluginEngine } = require("./pub_utils");
 
-const provider = "1109625052";
-const minPluginVersion = "2.1.1";
+const provider = "tt13aa65178c90228a";
+const minPluginVersion = "2.7.0";
 let fullRemoteEngineList = ["laya.core.js", "laya.filter.js", "laya.ani.js", "laya.tiledmap.js", "laya.d3.js", "laya.html.js", "laya.particle.js", "laya.ui.js", "laya.webgl.js", "laya.filter.js", "laya.d3Plugin.js"];
 let copyLibsTask = ["copyPlatformLibsJsFile"];
 let versiontask = ["version2"];
@@ -23,7 +23,7 @@ let versionCon; // 版本管理version.json
 let commandSuffix,
 	layarepublicPath;
 
-gulp.task("preCreate_QQ", copyLibsTask, function() {
+gulp.task("preCreate_ByteDance", copyLibsTask, function() {
 	releaseDir = global.releaseDir;
 	config = global.config;
 	commandSuffix = global.commandSuffix;
@@ -36,15 +36,15 @@ gulp.task("preCreate_QQ", copyLibsTask, function() {
 	}
 });
 
-gulp.task("copyPlatformFile_QQ", ["preCreate_QQ"], function() {
-	let adapterPath = path.join(layarepublicPath, "LayaAirProjectPack", "lib", "data", "qqfiles");
+gulp.task("copyPlatformFile_ByteDance", ["preCreate_ByteDance"], function() {
+	let adapterPath = path.join(layarepublicPath, "LayaAirProjectPack", "lib", "data", "bytefiles");
 	let hasPublishPlatform = 
 		fs.existsSync(path.join(releaseDir, "game.js")) &&
 		fs.existsSync(path.join(releaseDir, "game.json")) &&
 		fs.existsSync(path.join(releaseDir, "project.config.json"));
 	let copyLibsList;
 	if (hasPublishPlatform) {
-		copyLibsList = [`${adapterPath}/weapp-adapter.js`];
+		copyLibsList = [`${adapterPath}/microgame-adapter.js`];
 	} else {
 		copyLibsList = [`${adapterPath}/*.*`];
 	}
@@ -52,37 +52,37 @@ gulp.task("copyPlatformFile_QQ", ["preCreate_QQ"], function() {
 	return stream.pipe(gulp.dest(releaseDir));
 });
 
-gulp.task("modifyFile_QQ", versiontask, function() {
+gulp.task("modifyFile_ByteDance", versiontask, function() {
 	// 修改game.json文件
 	let gameJsonPath = path.join(releaseDir, "game.json");
 	let content = fs.readFileSync(gameJsonPath, "utf8");
 	let conJson = JSON.parse(content);
-	conJson.deviceOrientation = config.qqInfo.orientation;
+	conJson.deviceOrientation = config.bytedanceInfo.orientation;
 	content = JSON.stringify(conJson, null, 4);
 	fs.writeFileSync(gameJsonPath, content, "utf8");
 
-	if (config.version) {
+	if (config.version || config.enableVersion) {
 		let versionPath = releaseDir + "/version.json";
 		versionCon = fs.readFileSync(versionPath, "utf8");
 		versionCon = JSON.parse(versionCon);
 	}
+	// 修改index.js
 	let indexJsStr = (versionCon && versionCon["index.js"]) ? versionCon["index.js"] :  "index.js";
-	// QQ小游戏项目，修改index.js
-	let filePath = path.join(releaseDir, indexJsStr);
-	if (!fs.existsSync(filePath)) {
+	let indexFilePath = path.join(releaseDir, indexJsStr);
+	if (!fs.existsSync(indexFilePath)) {
 		return;
 	}
-	let fileContent = fs.readFileSync(filePath, "utf8");
-	fileContent = fileContent.replace(/loadLib(\(['"])/gm, "require$1./");
-	fs.writeFileSync(filePath, fileContent, "utf8");
-});
+	let indexFileContent = fs.readFileSync(indexFilePath, "utf8");
+	indexFileContent = indexFileContent.replace(/loadLib(\(['"])/gm, "require$1./");
+	fs.writeFileSync(indexFilePath, indexFileContent, "utf8");
+})
 
-gulp.task("modifyMinJs_QQ", ["modifyFile_QQ"], function() {
+gulp.task("modifyMinJs_ByteDance", ["modifyFile_ByteDance"], function() {
 	// 如果保留了平台文件，如果同时取消使用min类库，就会出现文件引用不正确的问题
 	if (config.keepPlatformFile) {
 		let fileJsPath = path.join(releaseDir, "game.js");
 		let content = fs.readFileSync(fileJsPath, "utf-8");
-		content = content.replace(/min\/laya(-[\w\d]+)?\.qqmini\.min\.js/gm, "laya.qqmini.js");
+		content = content.replace(/min\/laya(-[\w\d]+)?\.ttmini\.min\.js/gm, "laya.ttmini.js");
 		fs.writeFileSync(fileJsPath, content, 'utf-8');
 	}
 	if (!config.useMinJsLibs) {
@@ -90,16 +90,16 @@ gulp.task("modifyMinJs_QQ", ["modifyFile_QQ"], function() {
 	}
 	let fileJsPath = path.join(releaseDir, "game.js");
 	let content = fs.readFileSync(fileJsPath, "utf-8");
-	content = content.replace(/(min\/)?laya(-[\w\d]+)?\.qqmini(\.min)?\.js/gm, "min/laya.qqmini.min.js");
+	content = content.replace(/(min\/)?laya(-[\w\d]+)?\.ttmini(\.min)?\.js/gm, "min/laya.ttmini.min.js");
 	fs.writeFileSync(fileJsPath, content, 'utf-8');
 });
 
-gulp.task("version_QQ", ["modifyMinJs_QQ"], function() {
+gulp.task("version_ByteDance", ["modifyMinJs_ByteDance"], function() {
 	// 如果保留了平台文件，如果同时开启版本管理，就会出现文件引用不正确的问题
 	if (config.keepPlatformFile) {
 		let fileJsPath = path.join(releaseDir, "game.js");
 		let content = fs.readFileSync(fileJsPath, "utf-8");
-		content = content.replace(/laya(-[\w\d]+)?\.qqmini/gm, "laya.qqmini");
+		content = content.replace(/laya(-[\w\d]+)?\.ttmini/gm, "laya.ttmini");
 		content = content.replace(/index(-[\w\d]+)?\.js/gm, "index.js");
 		fs.writeFileSync(fileJsPath, content, 'utf-8');
 	}
@@ -113,7 +113,7 @@ gulp.task("version_QQ", ["modifyMinJs_QQ"], function() {
 	}
 });
 
-gulp.task("pluginEngin_QQ", ["version_QQ"], function(cb) {
+gulp.task("pluginEngin_ByteDance", ["version_ByteDance"], function(cb) {
 	if (!config.uesEnginePlugin) { // 没有使用微信引擎插件，还是像以前一样发布
 		return cb();
 	}
@@ -145,8 +145,8 @@ gulp.task("pluginEngin_QQ", ["version_QQ"], function(cb) {
 		// 1) 修改game.js和game.json
 		// 修改game.js
 		let gameJsPath = path.join(releaseDir, "game.js");
-		let platformJs = config.useMinJsLibs ? `require("./libs/min/laya.qqmini.min.js");` : `require("./libs/laya.qqmini.js");`;
-		let gameJscontent = `require("weapp-adapter.js");\n${platformJs}\nrequirePlugin('layaPlugin');\nwindow.loadLib = require;\nrequire("./${indexJsStr}");`;
+		let platformJs = config.useMinJsLibs ? `require("./libs/min/laya.ttmini.min.js");` : `require("./libs/laya.ttmini.js");`;
+		let gameJscontent = `require("microgame-adapter.js");\n${platformJs}\nrequirePlugin('layaPlugin');\nwindow.loadLib = require;\nrequire("./${indexJsStr}");`;
 		fs.writeFileSync(gameJsPath, gameJscontent, "utf8");
 		// 修改game.json，使其支持引擎插件
 		let gameJsonPath = path.join(releaseDir, "game.json");
@@ -278,6 +278,6 @@ gulp.task("pluginEngin_QQ", ["version_QQ"], function(cb) {
 	})
 });
 
-gulp.task("buildQQProj", ["pluginEngin_QQ"], function() {
+gulp.task("buildByteDanceProj", ["pluginEngin_ByteDance"], function() {
 	console.log("all tasks completed");
 });
