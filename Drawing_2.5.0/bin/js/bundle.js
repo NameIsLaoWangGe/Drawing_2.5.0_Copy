@@ -7889,15 +7889,13 @@
                     this.Compound.homing();
                     this.Compound.time = 0;
                     _Game._GeneralPencils._compoundName = null;
-                    EventAdmin._notify(_Game._Event.generalRefresh);
                 },
                 disImgState: (e) => {
                     this.Compound.DisImg.visible = true;
                     this.Compound.Pencil.visible = false;
                     this.Compound.DisImg.pos(e.stageX, e.stageY);
                     let gOwnerP = this._Parent.localToGlobal(new Laya.Point(this.Owner.x, this.Owner.y));
-                    let distance = gOwnerP.distance(this.Compound.DisImg.x, this.Compound.DisImg.y);
-                    if (distance > 100) {
+                    if (gOwnerP.y - this.Compound.DisImg.y > 150) {
                         this.Compound.DisImg.rotation = -45;
                         Tools.Node.changePovit(this.Compound.DisImg, this.Compound.DisImg.width / 2, 0);
                     }
@@ -7935,7 +7933,6 @@
             if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.DisImg) {
                 this.Compound.disImgState(e);
                 _Game._GeneralPencils._compoundName = this.Owner['_dataSource']['name'];
-                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
             }
         }
         onStageMouseUp(e) {
@@ -7958,6 +7955,14 @@
                     this.Compound.DisImg.skin = this.Compound.Pencil.skin;
                     this.Compound.DisImg.visible = false;
                 }
+                this.lastName = _Game._GeneralPencils._pitchName;
+                if (this.Owner['_dataSource']['name'] == 'colours' && !_Game._ColoursPencils._switch) {
+                    e.stopPropagation();
+                }
+                else {
+                    _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+                    EventAdmin._notify(_Game._Event.generalRefresh);
+                }
             }, (e) => {
                 this.Compound.time++;
             }, (e) => {
@@ -7969,11 +7974,9 @@
                     return;
                 }
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                let lastName = _Game._GeneralPencils._pitchName;
-                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
                 if (this.Owner['_dataSource']['name'] == 'colours') {
                     if (!_Game._ColoursPencils._switch) {
-                        _Game._GeneralPencils._pitchName = lastName;
+                        _Game._GeneralPencils._pitchName = this.lastName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                         return;

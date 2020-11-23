@@ -47,15 +47,14 @@ export class _GameItem extends Admin._Object {
             this.Compound.homing();
             this.Compound.time = 0;
             _Game._GeneralPencils._compoundName = null;
-            EventAdmin._notify(_Game._Event.generalRefresh);
         },
         disImgState: (e: Laya.Event) => {
             this.Compound.DisImg.visible = true;
             this.Compound.Pencil.visible = false;
             this.Compound.DisImg.pos(e.stageX, e.stageY);
             let gOwnerP = this._Parent.localToGlobal(new Laya.Point(this.Owner.x, this.Owner.y));
-            let distance = gOwnerP.distance(this.Compound.DisImg.x, this.Compound.DisImg.y);
-            if (distance > 100) {
+            // let distance = gOwnerP.distance(this.Compound.DisImg.x, this.Compound.DisImg.y);
+            if (gOwnerP.y - this.Compound.DisImg.y > 150) {
                 this.Compound.DisImg.rotation = -45;
                 Tools.Node.changePovit(this.Compound.DisImg, this.Compound.DisImg.width / 2, 0);
             } else {
@@ -69,7 +68,6 @@ export class _GameItem extends Admin._Object {
             // _Game._activate = false;
             this.Compound.disImgState(e);
             _Game._GeneralPencils._compoundName = this.Owner['_dataSource']['name'];
-            _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
         }
     }
     onStageMouseUp(e: Laya.Event): void {
@@ -78,6 +76,8 @@ export class _GameItem extends Admin._Object {
             // _Game._activate = true;
         }
     }
+
+    lastName: string;
     lwgBtnClick(): void {
         Click._on(Click._Type.noEffect, this.Compound.Pencil, this,
             (e: Laya.Event) => {
@@ -96,7 +96,13 @@ export class _GameItem extends Admin._Object {
                     this.Compound.DisImg.skin = this.Compound.Pencil.skin;
                     this.Compound.DisImg.visible = false;
                 }
-                // e.stopPropagation();
+                this.lastName = _Game._GeneralPencils._pitchName;
+                if (this.Owner['_dataSource']['name'] == 'colours' && !_Game._ColoursPencils._switch) {
+                    e.stopPropagation();
+                } else {
+                    _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
+                    EventAdmin._notify(_Game._Event.generalRefresh);
+                }
             },
             (e: Laya.Event) => {
                 this.Compound.time++;
@@ -112,12 +118,10 @@ export class _GameItem extends Admin._Object {
                 // console.log(this.Owner);
                 // e.stopPropagation();
                 ADManager.TAPoint(TaT.BtnClick, `id_${this.Owner['_dataSource']['name']}`);
-                let lastName = _Game._GeneralPencils._pitchName;
-                _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
                 if (this.Owner['_dataSource']['name'] == 'colours') {
                     // console.log(this.Owner['_dataSource']['name']);
                     if (!_Game._ColoursPencils._switch) {
-                        _Game._GeneralPencils._pitchName = lastName;
+                        _Game._GeneralPencils._pitchName = this.lastName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
                         // _Game._activate = false;

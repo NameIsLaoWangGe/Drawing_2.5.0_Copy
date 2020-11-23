@@ -842,7 +842,6 @@ export module _Game {
             }
         }
         onStageMouseMove(e: Laya.Event): void {
-            // console.log(this.Draw.frontPos, this.Draw.switch, _Game._activate);
             if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
