@@ -2,11 +2,11 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":107,
+    "selecteID":94,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#000000","height":1280},
     "nodeParent":-1,
-    "maxID":132,
+    "maxID":226,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -571,27 +571,25 @@
             "props":{"y":1073,"x":1053,"width":638,"var":"BlinkcList","spaceY":-40,"spaceX":-10,"repeatY":2,"pivotY":190,"pivotX":319,"name":"BlinkcList","height":379},
             "nodeParent":2,
             "label":"BlinkcList",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":101,
             "child":[
                 {
-                    "x":30,
                     "type":"Box",
                     "searchKey":"Box",
                     "props":{"y":112,"x":66,"width":113,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
                     "nodeParent":101,
                     "label":"Box",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":false,
                     "hasChild":true,
                     "compId":102,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,Pic",
                             "props":{"width":64,"skin":"Game/UI/GameScene/Pencils/Blink/chengse.png","sizeGrid":"101,0,17,0","rotation":0,"pivotY":70,"pivotX":32,"name":"Pic","height":140,"centerY":0,"centerX":0},
@@ -605,7 +603,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Script",
                             "switchAble":true,
                             "source":"src/script/Frame/_GamePencilItem.ts",
@@ -658,14 +655,13 @@
             "props":{"y":1451,"x":394,"width":634,"pivotY":191,"pivotX":317,"height":382},
             "nodeParent":2,
             "label":"Image",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":107,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":65,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -692,7 +688,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":168,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -719,7 +714,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":271,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -746,7 +740,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":374,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -773,7 +766,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":477,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -800,7 +792,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":114,"x":580,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -827,7 +818,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":65,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -854,7 +844,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":168,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -881,7 +870,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":271,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -908,7 +896,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":374,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -935,7 +922,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":477,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -962,7 +948,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":278,"x":580,"width":103,"renderType":"render","pivotY":109,"pivotX":57,"height":201},
@@ -1223,5 +1208,13 @@
             "id":1,
             "frameRate":60,
             "action":0
+        },
+        {
+            "nodes":[
+                ],
+            "name":"ani2",
+            "id":2,
+            "frameRate":24,
+            "action":2
         }]
 }

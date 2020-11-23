@@ -1,0 +1,12 @@
+{
+  "code": "import { Admin } from \"./Lwg\";\r\nexport default class _GamePencilItem extends Admin._Object {\r\n    lwgBtnClick() {\r\n    }\r\n}\r\n",
+  "references": [
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/GameConfig.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/TJ/Admanager.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/Lwg.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_Compound.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_Game.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_GameItem.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_PropTry.ts"
+  ]
+}

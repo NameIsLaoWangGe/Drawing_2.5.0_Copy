@@ -1,6 +1,7 @@
 import ADManager, { TaT } from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import { Admin, Click, DateAdmin, EventAdmin, TimerAdmin, _Gold, _SceneName } from "./Lwg";
+import TweenMgr from "./TweenMgr";
 import { _Game } from "./_Game";
 
 export module _Special {
@@ -30,6 +31,11 @@ export module _Special {
         }
     }
     export class Special extends _Special.SpecialBase {
+        lwgOnAwake(): void {
+             
+        }
+
+
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
                 ADManager.ShowReward(() => {
@@ -50,6 +56,7 @@ export module _Special {
                     TimerAdmin._frameOnce(20, this, () => {
                         _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
                             _Gold._addGold(100000000000);
+                            Laya.LocalStorage.setItem("HuiShouYiNum","1");
                             this.lwgCloseScene(this.Owner.name, () => {
                                 console.log(Laya.stage);
                             });

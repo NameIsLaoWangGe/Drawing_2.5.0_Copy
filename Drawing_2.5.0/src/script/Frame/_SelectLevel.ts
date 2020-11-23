@@ -1,8 +1,11 @@
 import ADManager, { TaT } from "../TJ/Admanager";
 import { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, Animation2D } from "./Lwg";
+import { _Execution } from "./_Execution";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 import { _PropTry } from "./_PropTry";
+import { _ShuXing } from "./_ShuXing";
+import { _TiliXT } from "./_TiliXT";
 export module _SelectLevel {
     export class _Data {
         static _property = {
@@ -131,8 +134,13 @@ export module _SelectLevel {
             }
         }
     }
+
+    export let _comeFrom: string = _SceneName.SelectLevel;
+
     export enum _Event {
         _SelectLevel_Close = '_SelectLevel_Close',
+        _OpenTiliBuC = '_OpenTiliBuC',
+        _OpenTiliBuC2 = '_OpenTiliBuC2',
     }
     export function _init(): void {
     }
@@ -170,6 +178,7 @@ export module _SelectLevel {
                                 _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
                                 _Gold._num.value -= num;
                             } else {
+
                                 Dialogue.createHint_Middle('金币不够了！');
                             }
                             break;
@@ -177,13 +186,86 @@ export module _SelectLevel {
                             break;
                     }
                 } else {
-                    _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
-                    Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
-                    this.lwgOpenScene(_SceneName.PropTry, false);
+                    if(_TiliXT._execution.value >= 2){
+                        EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC);
+                        ADManager.TAPoint(TaT.PageShow, 'firstHPpage');
+                        ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_firstHP');
+                        EventAdmin._register(_Event._OpenTiliBuC2, this, () => {
+                            if(this.Owner['_dataSource'][_Data._property.chName]==="乌龟" ||this.Owner['_dataSource'][_Data._property.chName]==="小红花" ||this.Owner['_dataSource'][_Data._property.chName]==="小汽车" ){
+                                _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                                Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
+                                // this.lwgOpenScene(_SceneName.PropTry, false);
+
+                                if (_comeFrom == _SceneName.SelectLevel) {
+                                    let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                                    this.lwgOpenScene(levelName, true, () => {
+                                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                            Admin._sceneControl[levelName].addComponent(_Game.Game);
+                                        }
+                                        
+                                    });
+                                    EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                                } else {
+                                    this.lwgCloseScene();
+                                }
+                                
+                                
+                            }else{
+                                // _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, false);
+                                _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                                Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
+                                // this.lwgOpenScene(_SceneName.PropTry, false);
+                                if (_comeFrom == _SceneName.SelectLevel) {
+                                    let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                                    this.lwgOpenScene(levelName, true, () => {
+                                        if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                            Admin._sceneControl[levelName].addComponent(_Game.Game);
+                                        }
+                                        
+                                    });
+                                    EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                                } else {
+                                    this.lwgCloseScene();
+                                }
+                                
+                            }   
+                        })
+                        
+                    }else{
+                        this.lwgOpenScene("TiliFou",false);
+                    }  
+                }
+                _MyList.refresh();
+            });
+
+            
+            let ADjiesuo =  (this.Owner.getChildByName('Content') as Laya.Image).getChildByName('ADjiesuo')as Laya.Image;
+            Click._on(Click._Type.noEffect, ADjiesuo, this, null, null, () => {
+                
+                if (!this.owner['_dataSource'][_Data._property.unlock]) {
+                    switch (this.owner['_dataSource'][_Data._property.unlockWay]) {
+                        case _Data._unlockWay.ads:
+                            ADManager.ShowReward(() => {
+                                ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_choosecard');
+                                _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
+                            });
+                            break;
+                        case _Data._unlockWay.gold:
+                            ADManager.ShowReward(() => {
+                                ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_choosecard');
+                                _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
+
+                            });
+                            break;
+                        default:
+                            
+                            break;
+                    }
                 }
                 _MyList.refresh();
             });
         }
+    
     }
 
     export class SelectLevelBase extends Admin._SceneBase {
@@ -200,6 +282,7 @@ export module _SelectLevel {
                 let _dataSource = cell.dataSource;
                 let Content = cell.getChildByName('Content') as Laya.Image;
                 let BtnContent = Content.getChildByName('BtnContent') as Laya.Image;
+                let ADjiesuo = Content.getChildByName('ADjiesuo') as Laya.Image;
                 let Name = BtnContent.getChildByName('Name') as Laya.Image;
                 Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_Data._property.name]}.png`;
                 let Xianlu = Content.getChildByName('Xianlu') as Laya.Image;
@@ -228,31 +311,43 @@ export module _SelectLevel {
                 let IconLock = BtnContent.getChildByName('IconLock') as Laya.Image;
                 let GoldNum = BtnContent.getChildByName('GoldNum') as Laya.Label;
                 let GoldBoard = BtnContent.getChildByName('GoldBoard') as Laya.Image;
+                
 
                 if (!_dataSource[_Data._property.unlock]) {
                     switch (_dataSource[_Data._property.unlockWay]) {
                         case _Data._unlockWay.ads:
                             GoldBoard.visible = GoldNum.visible = false;
                             IconAds.visible = true;
+                            ADjiesuo.visible = false;
                             break;
                         case _Data._unlockWay.free:
                             GoldBoard.visible = GoldNum.visible = false;
                             IconAds.visible = false;
+                            ADjiesuo.visible = false;
                             break;
                         case _Data._unlockWay.gold:
                             GoldNum.text = _dataSource[_Data._property.condition];
                             GoldBoard.visible = GoldNum.visible = true;
                             IconAds.visible = false;
+                            if(_dataSource[_Data._property.chName]==="丁老太"){
+                                ADjiesuo.visible = false;
+                            }else{
+                                ADjiesuo.visible = true;
+                            }
+                            
                             break;
                         default:
                             break;
                     }
                     IconLock.skin = `Game/UI/SelectLevel/suo.png`;
+                    IconLock.pos(143,107);
                 } else {
                     IconAds.visible = false;
                     GoldNum.visible = false;
                     GoldBoard.visible = false;
+                    ADjiesuo.visible = false;
                     IconLock.skin = `Game/UI/SelectLevel/icon_can.png`;
+                    IconLock.pos(143,127);
                 }
                 let Board2 = BtnContent.getChildByName('Board2') as Laya.Image;
                 let Pic = Board2.getChildByName('Pic') as Laya.Image;
@@ -296,6 +391,9 @@ export module _SelectLevel {
             EventAdmin._register(_Event._SelectLevel_Close, this, () => {
                 this.lwgCloseScene();
             })
+            EventAdmin._register(_Event._OpenTiliBuC, this, () => {
+                this.ImgVar('TiliTishi').visible=true;
+            })
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.ImgVar('BtnBack'), this, null, null, () => {
@@ -329,6 +427,23 @@ export module _SelectLevel {
                     }
                 });
             }
+
+            Click._on(Click._Type.largen, this.ImgVar('SureQ'), this, null, null, () => {
+                ADManager.ShowReward(() => {
+                    EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC2);
+                    ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_firstHP');
+                    ADManager.TAPoint(TaT.PageLeave, 'firstHPpage');
+                });
+            });
+
+            Click._on(Click._Type.largen, this.ImgVar('GuanQ'), this, null, null, () => {    
+                _TiliXT._execution.value -=2;
+                _ShuXing.SKJ+=2;
+                Laya.LocalStorage.setItem("SKJ",_ShuXing.SKJ.toString());
+                EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC2);
+                Dialogue.createHint_Middle(`消耗2点体力`);
+                ADManager.TAPoint(TaT.PageLeave, 'firstHPpage');
+            });
         }
         lwgOnDisable(): void {
             ADManager.TAPoint(TaT.PageLeave, 'choosecardpage');

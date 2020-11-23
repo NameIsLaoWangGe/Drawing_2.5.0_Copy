@@ -278,7 +278,13 @@
                     Laya.LocalStorage.setItem('_execution', val.toString());
                 }
             };
-            function _createExecutionNum(parent) {
+            function _createAddExecution(x, y, parent) {
+                if (!parent) {
+                    parent = Laya.stage;
+                }
+                if (Execution.ExecutionNumNode) {
+                    Execution.ExecutionNumNode.removeSelf();
+                }
                 let sp;
                 Laya.loader.load('prefab/ExecutionNum.json', Laya.Handler.create(this, function (prefab) {
                     let _prefab = new Laya.Prefab();
@@ -286,33 +292,9 @@
                     sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
                     parent.addChild(sp);
                     let num = sp.getChildByName('Num');
-                    sp.pos(297, 90);
-                    sp.zOrder = 50;
+                    sp.pos(x, y);
+                    sp.zOrder = 1000;
                     Execution.ExecutionNumNode = sp;
-                    Execution.ExecutionNumNode.name = 'ExecutionNumNode';
-                }));
-            }
-            Execution._createExecutionNum = _createExecutionNum;
-            function _createAddExecution(x, y, func) {
-                let sp;
-                Laya.loader.load('prefab/execution.json', Laya.Handler.create(this, function (prefab) {
-                    let _prefab = new Laya.Prefab();
-                    _prefab.json = prefab;
-                    sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
-                    Laya.stage.addChild(sp);
-                    sp.x = Laya.stage.width / 2;
-                    sp.y = Laya.stage.height / 2;
-                    sp.zOrder = 50;
-                    if (Execution.ExecutionNumNode) {
-                        Animation2D.move_Simple(sp, sp.x, sp.y, Execution.ExecutionNumNode.x, Execution.ExecutionNumNode.y, 800, 100, f => {
-                            Animation2D.fadeOut(sp, 1, 0, 200, 0, f => {
-                                lwg.Animation2D.upDwon_Shake(Execution.ExecutionNumNode, 10, 80, 0, null);
-                                if (func) {
-                                    func();
-                                }
-                            });
-                        }, Laya.Ease.expoIn);
-                    }
                 }));
             }
             Execution._createAddExecution = _createAddExecution;
@@ -339,9 +321,13 @@
         (function (Gold_1) {
             Gold_1._num = {
                 get value() {
-                    return Laya.LocalStorage.getItem('_goldNum') ? Number(Laya.LocalStorage.getItem('_goldNum')) : 0;
+                    return Laya.LocalStorage.getItem('_goldNum') ? Number(Laya.LocalStorage.getItem('_goldNum')) : 200;
                 },
                 set value(val) {
+                    if (Gold_1.GoldNode) {
+                        let num = Gold_1.GoldNode.getChildByName('Num');
+                        num.text = val.toString();
+                    }
                     Laya.LocalStorage.setItem('_goldNum', val.toString());
                 }
             };
@@ -497,6 +483,10 @@
             }
             Gold_1._getGoldAni_Heap = _getGoldAni_Heap;
             class GoldAniBase extends Laya.Script {
+                constructor() {
+                    super(...arguments);
+                    this.maxKey = 3;
+                }
                 onAwake() {
                     this.initProperty();
                 }
@@ -972,6 +962,7 @@
                 _SceneName["Settle"] = "Settle";
                 _SceneName["Special"] = "Special";
                 _SceneName["Compound"] = "Compound";
+                _SceneName["SpecialQ"] = "SpecialQ";
             })(_SceneName = Admin._SceneName || (Admin._SceneName = {}));
             function _preLoadOpenScene(openSceneName, cloesSceneName, func, zOrder) {
                 _openScene(_SceneName.PreLoadStep);
@@ -1019,10 +1010,12 @@
                     };
                     scene.name = openSceneName;
                     Admin._sceneControl[openSceneName] = scene;
+                    console.log(Admin._sceneControl);
                     let background = scene.getChildByName('Background');
                     if (background) {
                         background.width = Laya.stage.width;
                         background.height = Laya.stage.height;
+                        ``;
                     }
                     if (Admin._sceneControl[cloesSceneName]) {
                         _closeScene(cloesSceneName, openf);
@@ -1034,6 +1027,7 @@
             }
             Admin._openScene = _openScene;
             function _closeScene(closeName, func) {
+                console.log(Admin._sceneControl);
                 if (!Admin._sceneControl[closeName]) {
                     console.log('场景', closeName, '关闭失败！可能是名称不对！');
                     return;
@@ -1239,6 +1233,13 @@
                         return undefined;
                     }
                 }
+                btnEv(name, func, caller = this) {
+                    let btn = this.ImgVar(name);
+                    btn.on(Laya.Event.CLICK, caller, () => {
+                        func.call(caller);
+                    });
+                    return btn;
+                }
                 btnVar(str) {
                     if (this.Owner[str]) {
                         return this.Owner[str];
@@ -1249,6 +1250,15 @@
                     }
                 }
                 ImgVar(str) {
+                    if (this.Owner[str]) {
+                        return this.Owner[str];
+                    }
+                    else {
+                        console.log('场景内不存在全局节点：', str);
+                        return undefined;
+                    }
+                }
+                TexVar(str) {
                     if (this.Owner[str]) {
                         return this.Owner[str];
                     }
@@ -2568,6 +2578,16 @@
                 }), delayed ? delayed : 0);
             }
             Animation2D.circulation_scale = circulation_scale;
+            function move_Simple_01(node, firstX, firstY, targetX, targetY, time, delayed, func) {
+                node.x = firstX;
+                node.y = firstY;
+                Laya.Tween.to(node, { x: targetX, y: targetY }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+                    if (func !== null) {
+                        func();
+                    }
+                }), delayed);
+            }
+            Animation2D.move_Simple_01 = move_Simple_01;
             function leftRight_Shake(node, range, time, delayed, func, click) {
                 if (!delayed) {
                     delayed = 0;
@@ -5749,6 +5769,8 @@
             TJ.API.AdService.ShowNormal(new TJ.API.AdService.Param());
         }
         static ShowReward(rewardAction, CDTime = 500) {
+            rewardAction();
+            return;
             if (Admin._platform.name == Admin._platform.tpye.WebTest || Admin._platform.name == Admin._platform.tpye.OPPOTest || Admin._platform.name == Admin._platform.tpye.Research) {
                 rewardAction();
                 return;
@@ -6337,6 +6359,8 @@
                 };
             }
             lwgOnAwake() {
+                _Game.Shouzhi.visible = false;
+                _Game.Shouzhi.alpha = 0;
                 if (_Compound.Skin1 == 'colours') {
                     _Compound.Skin1 = _Game._ColoursPencils._pitchName;
                     this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${_Compound.Skin1}.png`;
@@ -6642,6 +6666,14 @@
                     url: 'Prefab/BtnTurnRight.json',
                     prefab: new Laya.Prefab,
                 },
+                shouzhi: {
+                    url: 'Prefab/shouzhi.json',
+                    prefab: new Laya.Prefab,
+                },
+                ExecutionNum: {
+                    url: 'prefab/ExecutionNum.json',
+                    prefab: new Laya.Prefab,
+                },
             },
             texture: {
                 bishua1: {
@@ -6707,6 +6739,7 @@
                 Game_xiaonainiu: `Scene/Game_xiaonainiu.json`,
                 Game_xiaoqiche: `Scene/Game_xiaoqiche.json`,
                 Game_zhangyugege: `Scene/Game_zhangyugege.json`,
+                Game_nvwang: `Scene/Game_nvwang.json`,
             },
             json: {
                 General: {
@@ -6750,6 +6783,506 @@
         }
         _PreLoad.PreLoad = PreLoad;
     })(_PreLoad || (_PreLoad = {}));
+    var _PreLoad$1 = _PreLoad.PreLoad;
+
+    var _TiliXT;
+    (function (_TiliXT) {
+        _TiliXT._execution = {
+            get value() {
+                if (!this['_TiliXT_executionNum']) {
+                    return Laya.LocalStorage.getItem('_TiliXT_executionNum') ? Number(Laya.LocalStorage.getItem('_TiliXT_executionNum')) : 5;
+                }
+                return this['_TiliXT_executionNum'];
+            },
+            set value(val) {
+                console.log(val);
+                this['_TiliXT_executionNum'] = val;
+                _TiliXT.Num.value = val.toString();
+                Laya.LocalStorage.setItem('_TiliXT_executionNum', val.toString());
+            }
+        };
+        _TiliXT._addExDate = {
+            get value() {
+                if (!this['_TiliXT_addExDate']) {
+                    return Laya.LocalStorage.getItem('_TiliXT_addExDate') ? Number(Laya.LocalStorage.getItem('_TiliXT_addExDate')) : (new Date()).getDay();
+                }
+                return this['_TiliXT_addExDate'];
+            },
+            set value(val) {
+                this['_TiliXT_addExDate'] = val;
+                Laya.LocalStorage.setItem('_TiliXT_addExDate', val.toString());
+            }
+        };
+        _TiliXT._addExHours = {
+            get value() {
+                if (!this['_TiliXT_addExHours']) {
+                    return Laya.LocalStorage.getItem('_TiliXT_addExHours') ? Number(Laya.LocalStorage.getItem('_TiliXT_addExHours')) : (new Date()).getHours();
+                }
+                return this['_TiliXT_addExHours'];
+            },
+            set value(val) {
+                this['_TiliXT_addExHours'] = val;
+                Laya.LocalStorage.setItem('_TiliXT_addExHours', val.toString());
+            }
+        };
+        _TiliXT._addMinutes = {
+            get value() {
+                if (!this['_TiliXT_addMinutes']) {
+                    return Laya.LocalStorage.getItem('_TiliXT_addMinutes') ? Number(Laya.LocalStorage.getItem('_TiliXT_addMinutes')) : (new Date()).getMinutes();
+                }
+                return this['_TiliXT_addMinutes'];
+            },
+            set value(val) {
+                this['_TiliXT_addMinutes'] = val;
+                Laya.LocalStorage.setItem('_TiliXT_addMinutes', val.toString());
+            }
+        };
+        class TiliXT extends Admin._SceneBase {
+            constructor() {
+                super(...arguments);
+                this.time = 0;
+                this.countNum = 59;
+                this.timeSwitch = true;
+            }
+            lwgOnAwake() {
+                _TiliXT.Num = this.ImgVar("ExecutionNum").getChildByName('Num');
+                this.CountDown = this.ImgVar("ExecutionNum").getChildByName('CountDown');
+                this.CountDown_board = this.ImgVar("ExecutionNum").getChildByName('CountDown_board');
+                this.countNum = 59;
+                this.CountDown.text = '00:' + this.countNum;
+                this.CountDown_board.text = this.CountDown.text;
+                let d = new Date;
+                if (d.getDate() !== _TiliXT._addExDate.value) {
+                    _TiliXT._execution.value = 5;
+                }
+                else {
+                    if (d.getHours() == _TiliXT._addExHours.value) {
+                        console.log(d.getMinutes(), _TiliXT._addMinutes.value);
+                        _TiliXT._execution.value += (d.getMinutes() - _TiliXT._addMinutes.value);
+                        if (_TiliXT._execution.value > 5) {
+                            _TiliXT._execution.value = 5;
+                        }
+                    }
+                    else {
+                        _TiliXT._execution.value = 5;
+                    }
+                }
+                _TiliXT.Num.value = _TiliXT._execution.value.toString();
+                _TiliXT._addExDate.value = d.getDate();
+                _TiliXT._addExHours.value = d.getHours();
+                _TiliXT._addMinutes.value = d.getMinutes();
+            }
+            countDownAddEx() {
+                this.time++;
+                if (this.time % 60 == 0) {
+                    this.countNum--;
+                    if (this.countNum < 0) {
+                        this.countNum = 59;
+                        _TiliXT._execution.value += 1;
+                        _TiliXT.Num.value = _TiliXT._execution.value.toString();
+                        let d = new Date;
+                        _TiliXT._addExHours.value = d.getHours();
+                        _TiliXT._addMinutes.value = d.getMinutes();
+                    }
+                    if (this.countNum >= 10 && this.countNum <= 59) {
+                        this.CountDown.text = '00:' + this.countNum;
+                        this.CountDown_board.text = this.CountDown.text;
+                    }
+                    else if (this.countNum >= 0 && this.countNum < 10) {
+                        this.CountDown.text = '00:0' + this.countNum;
+                        this.CountDown_board.text = this.CountDown.text;
+                    }
+                }
+            }
+            lwgOnUpdate() {
+                if (Number(_TiliXT.Num.value) >= 5) {
+                    if (this.timeSwitch) {
+                        _TiliXT._execution.value = 5;
+                        _TiliXT.Num.value = _TiliXT._execution.value.toString();
+                        this.CountDown.text = '00:00';
+                        this.CountDown_board.text = this.CountDown.text;
+                        this.countNum = 60;
+                        this.timeSwitch = false;
+                    }
+                }
+                else {
+                    this.timeSwitch = true;
+                    this.countDownAddEx();
+                }
+            }
+        }
+        _TiliXT.TiliXT = TiliXT;
+    })(_TiliXT || (_TiliXT = {}));
+    var _TiliXT$1 = _TiliXT.TiliXT;
+
+    var _ShuXing;
+    (function (_ShuXing) {
+        _ShuXing.SKJT = 0;
+        _ShuXing.Scncount = 0;
+        _ShuXing.WKJ = 5;
+        _ShuXing.WKJT = 0;
+        _ShuXing.Wcncount = 0;
+        _ShuXing.XKJ = 5;
+        _ShuXing.XKJT = 0;
+        _ShuXing.Xcncount = 0;
+        _ShuXing.cncounts = 0;
+        _ShuXing.cncountz = 0;
+        _ShuXing.cncounx = 0;
+        class ShuXing extends Admin._SceneBase {
+            lwgOnAwake() {
+                _ShuXing.SKJ = Number(Laya.LocalStorage.getItem("SKJ"));
+                _ShuXing.SKJT = Number(Laya.LocalStorage.getItem("SKJT"));
+                _ShuXing.WKJ = Number(Laya.LocalStorage.getItem("WKJ"));
+                _ShuXing.WKJT = Number(Laya.LocalStorage.getItem("WKJT"));
+                _ShuXing.XKJ = Number(Laya.LocalStorage.getItem("XKJ"));
+                _ShuXing.XKJT = Number(Laya.LocalStorage.getItem("XKJT"));
+                _ShuXing.cncounx = Number(Laya.LocalStorage.getItem("cncounx"));
+                _ShuXing.cncountz = Number(Laya.LocalStorage.getItem("cncountz"));
+                _ShuXing.cncounts = Number(Laya.LocalStorage.getItem("cncounts"));
+                let FnumYao = Number(Laya.LocalStorage.getItem("FnumYao"));
+                if (FnumYao == 0) {
+                    this.TexVar('Stext').text = _ShuXing.SKJT + " / 50";
+                    _ShuXing.SKJ = 20;
+                    Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                    this.TexVar('Wtext').text = _ShuXing.WKJT + " / 50";
+                    _ShuXing.WKJ = 5;
+                    Laya.LocalStorage.setItem("WKJ", _ShuXing.WKJ.toString());
+                    this.TexVar('Xtext').text = _ShuXing.XKJT + " / 50";
+                    _ShuXing.XKJ = 5;
+                    Laya.LocalStorage.setItem("XKJ", _ShuXing.XKJ.toString());
+                }
+                else {
+                    this.TexVar('Stext').text = _ShuXing.SKJT + " / 1000";
+                    this.TexVar('Wtext').text = _ShuXing.WKJT + " / 1000";
+                    this.TexVar('Xtext').text = _ShuXing.XKJT + " / 1000";
+                }
+                this.TexVar('stest').text = "(+" + _ShuXing.SKJ + ")";
+                this.ImgVar('SSlide').width += 0.43 * Number(Laya.LocalStorage.getItem("Scncount"));
+                this.TexVar('wtest').text = "(+" + _ShuXing.SKJ + ")";
+                this.ImgVar('ZSlide').width += 0.43 * Number(Laya.LocalStorage.getItem("Wcncount"));
+                this.TexVar('xtest').text = "(+" + _ShuXing.SKJ + ")";
+                this.ImgVar('XSlide').width += 0.43 * Number(Laya.LocalStorage.getItem("Xcncount"));
+                this.ImgVar('ZheZ').height -= 3.8 * (Number(Laya.LocalStorage.getItem("cncounx")) + Number(Laya.LocalStorage.getItem("cncountz")) + Number(Laya.LocalStorage.getItem("cncounts")));
+                ADManager.TAPoint(TaT.PageEnter, "shuxingpage");
+            }
+            lwgOnUpdate() {
+                if (_ShuXing.SKJ > 0) {
+                    this.ImgVar('SWAD').visible = true;
+                    this.ImgVar('SAD').visible = false;
+                }
+                else {
+                    this.ImgVar('SWAD').visible = false;
+                    this.ImgVar('SAD').visible = true;
+                }
+                if (_ShuXing.SKJ > 0) {
+                    this.ImgVar('ZWAD').visible = true;
+                    this.ImgVar('ZAD').visible = false;
+                }
+                else {
+                    this.ImgVar('ZWAD').visible = false;
+                    this.ImgVar('ZAD').visible = true;
+                }
+                if (_ShuXing.SKJ > 0) {
+                    this.ImgVar('XWAD').visible = true;
+                    this.ImgVar('XAD').visible = false;
+                }
+                else {
+                    this.ImgVar('XWAD').visible = false;
+                    this.ImgVar('XAD').visible = true;
+                }
+            }
+            lwgOpenAni() { return 0; }
+            ;
+            lwgOpenAniAfter() {
+                TimerAdmin._loop(2000, this, () => {
+                    Animation2D.bomb_LeftRight(this.ImgVar('Box'), 1.20, 250);
+                    Animation2D.simple_Rotate(this.ImgVar('LiahtGX'), 0, 360, 3000);
+                }, true);
+            }
+            XYTianjia() {
+                _ShuXing.XKJT += 1;
+                this.ImgVar('ZheZ').height -= 3.8;
+                if (this.ImgVar('ZheZ').height <= 1) {
+                    this.ImgVar('ZheZ').height = 0;
+                    this.ImgVar('box').visible = false;
+                    this.ImgVar('Box').visible = true;
+                    Laya.timer.once(2000, this, () => {
+                        this.tanJL();
+                    });
+                }
+                else {
+                    _ShuXing.cncounx++;
+                    Laya.LocalStorage.setItem("cncounx", _ShuXing.cncounx.toString());
+                }
+                if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                    this.TexVar('Xtext').text = _ShuXing.XKJT + " / 50";
+                    this.ImgVar('XSlide').width += 8.6;
+                }
+                else {
+                    this.TexVar('Xtext').text = _ShuXing.XKJT + " / 1000";
+                    this.ImgVar('XSlide').width += 0.43;
+                }
+                this.TexVar('stest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('wtest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('xtest').text = "(+" + _ShuXing.SKJ + ")";
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('SWAD').visible = false;
+                    this.ImgVar('SAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('ZWAD').visible = false;
+                    this.ImgVar('ZAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('XWAD').visible = false;
+                    this.ImgVar('XAD').visible = true;
+                }
+                Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                Laya.LocalStorage.setItem("XKJT", _ShuXing.XKJT.toString());
+            }
+            ZLTianjia() {
+                _ShuXing.WKJT += 1;
+                this.ImgVar('ZheZ').height -= 3.8;
+                if (this.ImgVar('ZheZ').height <= 1) {
+                    this.ImgVar('ZheZ').height = 0;
+                    this.ImgVar('box').visible = false;
+                    this.ImgVar('Box').visible = true;
+                    Laya.timer.once(2000, this, () => {
+                        this.tanJL();
+                    });
+                }
+                else {
+                    _ShuXing.cncountz++;
+                    Laya.LocalStorage.setItem("cncountz", _ShuXing.cncountz.toString());
+                }
+                if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                    this.TexVar('Wtext').text = _ShuXing.WKJT + " / 50";
+                    this.ImgVar('ZSlide').width += 8.6;
+                }
+                else {
+                    this.TexVar('Wtext').text = _ShuXing.WKJT + " / 1000";
+                    this.ImgVar('ZSlide').width += 0.43;
+                }
+                this.TexVar('stest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('wtest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('xtest').text = "(+" + _ShuXing.SKJ + ")";
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('SWAD').visible = false;
+                    this.ImgVar('SAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('ZWAD').visible = false;
+                    this.ImgVar('ZAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('XWAD').visible = false;
+                    this.ImgVar('XAD').visible = true;
+                }
+                Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                Laya.LocalStorage.setItem("WKJT", _ShuXing.WKJT.toString());
+            }
+            SMTianjia() {
+                _ShuXing.SKJT += 1;
+                this.ImgVar('ZheZ').height -= 3.8;
+                if (this.ImgVar('ZheZ').height <= 1) {
+                    this.ImgVar('ZheZ').height = 0;
+                    this.ImgVar('box').visible = false;
+                    this.ImgVar('Box').visible = true;
+                    Laya.timer.once(2000, this, () => {
+                        this.tanJL();
+                    });
+                }
+                else {
+                    _ShuXing.cncounts++;
+                    Laya.LocalStorage.setItem("cncounts", _ShuXing.cncounts.toString());
+                }
+                if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                    this.TexVar('Stext').text = _ShuXing.SKJT + " / 50";
+                    this.ImgVar('SSlide').width += 8.6;
+                }
+                else {
+                    this.TexVar('Stext').text = _ShuXing.SKJT + " / 1000";
+                    this.ImgVar('SSlide').width += 0.43;
+                }
+                this.TexVar('stest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('wtest').text = "(+" + _ShuXing.SKJ + ")";
+                this.TexVar('xtest').text = "(+" + _ShuXing.SKJ + ")";
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('SWAD').visible = false;
+                    this.ImgVar('SAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('ZWAD').visible = false;
+                    this.ImgVar('ZAD').visible = true;
+                }
+                if (_ShuXing.SKJ == 0) {
+                    this.ImgVar('XWAD').visible = false;
+                    this.ImgVar('XAD').visible = true;
+                }
+                Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                Laya.LocalStorage.setItem("SKJT", _ShuXing.SKJT.toString());
+            }
+            tanJL() {
+                console.log("获得奖励");
+                ADManager.TAPoint(TaT.BtnShow, 'BXshuxing');
+                this.ImgVar('box').visible = true;
+                this.ImgVar('Box').visible = false;
+                this.ImgVar('ZheZ').height = 114;
+                this.ImgVar('JLBG').visible = true;
+                if (Number(Laya.LocalStorage.getItem("cncounts")) > Number(Laya.LocalStorage.getItem("cncountz")) && Number(Laya.LocalStorage.getItem("cncounts")) > Number(Laya.LocalStorage.getItem("cncounx"))) {
+                    this.ImgVar('TiliJL').visible = true;
+                    this.ImgVar('JINbiJL').visible = false;
+                    this.ImgVar('caibiJL').visible = false;
+                    _TiliXT._execution.value += 3;
+                }
+                else if (Number(Laya.LocalStorage.getItem("cncountz")) > Number(Laya.LocalStorage.getItem("cncounts")) && Number(Laya.LocalStorage.getItem("cncountz")) > Number(Laya.LocalStorage.getItem("cncounx"))) {
+                    this.ImgVar('TiliJL').visible = false;
+                    this.ImgVar('JINbiJL').visible = true;
+                    this.ImgVar('caibiJL').visible = false;
+                    _Gold._addGold(300);
+                }
+                else if (Number(Laya.LocalStorage.getItem("cncounx")) > Number(Laya.LocalStorage.getItem("cncounts")) && Number(Laya.LocalStorage.getItem("cncounx")) > Number(Laya.LocalStorage.getItem("cncountz"))) {
+                    this.ImgVar('TiliJL').visible = false;
+                    this.ImgVar('JINbiJL').visible = false;
+                    this.ImgVar('caibiJL').visible = true;
+                    _Game._BlinkPencils._pitchName = _Game._BlinkPencils._randomNoHaveOne();
+                    _Game._BlinkPencils._addPencil(_Game._BlinkPencils._randomNoHaveOne());
+                }
+                else {
+                    this.ImgVar('TiliJL').visible = true;
+                    this.ImgVar('JINbiJL').visible = false;
+                    this.ImgVar('caibiJL').visible = false;
+                    _TiliXT._execution.value += 3;
+                }
+                _ShuXing.cncounx = 0;
+                Laya.LocalStorage.setItem("cncounx", _ShuXing.cncounx.toString());
+                _ShuXing.cncountz = 0;
+                Laya.LocalStorage.setItem("cncountz", _ShuXing.cncountz.toString());
+                _ShuXing.cncounts = 0;
+                Laya.LocalStorage.setItem("cncounts", _ShuXing.cncounts.toString());
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('Huode'), this, null, null, () => {
+                    this.ImgVar('JLBG').visible = false;
+                    ADManager.TAPoint(TaT.BtnClick, 'BXshuxing');
+                });
+                Click._on(Click._Type.noEffect, this.btnVar('KaiYX'), this, null, null, () => {
+                    _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
+                    this.lwgOpenScene(_SceneName.SelectLevel);
+                });
+                Click._on(Click._Type.largen, this.btnVar('CheHui'), this, null, null, () => {
+                    this.lwgCloseScene();
+                    Laya.LocalStorage.setItem("FnumYao", "1");
+                });
+                Click._on(Click._Type.largen, this.btnVar('XWAD'), this, null, null, () => {
+                    if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                        if (_ShuXing.XKJT >= 50) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    else {
+                        if (_ShuXing.XKJT >= 10000) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    _ShuXing.Xcncount = Number(Laya.LocalStorage.getItem("Xcncount"));
+                    if (_ShuXing.SKJ > 0) {
+                        switch (_ShuXing.Xcncount) {
+                            default:
+                                _ShuXing.SKJ -= 1;
+                                this.XYTianjia();
+                                break;
+                        }
+                        _ShuXing.Xcncount++;
+                        Laya.LocalStorage.setItem("Xcncount", _ShuXing.Xcncount.toString());
+                    }
+                });
+                Click._on(Click._Type.largen, this.btnVar('XAD'), this, null, null, () => {
+                    this.ImgVar('TanShu').visible = true;
+                });
+                Click._on(Click._Type.largen, this.btnVar('SWAD'), this, null, null, () => {
+                    if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                        if (_ShuXing.SKJT >= 50) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    else {
+                        if (_ShuXing.SKJT >= 10000) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    _ShuXing.Scncount = Number(Laya.LocalStorage.getItem("Scncount"));
+                    if (_ShuXing.SKJ > 0) {
+                        switch (_ShuXing.Scncount) {
+                            default:
+                                _ShuXing.SKJ -= 1;
+                                this.SMTianjia();
+                                break;
+                        }
+                        _ShuXing.Scncount++;
+                        Laya.LocalStorage.setItem("Scncount", _ShuXing.Scncount.toString());
+                    }
+                });
+                Click._on(Click._Type.largen, this.btnVar('SAD'), this, null, null, () => {
+                    this.ImgVar('TanShu').visible = true;
+                });
+                Click._on(Click._Type.largen, this.btnVar('ZWAD'), this, null, null, () => {
+                    if (Number(Laya.LocalStorage.getItem("FnumYao")) == 0) {
+                        if (_ShuXing.WKJT >= 50) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    else {
+                        if (_ShuXing.WKJT >= 10000) {
+                            Dialogue.createHint_Middle(`该属性已满`);
+                            return;
+                        }
+                    }
+                    _ShuXing.Wcncount = Number(Laya.LocalStorage.getItem("Wcncount"));
+                    if (_ShuXing.SKJ > 0) {
+                        switch (_ShuXing.Wcncount) {
+                            default:
+                                _ShuXing.SKJ -= 1;
+                                this.ZLTianjia();
+                                break;
+                        }
+                        _ShuXing.Wcncount++;
+                        Laya.LocalStorage.setItem("Wcncount", _ShuXing.Wcncount.toString());
+                    }
+                });
+                Click._on(Click._Type.largen, this.btnVar('ZAD'), this, null, null, () => {
+                    this.ImgVar('TanShu').visible = true;
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
+                    this.ImgVar('TanShu').visible = false;
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnConfirm'), this, null, null, () => {
+                    ADManager.ShowReward(() => {
+                        _ShuXing.SKJ += 10;
+                        Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                        this.TexVar('stest').text = "(+" + _ShuXing.SKJ + ")";
+                        this.TexVar('wtest').text = "(+" + _ShuXing.SKJ + ")";
+                        this.TexVar('xtest').text = "(+" + _ShuXing.SKJ + ")";
+                        this.ImgVar('ZWAD').visible = true;
+                        this.ImgVar('ZAD').visible = false;
+                        ADManager.TAPoint(TaT.BtnClick, 'ADshuxing');
+                        this.ImgVar('TanShu').visible = false;
+                    });
+                });
+            }
+            lwgOnDisable() {
+                ADManager.TAPoint(TaT.PageLeave, 'shuxingpage');
+                Laya.LocalStorage.setItem("FnumYao", "1");
+            }
+        }
+        _ShuXing.ShuXing = ShuXing;
+    })(_ShuXing || (_ShuXing = {}));
+    var _ShuXing$1 = _ShuXing.ShuXing;
 
     var _SelectLevel;
     (function (_SelectLevel) {
@@ -6876,9 +7409,12 @@
             ads: 'ads',
         };
         _SelectLevel._Data = _Data;
+        _SelectLevel._comeFrom = _SceneName.SelectLevel;
         let _Event;
         (function (_Event) {
             _Event["_SelectLevel_Close"] = "_SelectLevel_Close";
+            _Event["_OpenTiliBuC"] = "_OpenTiliBuC";
+            _Event["_OpenTiliBuC2"] = "_OpenTiliBuC2";
         })(_Event = _SelectLevel._Event || (_SelectLevel._Event = {}));
         function _init() {
         }
@@ -6913,9 +7449,70 @@
                         }
                     }
                     else {
-                        _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
-                        Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
-                        this.lwgOpenScene(_SceneName.PropTry, false);
+                        if (_TiliXT._execution.value >= 2) {
+                            EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC);
+                            ADManager.TAPoint(TaT.PageShow, 'firstHPpage');
+                            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_firstHP');
+                            EventAdmin._register(_Event._OpenTiliBuC2, this, () => {
+                                if (this.Owner['_dataSource'][_Data._property.chName] === "乌龟" || this.Owner['_dataSource'][_Data._property.chName] === "小红花" || this.Owner['_dataSource'][_Data._property.chName] === "小汽车") {
+                                    _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                                    Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
+                                    if (_SelectLevel._comeFrom == _SceneName.SelectLevel) {
+                                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                                        this.lwgOpenScene(levelName, true, () => {
+                                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                                            }
+                                        });
+                                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                                    }
+                                    else {
+                                        this.lwgCloseScene();
+                                    }
+                                }
+                                else {
+                                    _SelectLevel._Data._pich.customs = this.Owner['_dataSource'][_SelectLevel._Data._property.name];
+                                    Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.random;
+                                    if (_SelectLevel._comeFrom == _SceneName.SelectLevel) {
+                                        let levelName = _SceneName.Game + '_' + _SelectLevel._Data._pich.customs;
+                                        this.lwgOpenScene(levelName, true, () => {
+                                            if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
+                                                Admin._sceneControl[levelName].addComponent(_Game.Game);
+                                            }
+                                        });
+                                        EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
+                                    }
+                                    else {
+                                        this.lwgCloseScene();
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            this.lwgOpenScene("TiliFou", false);
+                        }
+                    }
+                    _SelectLevel._MyList.refresh();
+                });
+                let ADjiesuo = this.Owner.getChildByName('Content').getChildByName('ADjiesuo');
+                Click._on(Click._Type.noEffect, ADjiesuo, this, null, null, () => {
+                    if (!this.owner['_dataSource'][_Data._property.unlock]) {
+                        switch (this.owner['_dataSource'][_Data._property.unlockWay]) {
+                            case _Data._unlockWay.ads:
+                                ADManager.ShowReward(() => {
+                                    ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_choosecard');
+                                    _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
+                                });
+                                break;
+                            case _Data._unlockWay.gold:
+                                ADManager.ShowReward(() => {
+                                    ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_choosecard');
+                                    _Data._setProperty(this.Owner['_dataSource'][_Data._property.name], _Data._property.unlock, true);
+                                });
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     _SelectLevel._MyList.refresh();
                 });
@@ -6934,6 +7531,7 @@
                     let _dataSource = cell.dataSource;
                     let Content = cell.getChildByName('Content');
                     let BtnContent = Content.getChildByName('BtnContent');
+                    let ADjiesuo = Content.getChildByName('ADjiesuo');
                     let Name = BtnContent.getChildByName('Name');
                     Name.skin = `Game/UI/SelectLevel/Name/${_dataSource[_Data._property.name]}.png`;
                     let Xianlu = Content.getChildByName('Xianlu');
@@ -6970,26 +7568,37 @@
                             case _Data._unlockWay.ads:
                                 GoldBoard.visible = GoldNum.visible = false;
                                 IconAds.visible = true;
+                                ADjiesuo.visible = false;
                                 break;
                             case _Data._unlockWay.free:
                                 GoldBoard.visible = GoldNum.visible = false;
                                 IconAds.visible = false;
+                                ADjiesuo.visible = false;
                                 break;
                             case _Data._unlockWay.gold:
                                 GoldNum.text = _dataSource[_Data._property.condition];
                                 GoldBoard.visible = GoldNum.visible = true;
                                 IconAds.visible = false;
+                                if (_dataSource[_Data._property.chName] === "丁老太") {
+                                    ADjiesuo.visible = false;
+                                }
+                                else {
+                                    ADjiesuo.visible = true;
+                                }
                                 break;
                             default:
                                 break;
                         }
                         IconLock.skin = `Game/UI/SelectLevel/suo.png`;
+                        IconLock.pos(143, 107);
                     }
                     else {
                         IconAds.visible = false;
                         GoldNum.visible = false;
                         GoldBoard.visible = false;
+                        ADjiesuo.visible = false;
                         IconLock.skin = `Game/UI/SelectLevel/icon_can.png`;
+                        IconLock.pos(143, 127);
                     }
                     let Board2 = BtnContent.getChildByName('Board2');
                     let Pic = Board2.getChildByName('Pic');
@@ -7037,6 +7646,9 @@
                 EventAdmin._register(_Event._SelectLevel_Close, this, () => {
                     this.lwgCloseScene();
                 });
+                EventAdmin._register(_Event._OpenTiliBuC, this, () => {
+                    this.ImgVar('TiliTishi').visible = true;
+                });
             }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.ImgVar('BtnBack'), this, null, null, () => {
@@ -7071,6 +7683,21 @@
                         }
                     });
                 }
+                Click._on(Click._Type.largen, this.ImgVar('SureQ'), this, null, null, () => {
+                    ADManager.ShowReward(() => {
+                        EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC2);
+                        ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_firstHP');
+                        ADManager.TAPoint(TaT.PageLeave, 'firstHPpage');
+                    });
+                });
+                Click._on(Click._Type.largen, this.ImgVar('GuanQ'), this, null, null, () => {
+                    _TiliXT._execution.value -= 2;
+                    _ShuXing.SKJ += 2;
+                    Laya.LocalStorage.setItem("SKJ", _ShuXing.SKJ.toString());
+                    EventAdmin._notify(_SelectLevel._Event._OpenTiliBuC2);
+                    Dialogue.createHint_Middle(`消耗2点体力`);
+                    ADManager.TAPoint(TaT.PageLeave, 'firstHPpage');
+                });
             }
             lwgOnDisable() {
                 ADManager.TAPoint(TaT.PageLeave, 'choosecardpage');
@@ -7302,10 +7929,12 @@
         }
         lwgBtnClick() {
             Click._on(Click._Type.noEffect, this.Compound.Pic, this, (e) => {
+                console.log("点击！");
                 if (!this.Compound.Img && this.Owner['_dataSource']) {
                     this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
                     this.Compound.Img = new Laya.Image;
                     this.OwnerScene.addChild(this.Compound.Img);
+                    this.Compound.Img.rotation = -45;
                     this.Compound.Img.zOrder = 300;
                     this.Compound.Img.width = this.Compound.Pic.width;
                     this.Compound.Img.height = this.Compound.Pic.height;
@@ -7450,6 +8079,7 @@
             _Event["turnRight"] = "_Game_turnRight";
             _Event["turnLeft"] = "_Game_turnLeft";
             _Event["generalRefresh"] = "_Game_generalRefresh";
+            _Event["Tuse"] = "_GameTuse";
         })(_Event = _Game._Event || (_Game._Event = {}));
         let _Animation;
         (function (_Animation) {
@@ -7644,6 +8274,7 @@
             _ColoursPencils._init();
         }
         _Game._init = _init;
+        _Game._DhadthCont = 0;
         class Game extends Admin._SceneBase {
             constructor() {
                 super(...arguments);
@@ -7731,6 +8362,9 @@
                         this.Owner.addChild(this.Step.BtnTurnLeft)['pos'](37, Laya.stage.height * 0.838);
                         this.Step.BtnTurnRight = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.BtnTurnRight.prefab);
                         this.Owner.addChild(this.Step.BtnTurnRight)['pos'](687, Laya.stage.height * 0.838);
+                        _Game.Shouzhi = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.shouzhi.prefab);
+                        this.Owner.addChild(_Game.Shouzhi)['pos'](260, Laya.stage.height * 0.950);
+                        _Game.Shouzhi.zOrder = 500;
                     }
                 };
                 this.Draw = {
@@ -7818,6 +8452,12 @@
                 };
             }
             lwgOnAwake() {
+                _Game._DhadthCont = Number(Laya.LocalStorage.getItem("_DhadthCont"));
+                if (Number(Laya.LocalStorage.getItem("_DhadthCont")) == 1) {
+                    _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
+                    _Game._ColoursPencils._switch = true;
+                    _Game._ColoursPencils._clickNum = 2;
+                }
                 ADManager.TAPoint(TaT.PageShow, 'playpage');
                 ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
                 _Gold.goldVinish(100);
@@ -7859,7 +8499,6 @@
                 Animation2D.simple_Rotate(this.ImgVar('DrawingBoard'), fR, 0, time, delay);
                 Animation2D.move_Simple(this.ImgVar('DrawingBoard'), fX, fY, 0, 0, time, delay, () => {
                     TimerAdmin._frameOnce(30, this, () => {
-                        RecordManager.startAutoRecord();
                         this.Step.cutFocus();
                     });
                 });
@@ -7876,6 +8515,9 @@
                 Animation2D.scale_Alpha(Shadow, 0.2, 1.2, 1.3, 1, 1, 0.4, time);
                 Animation2D.simple_Rotate(Shadow, fR - 20, 0, time, delay);
                 Animation2D.move_Simple(Shadow, fX, fY, 0, 0, time, delay, () => {
+                });
+                Laya.timer.loop(2000, this, () => {
+                    Animation2D.move_Simple(_Game.Shouzhi, 260, Laya.stage.height * 0.950, 462, Laya.stage.height * 0.838, 1600, delay);
                 });
                 return time + delay;
             }
@@ -8011,6 +8653,11 @@
                         Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
                     }
                     else {
+                        if (_Game._stepIndex.present == _Game._stepOrderImg.length - 2) {
+                            console.log("开始录屏");
+                            RecordManager.startAutoRecord();
+                        }
+                        _Game.Shouzhi.visible = false;
                         if (!this.Step.BtnNext.visible) {
                             this.Step.BtnNext.visible = true;
                             Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
@@ -8259,11 +8906,13 @@
                         }
                     };
                     Click._on(Click._Type.noEffect, _Game._stepOrderImg[index], this, (e) => {
+                        console.log("tusessssssssss");
                         if (this.Draw.switch && index == _Game._stepIndex.present) {
                             this.Draw.len.count += 1;
                         }
                     }, (e) => {
                         if (this.Draw.frontPos && this.Draw.switch && index == _Game._stepIndex.present) {
+                            console.log("tuse");
                             let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                             if (_GeneralPencils._pitchName != _GeneralPencils._effectType.eraser) {
                                 this.Draw.len.count += this.Draw.frontPos.distance(endPos.x, endPos.y);
@@ -8291,10 +8940,12 @@
                 Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e) => {
                     e.stopPropagation();
                     EventAdmin._notify(_Event.turnLeft);
+                    _Game.Shouzhi.visible = true;
                 });
                 Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, stop, stop, (e) => {
                     e.stopPropagation();
                     EventAdmin._notify(_Event.turnRight);
+                    _Game.Shouzhi.visible = false;
                 });
                 Click._on(Click._Type.largen, this.Step.BtnCompelet, this, stop, stop, () => {
                     this.lwgOpenScene(_SceneName.Settle, false, () => {
@@ -8603,7 +9254,7 @@
                 });
                 Click._on(Click._Type.largen, this.btnVar('BtnContinue'), this, null, null, () => {
                     EventAdmin._notify(_Game._Event.Photo);
-                    this.lwgOpenScene(_SceneName.Share);
+                    this.lwgOpenScene('Test');
                 });
             }
             lwgOnDisable() {
@@ -8647,6 +9298,8 @@
         }
         _Special.SpecialBase = SpecialBase;
         class Special extends _Special.SpecialBase {
+            lwgOnAwake() {
+            }
             lwgBtnClick() {
                 Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
                     ADManager.ShowReward(() => {
@@ -8663,6 +9316,7 @@
                         TimerAdmin._frameOnce(20, this, () => {
                             _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
                                 _Gold._addGold(100000000000);
+                                Laya.LocalStorage.setItem("HuiShouYiNum", "1");
                                 this.lwgCloseScene(this.Owner.name, () => {
                                     console.log(Laya.stage);
                                 });
@@ -8683,6 +9337,76 @@
     })(_Special || (_Special = {}));
     var _Special$1 = _Special.Special;
 
+    var _SpecialQ;
+    (function (_SpecialQ) {
+        class _data {
+            static get _openNum() {
+                return Laya.LocalStorage.getItem('_Special_OpenNum') ? Number(Laya.LocalStorage.getItem('_Special_OpenNum')) : 0;
+            }
+            static set _openNum(count) {
+                Laya.LocalStorage.setItem('_Special_OpenNum', count.toString());
+            }
+            static get _lastDate() {
+                return Laya.LocalStorage.getItem('_Special_lastDate') ? Number(Laya.LocalStorage.getItem('_Special_lastDate')) : DateAdmin._date.date - 1;
+            }
+            static set _lastDate(date) {
+                Laya.LocalStorage.setItem('_Special_lastDate', date.toString());
+            }
+        }
+        _SpecialQ._data = _data;
+        let _Event;
+        (function (_Event) {
+        })(_Event = _SpecialQ._Event || (_SpecialQ._Event = {}));
+        function _init() {
+        }
+        _SpecialQ._init = _init;
+        ;
+        class SpecialBase extends Admin._SceneBase {
+            moduleOnAwake() {
+                ADManager.TAPoint(TaT.PageShow, '1000page');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_1000');
+            }
+        }
+        _SpecialQ.SpecialBase = SpecialBase;
+        class SpecialQ extends _SpecialQ.SpecialBase {
+            lwgOnAwake() {
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('BtnSale'), this, null, null, () => {
+                    ADManager.ShowReward(() => {
+                        _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`);
+                        TimerAdmin._frameOnce(5, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 - 200, Laya.stage.height / 2));
+                        });
+                        TimerAdmin._frameOnce(10, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2 + 200, Laya.stage.height / 2));
+                        });
+                        TimerAdmin._frameOnce(15, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 - 200));
+                        });
+                        TimerAdmin._frameOnce(20, this, () => {
+                            _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, new Laya.Point(Laya.stage.width / 2, Laya.stage.height / 2 + 200), null, null, () => {
+                                _Gold._addGold(1000);
+                                this.lwgCloseScene(this.Owner.name, () => {
+                                    console.log(Laya.stage);
+                                });
+                            });
+                        });
+                    });
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnClose'), this, null, null, () => {
+                    ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_1000');
+                    this.lwgCloseScene();
+                });
+            }
+            lwgOnDisable() {
+                ADManager.TAPoint(TaT.PageLeave, '1000page');
+            }
+        }
+        _SpecialQ.SpecialQ = SpecialQ;
+    })(_SpecialQ || (_SpecialQ = {}));
+    var _SpecialQ$1 = _SpecialQ.SpecialQ;
+
     var _Start;
     (function (_Start) {
         function _init() {
@@ -8692,7 +9416,14 @@
             moduleOnAwake() {
                 ADManager.TAPoint(TaT.PageShow, 'mainpage');
                 ADManager.TAPoint(TaT.BtnShow, 'start_main');
-                _Gold.createGoldNode(38, 68);
+                _Gold.createGoldNode(200, 68);
+                this.lwgOpenScene("TiliXT", false);
+                let ShouShuxing = Number(Laya.LocalStorage.getItem("ShouShuxing"));
+                if (ShouShuxing == 0) {
+                    ShouShuxing = 1;
+                    this.lwgOpenScene('ShuXing', false);
+                    Laya.LocalStorage.setItem("ShouShuxing", ShouShuxing.toString());
+                }
             }
         }
         _Start._StartScene = _StartScene;
@@ -8705,6 +9436,7 @@
             lwgOpenAniAfter() {
                 TimerAdmin._loop(2000, this, () => {
                     Animation2D.bomb_LeftRight(this.ImgVar('BtnStart'), 1.22, 250);
+                    Animation2D.simple_Rotate(this.ImgVar('LiahtGX'), 0, 360, 3000);
                 }, true);
             }
             lwgBtnClick() {
@@ -8723,6 +9455,9 @@
                 Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
                     Dialogue.createHint_Middle('敬请期待！');
                 });
+                Click._on(Click._Type.largen, this.btnVar('ShuxING'), this, null, null, () => {
+                    this.lwgOpenScene('ShuXing', false);
+                });
             }
             lwgOnDisable() {
                 ADManager.TAPoint(TaT.PageLeave, 'mainpage');
@@ -8731,6 +9466,283 @@
         _Start.Start = Start;
     })(_Start || (_Start = {}));
     var _Start$1 = _Start.Start;
+
+    class TweenMgr {
+        constructor() {
+            this.clearCounter = 0;
+        }
+        gamePause(state) {
+            this.pause = state;
+        }
+        static clamp(v, min, max) {
+            let rs;
+            if (v < min) {
+                rs = min;
+            }
+            else if (v > max) {
+                rs = max;
+            }
+            else {
+                rs = v;
+            }
+            return rs;
+        }
+        static randomInRange_iWithOutY(x, y, s = null) {
+            let rs;
+            y = y - 1;
+            return this.randomInRange_i(x, y, s);
+        }
+        static randomInRange_f(x, y, s = null) {
+            let rs;
+            let g = y - x;
+            if (g < 0) {
+                throw `x > y`;
+            }
+            else {
+                if (g < TweenMgr.lim) {
+                    rs = x;
+                }
+                else {
+                    rs = g * (s == null ? Math.random() : s) + x;
+                }
+            }
+            return Number(rs);
+        }
+        static randomInRange_i(x, y, s = null) {
+            let rs;
+            if (x == y) {
+                rs = x;
+            }
+            else if (y > x) {
+                let v = (y - x) * (s == null ? Math.random() : s) + x;
+                rs = v.toFixed();
+            }
+            else {
+                throw `x > y`;
+            }
+            return Number(rs);
+        }
+    }
+    TweenMgr.lim = 1e-5;
+
+    var _Test;
+    (function (_Test) {
+        class TreasureItem {
+            constructor(id, obj, ui) {
+                this.isAD = false;
+                this.id = id;
+                this.ui = ui;
+                let baoshi = obj.getChildByName("baoshi");
+                this.baoshi = baoshi;
+                let frame = obj.getChildByName("Frame");
+                this.box = obj.getChildByName("Box");
+                this.box.skin = "Game/UI/TreasureNew/baoxiang.png";
+                this.frame = frame;
+                this.num = frame.getChildByName("Num");
+                this.g1 = frame.getChildByName("G1");
+                this.g2 = frame.getChildByName("G2");
+                this._close = true;
+                this._gold = TweenMgr.randomInRange_i(5, 10);
+                this.baoshi.visible = false;
+                this.frame.visible = false;
+                this.num.value = this._gold.toString();
+                if (this._gold < 7) {
+                    this.g2.visible = false;
+                    this.g1.x = 66;
+                }
+            }
+            clickItem() {
+                if (this._close) {
+                    if (this.isAD) {
+                        ADManager.ShowReward(() => {
+                            this.ClickBox();
+                            ADManager.TAPoint(TaT.BtnClick, 'ADrewardbox_box');
+                        }, null);
+                    }
+                    else {
+                        if (_Test.leftTimes > 0) {
+                            _Test.leftTimes -= 1;
+                            this.ClickBox();
+                        }
+                        else {
+                            Dialogue.createHint_Middle(`点击再开一次可获得机会继续！`);
+                        }
+                    }
+                }
+            }
+            ClickBox() {
+                console.log("点击宝箱");
+                _Test.boxOpenCount++;
+                if (_Game._ColoursPencils._switch != true) {
+                    if (_Test.boxOpenCount < 3) {
+                        _Test.BS30.visible = true;
+                    }
+                    else if (_Test.boxOpenCount == 4) {
+                        _Test.BS30.visible = false;
+                        _Test.BS50.visible = true;
+                    }
+                    else if (_Test.boxOpenCount == 8) {
+                        _Test.BS50.visible = false;
+                        _Test.BS100.visible = true;
+                    }
+                    else if (_Test.boxOpenCount == 9) {
+                        _Test.BSjihui.visible = false;
+                    }
+                }
+                if (_Test.boxOpenCount == 9) {
+                    if (_Game._ColoursPencils._switch != true) {
+                        _Game._DhadthCont = 1;
+                        Laya.LocalStorage.setItem("_DhadthCont", _Game._DhadthCont.toString());
+                        Dialogue.createHint_Middle(`恭喜获得彩色画笔！`);
+                        this.openshow2();
+                        return;
+                    }
+                }
+                Animation2D.bomb_LeftRight(this.box, 1.20, 250, () => {
+                    this._close = false;
+                    _Gold._getGoldAni_Heap(Laya.stage, 15, 55, 51, `Game/UI/Victory/jb.png`, null, null, null, () => {
+                        _Gold._addGold(this._gold);
+                    });
+                    this.frame.visible = true;
+                    this.ui.checkTimes(0);
+                });
+            }
+            openshow2() {
+                Animation2D.bomb_LeftRight(this.box, 1.20, 250, () => {
+                    this.g1.visible = false;
+                    this.g2.visible = false;
+                    this.num.visible = false;
+                    this.baoshi.visible = true;
+                    this.frame.visible = true;
+                    this.ui.checkTimes(0);
+                });
+            }
+            setAD() {
+                this.isAD = true;
+                this.box.skin = "Game/UI/TreasureNew/baoxiang_shipin.png";
+            }
+        }
+        _Test.TreasureItem = TreasureItem;
+        _Test.boxOpenCount = 0;
+        _Test.leftTimes = 3;
+        _Test.ADBntTime = 0;
+        class Test extends Admin._SceneBase {
+            constructor() {
+                super(...arguments);
+                this.itemList = [];
+                this.settleFixY = 260;
+                this.needShowAD = [[1, 2, 6], [2, 6, 7], [3, 5, 6], [2, 4, 7], [0, 5, 7]];
+            }
+            lwgOnAwake() {
+                _Gold.goldAppear(100);
+                _Test.boxOpenCount = 0;
+                _Test.leftTimes = 3;
+                _Test.ADBntTime = 0;
+                this.getKeyValid = true;
+                this.quitValid = true;
+                this.showAD = [-1, -1, -1];
+                this.showAD = this.needShowAD[TweenMgr.randomInRange_iWithOutY(0, this.needShowAD.length)];
+                for (let i = 0; i < 9; i++) {
+                    let c = "Card" + i;
+                    let item = new TreasureItem(i, this.ImgVar(c), this);
+                    this.itemList.push(item);
+                    this.btnEv(c, () => {
+                        item.clickItem();
+                    });
+                    if (this.showAD.indexOf(i) >= 0) {
+                        item.setAD();
+                    }
+                }
+                _Test.BSjihui = this.ImgVar("BSjihui");
+                _Test.BS30 = this.ImgVar("30");
+                _Test.BS50 = this.ImgVar("50");
+                _Test.BS100 = this.ImgVar("100");
+                if (_Game._ColoursPencils._switch != true) {
+                    _Test.BSjihui.visible = true;
+                    _Test.BS30.visible = true;
+                }
+                this.ImgVar("BtnMoreKey").visible = false;
+                this.ImgVar("BtnDirect").visible = false;
+                ADManager.TAPoint(TaT.PageEnter, 'boxpage');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbox_box');
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar("BtnMoreKey"), this, null, null, (e) => {
+                    if (_Test.ADBntTime >= 1) {
+                        Dialogue.createHint_Middle(`普通宝箱已开完哦！`);
+                    }
+                    else {
+                        ADManager.ShowReward(() => {
+                            _Test.ADBntTime++;
+                            this.ImgVar("BtnMoreKey").visible = false;
+                            this.ImgVar("BtnDirect").visible = false;
+                            this.getKeyValid = false;
+                            this.checkTimes(3);
+                            ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_box');
+                        });
+                    }
+                });
+                Click._on(Click._Type.largen, this.btnVar('BtnDirect'), this, null, null, (e) => {
+                    this.lwgOpenScene(_SceneName.Share);
+                });
+            }
+            checkTimes(delta) {
+                _Test.leftTimes += delta;
+                if (_Test.leftTimes == 0) {
+                    if (_Test.boxOpenCount == 9) {
+                        this.ImgVar("BtnMoreKey").visible = false;
+                        this.ImgVar("BtnDirect").visible = true;
+                    }
+                    else {
+                        this.ImgVar("BtnMoreKey").visible = true;
+                        this.ImgVar("BtnDirect").visible = true;
+                        ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_box');
+                    }
+                }
+            }
+            bofang() {
+                Animation2D.bomb_LeftRight(this.ImgVar('BtnStart'), 1.22, 250);
+            }
+            lwgOnDisable() {
+                ADManager.TAPoint(TaT.PageLeave, 'boxpage');
+            }
+        }
+        Test.isFirst = true;
+        _Test.Test = Test;
+    })(_Test || (_Test = {}));
+    var _Test$1 = _Test.Test;
+
+    var _TiliFou;
+    (function (_TiliFou) {
+        class TiliFou extends Admin._SceneBase {
+            lwgOnAwake() {
+                this.ImgVar("guanbi").visible = false;
+                Laya.timer.once(2000, this, () => {
+                    this.ImgVar("guanbi").visible = true;
+                });
+                ADManager.TAPoint(TaT.PageEnter, 'noticketpage');
+                ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_noticket');
+            }
+            lwgBtnClick() {
+                Click._on(Click._Type.largen, this.btnVar('guanbi'), this, null, null, (e) => {
+                    this.lwgCloseScene();
+                });
+                Click._on(Click._Type.largen, this.btnVar('ok'), this, null, null, (e) => {
+                    ADManager.ShowReward(() => {
+                        _TiliXT._execution.value += 5;
+                        Dialogue.createHint_Middle(`已补充5点体力，继续游戏吧！`);
+                        this.lwgCloseScene();
+                        ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_noticket');
+                    });
+                });
+            }
+            lwgOnDisable() {
+                ADManager.TAPoint(TaT.PageLeave, 'noticketpage');
+            }
+        }
+        _TiliFou.TiliFou = TiliFou;
+    })(_TiliFou || (_TiliFou = {}));
+    var _TiliFou$1 = _TiliFou.TiliFou;
 
     var _Victory;
     (function (_Victory) {
@@ -8769,6 +9781,40 @@
                     }
                 }
             }
+            HuiTan() {
+                let HuiShouYiNum = false;
+                HuiShouYiNum = Number(Laya.LocalStorage.getItem("HuiShouYiNum")) != 0;
+                if (!HuiShouYiNum) {
+                    let XZCJCount = Number(Laya.LocalStorage.getItem("XZCJCount"));
+                    let rate = TweenMgr.randomInRange_i(0, 100);
+                    switch (XZCJCount) {
+                        case 0:
+                            this.lwgOpenScene(_SceneName.Special, false);
+                            break;
+                        default:
+                            if (rate < 50) {
+                                if (_Game._ColoursPencils._switch) {
+                                    this.lwgOpenScene(_SceneName.Special, false);
+                                }
+                                else {
+                                    this.lwgOpenScene(_SceneName.SpecialQ, false);
+                                }
+                                break;
+                            }
+                            else {
+                                if (_Game._ColoursPencils._switch) {
+                                    this.lwgOpenScene(_SceneName.Special, false);
+                                }
+                                else {
+                                    console.log("啥也没有");
+                                }
+                                break;
+                            }
+                    }
+                    XZCJCount++;
+                    Laya.LocalStorage.setItem("XZCJCount", XZCJCount.toString());
+                }
+            }
             lwgOpenAniAfter() {
                 this.AniVar('NoAni_Remark').play(0, false);
                 this.AniVar('NoAni_Remark').on(Laya.Event.LABEL, this, (e) => {
@@ -8778,11 +9824,11 @@
                     OldEffects$1.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
                     OldEffects$1.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
                     console.log(_Game._GeneralPencils._pitchName, _Special._data._lastDate);
+                    this.HuiTan();
                     if (_Game._ColoursPencils._switch && _Special._data._lastDate
                         !== DateAdmin._date.date) {
                         _Special._data._lastDate = DateAdmin._date.date;
                         this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
-                        this.lwgOpenScene(_SceneName.Special, false);
                     }
                     else {
                         if (_Game._GeneralPencils._pitchName == 'colours') {
@@ -8856,6 +9902,11 @@
                 _PropTry: _PropTry,
                 _AdsHint: _AdsHint,
                 _Compound: _Compound,
+                _Test: _Test,
+                _TiliFou: _TiliFou,
+                _SpecialQ: _SpecialQ,
+                _ShuXing: _ShuXing,
+                _TiliXT: _TiliXT,
             };
             new ZJADMgr();
         }

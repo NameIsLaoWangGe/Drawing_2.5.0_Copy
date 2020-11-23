@@ -27,6 +27,14 @@
     "condition": 1,
     "resCondition": 0,
     "unlock": false
+  },{
+    "name": "nvwang",
+    "chName": "女王大人",
+    "classify": "limit",
+    "unlockWay": "gold",
+    "condition": 300,
+    "resCondition": 0,
+    "unlock": false
   },
   {
     "name": "wugui",

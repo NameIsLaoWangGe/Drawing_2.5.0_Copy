@@ -1,6 +1,6 @@
 import ADManager, { TaT } from "../TJ/Admanager";
 import ZJADMgr from "../TJ/ZJADMgr";
-import { Admin, Click, EventAdmin, Tools, _SceneName } from "./Lwg";
+import lwg, { Admin, Click, EventAdmin, Tools, _Gold, _SceneName } from "./Lwg";
 import { _Game } from "./_Game";
 import { _SelectLevel } from "./_SelectLevel";
 
@@ -49,6 +49,7 @@ export module _PropTry {
                         if (!Admin._sceneControl[levelName].getComponent(_Game.Game)) {
                             Admin._sceneControl[levelName].addComponent(_Game.Game);
                         }
+                        
                     });
                     EventAdmin._notify(_SelectLevel._Event._SelectLevel_Close);
                 } else {

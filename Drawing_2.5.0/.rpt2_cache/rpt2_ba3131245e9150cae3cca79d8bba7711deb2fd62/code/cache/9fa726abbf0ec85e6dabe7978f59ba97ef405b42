@@ -1,0 +1,9 @@
+{
+  "code": "import ADManager, { TaT } from \"../TJ/Admanager\";\r\nimport { Admin, Click, Dialogue } from \"./Lwg\";\r\nimport { _TiliXT } from \"./_TiliXT\";\r\nexport var _TiliFou;\r\n(function (_TiliFou) {\r\n    class TiliFou extends Admin._SceneBase {\r\n        lwgOnAwake() {\r\n            this.ImgVar(\"guanbi\").visible = false;\r\n            Laya.timer.once(2000, this, () => {\r\n                this.ImgVar(\"guanbi\").visible = true;\r\n            });\r\n            ADManager.TAPoint(TaT.PageEnter, 'noticketpage');\r\n            ADManager.TAPoint(TaT.BtnShow, 'ADrewardbt_noticket');\r\n        }\r\n        lwgBtnClick() {\r\n            Click._on(Click._Type.largen, this.btnVar('guanbi'), this, null, null, (e) => {\r\n                this.lwgCloseScene();\r\n            });\r\n            Click._on(Click._Type.largen, this.btnVar('ok'), this, null, null, (e) => {\r\n                ADManager.ShowReward(() => {\r\n                    _TiliXT._execution.value += 5;\r\n                    Dialogue.createHint_Middle(`已补充5点体力，继续游戏吧！`);\r\n                    this.lwgCloseScene();\r\n                    ADManager.TAPoint(TaT.BtnClick, 'ADrewardbt_noticket');\r\n                });\r\n            });\r\n        }\r\n        lwgOnDisable() {\r\n            ADManager.TAPoint(TaT.PageLeave, 'noticketpage');\r\n        }\r\n    }\r\n    _TiliFou.TiliFou = TiliFou;\r\n})(_TiliFou || (_TiliFou = {}));\r\nexport default _TiliFou.TiliFou;\r\n",
+  "references": [
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/TJ/Admanager.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/Lwg.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_Execution.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_TiliXT.ts"
+  ]
+}

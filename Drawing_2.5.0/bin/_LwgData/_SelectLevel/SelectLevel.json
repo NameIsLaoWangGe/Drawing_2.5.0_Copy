@@ -28,6 +28,7 @@
     "resCondition": 0,
     "unlock": false
   },
+ 
   {
     "name": "wugui",
     "chName": "乌龟",
@@ -42,7 +43,7 @@
     "chName": "海豚",
     "classify": "animal",
     "unlockWay": "gold",
-    "condition": 200,
+    "condition": 100,
     "resCondition": 0,
     "unlock": false
   },
@@ -60,7 +61,7 @@
     "chName": "小奶牛",
     "classify": "animal",
     "unlockWay": "gold",
-    "condition": 200,
+    "condition": 100,
     "resCondition": 0,
     "unlock": false
   },
@@ -78,7 +79,7 @@
     "chName": "猫头鹰",
     "classify": "animal",
     "unlockWay": "gold",
-    "condition": 200,
+    "condition": 100,
     "resCondition": 0,
     "unlock": false
   },
@@ -96,7 +97,7 @@
     "chName": "万圣南瓜",
     "classify": "botany",
     "unlockWay": "gold",
-    "condition": 200,
+    "condition": 100,
     "resCondition": 0,
     "unlock": false
   },

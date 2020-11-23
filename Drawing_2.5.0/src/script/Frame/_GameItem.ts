@@ -67,10 +67,15 @@ export class _GameItem extends Admin._Object {
     lwgBtnClick(): void {
         Click._on(Click._Type.noEffect, this.Compound.Pic, this,
             (e: Laya.Event) => {
+                console.log("点击！")
+                
                 if (!this.Compound.Img && this.Owner['_dataSource']) {
+
+
                     this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
                     this.Compound.Img = new Laya.Image;
                     this.OwnerScene.addChild(this.Compound.Img);
+                    // this.Compound.Img.rotation = -45;
                     this.Compound.Img.zOrder = 300;
                     this.Compound.Img.width = this.Compound.Pic.width;
                     this.Compound.Img.height = this.Compound.Pic.height;
@@ -78,6 +83,8 @@ export class _GameItem extends Admin._Object {
                     Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
                     this.Compound.Img.skin = this.Compound.Pic.skin;
                     this.Compound.Img.visible = false;
+
+
                 }
                 e.stopPropagation();
             },

@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":2,
-    "selecteID":11,
+    "selectedBox":64,
+    "selecteID":65,
     "searchKey":"View",
     "props":{"width":720,"sceneColor":"#ffffff","height":1280},
     "nodeParent":-1,
-    "maxID":61,
+    "maxID":66,
     "label":"View",
     "isOpen":true,
     "isDirectory":true,
@@ -117,14 +117,13 @@
                             "props":{"y":-29,"x":62,"width":34,"var":"Low","name":"Low","height":35},
                             "nodeParent":12,
                             "label":"Low",
-                            "isOpen":true,
+                            "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
                             "compId":13,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Bytedance_Low_Select,Bytedance_Low_Select",
                                     "props":{"y":275,"x":98,"width":32,"var":"Bytedance_Low_Select","skin":"Game/UI/PropTry/kxy.png","name":"Bytedance_Low_Select","height":32},
@@ -137,7 +136,6 @@
                                     "compId":14,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Bytedance_Low_Dot,Bytedance_Low_Dot",
                                             "props":{"y":7.25,"x":7.25,"var":"Bytedance_Low_Dot","skin":"Game/UI/PropTry/sxy.png","name":"Bytedance_Low_Dot"},
@@ -151,7 +149,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
                                             "props":{"y":0,"x":40,"skin":"Game/UI/PropTry/kgg.png","name":"Word"},
@@ -166,7 +163,6 @@
                                         }]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Bytedance_Low_BtnGet,Bytedance_Low_BtnGet",
                                     "props":{"y":76,"x":221,"width":230,"var":"Bytedance_Low_BtnGet","skin":"Game/UI/PropTry/an.png","pivotY":53,"pivotX":115,"name":"Bytedance_Low_BtnGet","height":105},
@@ -179,7 +175,6 @@
                                     "compId":17,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
                                             "props":{"y":20,"x":73,"skin":"Game/UI/PropTry/qd.png","name":"Word"},
@@ -194,7 +189,6 @@
                                         }]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Label",
                                     "searchKey":"Label,点击空白处开始游戏",
                                     "props":{"y":217,"x":105,"width":230,"text":"点击空白处开始游戏","styleSkin":"UI/Inherit/word1.png","name":"点击空白处开始游戏","height":27,"fontSize":25,"color":"#ffffff","alpha":0.5},
@@ -215,14 +209,13 @@
                             "props":{"y":-13,"x":47,"width":451,"var":"Mid","name":"Mid","height":12},
                             "nodeParent":12,
                             "label":"Mid",
-                            "isOpen":true,
+                            "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
                             "compId":20,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image,Bytedance_Mid_Select,Bytedance_Mid_Select",
                                     "props":{"y":255,"x":113.5,"width":32,"var":"Bytedance_Mid_Select","skin":"Game/UI/PropTry/kxy.png","name":"Bytedance_Mid_Select","height":32},
@@ -235,7 +228,6 @@
                                     "compId":21,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Bytedance_Mid_Dot,Bytedance_Mid_Dot",
                                             "props":{"y":8.25,"x":7.25,"var":"Bytedance_Mid_Dot","skin":"Game/UI/PropTry/sxy.png","name":"Bytedance_Mid_Dot"},
@@ -249,7 +241,6 @@
                                                 ]
                                         },
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
                                             "props":{"y":4,"x":41,"skin":"Game/UI/PropTry/kgg.png","name":"Word"},
@@ -264,7 +255,6 @@
                                         }]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Sprite",
                                     "searchKey":"Sprite,Bytedance_Mid_BtnGet,Bytedance_Mid_BtnGet",
                                     "props":{"y":64,"x":237,"width":230,"var":"Bytedance_Mid_BtnGet","texture":"Game/UI/PropTry/an.png","pivotY":53,"pivotX":115,"name":"Bytedance_Mid_BtnGet","height":105},
@@ -277,7 +267,6 @@
                                     "compId":24,
                                     "child":[
                                         {
-                                            "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
                                             "props":{"y":20,"skin":"Game/UI/PropTry/qd.png","name":"Word","centerX":0},
@@ -292,7 +281,6 @@
                                         }]
                                 },
                                 {
-                                    "x":60,
                                     "type":"Label",
                                     "searchKey":"Label,点击空白处开始游戏",
                                     "props":{"y":202,"x":120.5,"text":"点击空白处开始游戏","styleSkin":"UI/Inherit/word1.png","name":"点击空白处开始游戏","fontSize":25,"color":"#8d8d8d"},
@@ -336,7 +324,7 @@
                                             "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,Word",
-                                            "props":{"y":24.5,"x":48,"skin":"Game/UI/PropTry/qd.png","name":"Word"},
+                                            "props":{"y":21,"x":25,"visible":false,"skin":"Game/UI/Common/jinbi.png","name":"Word"},
                                             "nodeParent":28,
                                             "label":"Word",
                                             "isDirectory":false,
@@ -344,13 +332,14 @@
                                             "hasChild":false,
                                             "compId":29,
                                             "child":[
-                                                ]
+                                                ],
+                                            "$HIDDEN":true
                                         },
                                         {
                                             "x":75,
                                             "type":"Image",
                                             "searchKey":"Image,AdsPic",
-                                            "props":{"y":8.5,"x":141,"skin":"Game/UI/PropTry/sp.png","name":"AdsPic"},
+                                            "props":{"y":9.5,"x":161,"skin":"Game/UI/PropTry/sp.png","name":"AdsPic"},
                                             "nodeParent":28,
                                             "label":"AdsPic",
                                             "isDirectory":false,
@@ -359,6 +348,48 @@
                                             "compId":30,
                                             "child":[
                                                 ]
+                                        },
+                                        {
+                                            "x":75,
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"y":49,"x":24,"skin":"Game/UI/Common/mianfei.png"},
+                                            "nodeParent":28,
+                                            "label":"Image",
+                                            "isDirectory":false,
+                                            "isAniNode":true,
+                                            "hasChild":false,
+                                            "compId":63,
+                                            "child":[
+                                                ]
+                                        },
+                                        {
+                                            "x":75,
+                                            "type":"Image",
+                                            "searchKey":"Image",
+                                            "props":{"y":21,"x":25,"skin":"Game/UI/Common/jinbi.png"},
+                                            "nodeParent":28,
+                                            "label":"Image",
+                                            "isOpen":true,
+                                            "isDirectory":true,
+                                            "isAniNode":true,
+                                            "hasChild":true,
+                                            "compId":64,
+                                            "child":[
+                                                {
+                                                    "x":90,
+                                                    "type":"Image",
+                                                    "searchKey":"Image",
+                                                    "props":{"skin":"Game/UI/Common/chacha.png"},
+                                                    "nodeParent":64,
+                                                    "label":"Image",
+                                                    "isDirectory":false,
+                                                    "isAniNode":true,
+                                                    "hasChild":false,
+                                                    "compId":65,
+                                                    "child":[
+                                                        ]
+                                                }]
                                         }]
                                 },
                                 {

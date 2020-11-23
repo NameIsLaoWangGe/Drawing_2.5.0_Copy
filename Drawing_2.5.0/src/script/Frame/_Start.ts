@@ -1,6 +1,8 @@
 import ADManager, { TaT } from "../TJ/Admanager";
-import lwg, { Admin, Animation2D, Click, Dialogue, TimerAdmin, _Gold, _SceneName } from "./Lwg";
+import lwg, { Admin, Animation2D, Click, Dialogue, TimerAdmin, Tools, _Gold, _SceneName } from "./Lwg";
+import { _Execution } from "./_Execution";
 import { _Game } from "./_Game";
+import { _PreloadUrl } from "./_PreLoad";
 import { _SelectLevel } from "./_SelectLevel";
 
 /**测试模块,每个模块分开，默认导出一个类，这个类是默认挂载的脚本类，如果有多个脚本，
@@ -13,12 +15,20 @@ export module _Start {
         moduleOnAwake(): void {
             ADManager.TAPoint(TaT.PageShow, 'mainpage');
             ADManager.TAPoint(TaT.BtnShow, 'start_main');
-            _Gold.createGoldNode(38, 68);
+            _Gold.createGoldNode(200, 68);
+            this.lwgOpenScene("TiliXT",false);
+            let ShouShuxing=Number(Laya.LocalStorage.getItem("ShouShuxing"));
+            if(ShouShuxing==0){
+                ShouShuxing=1;
+                this.lwgOpenScene('ShuXing',false);
+                Laya.LocalStorage.setItem("ShouShuxing",ShouShuxing.toString()); 
+            }
         }
     }
     export class Start extends _StartScene {
         lwgOnAwake(): void {
-
+            
+            
         }
         lwgOnStart(): void {
             Admin._sceneAnimation.presentAni = Admin._sceneAnimation.type.stickIn.upLeftDownLeft;
@@ -26,11 +36,13 @@ export module _Start {
         lwgOpenAniAfter(): void {
             TimerAdmin._loop(2000, this, () => {
                 Animation2D.bomb_LeftRight(this.ImgVar('BtnStart'), 1.22, 250);
+                Animation2D.simple_Rotate(this.ImgVar('LiahtGX'), 0,360,3000);
             }, true);
         }
         lwgBtnClick(): void {
             Click._on(Click._Type.largen, this.btnVar('BtnStart'), this, null, null, () => {
                 ADManager.TAPoint(TaT.BtnClick, 'start_main');
+                
                 _SelectLevel._Data._pich.classify = _SelectLevel._Data._classify.animal;
                 this.lwgOpenScene(_SceneName.SelectLevel);
             })
@@ -43,6 +55,10 @@ export module _Start {
             })
             Click._on(Click._Type.noEffect, this.btnVar('BtnSpecial'), this, null, null, () => {
                 Dialogue.createHint_Middle('敬请期待！');
+            })
+
+            Click._on(Click._Type.largen, this.btnVar('ShuxING'), this, null, null, () => {
+                this.lwgOpenScene('ShuXing',false);
             })
         }
 

@@ -10,9 +10,14 @@ import { _PropTry } from "./_PropTry";
 import { _SelectLevel } from "./_SelectLevel";
 import { _Settle } from "./_Settle";
 import { _Share } from "./_Share";
+import { _ShuXing } from "./_ShuXing";
 import { _Special } from "./_Special";
+import { _SpecialQ } from "./_SpecialQ";
 import { _Start } from "./_Start";
 import { _Task } from "./_Task";
+import { _Test } from "./_Test";
+import { _TiliFou } from "./_TiliFou";
+import { _TiliXT } from "./_TiliXT";
 import { _Victory } from "./_Victory";
 
 export enum SceneName {
@@ -41,6 +46,11 @@ export default class LwgInit extends _LwgInitScene {
             _PropTry: _PropTry,
             _AdsHint: _AdsHint,
             _Compound: _Compound,
+            _Test:_Test,
+            _TiliFou:_TiliFou,
+            _SpecialQ:_SpecialQ,
+            _ShuXing:_ShuXing,
+            _TiliXT:_TiliXT,
         };
         new ZJADMgr();
     }

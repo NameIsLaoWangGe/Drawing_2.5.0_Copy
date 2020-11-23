@@ -326,7 +326,7 @@ export module lwg {
             }))
         }
     }
-
+    
     /**体力模块*/
     export module Execution {
 
@@ -341,13 +341,22 @@ export module lwg {
         };
 
 
+
         /**指代当前剩余体力节点*/
         export let ExecutionNumNode: Laya.Sprite;
         /**
-         * 创建通用剩余体力数量prefab
+         * 创建体力增加的prefab
+         * @param x x位置
+         * @param y y位置
          * @param parent 父节点
-         */
-        export function _createExecutionNum(parent): void {
+        */
+        export function _createAddExecution(x, y ,parent?: Laya.Sprite): void {
+            if (!parent) {
+                parent = Laya.stage;
+            }
+            if (ExecutionNumNode) {
+                ExecutionNumNode.removeSelf();
+            }
             let sp: Laya.Sprite;
             Laya.loader.load('prefab/ExecutionNum.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
                 let _prefab = new Laya.Prefab();
@@ -355,41 +364,11 @@ export module lwg {
                 sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
                 parent.addChild(sp);
                 let num = sp.getChildByName('Num') as Laya.FontClip;
-                // num.value = Global._execution.toString();
-                sp.pos(297, 90);
-                sp.zOrder = 50;
+                // num.value = _execution.value.toString();
+                sp.pos(x, y);
+                sp.zOrder = 1000;
                 ExecutionNumNode = sp;
-                ExecutionNumNode.name = 'ExecutionNumNode';
-            }));
-        }
-
-
-        /**
-         * 创建体力增加的prefab
-         * @param x x位置
-         * @param y y位置
-         * @param func 回调函数
-        */
-        export function _createAddExecution(x, y, func): void {
-            let sp: Laya.Sprite;
-            Laya.loader.load('prefab/execution.json', Laya.Handler.create(this, function (prefab: Laya.Prefab) {
-                let _prefab = new Laya.Prefab();
-                _prefab.json = prefab;
-                sp = Laya.Pool.getItemByCreateFun('prefab', _prefab.create, _prefab);
-                Laya.stage.addChild(sp);
-                sp.x = Laya.stage.width / 2;
-                sp.y = Laya.stage.height / 2;
-                sp.zOrder = 50;
-                if (ExecutionNumNode) {
-                    Animation2D.move_Simple(sp, sp.x, sp.y, ExecutionNumNode.x, ExecutionNumNode.y, 800, 100, f => {
-                        Animation2D.fadeOut(sp, 1, 0, 200, 0, f => {
-                            lwg.Animation2D.upDwon_Shake(ExecutionNumNode, 10, 80, 0, null);
-                            if (func) {
-                                func();
-                            }
-                        });
-                    }, Laya.Ease.expoIn);
-                }
+                // _ExecutionNode.name = '_ExecutionNode';
             }));
         }
 
@@ -421,9 +400,13 @@ export module lwg {
         /**金币数量*/
         export let _num = {
             get value(): number {
-                return Laya.LocalStorage.getItem('_goldNum') ? Number(Laya.LocalStorage.getItem('_goldNum')) : 0;
+                return Laya.LocalStorage.getItem('_goldNum') ? Number(Laya.LocalStorage.getItem('_goldNum')) : 200;
             },
             set value(val: number) {
+                if(GoldNode){
+                    let num = GoldNode.getChildByName('Num') as Laya.Label;
+                    num.text =val.toString();
+                }
                 Laya.LocalStorage.setItem('_goldNum', val.toString());
             }
         };
@@ -455,6 +438,8 @@ export module lwg {
                 GoldNode = sp;
             }));
         }
+
+       
 
         /**增加金币以并且在节点上也表现出来*/
         export function _addGold(number: number) {
@@ -664,6 +649,8 @@ export module lwg {
             rotateRan: number;
             /**随机消失时间*/
             continueTime: number;
+
+            maxKey = 3;
 
             onAwake(): void {
                 this.initProperty();
@@ -1301,6 +1288,7 @@ export module lwg {
             Settle = 'Settle',
             Special = 'Special',
             Compound = 'Compound',
+            SpecialQ = 'SpecialQ',
         }
 
         /**
@@ -1361,11 +1349,12 @@ export module lwg {
                 }
                 scene.name = openSceneName;
                 _sceneControl[openSceneName] = scene;//装入场景容器，此容器内每个场景唯一
+                console.log(_sceneControl);
                 // 背景图自适应并且居中
                 let background = scene.getChildByName('Background') as Laya.Image;
                 if (background) {
                     background.width = Laya.stage.width;
-                    background.height = Laya.stage.height;
+                    background.height = Laya.stage.height;``
                 }
                 if (_sceneControl[cloesSceneName]) {
                     _closeScene(cloesSceneName, openf);
@@ -1381,6 +1370,7 @@ export module lwg {
          * @param func 关闭后的回调函数
          * */
         export function _closeScene(closeName?: string, func?: Function): void {
+            console.log(_sceneControl)
             if (!_sceneControl[closeName]) {
                 console.log('场景', closeName, '关闭失败！可能是名称不对！');
                 return;
@@ -1615,6 +1605,14 @@ export module lwg {
                     return undefined;
                 }
             }
+            btnEv(name: string, func: Function, caller: any = this){
+                let btn = this.ImgVar(name) as Laya.Sprite;
+                btn.on(Laya.Event.CLICK, caller, ()=>{
+                    //todo: 播放通用按钮声音
+                    func.call(caller);
+                });
+                return btn;
+            }
             btnVar(str: string): Laya.Sprite {
                 if (this.Owner[str]) {
                     return this.Owner[str] as Laya.Image;
@@ -1626,6 +1624,14 @@ export module lwg {
             ImgVar(str: string): Laya.Image {
                 if (this.Owner[str]) {
                     return this.Owner[str] as Laya.Image;
+                } else {
+                    console.log('场景内不存在全局节点：', str);
+                    return undefined;
+                }
+            }
+            TexVar(str: string): Laya.Text {
+                if (this.Owner[str]) {
+                    return this.Owner[str] as Laya.Text;
                 } else {
                     console.log('场景内不存在全局节点：', str);
                     return undefined;
@@ -3379,6 +3385,27 @@ export module lwg {
                     }), 0);
                 }), 0);
             }), delayed ? delayed : 0);
+        }
+
+        /**
+         * expoIn简单移动,初始位置可以为null
+         * @param node 节点
+         * @param firstX 初始x位置
+         * @param firstY 初始y位置
+         * @param targetX 目标x位置
+         * @param targetY 目标y位置
+         * @param time 花费时间
+         * @param delayed 延时时间
+         * @param func 完成后的回调
+         */
+        export function move_Simple_01(node, firstX, firstY, targetX, targetY, time, delayed, func): void {
+            node.x = firstX;
+            node.y = firstY;
+            Laya.Tween.to(node, { x: targetX, y: targetY }, time, Laya.Ease.cubicInOut, Laya.Handler.create(this, function () {
+                if (func !== null) {
+                    func()
+                }
+            }), delayed);
         }
 
         /**

@@ -9,6 +9,8 @@ export module _Compound {
     export let Skin2: string;
     export class Compound extends Admin._SceneBase {
         lwgOnAwake(): void {
+            _Game.Shouzhi.visible=false;
+            _Game.Shouzhi.alpha=0;
             if (Skin1 == 'colours') {
                 Skin1 = _Game._ColoursPencils._pitchName;
                 this.ImgVar('Pencil1').skin = `Game/UI/GameScene/Pencils/ColoursPencils/${Skin1}.png`;

@@ -1,0 +1,7 @@
+{
+  "code": "import { Admin, Click } from \"./Lwg\";\r\nexport var _TreasureB;\r\n(function (_TreasureB) {\r\n    class TreasureB extends Admin._SceneBase {\r\n        lwgBtnClick() {\r\n            Click._on(Click._Type.largen, this.btnVar('BtnDirect'), this, null, null, (e) => {\r\n                this.lwgOpenScene('Start');\r\n            });\r\n        }\r\n    }\r\n    _TreasureB.TreasureB = TreasureB;\r\n})(_TreasureB || (_TreasureB = {}));\r\nexport default _TreasureB.TreasureB;\r\n",
+  "references": [
+    "C:/Users/sjie1/Desktop/Drawing_2.5.0/src/script/TJ/Admanager.ts",
+    "C:/Users/sjie1/Desktop/Drawing_2.5.0/src/script/Frame/Lwg.ts"
+  ]
+}

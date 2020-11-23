@@ -1,0 +1,25 @@
+{
+    "x":0,
+    "type":"Image",
+    "selectedBox":62,
+    "searchKey":"Image,shouzhi",
+    "props":{"y":0,"x":0,"var":"shouzhi","skin":"Frame/UI/icon_hand.png","presetID":1,"preset":"laya/pages/Prefab/shouzhi.prefab","isPresetRoot":true,"anchorY":0.5,"anchorX":0.5},
+    "nodeParent":-1,
+    "maxID":63,
+    "label":"shouzhi",
+    "isDirectory":false,
+    "isAniNode":true,
+    "hasChild":false,
+    "compId":62,
+    "child":[
+        ],
+    "animations":[
+        {
+            "nodes":[
+                ],
+            "name":"ani1",
+            "id":1,
+            "frameRate":24,
+            "action":0
+        }]
+}

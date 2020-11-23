@@ -2,6 +2,7 @@ import ADManager, { TaT } from "../TJ/Admanager";
 import RecordManager from "../TJ/RecordManager";
 import lwg, { Admin, Click, _Gold, Tools, Dialogue, _SceneName, EventAdmin, DateAdmin, PalyAudio, Effects } from "./Lwg";
 import OldEffects from "./OldEffects";
+import TweenMgr from "./TweenMgr";
 import { _Game } from "./_Game";
 import { _PreloadUrl } from "./_PreLoad";
 import { _Share } from "./_Share";
@@ -36,7 +37,44 @@ export module _Victory {
                     this.ImgVar('Evaluate').skin = 'Game/UI/Victory/pptt.png';
                 }
             }
+            
         }
+
+        //回收弹窗
+        HuiTan(){
+            let HuiShouYiNum = false;
+            HuiShouYiNum = Number(Laya.LocalStorage.getItem("HuiShouYiNum"))!=0;
+            if(!HuiShouYiNum){
+                let XZCJCount = Number(Laya.LocalStorage.getItem("XZCJCount"));
+                let rate = TweenMgr.randomInRange_i(0,100);
+                switch(XZCJCount)
+                {
+                    case 0:
+                        this.lwgOpenScene(_SceneName.Special, false);
+                        break;
+                    default:
+                        if(rate<50){
+                            if(_Game._ColoursPencils._switch){
+                                this.lwgOpenScene(_SceneName.Special, false);
+                            }else{
+                                this.lwgOpenScene(_SceneName.SpecialQ, false);
+                            }
+                            break;
+                        }else{
+                            if(_Game._ColoursPencils._switch){
+                                this.lwgOpenScene(_SceneName.Special, false);
+                            }else{
+                                console.log("啥也没有")
+                            }
+                            break;
+                        }
+                        
+                }
+                XZCJCount++;
+                Laya.LocalStorage.setItem("XZCJCount",XZCJCount.toString());
+            }
+        }
+
         lwgOpenAniAfter(): void {
             this.AniVar('NoAni_Remark').play(0, false);
             this.AniVar('NoAni_Remark').on(Laya.Event.LABEL, this, (e: Laya.Event) => {
@@ -46,11 +84,14 @@ export module _Victory {
                 OldEffects.createLeftOrRightJet(Laya.stage, 'right', 40, 720, 300);
                 OldEffects.createLeftOrRightJet(Laya.stage, 'left', 40, 0, 300);
                 console.log(_Game._GeneralPencils._pitchName, _Special._data._lastDate);
+
+                this.HuiTan();
+
                 if (_Game._ColoursPencils._switch && _Special._data._lastDate
                     !== DateAdmin._date.date) {
                     _Special._data._lastDate = DateAdmin._date.date;
                     this.ImgVar('Evaluate').skin = 'Game/UI/Victory/sbml.png';
-                    this.lwgOpenScene(_SceneName.Special, false);
+                    
                 } else {
                     if (_Game._GeneralPencils._pitchName == 'colours') {
                         this.ImgVar('Evaluate').skin = 'Game/UI/Victory/jmjl.png';

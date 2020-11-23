@@ -802,6 +802,7 @@ declare namespace TJ.Develop.Yun.Location {
     let syncPromise: Promise<void>;
     function Sync(): Promise<void>;
     let shield: boolean;
+    let noAdTime: number;
 }
 declare namespace TJ.Develop.Yun.Login {
     let apiUrl: string;
@@ -903,6 +904,7 @@ declare namespace TJ.Develop.Yun.Promo {
         promoOriginIcon: string;
         weight: number;
         title: string;
+        titleBG: number;
         describe: string;
         tag: number;
         private promoStyle;

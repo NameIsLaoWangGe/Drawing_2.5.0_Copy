@@ -30,6 +30,9 @@ export default class ADManager {
     static CanShowCD: boolean = true;
     public static ShowReward(rewardAction: Function, CDTime: number = 500)//展示激励广告，一般是视频
     {
+        //无广告模式
+        rewardAction()
+        return;
         if (Admin._platform.name == Admin._platform.tpye.WebTest || Admin._platform.name == Admin._platform.tpye.OPPOTest || Admin._platform.name == Admin._platform.tpye.Research) {
             rewardAction();
             return;

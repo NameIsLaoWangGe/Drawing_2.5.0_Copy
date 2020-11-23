@@ -1,7 +1,7 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":7,
+    "selectedBox":2,
     "selecteID":8,
     "searchKey":"View",
     "referenceLines":[
@@ -152,13 +152,14 @@
                     "props":{"y":895,"x":366,"width":260,"var":"BtnGet","skin":"Game/UI/Compound/an.png","sizeGrid":"39,74,47,65","rotation":0,"pivotY":53,"pivotX":130,"name":"BtnGet","height":116,"alpha":1},
                     "nodeParent":7,
                     "label":"BtnGet",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":12,
                     "child":[
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label",
                             "props":{"y":30,"x":29,"width":135,"valign":"middle","text":"立即获取","strokeColor":"#662569","stroke":5,"height":46,"fontSize":33,"color":"#fff8f8","bold":true,"align":"center"},
@@ -172,6 +173,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite",
                             "props":{"y":13,"x":173,"texture":"Game/UI/PropTry/sp.png"},

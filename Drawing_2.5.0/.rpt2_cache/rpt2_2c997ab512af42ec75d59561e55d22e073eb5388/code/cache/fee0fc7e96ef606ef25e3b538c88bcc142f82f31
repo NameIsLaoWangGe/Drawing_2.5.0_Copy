@@ -1,0 +1,8 @@
+{
+  "code": "import { Admin, Click, _SceneName } from \"./lwg\";\r\nexport var _Treasure;\r\n(function (_Treasure) {\r\n    _Treasure.boxOpenCount = 0;\r\n    _Treasure.leftTimes = 3;\r\n    class Treasure extends Admin._SceneBase {\r\n        lwgOnAwake() {\r\n        }\r\n        lwgBtnClick() {\r\n            Click._on(Click._Type.largen, this.ImgVar(\"BtnDirect\"), this, null, null, (e) => {\r\n                console.log(\"关闭宝箱界面\");\r\n                this.lwgOpenScene(_SceneName.Start);\r\n            });\r\n        }\r\n        lwgOnDisable() {\r\n        }\r\n    }\r\n    _Treasure.Treasure = Treasure;\r\n})(_Treasure || (_Treasure = {}));\r\nexport default _Treasure.Treasure;\r\n",
+  "references": [
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/TJ/Admanager.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/lwg.ts",
+    "C:/Users/tomato/Desktop/Drawing_2.5.0/src/script/Frame/_Game.ts"
+  ]
+}

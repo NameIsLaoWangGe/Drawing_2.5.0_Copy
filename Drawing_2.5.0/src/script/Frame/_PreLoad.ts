@@ -1,5 +1,6 @@
 import ADManager, { TaT } from "../TJ/Admanager";
-import { Admin, EventAdmin, _LwgPreLoad, _SceneName } from "./Lwg";
+import { Admin, EventAdmin, Execution, Tools, _LwgPreLoad, _SceneName } from "./Lwg";
+import { _Execution } from "./_Execution";
 export module _PreloadUrl {
     export let _list = {
         // scene3D: {
@@ -45,6 +46,14 @@ export module _PreloadUrl {
             },
             BtnTurnRight: {
                 url: 'Prefab/BtnTurnRight.json',
+                prefab: new Laya.Prefab,
+            },
+            shouzhi: {
+                url: 'Prefab/shouzhi.json',
+                prefab: new Laya.Prefab,
+            },
+            ExecutionNum: {
+                url: 'prefab/ExecutionNum.json',
                 prefab: new Laya.Prefab,
             },
         },
@@ -119,6 +128,7 @@ export module _PreloadUrl {
             Game_xiaonainiu: `Scene/Game_xiaonainiu.json`,
             Game_xiaoqiche: `Scene/Game_xiaoqiche.json`,
             Game_zhangyugege: `Scene/Game_zhangyugege.json`,
+            Game_nvwang: `Scene/Game_nvwang.json`,
         },
         json: {
             General: {
@@ -149,7 +159,10 @@ export module _PreloadUrl {
 
 export module _PreLoad {
     export class PreLoad extends _LwgPreLoad._PreLoadScene {
+
         lwgOnStart(): void {
+
+            
             ADManager.TAPoint(TaT.PageShow, 'loadpage');
             this.AniVar('ani1').play(0, false);
             this.AniVar('ani1').on(Laya.Event.LABEL, this, () => {
@@ -158,16 +171,23 @@ export module _PreLoad {
         }
         lwgOpenAni(): number { return 1; }
         lwgStepComplete(): void {
+
         }
         lwgAllComplete(): number {
+            
+            // _Execution._ExecutionNode=Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.ExecutionNum.prefab) as Laya.Image;
+            // console.log(_Execution._ExecutionNode);
+            // Laya.stage.addChild(_Execution._ExecutionNode)['pos'](500, 77);
+            // _Execution._ExecutionNode.zOrder = 1000;
+            // _Execution._ExecutionNode.addComponent(_Execution.Execution);
             return 1000;
         }
         lwgOnDisable(): void {
             ADManager.TAPoint(TaT.PageLeave, 'loadpage');
-        }
+        }  
     }
 
 }
-export default PreLoad;
+export default _PreLoad.PreLoad;
 
 

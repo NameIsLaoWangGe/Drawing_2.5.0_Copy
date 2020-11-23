@@ -5,16 +5,85 @@ var DP =
         appGuid:"d8fe0ff2-3c0c-35d4-6196-1da9e6725232",
         productName:"涂鸦小画手",
         packageName:"com.qingkuijoy.tyxhs.toutiao",
-        versionName:"1.0.1",
-        versionCode:2,
+        versionName:"1.0.2",
+        versionCode:3,
         channel:"ZJTD_AppRt",
     },
-    XIAOMI:
+    Adwending:   //双阳小游戏
     {
-        QG:   //小米快游戏
+        username:null,
+        gameid:0,
+    },
+    HBS:   //华为快游戏
+    {
+        appId:null,
+    },
+    HG:   //Hago游戏
+    {
+        videoId:0,
+    },
+    Kwai:   //快手小游戏
+    {
+        appId:"ks669347494923799235",
+        videoId:"2300000082_01",
+    },
+    MZ:   //魅族快游戏
+    {
+        bannerId:null,
+        insertId:null,
+        videoId:null,
+    },
+    OPPO:
+    {
+        QG:   //oppo小游戏
         {
+            appId:null,
+            bannerId:null,
             insertId:null,
             videoId:null,
+            nativeId:null,
+            nativeCustomInsert:null,
+            gameBannerId:null,
+            gamePortalId:null,
+        },
+    },
+    QQ:   //QQ小游戏
+    {
+        appId:null,
+        bannerId:null,
+        insertId:null,
+        videoId:null,
+    },
+    QTTGame:   //趣头条游戏
+    {
+        appId:null,
+        appKey:null,
+    },
+    ReYun:   //热云统计
+    {
+        appId:"b1c86215b2fc92180391d841a9a2fdad",
+    },
+    TT:   //字节跳动小游戏
+    {
+        appId:"tt62dc1461fde789ab",
+        bannerId:"1acmk6c6lkbonh0049",
+        insertId:"17al0aik4hmd11bp48",
+        videoId:"aekluq02s4g4aptb68",
+    },
+    UC:   //UC小游戏
+    {
+        appid:null,
+        clientid:null,
+    },
+    VIVO:
+    {
+        QG:   //vivo小游戏
+        {
+            bannerId:null,
+            insertId:null,
+            videoId:null,
+            nativeId:null,
+            nativeCustomInsert:null,
         },
     },
     WX:   //微信小游戏
@@ -24,82 +93,13 @@ var DP =
         insertId:null,
         videoId:null,
     },
-    VIVO:
+    XIAOMI:
     {
-        QG:   //vivo小游戏
+        QG:   //小米快游戏
         {
-            bannerId:"a06f50fe4849413eb2644412734197dc",
-            insertId:"0298c76ee2ec44258056cc357930469d",
-            videoId:"0f37dd9eec1a442fac0dfc39723b9342",
-            nativeId:"99351dc533db46e29f0260cf8146bc1b",
-            nativeCustomInsert:null,
-        },
-    },
-    UC:   //UC小游戏
-    {
-        appid:null,
-        clientid:null,
-    },
-    TT:   //字节跳动小游戏
-    {
-        appId:"tt62dc1461fde789ab",
-        bannerId:"1acmk6c6lkbonh0049",
-        insertId:"17al0aik4hmd11bp48",
-        videoId:"aekluq02s4g4aptb68",
-    },
-    ReYun:   //热云统计
-    {
-        appId:"b1c86215b2fc92180391d841a9a2fdad",
-    },
-    QTTGame:   //趣头条游戏
-    {
-        appId:null,
-        appKey:null,
-    },
-    QQ:   //QQ小游戏
-    {
-        appId:null,
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    OPPO:
-    {
-        QG:   //oppo小游戏
-        {
-            appId:"30328407",
-            bannerId:"214580",
             insertId:null,
-            videoId:"214589",
-            nativeId:"221104",
-            nativeCustomInsert:null,
-            gameBannerId:null,
-            gamePortalId:null,
+            videoId:null,
         },
-    },
-    MZ:   //魅族快游戏
-    {
-        bannerId:null,
-        insertId:null,
-        videoId:null,
-    },
-    Kwai:   //快手小游戏
-    {
-        appId:null,
-        videoId:null,
-    },
-    HG:   //Hago游戏
-    {
-        videoId:0,
-    },
-    HBS:   //华为快游戏
-    {
-        appId:null,
-    },
-    Adwending:   //双阳小游戏
-    {
-        username:null,
-        gameid:0,
     },
 }
 
@@ -152,9 +152,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 /*
-DESKTOP-BT8F2H9
-Microsoft Windows NT 10.0.17763.0
-中国标准时间 2020/11/10 20:54:14
+DESKTOP-0D6PVS8
+Microsoft Windows NT 10.0.18363.0
+中国标准时间 2020/11/18 18:01:39
 */
 var TJ;
 (function (TJ) {
@@ -3921,7 +3921,7 @@ var TJ;
                 Location.syncPromise = new Promise(function (r) { syncResolve = r; });
                 function Sync() {
                     return __awaiter(this, void 0, void 0, function () {
-                        var url, www, res, citys, _i, citys_1, c;
+                        var url, www, res, error_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -3931,71 +3931,93 @@ var TJ;
                                     return [4 /*yield*/, www.Send()];
                                 case 1:
                                     _a.sent();
-                                    if (!(www.error == null)) return [3 /*break*/, 4];
-                                    res = JSON.parse(www.text);
-                                    if (!(res.code == 200)) return [3 /*break*/, 4];
-                                    Location.ip = res.data.ip;
-                                    Location.country = res.data.country;
-                                    Location.province = res.data.province;
-                                    Location.city = res.data.city;
-                                    server_time = res.data.server_time * 1000;
-                                    syncTime = Date.now();
-                                    if (!(Location.city != null)) return [3 /*break*/, 3];
-                                    return [4 /*yield*/, GetShieldCity()];
-                                case 2:
-                                    citys = _a.sent();
-                                    if (citys != null) {
-                                        Location.shield = false;
-                                        for (_i = 0, citys_1 = citys; _i < citys_1.length; _i++) {
-                                            c = citys_1[_i];
-                                            if (Location.city.search(c) != -1 || c.search(Location.city) != -1) {
-                                                Location.shield = true;
-                                                break;
-                                            }
+                                    if (www.error == null) {
+                                        res = JSON.parse(www.text);
+                                        if (res.code == 200) {
+                                            Location.ip = res.data.ip;
+                                            Location.country = res.data.country;
+                                            Location.province = res.data.province;
+                                            Location.city = res.data.city;
+                                            server_time = res.data.server_time * 1000;
                                         }
                                     }
-                                    _a.label = 3;
+                                    syncTime = Date.now();
+                                    _a.label = 2;
+                                case 2:
+                                    _a.trys.push([2, 4, , 5]);
+                                    return [4 /*yield*/, GetConfig()];
                                 case 3:
+                                    _a.sent();
+                                    return [3 /*break*/, 5];
+                                case 4:
+                                    error_1 = _a.sent();
+                                    console.error(error_1);
+                                    return [3 /*break*/, 5];
+                                case 5:
                                     syncResolve();
-                                    _a.label = 4;
-                                case 4: return [2 /*return*/];
+                                    return [2 /*return*/];
                             }
                         });
                     });
                 }
                 Location.Sync = Sync;
+                var Config = /** @class */ (function () {
+                    function Config() {
+                    }
+                    return Config;
+                }());
                 Location.shield = true;
-                function GetShieldCity() {
+                Location.noAdTime = 60;
+                function GetConfig() {
                     return __awaiter(this, void 0, void 0, function () {
-                        var citys, channel, url, www, res;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
+                        var cfg, channel, url, www, _i, _a, c;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
                                 case 0:
-                                    citys = null;
+                                    cfg = null;
                                     channel = TJ.API.AppInfo.Channel();
                                     if (!(channel != null && channel.length > 0)) return [3 /*break*/, 4];
                                     if (!(channel == TJ.Define.Channel.AppRt.OPPO_AppRt)) return [3 /*break*/, 2];
-                                    url = "https://h5.tomatojoy.cn/res/" + TJ.API.AppInfo.Channel() + "/config.json";
+                                    url = "https://h5.tomatojoy.cn/res/" + channel + "/config.json";
                                     www = new TJ.Common.WWW(url);
                                     www.logText = true;
                                     return [4 /*yield*/, www.Send()];
                                 case 1:
-                                    _a.sent();
-                                    if (www.error == null) {
-                                        res = JSON.parse(www.text);
-                                        if (res.shield_city != null) {
-                                            citys = res.shield_city;
+                                    _b.sent();
+                                    if (www.text != null && www.text.length > 0) {
+                                        cfg = JSON.parse(www.text);
+                                    }
+                                    if (cfg != null) {
+                                        if (Location.city != null && typeof cfg.shield_city == "object") {
+                                            Location.shield = false;
+                                            for (_i = 0, _a = cfg.shield_city; _i < _a.length; _i++) {
+                                                c = _a[_i];
+                                                if (Location.city.search(c) != -1 || c.search(Location.city) != -1) {
+                                                    Location.shield = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (Location.shield) {
+                                            if (typeof cfg.shield_cd_time == "number") {
+                                                Location.noAdTime = cfg.shield_cd_time;
+                                            }
+                                        }
+                                        else {
+                                            if (typeof cfg.no_shield_cd_time == "number") {
+                                                Location.noAdTime = cfg.no_shield_cd_time;
+                                            }
                                         }
                                     }
                                     return [3 /*break*/, 3];
                                 case 2:
-                                    citys = [];
-                                    _a.label = 3;
+                                    Location.shield = false;
+                                    _b.label = 3;
                                 case 3: return [3 /*break*/, 5];
                                 case 4:
-                                    citys = [];
-                                    _a.label = 5;
-                                case 5: return [2 /*return*/, citys];
+                                    Location.shield = false;
+                                    _b.label = 5;
+                                case 5: return [2 /*return*/];
                             }
                         });
                     });
@@ -12404,7 +12426,6 @@ var TJ;
                                     AppRt.Develop.TA.LaunchOptions(options);
                                     console.log("OPPO.QG.GetLaunchOptionsSync " + JSON.stringify(options));
                                 }
-                                GetNoAdTime();
                             };
                             return Manager;
                         }(TJ.Common.Component.Interface));
@@ -12483,25 +12504,8 @@ var TJ;
                             };
                             return Promo;
                         }(TJ.API.Promo.IPromo));
-                        function GetNoAdTime() {
-                            return __awaiter(this, void 0, void 0, function () {
-                                var obj;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, TJ.Develop.Yun.Config.GameCfg()];
-                                        case 1:
-                                            obj = _a.sent();
-                                            if (typeof obj.NoAdTime == 'number') {
-                                                noAdTime = obj.NoAdTime;
-                                            }
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            });
-                        }
-                        var noAdTime = 60;
                         function OnNoAd() {
-                            if (TJ.Common.Date_.nowSeconds - TJ.Common.SystemInfo.startupTime > noAdTime) {
+                            if (TJ.Common.Date_.nowSeconds - TJ.Common.SystemInfo.startupTime > TJ.Develop.Yun.Location.noAdTime) {
                                 return false;
                             }
                             return true;
