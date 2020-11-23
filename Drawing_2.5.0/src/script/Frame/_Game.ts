@@ -242,12 +242,12 @@ export module _Game {
     export class Game extends Admin._SceneBase {
         lwgOnAwake(): void {
             _DhadthCont = Number(Laya.LocalStorage.getItem("_DhadthCont"));
-            if(Number(Laya.LocalStorage.getItem("_DhadthCont"))==1){
+            if (Number(Laya.LocalStorage.getItem("_DhadthCont")) == 1) {
                 _Game._GeneralPencils._pitchName = _Game._GeneralPencils._effectType.colours;
                 _Game._ColoursPencils._switch = true;
                 _Game._ColoursPencils._clickNum = 2;
             }
-                
+
 
             ADManager.TAPoint(TaT.PageShow, 'playpage');
             ADManager.TAPoint(TaT.LevelStart, `level_${this.Owner.name}`);
@@ -341,11 +341,11 @@ export module _Game {
             Animation2D.simple_Rotate(Shadow, fR - 20, 0, time, delay);
             Animation2D.move_Simple(Shadow, fX, fY, 0, 0, time, delay, () => {
             });
-            Laya.timer.loop(2000,this,()=>{
-                Animation2D.move_Simple(_Game.Shouzhi, 260, Laya.stage.height * 0.950,462,Laya.stage.height * 0.838, 1600,delay);
-            });  
+            Laya.timer.loop(2000, this, () => {
+                Animation2D.move_Simple(_Game.Shouzhi, 260, Laya.stage.height * 0.950, 462, Laya.stage.height * 0.838, 1600, delay);
+            });
 
-            
+
             return time + delay;
         }
         /**步骤控制*/
@@ -357,7 +357,7 @@ export module _Game {
             BtnLast: null as Laya.Image,
             BtnTurnLeft: null as Laya.Image,
             BtnTurnRight: null as Laya.Image,
-            
+
             btnSwitch: true,
             automaticNext: false,
             /**自动进入下一关*/
@@ -441,7 +441,7 @@ export module _Game {
                 this.Owner.addChild(this.Step.BtnTurnRight)['pos'](687, Laya.stage.height * 0.838);
                 _Game.Shouzhi = Tools.Node.prefabCreate(_PreloadUrl._list.prefab2D.shouzhi.prefab) as Laya.Image;
                 this.Owner.addChild(_Game.Shouzhi)['pos'](260, Laya.stage.height * 0.950);
-                _Game.Shouzhi.zOrder=500;
+                _Game.Shouzhi.zOrder = 500;
             }
         }
         lwgOnEnable(): void {
@@ -566,15 +566,15 @@ export module _Game {
 
             EventAdmin._register(_Event.showStepBtn, this, () => {
                 if (_stepIndex.present == 0) {
-                    
+
                     this.Step.BtnNext.visible = true;
                     Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
                 } else {
-                    if (_stepIndex.present == _stepOrderImg.length-2) {
+                    if (_stepIndex.present == _stepOrderImg.length - 2) {
                         console.log("开始录屏")
                         RecordManager.startAutoRecord();
                     }
-                    _Game.Shouzhi.visible=false;
+                    _Game.Shouzhi.visible = false;
                     if (!this.Step.BtnNext.visible) {
                         this.Step.BtnNext.visible = true;
                         Animation2D.fadeOut(this.Step.BtnNext, 0, 1, 300);
@@ -707,8 +707,6 @@ export module _Game {
                     });
                 });
             })
-
-            
         }
 
         /**绘画控制*/
@@ -721,7 +719,6 @@ export module _Game {
             BlinkSp: null as Laya.Sprite,
             frontPos: null as Laya.Point,
             endPos: null as Laya.Point,
-            DisImg:null as Laya.Point,
             getTex: (): Laya.Texture => {
                 return _PreloadUrl._list.texture[`bishua${1 + Math.floor(Math.random() * 4)
                     }`]['texture'];
@@ -845,6 +842,7 @@ export module _Game {
             }
         }
         onStageMouseMove(e: Laya.Event): void {
+            // console.log(this.Draw.frontPos, this.Draw.switch, _Game._activate);
             if (this.Draw.frontPos && this.Draw.switch && _Game._activate) {
                 let endPos = this.Draw.DrawBoard.globalToLocal(new Laya.Point(e.stageX, e.stageY));
                 let Sp: Laya.Sprite;
@@ -910,8 +908,8 @@ export module _Game {
         }
 
         lwgBtnClick(): void {
-            
-            
+
+
             for (let index = 0; index < _stepOrderImg.length; index++) {
                 const element = _stepOrderImg[index];
                 var func = () => {
@@ -958,12 +956,12 @@ export module _Game {
             Click._on(Click._Type.largen, this.Step.BtnTurnLeft, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 EventAdmin._notify(_Event.turnLeft);
-                _Game.Shouzhi.visible=true;
+                _Game.Shouzhi.visible = true;
             });
             Click._on(Click._Type.largen, this.Step.BtnTurnRight, this, stop, stop, (e: Laya.Event) => {
                 e.stopPropagation();
                 EventAdmin._notify(_Event.turnRight);
-                _Game.Shouzhi.visible=false;
+                _Game.Shouzhi.visible = false;
             });
 
             Click._on(Click._Type.largen, this.Step.BtnCompelet, this, stop, stop, () => {
@@ -973,7 +971,7 @@ export module _Game {
             });
         }
 
-    
+
         lwgOnDisable(): void {
             _ColoursPencils._switch = false;
             ADManager.TAPoint(TaT.PageShow, 'playpage');

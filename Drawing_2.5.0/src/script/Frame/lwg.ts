@@ -1848,6 +1848,9 @@ export module lwg {
             get OwnerScene(): Laya.Sprite {
                 return this.owner.scene as Laya.Scene;
             }
+            get _Parent(): Laya.Sprite {
+                return this.owner.parent as Laya.Scene;
+            }
             /**物理组件*/
             get OwnerRig(): Laya.RigidBody {
                 if (!this.Owner['_OwnerRig']) {

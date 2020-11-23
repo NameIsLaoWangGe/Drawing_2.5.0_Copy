@@ -6,7 +6,7 @@ import { _PropTry } from "./_PropTry";
 
 export class _GameItem extends Admin._Object {
     lwgOnAwake(): void {
-        this.Compound.Pic = this.Owner.getChildByName('Pic') as Laya.Image;
+        this.Compound.Pencil = this.Owner.getChildByName('Pic') as Laya.Image;
     }
     lwgOnStart(): void {
         var caller = {};
@@ -29,17 +29,17 @@ export class _GameItem extends Admin._Object {
         });
     }
     Compound = {
-        Pic: null as Laya.Image,
+        Pencil: null as Laya.Image,
         time: 0,
         restrict: 1,
-        Img: null as Laya.Image,
+        DisImg: null as Laya.Image,
         firstPos: null as Laya.Point,
         PosArr: null,
         homing: () => {
-            if (this.Compound.Img) {
-                this.Compound.Img.destroy();
-                this.Compound.Img = null;
-                this.Compound.Pic.visible = true;
+            if (this.Compound.DisImg) {
+                this.Compound.DisImg.destroy();
+                this.Compound.DisImg = null;
+                this.Compound.Pencil.visible = true;
             }
         },
         remake: () => {
@@ -47,52 +47,61 @@ export class _GameItem extends Admin._Object {
             this.Compound.homing();
             this.Compound.time = 0;
             _Game._GeneralPencils._compoundName = null;
-            _Game._activate = true;
+            EventAdmin._notify(_Game._Event.generalRefresh);
+        },
+        disImgState: (e: Laya.Event) => {
+            this.Compound.DisImg.visible = true;
+            this.Compound.Pencil.visible = false;
+            this.Compound.DisImg.pos(e.stageX, e.stageY);
+            let gOwnerP = this._Parent.localToGlobal(new Laya.Point(this.Owner.x, this.Owner.y));
+            let distance = gOwnerP.distance(this.Compound.DisImg.x, this.Compound.DisImg.y);
+            if (distance > 100) {
+                this.Compound.DisImg.rotation = -45;
+                Tools.Node.changePovit(this.Compound.DisImg, this.Compound.DisImg.width / 2, 0);
+            } else {
+                this.Compound.DisImg.rotation = 0;
+                Tools.Node.changePovit(this.Compound.DisImg, this.Compound.DisImg.width / 2, this.Compound.DisImg.height / 2);
+            }
         }
     }
     onStageMouseMove(e: Laya.Event): void {
-        if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.Img) {
-            _Game._activate = false;
+        if (this.Owner['_dataSource'] && this.Compound.time > this.Compound.restrict && this.Compound.DisImg) {
+            // _Game._activate = false;
+            this.Compound.disImgState(e);
             _Game._GeneralPencils._compoundName = this.Owner['_dataSource']['name'];
-            this.Compound.Img.visible = true;
-            this.Compound.Pic.visible = false;
-            this.Compound.Img.pos(e.stageX, e.stageY);
+            _Game._GeneralPencils._pitchName = this.Owner['_dataSource']['name'];
         }
     }
     onStageMouseUp(e: Laya.Event): void {
         if (this.Owner['_dataSource']) {
             this.Compound.remake();
+            // _Game._activate = true;
         }
     }
     lwgBtnClick(): void {
-        Click._on(Click._Type.noEffect, this.Compound.Pic, this,
+        Click._on(Click._Type.noEffect, this.Compound.Pencil, this,
             (e: Laya.Event) => {
                 console.log("点击！")
-                
-                if (!this.Compound.Img && this.Owner['_dataSource']) {
 
+                if (!this.Compound.DisImg && this.Owner['_dataSource']) {
 
                     this.Compound.firstPos = new Laya.Point(e.stageX, e.stageY);
-                    this.Compound.Img = new Laya.Image;
-                    this.OwnerScene.addChild(this.Compound.Img);
-                    // this.Compound.Img.rotation = -45;
-                    this.Compound.Img.zOrder = 300;
-                    this.Compound.Img.width = this.Compound.Pic.width;
-                    this.Compound.Img.height = this.Compound.Pic.height;
-                    this.Compound.Img.scale(this.Compound.Pic.scaleX, this.Compound.Pic.scaleY);
-                    Tools.Node.changePovit(this.Compound.Img, this.Compound.Img.width / 2, this.Compound.Img.height / 2);
-                    this.Compound.Img.skin = this.Compound.Pic.skin;
-                    this.Compound.Img.visible = false;
-
-
+                    this.Compound.DisImg = new Laya.Image;
+                    this.OwnerScene.addChild(this.Compound.DisImg);
+                    this.Compound.DisImg.zOrder = 300;
+                    this.Compound.DisImg.width = this.Compound.Pencil.width;
+                    this.Compound.DisImg.height = this.Compound.Pencil.height;
+                    this.Compound.DisImg.scale(this.Compound.Pencil.scaleX, this.Compound.Pencil.scaleY);
+                    Tools.Node.changePovit(this.Compound.DisImg, this.Compound.DisImg.width / 2, this.Compound.DisImg.height / 2);
+                    this.Compound.DisImg.skin = this.Compound.Pencil.skin;
+                    this.Compound.DisImg.visible = false;
                 }
-                e.stopPropagation();
+                // e.stopPropagation();
             },
             (e: Laya.Event) => {
                 this.Compound.time++;
             },
             (e: Laya.Event) => {
-                console.log('抬起！')
                 if (_Game._GeneralPencils._compoundName && _Game._GeneralPencils._compoundName !== this.Owner['_dataSource']['name']) {
                     _Compound.Skin1 = _Game._GeneralPencils._compoundName;
                     _Compound.Skin2 = this.Owner['_dataSource']['name'];
@@ -111,7 +120,7 @@ export class _GameItem extends Admin._Object {
                         _Game._GeneralPencils._pitchName = lastName;
                         _PropTry._comeFrom = _SceneName.Game;
                         this.lwgOpenScene(_SceneName.PropTry, false);
-                        _Game._activate = false;
+                        // _Game._activate = false;
                         return;
                     }
                     _Game._ColoursPencils._clickNum++;
